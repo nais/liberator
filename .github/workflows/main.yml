@@ -25,6 +25,7 @@ jobs:
         DEPLOY_KEY: ${{ secrets.NAIS_YAML_DEPLOY_KEY }}
         GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
       run: |
+        NAIS_YAML=${GITHUB_WORKSPACE}/nais-yaml
         eval "$(ssh-agent -s)"
         ssh-add - <<< "${DEPLOY_KEY}"
         mkdir -p $NAIS_YAML
