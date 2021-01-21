@@ -1,8 +1,8 @@
-// Package v1 contains API Schema definitions for the kafka.nais.io v1 API group
+// Package v1 contains API Schema definitions for the nais.io v1 API group
 // +kubebuilder:object:generate=true
-// +groupName=kafka.nais.io
+// +groupName=nais.io
 // +versionName=v1
-package kafka_nais_io_v1
+package nais_io_v1
 
 import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -11,8 +11,7 @@ import (
 
 var (
 	// GroupVersion is group version used to register these objects
-	GroupVersion = schema.GroupVersion{Group: "kafka.nais.io", Version: "v1"}
-	// renamed to SchemeGroupVersion???
+	GroupVersion = schema.GroupVersion{Group: "nais.io", Version: "v1"}
 
 	// SchemeBuilder is used to add go types to the GroupVersionKind scheme
 	SchemeBuilder = &scheme.Builder{GroupVersion: GroupVersion}
