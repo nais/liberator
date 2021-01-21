@@ -5,6 +5,7 @@ Collection of small Go libraries used by NAIS operators.
 ## Contents
 
 * Kubernetes _Custom Resource Definitions_
+* Name generation functions
 * ...more to come
 
 ## Usage
@@ -22,3 +23,25 @@ go get -u github.com/nais/liberator
 The library is semantically versioned. Minor and patch level releases contain
 only new features and bugfixes, respectively. API breaking changes occurs only
 in major version releases.
+
+## Developing
+
+### Kubernetes dependencies
+
+The `controller-tools` dependency in `go.mod` locks the versions of
+upstream libraries `api`, `apiextensions`, and `apimachinery`,
+effectively determining which Kubernetes version is compatible.
+
+Check for compatibility here: https://github.com/kubernetes-sigs/controller-tools/commits/master/go.mod
+
+| Kubernetes version | controller-gen version |
+|--------------------|------------------------|
+| 1.17               | v0.2.5                 |
+| 1.18               | v0.4.1                 |
+| 1.19               | master                 |
+
+### Code generation
+
+Make sure `controller-gen` is of a compatible version by modifying `Makefile` and running `make controller-gen`.
+ 
+Run `make generate` to generate deep copy functions and CRD files.

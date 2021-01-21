@@ -1,0 +1,121 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.2.5
+  creationTimestamp: null
+  name: topics.kafka.nais.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
+  - JSONPath: .status.synchronizationState
+    name: State
+    type: string
+  - JSONPath: .status.fullyQualifiedName
+    name: Fully Qualified Name
+    type: string
+  - JSONPath: .status.credentialsExpiryTime
+    name: Credentials expiry time
+    type: string
+  group: kafka.nais.io
+  names:
+    kind: Topic
+    listKind: TopicList
+    plural: topics
+    singular: topic
+  scope: Namespaced
+  subresources: {}
+  validation:
+    openAPIV3Schema:
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          properties:
+            acl:
+              items:
+                properties:
+                  access:
+                    enum:
+                    - read
+                    - write
+                    - readwrite
+                    type: string
+                  application:
+                    type: string
+                  team:
+                    type: string
+                required:
+                - access
+                - application
+                - team
+                type: object
+              type: array
+            config:
+              properties:
+                cleanupPolicy:
+                  type: string
+                minimumInSyncReplicas:
+                  type: integer
+                partitions:
+                  type: integer
+                replication:
+                  type: integer
+                retentionBytes:
+                  type: integer
+                retentionHours:
+                  type: integer
+              type: object
+            pool:
+              type: string
+          required:
+          - acl
+          - pool
+          type: object
+        status:
+          properties:
+            credentialsExpiryTime:
+              type: string
+            errors:
+              items:
+                type: string
+              type: array
+            fullyQualifiedName:
+              type: string
+            message:
+              type: string
+            synchronizationHash:
+              type: string
+            synchronizationState:
+              type: string
+            synchronizationTime:
+              type: string
+          type: object
+      required:
+      - spec
+      type: object
+  version: v1
+  versions:
+  - name: v1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
