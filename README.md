@@ -26,6 +26,18 @@ in major version releases.
 
 ## Developing
 
+### Using a locally checked out copy of Liberator
+
+When developing applications using new Liberator features, you can point the application to link
+against your local Liberator by running the following command in the application repository:
+ 
+```
+go mod edit -replace github.com/nais/liberator=../liberator
+```
+
+This will add a line in your `go.mod` file. Make sure this change isn't checked in when committing,
+otherwise the code won't build in the CI tool.
+
 ### Kubernetes dependencies
 
 The `controller-tools` dependency in `go.mod` locks the versions of
