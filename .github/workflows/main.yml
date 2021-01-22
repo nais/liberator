@@ -36,5 +36,9 @@ jobs:
         git config user.name "NAIS deploy pipeline"
         git add .
         git --no-pager diff --cached
-        git commit -a -m "Update NAIS custom resource definitions" -m "liberator commit sha: ${GITHUB_SHA}"
-        git push
+        if [ ! -z "$(git diff)" ]; then
+          git commit -a -m "Update NAIS custom resource definitions" -m "liberator commit sha: ${GITHUB_SHA}"
+          git push
+        else
+          echo "No changes; skip commit"
+        fi
