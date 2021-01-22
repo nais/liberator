@@ -36,7 +36,12 @@ go mod edit -replace github.com/nais/liberator=../liberator
 ```
 
 This will add a line in your `go.mod` file. Make sure this change isn't checked in when committing,
-otherwise the code won't build in the CI tool.
+otherwise the code won't build in the CI tool. To revert your changes, run:
+
+```
+go mod edit -dropreplace github.com/nais/liberator
+go get -u github.com/nais/liberator@master
+```
 
 ### Kubernetes dependencies
 
