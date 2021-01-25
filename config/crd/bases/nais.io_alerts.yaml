@@ -1,0 +1,179 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.2.5
+  creationTimestamp: null
+  name: alerts.nais.io
+spec:
+  group: nais.io
+  names:
+    kind: Alert
+    listKind: AlertList
+    plural: alerts
+    singular: alert
+  scope: Namespaced
+  validation:
+    openAPIV3Schema:
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          properties:
+            alerts:
+              items:
+                properties:
+                  action:
+                    type: string
+                  alert:
+                    type: string
+                  description:
+                    type: string
+                  documentation:
+                    type: string
+                  expr:
+                    type: string
+                  for:
+                    type: string
+                  priority:
+                    type: string
+                  severity:
+                    type: string
+                  sla:
+                    type: string
+                required:
+                - action
+                - alert
+                - description
+                - documentation
+                - expr
+                - for
+                - priority
+                - severity
+                - sla
+                type: object
+              type: array
+            inhibitRules:
+              items:
+                properties:
+                  labels:
+                    items:
+                      type: string
+                    type: array
+                  sources:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  sourcesRegex:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  targets:
+                    additionalProperties:
+                      type: string
+                    type: object
+                  targetsRegex:
+                    additionalProperties:
+                      type: string
+                    type: object
+                required:
+                - labels
+                - sources
+                - sourcesRegex
+                - targets
+                - targetsRegex
+                type: object
+              type: array
+            receivers:
+              properties:
+                email:
+                  properties:
+                    send_resolved:
+                      type: boolean
+                    to:
+                      type: string
+                  required:
+                  - send_resolved
+                  - to
+                  type: object
+                pushover:
+                  properties:
+                    send_resolved:
+                      type: boolean
+                    user_key:
+                      type: string
+                  required:
+                  - send_resolved
+                  - user_key
+                  type: object
+                slack:
+                  properties:
+                    channel:
+                      type: string
+                    prependText:
+                      type: string
+                  required:
+                  - channel
+                  - prependText
+                  type: object
+                sms:
+                  properties:
+                    recipients:
+                      type: string
+                    send_resolved:
+                      type: boolean
+                  required:
+                  - recipients
+                  - send_resolved
+                  type: object
+              required:
+              - email
+              - pushover
+              - slack
+              - sms
+              type: object
+            route:
+              properties:
+                groupInterval:
+                  type: string
+                groupWait:
+                  type: string
+                repeatInterval:
+                  type: string
+              required:
+              - groupInterval
+              - groupWait
+              - repeatInterval
+              type: object
+          required:
+          - alerts
+          - inhibitRules
+          - receivers
+          - route
+          type: object
+      required:
+      - spec
+      type: object
+  version: v1
+  versions:
+  - name: v1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
