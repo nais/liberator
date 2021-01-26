@@ -1,31 +1,104 @@
 package nais_io_v1
 
 import (
-	"regexp"
 	"strconv"
 	"time"
 
 	hash "github.com/mitchellh/hashstructure"
-	"gopkg.in/go-playground/validator.v9"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 const LastSyncedHashAnnotation = "nais.io/lastSyncedHash"
-const PrometheusRangeRegexPattern = "\\d+[smhdwy]"
 
-var (
-	Validate             *validator.Validate
-	PrometheusRangeRegex = regexp.MustCompile(PrometheusRangeRegexPattern)
-)
+type Slack struct {
+	Channel     string `json:"channel"`
+	PrependText string `json:"prependText,omitempty"`
+}
 
+type Email struct {
+	To           string `json:"to"`
+	SendResolved bool   `json:"send_resolved,omitempty"`
+}
+
+type SMS struct {
+	Recipients   string `json:"recipients"`
+	SendResolved bool   `json:"send_resolved,omitempty"`
+}
+
+type Pushover struct {
+	UserKey      string `json:"user_key"`
+	SendResolved bool   `json:"send_resolved,omitempty"`
+}
+
+type Receivers struct {
+	Slack    Slack    `json:"slack,omitempty"`
+	Email    Email    `json:"email,omitempty"`
+	SMS      SMS      `json:"sms,omitempty"`
+	Pushover Pushover `json:"pushover,omitempty"`
+}
+
+type Rule struct {
+	// +kubebuilder:validation:Required
+	Alert         string `json:"alert"`
+	Description   string `json:"description,omitempty"`
+	// +kubebuilder:validation:Required
+	Expr          string `json:"expr"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern="^\\d+[smhdwy]$"
+	For           string `json:"for"`
+	// +kubebuilder:validation:Required
+	Action        string `json:"action"`
+	Documentation string `json:"documentation,omitempty"`
+	SLA           string `json:"sla,omitempty"`
+	// +kubebuilder:validation:Pattern="^$|good|warning|danger|#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})"
+	Severity      string `json:"severity,omitempty"`
+	Priority      string `json:"priority,omitempty"`
+}
+
+type InhibitRules struct {
+	Targets      map[string]string `json:"targets,omitempty"`
+	TargetsRegex map[string]string `json:"targetsRegex,omitempty"`
+	Sources      map[string]string `json:"sources,omitempty"`
+	SourcesRegex map[string]string `json:"sourcesRegex,omitempty"`
+	Labels       []string          `json:"labels,omitempty"`
+}
+
+type Route struct {
+	// +kubebuilder:validation:Pattern="([0-9]+(ms|[smhdwy]))?"
+	GroupWait      string `json:"groupWait,omitempty"`
+	// +kubebuilder:validation:Pattern="([0-9]+(ms|[smhdwy]))?"
+	GroupInterval  string `json:"groupInterval,omitempty"`
+	// +kubebuilder:validation:Pattern="([0-9]+(ms|[smhdwy]))?"
+	RepeatInterval string `json:"repeatInterval,omitempty"`
+}
+
+type AlertSpec struct {
+	Route        Route          `json:"route,omitempty"`
+	// +kubebuilder:validation:Required
+	Receivers    Receivers      `json:"receivers,omitempty"`
+	// +kubebuilder:validation:Required
+	Alerts       []Rule         `json:"alerts,omitempty"`
+	InhibitRules []InhibitRules `json:"inhibitRules,omitempty"`
+}
+
+// AlertStatus defines the observed state of Alerterator
+type AlertStatus struct {
+	SynchronizationTime  int64  `json:"synchronizationTime,omitempty"`
+	SynchronizationState string `json:"synchronizationState,omitempty"`
+	SynchronizationHash  string `json:"synchronizationHash,omitempty"`
+}
+
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Slack channel",type="string",JSONPath=".spec.receivers.slack.channel"
 // +kubebuilder:object:root=true
 type Alert struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec AlertSpec `json:"spec"`
+	Spec   AlertSpec   `json:"spec"`
+	Status AlertStatus `json:"status,omitempty"`
 }
 
 // +kubebuilder:object:root=true
@@ -34,66 +107,6 @@ type AlertList struct {
 	metav1.ListMeta `json:"metadata,omitempty"`
 
 	Items []Alert `json:"items"`
-}
-
-type Slack struct {
-	Channel     string `json:"channel"`
-	PrependText string `json:"prependText"`
-}
-
-type Email struct {
-	To           string `json:"to"`
-	SendResolved bool   `json:"send_resolved"`
-}
-
-type SMS struct {
-	Recipients   string `json:"recipients"`
-	SendResolved bool   `json:"send_resolved"`
-}
-
-type Pushover struct {
-	UserKey      string `json:"user_key"`
-	SendResolved bool   `json:"send_resolved"`
-}
-
-type Receivers struct {
-	Slack    Slack    `json:"slack"`
-	Email    Email    `json:"email"`
-	SMS      SMS      `json:"sms"`
-	Pushover Pushover `json:"pushover"`
-}
-
-type Rule struct {
-	Alert         string `json:"alert"`
-	Description   string `json:"description"`
-	Expr          string `json:"expr"`
-	For           string `json:"for" validate:"required,prometheus_range"`
-	Action        string `json:"action"`
-	Documentation string `json:"documentation"`
-	SLA           string `json:"sla"`
-	Severity      string `json:"severity"`
-	Priority      string `json:"priority"`
-}
-
-type InhibitRules struct {
-	Targets      map[string]string `json:"targets"`
-	TargetsRegex map[string]string `json:"targetsRegex"`
-	Sources      map[string]string `json:"sources"`
-	SourcesRegex map[string]string `json:"sourcesRegex"`
-	Labels       []string          `json:"labels"`
-}
-
-type Route struct {
-	GroupWait      string `json:"groupWait"`
-	GroupInterval  string `json:"groupInterval"`
-	RepeatInterval string `json:"repeatInterval"`
-}
-
-type AlertSpec struct {
-	Route        Route          `json:"route"`
-	Receivers    Receivers      `json:"receivers"`
-	Alerts       []Rule         `json:"alerts" validate:"dive"`
-	InhibitRules []InhibitRules `json:"inhibitRules"`
 }
 
 func (in *Alert) CreateEvent(reason, message, typeStr string) *corev1.Event {
@@ -183,14 +196,4 @@ func (in *Alert) SetLastSyncedHash(hash string) {
 	}
 	a[LastSyncedHashAnnotation] = hash
 	in.SetAnnotations(a)
-}
-
-func (in *Alert) ValidateAlertFields() error {
-	Validate = validator.New()
-	_ = Validate.RegisterValidation("prometheus_range", IsValidPrometheusRange)
-	return Validate.Struct(in)
-}
-
-func IsValidPrometheusRange(fl validator.FieldLevel) bool {
-	return PrometheusRangeRegex.MatchString(fl.Field().String())
 }

@@ -8,6 +8,10 @@ metadata:
   creationTimestamp: null
   name: alerts.nais.io
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.receivers.slack.channel
+    name: Slack channel
+    type: string
   group: nais.io
   names:
     kind: Alert
@@ -15,6 +19,8 @@ spec:
     plural: alerts
     singular: alert
   scope: Namespaced
+  subresources:
+    status: {}
   validation:
     openAPIV3Schema:
       properties:
@@ -46,23 +52,20 @@ spec:
                   expr:
                     type: string
                   for:
+                    pattern: ^\d+[smhdwy]$
                     type: string
                   priority:
                     type: string
                   severity:
+                    pattern: ^$|good|warning|danger|#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})
                     type: string
                   sla:
                     type: string
                 required:
                 - action
                 - alert
-                - description
-                - documentation
                 - expr
                 - for
-                - priority
-                - severity
-                - sla
                 type: object
               type: array
             inhibitRules:
@@ -88,12 +91,6 @@ spec:
                     additionalProperties:
                       type: string
                     type: object
-                required:
-                - labels
-                - sources
-                - sourcesRegex
-                - targets
-                - targetsRegex
                 type: object
               type: array
             receivers:
@@ -105,7 +102,6 @@ spec:
                     to:
                       type: string
                   required:
-                  - send_resolved
                   - to
                   type: object
                 pushover:
@@ -115,7 +111,6 @@ spec:
                     user_key:
                       type: string
                   required:
-                  - send_resolved
                   - user_key
                   type: object
                 slack:
@@ -126,7 +121,6 @@ spec:
                       type: string
                   required:
                   - channel
-                  - prependText
                   type: object
                 sms:
                   properties:
@@ -136,32 +130,31 @@ spec:
                       type: boolean
                   required:
                   - recipients
-                  - send_resolved
                   type: object
-              required:
-              - email
-              - pushover
-              - slack
-              - sms
               type: object
             route:
               properties:
                 groupInterval:
+                  pattern: ([0-9]+(ms|[smhdwy]))?
                   type: string
                 groupWait:
+                  pattern: ([0-9]+(ms|[smhdwy]))?
                   type: string
                 repeatInterval:
+                  pattern: ([0-9]+(ms|[smhdwy]))?
                   type: string
-              required:
-              - groupInterval
-              - groupWait
-              - repeatInterval
               type: object
-          required:
-          - alerts
-          - inhibitRules
-          - receivers
-          - route
+          type: object
+        status:
+          description: AlertStatus defines the observed state of Alerterator
+          properties:
+            synchronizationHash:
+              type: string
+            synchronizationState:
+              type: string
+            synchronizationTime:
+              format: int64
+              type: integer
           type: object
       required:
       - spec
