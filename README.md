@@ -40,7 +40,7 @@ otherwise the code won't build in the CI tool. To revert your changes, run:
 
 ```
 go mod edit -dropreplace github.com/nais/liberator
-go get -u github.com/nais/liberator@master
+go get -u github.com/nais/liberator@main
 ```
 
 ### Kubernetes dependencies
