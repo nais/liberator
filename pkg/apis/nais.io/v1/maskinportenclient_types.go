@@ -1,7 +1,6 @@
 package nais_io_v1
 
 import (
-	"github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -24,10 +23,14 @@ type MaskinportenClientList struct {
 	Items           []MaskinportenClient `json:"items"`
 }
 
+type MaskinportenScope struct {
+	Name string `json:"name"`
+}
+
 // MaskinportenClientSpec defines the desired state of MaskinportenClient
 type MaskinportenClientSpec struct {
 	// Scopes is a list of valid scopes that the client can request tokens for
-	Scopes []nais_io_v1alpha1.MaskinportenScope `json:"scopes"`
+	Scopes []MaskinportenScope `json:"scopes"`
 	// SecretName is the name of the resulting Secret resource to be created
 	SecretName string `json:"secretName"`
 }

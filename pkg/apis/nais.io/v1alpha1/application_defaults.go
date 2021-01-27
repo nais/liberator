@@ -2,6 +2,7 @@ package nais_io_v1alpha1
 
 import (
 	"github.com/imdario/mergo"
+	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 )
 
 // Application spec default values
@@ -68,13 +69,13 @@ func getAppDefaults() *Application {
 			SecureLogs: &SecureLogs{
 				Enabled: false,
 			},
-			AccessPolicy: &AccessPolicy{
-				Inbound: &AccessPolicyInbound{
-					Rules: []AccessPolicyRule{},
+			AccessPolicy: &nais_io_v1.AccessPolicy{
+				Inbound: &nais_io_v1.AccessPolicyInbound{
+					Rules: []nais_io_v1.AccessPolicyRule{},
 				},
-				Outbound: &AccessPolicyOutbound{
-					Rules:    []AccessPolicyRule{},
-					External: []AccessPolicyExternalRule{},
+				Outbound: &nais_io_v1.AccessPolicyOutbound{
+					Rules:    []nais_io_v1.AccessPolicyRule{},
+					External: []nais_io_v1.AccessPolicyExternalRule{},
 				},
 			},
 			TokenX: &TokenX{

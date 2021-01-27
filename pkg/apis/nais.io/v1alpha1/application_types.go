@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	hash "github.com/mitchellh/hashstructure"
+	"github.com/nais/liberator/pkg/apis/nais.io/v1"
 	log "github.com/sirupsen/logrus"
 	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -50,36 +51,36 @@ type Ingress string
 // ApplicationSpec contains the NAIS manifest.
 // Please keep this list sorted for clarity.
 type ApplicationSpec struct {
-	AccessPolicy    *AccessPolicy         `json:"accessPolicy,omitempty"`
-	Azure           *Azure                `json:"azure,omitempty"`
-	Elastic         *Elastic              `json:"elastic,omitempty"`
-	Env             []EnvVar              `json:"env,omitempty"`
-	EnvFrom         []EnvFrom             `json:"envFrom,omitempty"`
-	FilesFrom       []FilesFrom           `json:"filesFrom,omitempty"`
-	GCP             *GCP                  `json:"gcp,omitempty"`
-	IDPorten        *IDPorten             `json:"idporten,omitempty"`
-	Image           string                `json:"image"`
-	Ingresses       []Ingress             `json:"ingresses,omitempty"`
-	Kafka           *Kafka                `json:"kafka,omitempty"`
-	LeaderElection  bool                  `json:"leaderElection,omitempty"`
-	Liveness        *Probe                `json:"liveness,omitempty"`
-	Logtransform    string                `json:"logtransform,omitempty"`
-	Maskinporten    *Maskinporten         `json:"maskinporten,omitempty"`
-	Port            int                   `json:"port,omitempty"`
-	PreStopHookPath string                `json:"preStopHookPath,omitempty"`
-	Prometheus      *PrometheusConfig     `json:"prometheus,omitempty"`
-	Readiness       *Probe                `json:"readiness,omitempty"`
-	Replicas        *Replicas             `json:"replicas,omitempty"`
-	Resources       *ResourceRequirements `json:"resources,omitempty"`
-	SecureLogs      *SecureLogs           `json:"secureLogs,omitempty"`
-	Service         *Service              `json:"service,omitempty"`
-	SkipCaBundle    bool                  `json:"skipCaBundle,omitempty"`
-	Startup         *Probe                `json:"startup,omitempty"`
-	Strategy        *Strategy             `json:"strategy,omitempty"`
-	TokenX          *TokenX               `json:"tokenx,omitempty"`
-	Tracing         *Tracing              `json:"tracing,omitempty"`
-	Vault           *Vault                `json:"vault,omitempty"`
-	WebProxy        bool                  `json:"webproxy,omitempty"`
+	AccessPolicy    *nais_io_v1.AccessPolicy `json:"accessPolicy,omitempty"`
+	Azure           *Azure                   `json:"azure,omitempty"`
+	Elastic         *Elastic                 `json:"elastic,omitempty"`
+	Env             []EnvVar                 `json:"env,omitempty"`
+	EnvFrom         []EnvFrom                `json:"envFrom,omitempty"`
+	FilesFrom       []FilesFrom              `json:"filesFrom,omitempty"`
+	GCP             *GCP                     `json:"gcp,omitempty"`
+	IDPorten        *IDPorten                `json:"idporten,omitempty"`
+	Image           string                   `json:"image"`
+	Ingresses       []Ingress                `json:"ingresses,omitempty"`
+	Kafka           *Kafka                   `json:"kafka,omitempty"`
+	LeaderElection  bool                     `json:"leaderElection,omitempty"`
+	Liveness        *Probe                   `json:"liveness,omitempty"`
+	Logtransform    string                   `json:"logtransform,omitempty"`
+	Maskinporten    *Maskinporten            `json:"maskinporten,omitempty"`
+	Port            int                      `json:"port,omitempty"`
+	PreStopHookPath string                   `json:"preStopHookPath,omitempty"`
+	Prometheus      *PrometheusConfig        `json:"prometheus,omitempty"`
+	Readiness       *Probe                   `json:"readiness,omitempty"`
+	Replicas        *Replicas                `json:"replicas,omitempty"`
+	Resources       *ResourceRequirements    `json:"resources,omitempty"`
+	SecureLogs      *SecureLogs              `json:"secureLogs,omitempty"`
+	Service         *Service                 `json:"service,omitempty"`
+	SkipCaBundle    bool                     `json:"skipCaBundle,omitempty"`
+	Startup         *Probe                   `json:"startup,omitempty"`
+	Strategy        *Strategy                `json:"strategy,omitempty"`
+	TokenX          *TokenX                  `json:"tokenx,omitempty"`
+	Tracing         *Tracing                 `json:"tracing,omitempty"`
+	Vault           *Vault                   `json:"vault,omitempty"`
+	WebProxy        bool                     `json:"webproxy,omitempty"`
 
 	// +kubebuilder:validation:Enum="";accesslog;accesslog_with_processing_time;accesslog_with_referer_useragent;capnslog;logrus;gokit;redis;glog;simple;influxdb;log15
 	Logformat string `json:"logformat,omitempty"`
@@ -140,16 +141,8 @@ type AzureApplication struct {
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
 	Tenant string `json:"tenant,omitempty"`
 	// Claims defines additional configuration of the emitted claims in tokens returned to the AzureAdApplication
-	Claims *AzureAdClaims `json:"claims,omitempty"`
+	Claims *nais_io_v1.AzureAdClaims `json:"claims,omitempty"`
 }
-
-type AzureAdClaims struct {
-	// Extra is a list of additional claims to be mapped from an associated claim-mapping policy.
-	Extra []AzureAdExtraClaim `json:"extra,omitempty"`
-}
-
-// +kubebuilder:validation:Enum=NAVident
-type AzureAdExtraClaim string
 
 type SecureLogs struct {
 	// Whether or not to enable a sidecar container for secure logging.
@@ -327,38 +320,6 @@ type Service struct {
 	Port     int32  `json:"port"`
 }
 
-type AccessPolicyPortRule struct {
-	Name string `json:"name"`
-	Port uint32 `json:"port"`
-	// +kubebuilder:validation:Enum=HTTP;HTTPS;GRPC;HTTP2;MONGO;TCP;TLS
-	Protocol string `json:"protocol"`
-}
-
-type AccessPolicyExternalRule struct {
-	Host  string                 `json:"host"`
-	Ports []AccessPolicyPortRule `json:"ports,omitempty"`
-}
-
-type AccessPolicyRule struct {
-	Application string `json:"application"`
-	Namespace   string `json:"namespace,omitempty"`
-	Cluster     string `json:"cluster,omitempty"`
-}
-
-type AccessPolicyInbound struct {
-	Rules []AccessPolicyRule `json:"rules"`
-}
-
-type AccessPolicyOutbound struct {
-	Rules    []AccessPolicyRule         `json:"rules,omitempty"`
-	External []AccessPolicyExternalRule `json:"external,omitempty"`
-}
-
-type AccessPolicy struct {
-	Inbound  *AccessPolicyInbound  `json:"inbound,omitempty"`
-	Outbound *AccessPolicyOutbound `json:"outbound,omitempty"`
-}
-
 type Kafka struct {
 	Pool string `json:"pool"`
 }
@@ -376,11 +337,7 @@ type CloudIAMPermission struct {
 
 type Maskinporten struct {
 	Enabled bool                `json:"enabled"`
-	Scopes  []MaskinportenScope `json:"scopes,omitempty"`
-}
-
-type MaskinportenScope struct {
-	Name string `json:"name"`
+	Scopes  []nais_io_v1.MaskinportenScope `json:"scopes,omitempty"`
 }
 
 func (in *Application) GetObjectKind() schema.ObjectKind {
@@ -484,30 +441,23 @@ func (in *Application) SkipDeploymentMessage() bool {
 	return skip
 }
 
-func (in AccessPolicyRule) MatchesCluster(clusterName string) bool {
-	if len(in.Cluster) > 0 && in.Cluster != clusterName {
-		return false
-	}
-	return true
-}
-
 func (in *Application) ClientID(cluster string) string {
 	return fmt.Sprintf("%s:%s:%s", cluster, in.ObjectMeta.Namespace, in.ObjectMeta.Name)
 }
 
 func (in *Application) AddAccessPolicyExternalHostsAsStrings(hosts []string) {
-	externalRules := make([]AccessPolicyExternalRule, len(hosts))
+	externalRules := make([]nais_io_v1.AccessPolicyExternalRule, len(hosts))
 	for _, host := range hosts {
-		externalRules = append(externalRules, AccessPolicyExternalRule{Host: host})
+		externalRules = append(externalRules, nais_io_v1.AccessPolicyExternalRule{Host: host})
 	}
 
 	in.AddAccessPolicyExternalHosts(externalRules)
 }
 
-func (in *Application) AddAccessPolicyExternalHosts(hosts []AccessPolicyExternalRule) {
+func (in *Application) AddAccessPolicyExternalHosts(hosts []nais_io_v1.AccessPolicyExternalRule) {
 	var empty struct{}
 	seen := map[string]struct{}{}
-	rules := make([]AccessPolicyExternalRule, 0)
+	rules := make([]nais_io_v1.AccessPolicyExternalRule, 0)
 
 	for _, rule := range in.Spec.AccessPolicy.Outbound.External {
 		seen[rule.Host] = empty

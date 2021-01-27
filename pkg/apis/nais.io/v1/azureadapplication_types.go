@@ -1,12 +1,9 @@
 package nais_io_v1
 
 import (
-	"github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// +genclient
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:shortName=azureapp
 // +kubebuilder:subresource:status
@@ -20,7 +17,6 @@ type AzureAdApplication struct {
 	Status AzureAdApplicationStatus `json:"status,omitempty"`
 }
 
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 // +kubebuilder:object:root=true
 
 // AzureAdApplicationList contains a list of AzureAdApplication
@@ -32,8 +28,8 @@ type AzureAdApplicationList struct {
 
 // AzureAdApplicationSpec defines the desired state of AzureAdApplication
 type AzureAdApplicationSpec struct {
-	ReplyUrls                 []AzureAdReplyUrl                   `json:"replyUrls,omitempty"`
-	PreAuthorizedApplications []nais_io_v1alpha1.AccessPolicyRule `json:"preAuthorizedApplications,omitempty"`
+	ReplyUrls                 []AzureAdReplyUrl  `json:"replyUrls,omitempty"`
+	PreAuthorizedApplications []AccessPolicyRule `json:"preAuthorizedApplications,omitempty"`
 	// LogoutUrl is the URL where Azure AD sends a request to have the application clear the user's session data.
 	// This is required if single sign-out should work correctly. Must start with 'https'
 	LogoutUrl string `json:"logoutUrl,omitempty"`
@@ -43,7 +39,7 @@ type AzureAdApplicationSpec struct {
 	// Can be omitted if only running a single instance or targeting the default tenant.
 	Tenant string `json:"tenant,omitempty"`
 	// Claims defines additional configuration of the emitted claims in tokens returned to the AzureAdApplication
-	Claims *nais_io_v1alpha1.AzureAdClaims `json:"claims,omitempty"`
+	Claims *AzureAdClaims `json:"claims,omitempty"`
 }
 
 // AzureAdApplicationStatus defines the observed state of AzureAdApplication
@@ -72,3 +68,11 @@ type AzureAdApplicationStatus struct {
 type AzureAdReplyUrl struct {
 	Url string `json:"url,omitempty"`
 }
+
+type AzureAdClaims struct {
+	// Extra is a list of additional claims to be mapped from an associated claim-mapping policy.
+	Extra []AzureAdExtraClaim `json:"extra,omitempty"`
+}
+
+// +kubebuilder:validation:Enum=NAVident
+type AzureAdExtraClaim string

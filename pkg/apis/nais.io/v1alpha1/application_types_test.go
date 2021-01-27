@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/mitchellh/hashstructure"
+	"github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	"github.com/stretchr/testify/assert"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -109,21 +110,21 @@ func TestAddAccessPolicyExternalHosts(t *testing.T) {
 		"existing.host.test",
 	}
 
-	hosts := []nais_io_v1alpha1.AccessPolicyExternalRule{
+	hosts := []nais_io_v1.AccessPolicyExternalRule{
 		{Host: "some-host.example.host"},
-		{Host: "some-port.example.host", Ports: []nais_io_v1alpha1.AccessPolicyPortRule{{Port: 1337}}},
+		{Host: "some-port.example.host", Ports: []nais_io_v1.AccessPolicyPortRule{{Port: 1337}}},
 	}
 
 	app.Spec.AccessPolicy.Outbound.External = append(app.Spec.AccessPolicy.Outbound.External,
-		nais_io_v1alpha1.AccessPolicyExternalRule{Host: "existing.host.test"},
+		nais_io_v1.AccessPolicyExternalRule{Host: "existing.host.test"},
 	)
 	app.AddAccessPolicyExternalHostsAsStrings(stringHosts)
 	app.AddAccessPolicyExternalHosts(hosts)
 
 	assert.Len(t, app.Spec.AccessPolicy.Outbound.External, 4)
-	assert.Contains(t, app.Spec.AccessPolicy.Outbound.External, nais_io_v1alpha1.AccessPolicyExternalRule{Host: "existing.host.test"})
-	assert.Contains(t, app.Spec.AccessPolicy.Outbound.External, nais_io_v1alpha1.AccessPolicyExternalRule{Host: "some-host.example.string"})
-	assert.Contains(t, app.Spec.AccessPolicy.Outbound.External, nais_io_v1alpha1.AccessPolicyExternalRule{Host: "some-host.example.host"})
-	assert.Contains(t, app.Spec.AccessPolicy.Outbound.External, nais_io_v1alpha1.AccessPolicyExternalRule{Host: "some-port.example.host", Ports: []nais_io_v1alpha1.AccessPolicyPortRule{{Port: 1337}}})
+	assert.Contains(t, app.Spec.AccessPolicy.Outbound.External, nais_io_v1.AccessPolicyExternalRule{Host: "existing.host.test"})
+	assert.Contains(t, app.Spec.AccessPolicy.Outbound.External, nais_io_v1.AccessPolicyExternalRule{Host: "some-host.example.string"})
+	assert.Contains(t, app.Spec.AccessPolicy.Outbound.External, nais_io_v1.AccessPolicyExternalRule{Host: "some-host.example.host"})
+	assert.Contains(t, app.Spec.AccessPolicy.Outbound.External, nais_io_v1.AccessPolicyExternalRule{Host: "some-port.example.host", Ports: []nais_io_v1.AccessPolicyPortRule{{Port: 1337}}})
 
 }

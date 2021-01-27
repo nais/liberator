@@ -14,21 +14,6 @@ type JwkerSpec struct {
 	AccessPolicy *AccessPolicy `json:"accessPolicy"`
 	SecretName   string        `json:"secretName"`
 }
-type AccessPolicy struct {
-	Inbound  *AccessPolicyInbound  `json:"inbound,omitempty"`
-	Outbound *AccessPolicyOutbound `json:"outbound,omitempty"`
-}
-type AccessPolicyOutbound struct {
-	Rules []AccessPolicyRule `json:"rules,omitempty"`
-}
-type AccessPolicyInbound struct {
-	Rules []AccessPolicyRule `json:"rules,omitempty"`
-}
-type AccessPolicyRule struct {
-	Application string `json:"application"`
-	Namespace   string `json:"namespace"`
-	Cluster     string `json:"cluster"`
-}
 
 // JwkerStatus defines the observed state of Jwker
 type JwkerStatus struct {
