@@ -10,6 +10,13 @@ const (
 	EventFailedSynchronization = "FailedSynchronization"
 )
 
+func init() {
+	SchemeBuilder.Register(
+		&Jwker{},
+		&JwkerList{},
+	)
+}
+
 type JwkerSpec struct {
 	AccessPolicy *AccessPolicy `json:"accessPolicy"` // fixme: access policy should not have rules required, but cluster and namespace. doesn't need external.
 	SecretName   string        `json:"secretName"`
@@ -42,8 +49,4 @@ type JwkerList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []Jwker `json:"items"`
-}
-
-func init() {
-	SchemeBuilder.Register(&Jwker{}, &JwkerList{})
 }

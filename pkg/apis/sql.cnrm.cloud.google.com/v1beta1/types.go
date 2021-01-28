@@ -4,6 +4,17 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+func init() {
+	SchemeBuilder.Register(
+		&SQLInstance{},
+		&SQLInstanceList{},
+		&SQLDatabase{},
+		&SQLDatabaseList{},
+		&SQLUser{},
+		&SQLUserList{},
+	)
+}
+
 type SQLInstanceSpec struct {
 	DatabaseVersion string              `json:"databaseVersion"`
 	Region          string              `json:"region"`

@@ -12,6 +12,13 @@ import (
 
 const LastSyncedHashAnnotation = "nais.io/lastSyncedHash"
 
+func init() {
+	SchemeBuilder.Register(
+		&Alert{},
+		&AlertList{},
+	)
+}
+
 type Slack struct {
 	Channel     string `json:"channel"`
 	PrependText string `json:"prependText,omitempty"`

@@ -4,6 +4,13 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+func init() {
+	SchemeBuilder.Register(
+		&MaskinportenClient{},
+		&MaskinportenClientList{},
+	)
+}
+
 // MaskinportenClient is the Schema for the MaskinportenClient API
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

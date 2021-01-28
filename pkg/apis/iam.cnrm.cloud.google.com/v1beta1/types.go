@@ -4,6 +4,17 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+func init() {
+	SchemeBuilder.Register(
+		&IAMServiceAccount{},
+		&IAMServiceAccountList{},
+		&IAMPolicy{},
+		&IAMPolicyList{},
+		&IAMPolicyMember{},
+		&IAMPolicyMemberList{},
+	)
+}
+
 // +kubebuilder:object:root=true
 type IAMServiceAccount struct {
 	metav1.TypeMeta   `json:",inline"`

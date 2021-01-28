@@ -4,6 +4,13 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+func init() {
+	SchemeBuilder.Register(
+		&IDPortenClient{},
+		&IDPortenClientList{},
+	)
+}
+
 // IDPortenClient is the Schema for the IDPortenClients API
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

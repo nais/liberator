@@ -4,6 +4,15 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+func init() {
+	SchemeBuilder.Register(
+		&StorageBucket{},
+		&StorageBucketList{},
+		&StorageBucketAccessControl{},
+		&StorageBucketAccessControlList{},
+	)
+}
+
 // +kubebuilder:object:root=true
 type StorageBucket struct {
 	metav1.TypeMeta   `json:",inline"`

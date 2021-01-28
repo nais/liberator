@@ -19,6 +19,13 @@ const (
 	RemoveDataAnnotation = "kafka.nais.io/removeDataWhenResourceIsDeleted"
 )
 
+func init() {
+	SchemeBuilder.Register(
+		&Topic{},
+		&TopicList{},
+	)
+}
+
 // +kubebuilder:object:root=true
 type TopicList struct {
 	metav1.TypeMeta `json:",inline"`
@@ -160,8 +167,4 @@ func (in *Topic) CredentialsExpired() bool {
 		return true
 	}
 	return time.Now().After(expiry)
-}
-
-func init() {
-	SchemeBuilder.Register(&Topic{}, &TopicList{})
 }

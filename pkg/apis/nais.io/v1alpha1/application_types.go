@@ -25,6 +25,13 @@ const (
 	DefaultDigdiratorMaskinportenMountPath = "/var/run/secrets/nais.io/maskinporten"
 )
 
+func init() {
+	SchemeBuilder.Register(
+		&Application{},
+		&ApplicationList{},
+	)
+}
+
 func GetDefaultMountPath(name string) string {
 	return fmt.Sprintf("/var/run/configmaps/%s", name)
 }
@@ -336,7 +343,7 @@ type CloudIAMPermission struct {
 }
 
 type Maskinporten struct {
-	Enabled bool                `json:"enabled"`
+	Enabled bool                           `json:"enabled"`
 	Scopes  []nais_io_v1.MaskinportenScope `json:"scopes,omitempty"`
 }
 

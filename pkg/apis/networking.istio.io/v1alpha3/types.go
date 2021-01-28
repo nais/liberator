@@ -4,6 +4,15 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+func init() {
+	SchemeBuilder.Register(
+		&VirtualService{},
+		&VirtualServiceList{},
+		&ServiceEntry{},
+		&ServiceEntryList{},
+	)
+}
+
 // +kubebuilder:object:root=true
 type VirtualServiceList struct {
 	metav1.TypeMeta `json:",inline"`
