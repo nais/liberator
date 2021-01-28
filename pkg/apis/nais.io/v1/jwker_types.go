@@ -11,7 +11,7 @@ const (
 )
 
 type JwkerSpec struct {
-	AccessPolicy *AccessPolicy `json:"accessPolicy"`
+	AccessPolicy *AccessPolicy `json:"accessPolicy"` // fixme: access policy should not have rules required, but cluster and namespace. doesn't need external.
 	SecretName   string        `json:"secretName"`
 }
 

@@ -18,7 +18,7 @@ test:
 # Generate code
 generate: controller-gen
 	$(CONTROLLER_GEN) object paths="./pkg/apis/..."
-	$(CONTROLLER_GEN) crd:trivialVersions=true rbac:roleName=manager-role webhook paths="./pkg/apis/nais.io/... ./pkg/apis/kafka.nais.io/..." output:crd:artifacts:config=config/crd/bases
+	$(CONTROLLER_GEN) crd:trivialVersions=true rbac:roleName=manager-role webhook paths="./pkg/apis/..." output:crd:artifacts:config=config/crd/bases
 
 mocks:
 	cd pkg/ && mockery -inpkg -all -case snake

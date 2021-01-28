@@ -53,13 +53,46 @@ spec:
                             type: string
                         required:
                         - application
-                        - cluster
-                        - namespace
                         type: object
                       type: array
+                  required:
+                  - rules
                   type: object
                 outbound:
                   properties:
+                    external:
+                      items:
+                        properties:
+                          host:
+                            type: string
+                          ports:
+                            items:
+                              properties:
+                                name:
+                                  type: string
+                                port:
+                                  format: int32
+                                  type: integer
+                                protocol:
+                                  enum:
+                                  - HTTP
+                                  - HTTPS
+                                  - GRPC
+                                  - HTTP2
+                                  - MONGO
+                                  - TCP
+                                  - TLS
+                                  type: string
+                              required:
+                              - name
+                              - port
+                              - protocol
+                              type: object
+                            type: array
+                        required:
+                        - host
+                        type: object
+                      type: array
                     rules:
                       items:
                         properties:
@@ -71,8 +104,6 @@ spec:
                             type: string
                         required:
                         - application
-                        - cluster
-                        - namespace
                         type: object
                       type: array
                   type: object

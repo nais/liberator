@@ -30,7 +30,7 @@ jobs:
         ssh-add - <<< "${DEPLOY_KEY}"
         mkdir -p $NAIS_YAML
         git clone git@github.com:navikt/nais-yaml.git $NAIS_YAML
-        cat config/crd/bases/*.yaml > $NAIS_YAML/templates/zz-generated-nais-crds.yaml
+        cat config/crd/bases/*nais.io_*.yaml > $NAIS_YAML/templates/zz-generated-nais-crds.yaml
         cd $NAIS_YAML
         git config user.email "aura@nav.no"
         git config user.name "NAIS deploy pipeline"
