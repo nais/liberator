@@ -134,6 +134,15 @@ spec:
                             - NAVident
                             type: string
                           type: array
+                        groups:
+                          description: Groups is a list of Azure AD group IDs to be
+                            emitted in the 'Groups' claim.
+                          items:
+                            properties:
+                              id:
+                                type: string
+                            type: object
+                          type: array
                       type: object
                     enabled:
                       type: boolean
