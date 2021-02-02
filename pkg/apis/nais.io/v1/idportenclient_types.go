@@ -11,6 +11,13 @@ func init() {
 	)
 }
 
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:shortName=idportenclient
+
+// +kubebuilder:printcolumn:name="Secret",type=string,JSONPath=`.spec.secretName`
+// +kubebuilder:printcolumn:name="ClientID",type=string,JSONPath=`.status.clientID`
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+
 // IDPortenClient is the Schema for the IDPortenClients API
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

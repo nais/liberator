@@ -8,6 +8,16 @@ metadata:
   creationTimestamp: null
   name: maskinportenclients.nais.io
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.secretName
+    name: Secret
+    type: string
+  - JSONPath: .status.clientID
+    name: ClientID
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: nais.io
   names:
     kind: MaskinportenClient
@@ -15,6 +25,7 @@ spec:
     plural: maskinportenclients
     singular: maskinportenclient
   scope: Namespaced
+  subresources: {}
   validation:
     openAPIV3Schema:
       description: MaskinportenClient is the Schema for the MaskinportenClient API

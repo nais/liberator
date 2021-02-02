@@ -11,6 +11,13 @@ func init() {
 	)
 }
 
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:shortName=maskinportenclient
+
+// +kubebuilder:printcolumn:name="Secret",type=string,JSONPath=`.spec.secretName`
+// +kubebuilder:printcolumn:name="ClientID",type=string,JSONPath=`.status.clientID`
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+
 // MaskinportenClient is the Schema for the MaskinportenClient API
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

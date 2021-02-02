@@ -8,6 +8,16 @@ metadata:
   creationTimestamp: null
   name: idportenclients.nais.io
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .spec.secretName
+    name: Secret
+    type: string
+  - JSONPath: .status.clientID
+    name: ClientID
+    type: string
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
   group: nais.io
   names:
     kind: IDPortenClient
@@ -15,6 +25,7 @@ spec:
     plural: idportenclients
     singular: idportenclient
   scope: Namespaced
+  subresources: {}
   validation:
     openAPIV3Schema:
       description: IDPortenClient is the Schema for the IDPortenClients API
