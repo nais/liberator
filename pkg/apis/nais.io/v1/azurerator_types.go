@@ -3,6 +3,7 @@ package nais_io_v1
 import (
 	"encoding/json"
 	"fmt"
+
 	hash "github.com/mitchellh/hashstructure"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -49,8 +50,8 @@ type AzureAdApplicationList struct {
 
 // AzureAdApplicationSpec defines the desired state of AzureAdApplication
 type AzureAdApplicationSpec struct {
-	ReplyUrls                 []AzureAdReplyUrl                 `json:"replyUrls,omitempty"`
-	PreAuthorizedApplications []AzureAdPreAuthorizedApplication `json:"preAuthorizedApplications,omitempty"`
+	ReplyUrls                 []AzureAdReplyUrl  `json:"replyUrls,omitempty"`
+	PreAuthorizedApplications []AccessPolicyRule `json:"preAuthorizedApplications,omitempty"`
 	// LogoutUrl is the URL where Azure AD sends a request to have the application clear the user's session data.
 	// This is required if single sign-out should work correctly. Must start with 'https'
 	LogoutUrl string `json:"logoutUrl,omitempty"`
@@ -101,13 +102,6 @@ type AzureAdGroup struct {
 	ID string `json:"id,omitempty"`
 }
 
-// AzureAdPreAuthorizedApplication describes an application that are allowed to request an on-behalf-of token for this application
-type AzureAdPreAuthorizedApplication struct {
-	Application string `json:"application"`
-	Namespace   string `json:"namespace"`
-	Cluster     string `json:"cluster"`
-}
-
 // AzureAdReplyUrl defines the valid reply URLs for callbacks after OIDC flows for this application
 type AzureAdReplyUrl struct {
 	Url string `json:"url,omitempty"`
@@ -136,10 +130,6 @@ func (in *AzureAdApplication) Hash() (string, error) {
 	}
 	h, err := hash.Hash(marshalled, nil)
 	return fmt.Sprintf("%x", h), err
-}
-
-func (in AzureAdPreAuthorizedApplication) GetUniqueName() string {
-	return fmt.Sprintf("%s:%s:%s", in.Cluster, in.Namespace, in.Application)
 }
 
 func init() {

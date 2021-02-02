@@ -1,5 +1,9 @@
 package nais_io_v1
 
+import (
+	"fmt"
+)
+
 type AccessPolicyPortRule struct {
 	Name string `json:"name"`
 	Port uint32 `json:"port"`
@@ -37,4 +41,8 @@ func (in AccessPolicyRule) MatchesCluster(clusterName string) bool {
 		return false
 	}
 	return true
+}
+
+func (in AccessPolicyRule) GetUniqueName() string {
+	return fmt.Sprintf("%s:%s:%s", in.Cluster, in.Namespace, in.Application)
 }
