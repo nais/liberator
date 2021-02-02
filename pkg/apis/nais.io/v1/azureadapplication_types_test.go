@@ -24,7 +24,7 @@ func TestAzureAdApplication_Hash(t *testing.T) {
 }
 
 func TestAzureAdPreAuthorizedApplication_GetUniqueName(t *testing.T) {
-	preAuthorizedApp := nais_io_v1.AzureAdPreAuthorizedApplication{
+	preAuthorizedApp := nais_io_v1.AccessPolicyRule{
 		Application: "test-app",
 		Namespace:   "test-namespace",
 		Cluster:     "test-cluster",
