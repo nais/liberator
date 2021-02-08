@@ -1,10 +1,9 @@
 package nais_io_v1
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/nais/liberator/pkg/hash"
 
-	hash "github.com/mitchellh/hashstructure"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -124,12 +123,7 @@ func (in *AzureAdApplication) GetUniqueName() string {
 }
 
 func (in *AzureAdApplication) Hash() (string, error) {
-	marshalled, err := json.Marshal(in.Spec)
-	if err != nil {
-		return "", err
-	}
-	h, err := hash.Hash(marshalled, nil)
-	return fmt.Sprintf("%x", h), err
+	return hash.Hash(in.Spec)
 }
 
 func init() {
