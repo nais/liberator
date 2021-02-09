@@ -65,7 +65,7 @@ spec:
           - secretName
           type: object
         status:
-          description: MaskinportenClientStatus defines the observed state of MaskinportenClient
+          description: DigdiratorStatus defines the observed state of Current Client
           properties:
             clientID:
               description: ClientID is the corresponding client ID for this client
@@ -82,12 +82,11 @@ spec:
                 type: string
               type: array
             synchronizationHash:
-              description: SynchronizationHash is the hash of the MaskinportenClient
-                object
+              description: SynchronizationHash is the hash of the Instance object
               type: string
             synchronizationState:
               description: SynchronizationState denotes the last known state of the
-                MaskinportenClient during synchronization
+                Instance during synchronization
               type: string
             synchronizationTime:
               description: SynchronizationTime is the last time the Status subresource

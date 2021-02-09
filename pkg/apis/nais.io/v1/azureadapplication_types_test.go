@@ -12,11 +12,6 @@ const (
 	expectedHash = "4a1437b125349976"
 )
 
-func TestAzureAdApplication_GetUniqueName(t *testing.T) {
-	expected := "test-cluster:test-namespace:test-app"
-	assert.Equal(t, expected, minimalApplication().GetUniqueName())
-}
-
 func TestAzureAdApplication_Hash(t *testing.T) {
 	actual, err := minimalApplication().Hash()
 	assert.NoError(t, err)

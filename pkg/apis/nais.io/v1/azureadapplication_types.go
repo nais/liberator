@@ -1,7 +1,6 @@
 package nais_io_v1
 
 import (
-	"fmt"
 	"github.com/nais/liberator/pkg/hash"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -116,10 +115,6 @@ func (in *AzureAdApplication) GetServicePrincipalId() string {
 
 func (in *AzureAdApplication) GetClientId() string {
 	return in.Status.ClientId
-}
-
-func (in *AzureAdApplication) GetUniqueName() string {
-	return fmt.Sprintf("%s:%s:%s", in.GetClusterName(), in.GetNamespace(), in.GetName())
 }
 
 func (in *AzureAdApplication) Hash() (string, error) {

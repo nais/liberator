@@ -85,7 +85,7 @@ spec:
           - secretName
           type: object
         status:
-          description: IDPortenClientStatus defines the observed state of IDPortenClient
+          description: DigdiratorStatus defines the observed state of Current Client
           properties:
             clientID:
               description: ClientID is the corresponding client ID for this client
