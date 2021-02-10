@@ -69,7 +69,7 @@ func init() {
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:shortName=maskinportenclient
 
-// +kubebuilder:printcolumn:name="Secret",type=string,JSONPath=`.spec.secretName`
+// +kubebuilder:printcolumn:name="Secret Ref",type=string,JSONPath=`.spec.secretName`
 // +kubebuilder:printcolumn:name="ClientID",type=string,JSONPath=`.status.clientID`
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
@@ -130,7 +130,7 @@ func init() {
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:shortName=idportenclient
 
-// +kubebuilder:printcolumn:name="Secret",type=string,JSONPath=`.spec.secretName`
+// +kubebuilder:printcolumn:name="Secret Ref",type=string,JSONPath=`.spec.secretName`
 // +kubebuilder:printcolumn:name="ClientID",type=string,JSONPath=`.status.clientID`
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 
