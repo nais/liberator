@@ -13,6 +13,8 @@ type DigdiratorStatus struct {
 	SynchronizationTime *metav1.Time `json:"synchronizationTime,omitempty"`
 	// SynchronizationHash is the hash of the Instance object
 	SynchronizationHash string `json:"synchronizationHash,omitempty"`
+	// SynchronizationSecretName is the SecretName set in the last successful synchronization
+	SynchronizationSecretName string `json:"synchronizationSecretName,omitempty"`
 	// ClientID is the corresponding client ID for this client at Digdir
 	ClientID string `json:"clientID,omitempty"`
 	// CorrelationID is the ID referencing the processing transaction last performed on this resource
@@ -57,6 +59,14 @@ func (in *DigdiratorStatus) SetKeyIDs(keyIDs []string) {
 
 func (in *DigdiratorStatus) SetSynchronizationState(state string) {
 	in.SynchronizationState = state
+}
+
+func (in *DigdiratorStatus) GetSynchronizationSecretName() string {
+	return in.SynchronizationSecretName
+}
+
+func (in *DigdiratorStatus) SetSynchronizationSecretName(name string) {
+	in.SynchronizationSecretName = name
 }
 
 func init() {

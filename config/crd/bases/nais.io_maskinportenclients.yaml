@@ -10,7 +10,7 @@ metadata:
 spec:
   additionalPrinterColumns:
   - JSONPath: .spec.secretName
-    name: Secret
+    name: Secret Ref
     type: string
   - JSONPath: .status.clientID
     name: ClientID
@@ -83,6 +83,10 @@ spec:
               type: array
             synchronizationHash:
               description: SynchronizationHash is the hash of the Instance object
+              type: string
+            synchronizationSecretName:
+              description: SynchronizationSecretName is the SecretName set in the
+                last successful synchronization
               type: string
             synchronizationState:
               description: SynchronizationState denotes the last known state of the
