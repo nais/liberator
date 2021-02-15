@@ -328,6 +328,7 @@ type Service struct {
 }
 
 type Kafka struct {
+	// +kubebuilder:validation:Enum=nav-dev;nav-prod
 	Pool string `json:"pool"`
 }
 

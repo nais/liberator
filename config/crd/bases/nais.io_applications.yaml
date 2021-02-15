@@ -367,6 +367,9 @@ spec:
             kafka:
               properties:
                 pool:
+                  enum:
+                  - nav-dev
+                  - nav-prod
                   type: string
               required:
               - pool
