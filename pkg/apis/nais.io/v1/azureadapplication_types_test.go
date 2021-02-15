@@ -18,16 +18,6 @@ func TestAzureAdApplication_Hash(t *testing.T) {
 	assert.Equal(t, expectedHash, actual)
 }
 
-func TestAzureAdPreAuthorizedApplication_GetUniqueName(t *testing.T) {
-	preAuthorizedApp := nais_io_v1.AccessPolicyRule{
-		Application: "test-app",
-		Namespace:   "test-namespace",
-		Cluster:     "test-cluster",
-	}
-	expected := "test-cluster:test-namespace:test-app"
-	assert.Equal(t, expected, preAuthorizedApp.GetUniqueName())
-}
-
 func minimalApplication() *nais_io_v1.AzureAdApplication {
 	return &nais_io_v1.AzureAdApplication{
 		ObjectMeta: metav1.ObjectMeta{
