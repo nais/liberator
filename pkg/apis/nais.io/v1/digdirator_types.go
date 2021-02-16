@@ -122,6 +122,10 @@ func (in *MaskinportenClient) GetStatus() *DigdiratorStatus {
 	return &in.Status
 }
 
+func (in *MaskinportenClient) SetStatus(new DigdiratorStatus) {
+	in.Status = new
+}
+
 func (in MaskinportenClient) GetScopes() []string {
 	scopes := make([]string, 0)
 	for _, scope := range in.Spec.Scopes {
@@ -192,4 +196,8 @@ func (in *IDPortenClient) Hash() (string, error) {
 
 func (in *IDPortenClient) GetStatus() *DigdiratorStatus {
 	return &in.Status
+}
+
+func (in *IDPortenClient) SetStatus(new DigdiratorStatus) {
+	in.Status = new
 }
