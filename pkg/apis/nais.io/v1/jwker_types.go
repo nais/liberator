@@ -24,9 +24,10 @@ type JwkerSpec struct {
 
 // JwkerStatus defines the observed state of Jwker
 type JwkerStatus struct {
-	SynchronizationTime  int64  `json:"synchronizationTime,omitempty"`
-	SynchronizationState string `json:"synchronizationState,omitempty"`
-	SynchronizationHash  string `json:"synchronizationHash,omitempty"`
+	SynchronizationTime       int64  `json:"synchronizationTime,omitempty"`
+	SynchronizationState      string `json:"synchronizationState,omitempty"`
+	SynchronizationHash       string `json:"synchronizationHash,omitempty"`
+	SynchronizationSecretName string `json:"synchronizationSecretName,omitempty"`
 }
 
 // +genclient

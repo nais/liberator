@@ -119,6 +119,8 @@ spec:
           properties:
             synchronizationHash:
               type: string
+            synchronizationSecretName:
+              type: string
             synchronizationState:
               type: string
             synchronizationTime:
