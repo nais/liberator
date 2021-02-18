@@ -1,6 +1,8 @@
 package stringutil
 
 import (
+	"fmt"
+	"hash/crc32"
 	"math"
 	"math/rand"
 	"time"
@@ -38,4 +40,21 @@ func RandomString(length int) string {
 		b[i] = charset[seededRand.Intn(len(charset))]
 	}
 	return string(b)
+}
+
+func CRC32(input string) string {
+	hasher := crc32.NewIEEE()
+	// crc32 hasher always returns nil error
+	_, _ = hasher.Write([]byte(input))
+	return fmt.Sprintf("%x", hasher.Sum32())
+}
+
+// Procedurally generate a short string with hash that can be calculated using the base name
+func UniqueWithHash(basename string, maxlen int) string {
+	maxlen -= 9 // 8 bytes of hexadecimal hash and 1 byte of separator
+	hashStr := CRC32(basename)
+	if len(basename) > maxlen {
+		basename = basename[:maxlen]
+	}
+	return basename + "-" + hashStr
 }
