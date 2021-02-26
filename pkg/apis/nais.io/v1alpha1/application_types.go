@@ -406,28 +406,29 @@ func (in *Application) LogFields() log.Fields {
 	}
 }
 
-// If the application was deployed with a correlation ID annotation, return this value.
-// Otherwise, generate a random UUID.
-func (in *Application) NextCorrelationID() (string, error) {
-	var correlationID string
-
-	if in.Annotations != nil {
-		correlationID = in.Annotations[DeploymentCorrelationIDAnnotation]
+// If the application was not deployed with a correlation ID annotation,
+// generate a random UUID and add it to annotations.
+func (in *Application) EnsureCorrelationID() error {
+	if in.Annotations == nil {
+		in.SetAnnotations(map[string]string{})
 	}
 
-	if len(correlationID) == 0 {
-		id, err := uuid.NewRandom()
-		if err != nil {
-			return correlationID, fmt.Errorf("BUG: generate deployment correlation ID: %s", err)
-		}
-		correlationID = id.String()
+	if len(in.Annotations[DeploymentCorrelationIDAnnotation]) != 0 {
+		return nil
 	}
 
-	return correlationID, nil
+	id, err := uuid.NewRandom()
+	if err != nil {
+		return fmt.Errorf("generate deployment correlation ID: %s", err)
+	}
+
+	in.Annotations[DeploymentCorrelationIDAnnotation] = id.String()
+
+	return nil
 }
 
-func (in *Application) SetCorrelationID(id string) {
-	in.Status.CorrelationID = id
+func (in *Application) CorrelationID() string {
+	return in.Annotations[DeploymentCorrelationIDAnnotation]
 }
 
 func (in *Application) SetDeploymentRolloutStatus(rolloutStatus string) {

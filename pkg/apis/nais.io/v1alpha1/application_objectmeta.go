@@ -17,7 +17,9 @@ func (in *Application) CreateObjectMeta() metav1.ObjectMeta {
 			"app":  in.Name,
 			"team": in.Labels["team"],
 		},
-		Annotations:     map[string]string{},
+		Annotations: map[string]string{
+			DeploymentCorrelationIDAnnotation: in.CorrelationID(),
+		},
 		OwnerReferences: in.OwnerReferences(in),
 	}
 }
