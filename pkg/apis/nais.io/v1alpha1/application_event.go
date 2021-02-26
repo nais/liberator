@@ -14,7 +14,6 @@ func (in *Application) CreateEvent(reason, message, typeStr string) *corev1.Even
 	objectMeta := in.CreateObjectMeta()
 	objectMeta.GenerateName = "naiserator-event-"
 	objectMeta.Name = ""
-	objectMeta.Annotations[DeploymentCorrelationIDAnnotation] = in.Status.CorrelationID
 
 	return &corev1.Event{
 		ObjectMeta:          objectMeta,
