@@ -131,7 +131,11 @@ type IDPorten struct {
 	Enabled   bool   `json:"enabled"`
 	ClientURI string `json:"clientURI,omitempty"`
 	// +kubebuilder:validation:Pattern=`^https:\/\/`
-	RedirectURI            string   `json:"redirectURI,omitempty"`
+	RedirectURI string `json:"redirectURI,omitempty"`
+	// +kubebuilder:validation:Pattern=`^\/`
+	RedirectPath string `json:"redirectPath,omitempty"`
+	// +kubebuilder:validation:Pattern=`^\/`
+	FrontchannelLogoutPath string   `json:"frontchannelLogoutPath,omitempty"`
 	FrontchannelLogoutURI  string   `json:"frontchannelLogoutURI,omitempty"`
 	PostLogoutRedirectURIs []string `json:"postLogoutRedirectURIs,omitempty"`
 	// +kubebuilder:validation:Minimum=3600

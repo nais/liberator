@@ -341,12 +341,18 @@ spec:
                   type: string
                 enabled:
                   type: boolean
+                frontchannelLogoutPath:
+                  pattern: ^\/
+                  type: string
                 frontchannelLogoutURI:
                   type: string
                 postLogoutRedirectURIs:
                   items:
                     type: string
                   type: array
+                redirectPath:
+                  pattern: ^\/
+                  type: string
                 redirectURI:
                   pattern: ^https:\/\/
                   type: string
