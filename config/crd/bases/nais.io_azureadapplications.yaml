@@ -15,11 +15,14 @@ spec:
   - JSONPath: .status.clientId
     name: Client ID
     type: string
-  - JSONPath: .spec.tenant
+  - JSONPath: .status.synchronizationTenant
     name: Tenant
     type: string
   - JSONPath: .metadata.creationTimestamp
-    name: Age
+    name: Created
+    type: date
+  - JSONPath: .status.synchronizationTime
+    name: Synchronized
     type: date
   group: nais.io
   names:
@@ -152,6 +155,10 @@ spec:
             synchronizationState:
               description: SynchronizationState denotes whether the provisioning of
                 the AzureAdApplication has been successfully completed or not
+              type: string
+            synchronizationTenant:
+              description: SynchronizationTenant is the tenant that the AzureAdApplication
+                was synchronized to
               type: string
             synchronizationTime:
               description: SynchronizationTime is the last time the Status subresource

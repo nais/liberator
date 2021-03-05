@@ -27,8 +27,9 @@ const (
 // AzureAdApplication is the Schema for the AzureAdApplications API
 // +kubebuilder:printcolumn:name="Secret Ref",type=string,JSONPath=`.spec.secretName`
 // +kubebuilder:printcolumn:name="Client ID",type=string,JSONPath=`.status.clientId`
-// +kubebuilder:printcolumn:name="Tenant",type=string,JSONPath=`.spec.tenant`
-// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+// +kubebuilder:printcolumn:name="Tenant",type=string,JSONPath=`.status.synchronizationTenant`
+// +kubebuilder:printcolumn:name="Created",type="date",JSONPath=".metadata.creationTimestamp"
+// +kubebuilder:printcolumn:name="Synchronized",type="date",JSONPath=".status.synchronizationTime"
 type AzureAdApplication struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -82,6 +83,8 @@ type AzureAdApplicationStatus struct {
 	SynchronizationSecretName string `json:"synchronizationSecretName,omitempty"`
 	// SynchronizationState denotes whether the provisioning of the AzureAdApplication has been successfully completed or not
 	SynchronizationState string `json:"synchronizationState,omitempty"`
+	// SynchronizationTenant is the tenant that the AzureAdApplication was synchronized to
+	SynchronizationTenant string `json:"synchronizationTenant,omitempty"`
 	// SynchronizationTime is the last time the Status subresource was updated
 	SynchronizationTime *metav1.Time `json:"synchronizationTime,omitempty"`
 }
