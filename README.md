@@ -17,7 +17,7 @@ go get github.com/nais/liberator
 
 To update to the latest version, run:
 ```
-go get -u github.com/nais/liberator
+go get -u github.com/nais/liberator@HEAD
 ```
 
 The library is semantically versioned. Minor and patch level releases contain
@@ -40,7 +40,7 @@ otherwise the code won't build in the CI tool. To revert your changes, run:
 
 ```
 go mod edit -dropreplace github.com/nais/liberator
-go get -u github.com/nais/liberator@main
+go get -u github.com/nais/liberator@HEAD
 ```
 
 ### Kubernetes dependencies
