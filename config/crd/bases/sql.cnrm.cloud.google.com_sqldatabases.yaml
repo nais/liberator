@@ -39,6 +39,8 @@ spec:
               required:
               - name
               type: object
+            resourceID:
+              type: string
           required:
           - instanceRef
           type: object

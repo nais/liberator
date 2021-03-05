@@ -36,6 +36,8 @@ spec:
               type: string
             region:
               type: string
+            resourceID:
+              type: string
             settings:
               properties:
                 availabilityType:

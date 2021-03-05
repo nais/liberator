@@ -58,6 +58,8 @@ spec:
               type: array
             location:
               type: string
+            resourceID:
+              type: string
             retentionPolicy:
               properties:
                 retentionPeriod:

@@ -21,6 +21,7 @@ type StorageBucket struct {
 }
 
 type StorageBucketSpec struct {
+	ResourceID      string           `json:"resourceID,omitempty"`
 	Location        string           `json:"location"`
 	RetentionPolicy *RetentionPolicy `json:"retentionPolicy,omitempty"`
 	LifecycleRules  []LifecycleRules `json:"lifecycleRule,omitempty"`

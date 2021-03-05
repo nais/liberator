@@ -16,6 +16,7 @@ func init() {
 }
 
 type SQLInstanceSpec struct {
+	ResourceID      string              `json:"resourceID,omitempty"`
 	DatabaseVersion string              `json:"databaseVersion"`
 	Region          string              `json:"region"`
 	Settings        SQLInstanceSettings `json:"settings"`
@@ -70,6 +71,7 @@ type InstanceRef struct {
 	Name string `json:"name"`
 }
 type SQLDatabaseSpec struct {
+	ResourceID  string      `json:"resourceID,omitempty"`
 	InstanceRef InstanceRef `json:"instanceRef"`
 }
 
@@ -101,6 +103,7 @@ type SqlUserPasswordValue struct {
 }
 
 type SQLUserSpec struct {
+	ResourceID  string               `json:"resourceID,omitempty"`
 	InstanceRef InstanceRef          `json:"instanceRef"`
 	Host        string               `json:"host"`
 	Password    SqlUserPasswordValue `json:"password"`
