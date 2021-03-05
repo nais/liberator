@@ -82,6 +82,8 @@ func init() {
 // +kubebuilder:printcolumn:name="Secret Ref",type=string,JSONPath=`.spec.secretName`
 // +kubebuilder:printcolumn:name="ClientID",type=string,JSONPath=`.status.clientID`
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+// +kubebuilder:printcolumn:name="Created",type="date",JSONPath=".metadata.creationTimestamp"
+// +kubebuilder:printcolumn:name="Synchronized",type="date",JSONPath=".status.synchronizationTime"
 
 // MaskinportenClient is the Schema for the MaskinportenClient API
 // +genclient
@@ -147,6 +149,8 @@ func init() {
 // +kubebuilder:printcolumn:name="Secret Ref",type=string,JSONPath=`.spec.secretName`
 // +kubebuilder:printcolumn:name="ClientID",type=string,JSONPath=`.status.clientID`
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+// +kubebuilder:printcolumn:name="Created",type="date",JSONPath=".metadata.creationTimestamp"
+// +kubebuilder:printcolumn:name="Synchronized",type="date",JSONPath=".status.synchronizationTime"
 
 // IDPortenClient is the Schema for the IDPortenClients API
 // +genclient
