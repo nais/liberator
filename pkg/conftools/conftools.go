@@ -22,7 +22,7 @@ func Initialize(appName string) {
 
 	// Read configuration file from working directory and/or /etc.
 	// File formats supported include JSON, TOML, YAML, HCL, envfile and Java properties config files
-	viper.SetConfigName("hookd")
+	viper.SetConfigName(appName)
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("/etc")
 }
