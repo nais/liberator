@@ -335,6 +335,10 @@ func (in *AzureAdApplicationStatus) DeepCopyInto(out *AzureAdApplicationStatus) 
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
+	if in.SynchronizationSecretRotationTime != nil {
+		in, out := &in.SynchronizationSecretRotationTime, &out.SynchronizationSecretRotationTime
+		*out = (*in).DeepCopy()
+	}
 	if in.SynchronizationTime != nil {
 		in, out := &in.SynchronizationTime, &out.SynchronizationTime
 		*out = (*in).DeepCopy()

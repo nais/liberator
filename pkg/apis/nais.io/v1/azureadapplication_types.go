@@ -81,6 +81,8 @@ type AzureAdApplicationStatus struct {
 	SynchronizationHash string `json:"synchronizationHash,omitempty"`
 	// SynchronizationSecretName is the SecretName set in the last successful synchronization
 	SynchronizationSecretName string `json:"synchronizationSecretName,omitempty"`
+	// SynchronizationSecretRotationTime is the last time the AzureAdApplication had its keys rotated.
+	SynchronizationSecretRotationTime *metav1.Time `json:"synchronizationSecretRotationTime,omitempty"`
 	// SynchronizationState denotes whether the provisioning of the AzureAdApplication has been successfully completed or not
 	SynchronizationState string `json:"synchronizationState,omitempty"`
 	// SynchronizationTenant is the tenant that the AzureAdApplication was synchronized to

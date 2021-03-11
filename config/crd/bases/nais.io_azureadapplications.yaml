@@ -152,6 +152,11 @@ spec:
               description: SynchronizationSecretName is the SecretName set in the
                 last successful synchronization
               type: string
+            synchronizationSecretRotationTime:
+              description: SynchronizationSecretRotationTime is the last time the
+                AzureAdApplication had its keys rotated.
+              format: date-time
+              type: string
             synchronizationState:
               description: SynchronizationState denotes whether the provisioning of
                 the AzureAdApplication has been successfully completed or not
