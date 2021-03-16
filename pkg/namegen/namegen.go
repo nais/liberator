@@ -2,8 +2,9 @@ package namegen
 
 import (
 	"fmt"
-	"github.com/nais/liberator/pkg/keygen"
 	"hash/crc32"
+
+	"github.com/nais/liberator/pkg/keygen"
 )
 
 // Append the string's CRC32 hash to the string and truncate it to a maximum length.
@@ -24,6 +25,7 @@ func ShortName(basename string, maxlen int) (string, error) {
 	return basename + "-" + hashStr, nil
 }
 
+// Suffix a string with random letters and numbers, and truncate it to a maximum length.
 func RandShortName(basename string, maxlen int) string {
 	randlen := 8
 	maxlen -= randlen + 1 // length of random bytes and 1 byte of separator

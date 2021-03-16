@@ -19,6 +19,8 @@ func init() {
 	mathrand.Seed(time.Now().UnixNano())
 }
 
+// Generate a string of random letters and numbers.
+// This function is NOT cryptographically secure.
 func RandStringBytes(n int) string {
 	b := make([]byte, n)
 	for i := range b {
