@@ -457,34 +457,3 @@ func (in *Application) SkipDeploymentMessage() bool {
 func (in *Application) ClientID(cluster string) string {
 	return fmt.Sprintf("%s:%s:%s", cluster, in.ObjectMeta.Namespace, in.ObjectMeta.Name)
 }
-
-func (in *Application) AddAccessPolicyExternalHostsAsStrings(hosts []string) {
-	externalRules := make([]nais_io_v1.AccessPolicyExternalRule, len(hosts))
-	for _, host := range hosts {
-		externalRules = append(externalRules, nais_io_v1.AccessPolicyExternalRule{Host: host})
-	}
-
-	in.AddAccessPolicyExternalHosts(externalRules)
-}
-
-func (in *Application) AddAccessPolicyExternalHosts(hosts []nais_io_v1.AccessPolicyExternalRule) {
-	var empty struct{}
-	seen := map[string]struct{}{}
-	rules := make([]nais_io_v1.AccessPolicyExternalRule, 0)
-
-	for _, rule := range in.Spec.AccessPolicy.Outbound.External {
-		seen[rule.Host] = empty
-	}
-
-	for _, externalRule := range hosts {
-		if len(externalRule.Host) == 0 {
-			continue
-		}
-		if _, found := seen[externalRule.Host]; !found {
-			seen[externalRule.Host] = empty
-			rules = append(rules, externalRule)
-		}
-	}
-
-	in.Spec.AccessPolicy.Outbound.External = append(in.Spec.AccessPolicy.Outbound.External, rules...)
-}

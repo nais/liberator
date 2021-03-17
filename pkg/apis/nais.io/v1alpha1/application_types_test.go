@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/mitchellh/hashstructure"
-	"github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	"github.com/stretchr/testify/assert"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -98,33 +97,4 @@ func TestNewCRD(t *testing.T) {
 	hash, err := app.Hash()
 	assert.NoError(t, err)
 	assert.Equalf(t, applicationHash, hash, "Your Application default value changes will trigger a FULL REDEPLOY of ALL APPLICATIONS in ALL NAMESPACES across ALL CLUSTERS. If this is what you really want, change the `applicationHash` constant in this test file to `%s`.", hash)
-}
-
-func TestAddAccessPolicyExternalHosts(t *testing.T) {
-	app := &nais_io_v1alpha1.Application{}
-	err := nais_io_v1alpha1.ApplyDefaults(app)
-	assert.NoError(t, err)
-
-	stringHosts := []string{
-		"some-host.example.string",
-		"existing.host.test",
-	}
-
-	hosts := []nais_io_v1.AccessPolicyExternalRule{
-		{Host: "some-host.example.host"},
-		{Host: "some-port.example.host", Ports: []nais_io_v1.AccessPolicyPortRule{{Port: 1337}}},
-	}
-
-	app.Spec.AccessPolicy.Outbound.External = append(app.Spec.AccessPolicy.Outbound.External,
-		nais_io_v1.AccessPolicyExternalRule{Host: "existing.host.test"},
-	)
-	app.AddAccessPolicyExternalHostsAsStrings(stringHosts)
-	app.AddAccessPolicyExternalHosts(hosts)
-
-	assert.Len(t, app.Spec.AccessPolicy.Outbound.External, 4)
-	assert.Contains(t, app.Spec.AccessPolicy.Outbound.External, nais_io_v1.AccessPolicyExternalRule{Host: "existing.host.test"})
-	assert.Contains(t, app.Spec.AccessPolicy.Outbound.External, nais_io_v1.AccessPolicyExternalRule{Host: "some-host.example.string"})
-	assert.Contains(t, app.Spec.AccessPolicy.Outbound.External, nais_io_v1.AccessPolicyExternalRule{Host: "some-host.example.host"})
-	assert.Contains(t, app.Spec.AccessPolicy.Outbound.External, nais_io_v1.AccessPolicyExternalRule{Host: "some-port.example.host", Ports: []nais_io_v1.AccessPolicyPortRule{{Port: 1337}}})
-
 }
