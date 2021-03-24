@@ -10,18 +10,23 @@ import (
 )
 
 func (in *Application) CreateObjectMeta() metav1.ObjectMeta {
-	return metav1.ObjectMeta{
+	meta := metav1.ObjectMeta{
 		Name:      in.Name,
 		Namespace: in.Namespace,
-		Labels: map[string]string{
-			"app":  in.Name,
-			"team": in.Labels["team"],
-		},
+		Labels: map[string]string{},
 		Annotations: map[string]string{
 			DeploymentCorrelationIDAnnotation: in.CorrelationID(),
 		},
 		OwnerReferences: in.OwnerReferences(in),
 	}
+
+	for k, v := range in.Labels {
+		meta.Labels[k] = v
+	}
+
+	meta.Labels["app"] = in.Name
+
+	return meta
 }
 
 // We concatenate name, namespace and add a hash in order to avoid duplicate names when creating service accounts in common service accounts namespace.
