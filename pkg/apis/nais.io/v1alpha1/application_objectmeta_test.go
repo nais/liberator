@@ -70,7 +70,7 @@ func TestApplication_CreateObjectMeta(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := tt.in.CreateObjectMeta()
 			if !reflect.DeepEqual(got.Labels, tt.want) {
-				t.Errorf("CreateObjectMeta() = %v, want %v", got, tt.want)
+				t.Errorf("CreateObjectMeta().Labels = %v, want %v", got.Labels, tt.want)
 			}
 		})
 	}
