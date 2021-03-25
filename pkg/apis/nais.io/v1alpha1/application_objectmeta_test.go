@@ -20,13 +20,13 @@ func TestApplication_CreateObjectMeta(t *testing.T) {
 				ObjectMeta: v1.ObjectMeta{
 					Name:      app,
 					Namespace: namespace,
-					Labels:    map[string]string{
+					Labels: map[string]string{
 						"team": team,
 					},
 				},
 			},
 			map[string]string{
-				"app": app,
+				"app":  app,
 				"team": team,
 			},
 		},
@@ -36,16 +36,16 @@ func TestApplication_CreateObjectMeta(t *testing.T) {
 				ObjectMeta: v1.ObjectMeta{
 					Name:      app,
 					Namespace: namespace,
-					Labels:    map[string]string{
+					Labels: map[string]string{
 						"team": team,
-						key: value,
+						key:    value,
 					},
 				},
 			},
 			map[string]string{
-				"app": app,
+				"app":  app,
 				"team": team,
-				key: value,
+				key:    value,
 			},
 		},
 		{
@@ -54,14 +54,14 @@ func TestApplication_CreateObjectMeta(t *testing.T) {
 				ObjectMeta: v1.ObjectMeta{
 					Name:      app,
 					Namespace: namespace,
-					Labels:    map[string]string{
+					Labels: map[string]string{
 						"team": team,
-						"app": "ignored",
+						"app":  "ignored",
 					},
 				},
 			},
 			map[string]string{
-				"app": app,
+				"app":  app,
 				"team": team,
 			},
 		},
