@@ -14,5 +14,6 @@ require (
 	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e // indirect
 	k8s.io/api v0.17.2
 	k8s.io/apimachinery v0.17.2
+	k8s.io/client-go v0.17.2 // indirect
 	sigs.k8s.io/controller-runtime v0.5.0
 )

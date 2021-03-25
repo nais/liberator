@@ -10,13 +10,18 @@ import (
 )
 
 func (in *Application) CreateObjectMeta() metav1.ObjectMeta {
+	labels := map[string]string{}
+
+	for k, v := range in.Labels {
+		labels[k] = v
+	}
+
+	labels["app"] = in.Name
+
 	return metav1.ObjectMeta{
 		Name:      in.Name,
 		Namespace: in.Namespace,
-		Labels: map[string]string{
-			"app":  in.Name,
-			"team": in.Labels["team"],
-		},
+		Labels:    labels,
 		Annotations: map[string]string{
 			DeploymentCorrelationIDAnnotation: in.CorrelationID(),
 		},

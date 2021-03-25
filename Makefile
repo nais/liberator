@@ -21,7 +21,7 @@ generate: controller-gen
 	$(CONTROLLER_GEN) crd:trivialVersions=true rbac:roleName=manager-role webhook paths="./pkg/apis/..." output:crd:artifacts:config=config/crd/bases
 
 mocks:
-	cd pkg/ && mockery -inpkg -all -case snake
+	cd pkg/ && mockery --inpackage --all --case snake
 
 # find or download controller-gen
 # download controller-gen if necessary
