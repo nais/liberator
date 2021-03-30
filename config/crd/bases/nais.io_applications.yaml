@@ -367,7 +367,7 @@ spec:
               type: string
             ingresses:
               items:
-                pattern: ^https:\/\/
+                pattern: ^https:\/\/.*
                 type: string
               type: array
             kafka:
