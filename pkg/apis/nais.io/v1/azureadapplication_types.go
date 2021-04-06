@@ -62,6 +62,8 @@ type AzureAdApplicationSpec struct {
 	Tenant string `json:"tenant,omitempty"`
 	// Claims defines additional configuration of the emitted claims in tokens returned to the AzureAdApplication
 	Claims *AzureAdClaims `json:"claims,omitempty"`
+	// SecretKeyPrefix is an optional user-defined prefix applied to the keys in the secret output, replacing the default prefix.
+	SecretKeyPrefix string `json:"secretKeyPrefix,omitempty"`
 }
 
 // AzureAdApplicationStatus defines the observed state of AzureAdApplication

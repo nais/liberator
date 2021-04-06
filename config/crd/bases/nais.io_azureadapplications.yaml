@@ -103,6 +103,10 @@ spec:
                     type: string
                 type: object
               type: array
+            secretKeyPrefix:
+              description: SecretKeyPrefix is an optional user-defined prefix applied
+                to the keys in the secret output, replacing the default prefix.
+              type: string
             secretName:
               description: SecretName is the name of the resulting Secret resource
                 to be created
