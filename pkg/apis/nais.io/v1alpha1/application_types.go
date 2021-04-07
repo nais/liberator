@@ -52,7 +52,7 @@ type Application struct {
 	Status ApplicationStatus `json:"status,omitempty"`
 }
 
-// +kubebuilder:validation:Pattern=`^https:\/\/`
+// +kubebuilder:validation:Pattern=`^https:\/\/.+$`
 type Ingress string
 
 // ApplicationSpec contains the NAIS manifest.
@@ -130,11 +130,11 @@ type TokenX struct {
 type IDPorten struct {
 	Enabled   bool   `json:"enabled"`
 	ClientURI string `json:"clientURI,omitempty"`
-	// +kubebuilder:validation:Pattern=`^https:\/\/`
+	// +kubebuilder:validation:Pattern=`^https:\/\/.+$`
 	RedirectURI string `json:"redirectURI,omitempty"`
-	// +kubebuilder:validation:Pattern=`^\/`
+	// +kubebuilder:validation:Pattern=`^\/.*$`
 	RedirectPath string `json:"redirectPath,omitempty"`
-	// +kubebuilder:validation:Pattern=`^\/`
+	// +kubebuilder:validation:Pattern=`^\/.*$`
 	FrontchannelLogoutPath string   `json:"frontchannelLogoutPath,omitempty"`
 	FrontchannelLogoutURI  string   `json:"frontchannelLogoutURI,omitempty"`
 	PostLogoutRedirectURIs []string `json:"postLogoutRedirectURIs,omitempty"`

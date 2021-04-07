@@ -74,7 +74,7 @@ spec:
               type: array
             redirectURI:
               description: RedirectURI is the redirect URI to be registered at DigDir
-              pattern: ^https:\/\/
+              pattern: ^https:\/\/.+$
               type: string
             secretName:
               description: SecretName is the name of the resulting Secret resource

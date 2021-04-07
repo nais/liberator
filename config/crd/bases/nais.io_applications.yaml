@@ -342,7 +342,7 @@ spec:
                 enabled:
                   type: boolean
                 frontchannelLogoutPath:
-                  pattern: ^\/
+                  pattern: ^\/.*$
                   type: string
                 frontchannelLogoutURI:
                   type: string
@@ -351,10 +351,10 @@ spec:
                     type: string
                   type: array
                 redirectPath:
-                  pattern: ^\/
+                  pattern: ^\/.*$
                   type: string
                 redirectURI:
-                  pattern: ^https:\/\/
+                  pattern: ^https:\/\/.+$
                   type: string
                 sessionLifetime:
                   maximum: 7200
@@ -367,7 +367,7 @@ spec:
               type: string
             ingresses:
               items:
-                pattern: ^https:\/\/
+                pattern: ^https:\/\/.+$
                 type: string
               type: array
             kafka:
