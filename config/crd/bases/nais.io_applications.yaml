@@ -518,6 +518,7 @@ spec:
                   - http
                   - redis
                   - tcp
+                  - grpc
                   type: string
               required:
               - port
