@@ -12,7 +12,7 @@ import (
 
 const (
 	// Change this value to accept re-synchronization of ALL application resources when deploying a new version.
-	applicationHash = "ba79fcde22026d1d"
+	applicationHash = "56c407b7c74b1ecc"
 )
 
 func TestApplication_Hash(t *testing.T) {
