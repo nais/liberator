@@ -246,6 +246,12 @@ type CloudSqlDatabase struct {
 	EnvVarPrefix string `json:"envVarPrefix,omitempty"`
 }
 
+type AdditionalUser struct {
+	// +kubebuilder:validation:Required
+	Name string `json:"name"`
+}
+
+
 type CloudSqlInstance struct {
 	// +kubebuilder:validation:Enum=POSTGRES_11;POSTGRES_12
 	// +kubebuilder:validation:Required
@@ -267,6 +273,7 @@ type CloudSqlInstance struct {
 	Databases       []CloudSqlDatabase `json:"databases,omitempty"`
 	CascadingDelete bool               `json:"cascadingDelete,omitempty"`
 	Collation       string             `json:"collation,omitempty"`
+	AdditionalUsers []AdditionalUser	`json:"additionalUsers,omitempty"`
 }
 
 type Maintenance struct {

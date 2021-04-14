@@ -274,6 +274,15 @@ spec:
                 sqlInstances:
                   items:
                     properties:
+                      additionalUsers:
+                        items:
+                          properties:
+                            name:
+                              type: string
+                          required:
+                          - name
+                          type: object
+                        type: array
                       autoBackupHour:
                         maximum: 23
                         minimum: 0
