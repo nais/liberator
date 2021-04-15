@@ -9,7 +9,7 @@ import (
 
 const (
 	// Change this value to accept re-synchronization of ALL AzureAdApplication resources when deploying a new version.
-	expectedHash = "4a1437b125349976"
+	expectedHash = "fb3ded02e59f9458"
 )
 
 func TestAzureAdApplication_Hash(t *testing.T) {
