@@ -1,0 +1,107 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.2.5
+  creationTimestamp: null
+  name: aivenapplications.kafka.nais.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
+  - JSONPath: .status.synchronizationState
+    name: State
+    type: string
+  - JSONPath: .status.secretName
+    name: Name of secret
+    priority: 10
+    type: string
+  - JSONPath: .spec.serviceUsers[*].credentialsExpirationTime
+    name: Credentials expire
+    priority: 20
+    type: string
+  group: kafka.nais.io
+  names:
+    kind: AivenApplication
+    listKind: AivenApplicationList
+    plural: aivenapplications
+    singular: aivenapplication
+  scope: Namespaced
+  subresources: {}
+  validation:
+    openAPIV3Schema:
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          properties:
+            config:
+              properties:
+                rotationIntervalDays:
+                  type: integer
+              type: object
+            pool:
+              type: string
+            serviceUsers:
+              items:
+                properties:
+                  credentialsExpirationTime:
+                    format: date-time
+                    type: string
+                  name:
+                    maxLength: 64
+                    type: string
+                required:
+                - name
+                type: object
+              type: array
+          required:
+          - pool
+          type: object
+        status:
+          properties:
+            currentUser:
+              type: string
+            errors:
+              items:
+                type: string
+              type: array
+            message:
+              type: string
+            secretName:
+              type: string
+            synchronizationHash:
+              type: string
+            synchronizationState:
+              type: string
+            synchronizationTime:
+              format: date-time
+              type: string
+          type: object
+      required:
+      - spec
+      type: object
+  version: v1
+  versions:
+  - name: v1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
