@@ -285,19 +285,20 @@ spec:
                       databases:
                         items:
                           properties:
-                            additionalUsers:
+                            envVarPrefix:
+                              type: string
+                            name:
+                              type: string
+                            users:
                               items:
                                 properties:
                                   name:
+                                    pattern: ^[a-zA-Z _-]*$
                                     type: string
                                 required:
                                 - name
                                 type: object
                               type: array
-                            envVarPrefix:
-                              type: string
-                            name:
-                              type: string
                           required:
                           - name
                           type: object

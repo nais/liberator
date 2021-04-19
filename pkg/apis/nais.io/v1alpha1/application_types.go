@@ -244,11 +244,12 @@ type CloudSqlDatabase struct {
 	// +kubebuilder:validation:Required
 	Name         string `json:"name"`
 	EnvVarPrefix string `json:"envVarPrefix,omitempty"`
-	AdditionalUsers []AdditionalUser	`json:"additionalUsers,omitempty"`
+	Users		 []CloudSqlDatabaseUser	`json:"users,omitempty"`
 }
 
-type AdditionalUser struct {
+type CloudSqlDatabaseUser struct {
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern="^[a-zA-Z _-]*$"
 	Name string `json:"name"`
 }
 
