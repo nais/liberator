@@ -2,7 +2,6 @@ package kafka_nais_io_v1
 
 import (
 	"strconv"
-	"time"
 
 	"github.com/nais/liberator/pkg/namegen"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -152,19 +151,5 @@ func (in *Topic) NeedsSynchronization(hash string) bool {
 	if in.Status == nil {
 		return true
 	}
-	if in.Status.SynchronizationHash != hash {
-		return true
-	}
-	return in.CredentialsExpired()
-}
-
-func (in *Topic) CredentialsExpired() bool {
-	if in.Status == nil {
-		return true
-	}
-	expiry, err := time.Parse(time.RFC3339, in.Status.CredentialsExpiryTime)
-	if err != nil {
-		return true
-	}
-	return time.Now().After(expiry)
+	return in.Status.SynchronizationHash != hash
 }
