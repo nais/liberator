@@ -253,7 +253,6 @@ type CloudSqlDatabaseUser struct {
 	Name string `json:"name"`
 }
 
-
 type CloudSqlInstance struct {
 	// +kubebuilder:validation:Enum=POSTGRES_11;POSTGRES_12
 	// +kubebuilder:validation:Required

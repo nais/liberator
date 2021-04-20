@@ -126,7 +126,22 @@ func (in *AzureAdApplication) GetClientId() string {
 }
 
 func (in *AzureAdApplication) Hash() (string, error) {
-	return hash.Hash(in.Spec)
+	relevantValues := struct {
+		ReplyUrls                 []AzureAdReplyUrl
+		PreAuthorizedApplications []AccessPolicyRule
+		LogoutUrl                 string
+		Tenant                    string
+		Claims                    *AzureAdClaims
+		SecretKeyPrefix           string
+	}{
+		ReplyUrls:                 in.Spec.ReplyUrls,
+		PreAuthorizedApplications: in.Spec.PreAuthorizedApplications,
+		LogoutUrl:                 in.Spec.LogoutUrl,
+		Tenant:                    in.Spec.Tenant,
+		Claims:                    in.Spec.Claims,
+		SecretKeyPrefix:           in.Spec.SecretKeyPrefix,
+	}
+	return hash.Hash(relevantValues)
 }
 
 func init() {
