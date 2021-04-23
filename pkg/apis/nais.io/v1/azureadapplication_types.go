@@ -101,7 +101,7 @@ type AzureAdClaims struct {
 	Groups []AzureAdGroup `json:"groups,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=NAVident
+// +kubebuilder:validation:Enum=NAVident;azp_name
 type AzureAdExtraClaim string
 
 type AzureAdGroup struct {

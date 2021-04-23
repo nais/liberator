@@ -132,6 +132,7 @@ spec:
                           items:
                             enum:
                             - NAVident
+                            - azp_name
                             type: string
                           type: array
                         groups:
