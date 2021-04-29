@@ -19,42 +19,38 @@ type AivenApplicationList struct {
 }
 
 // +kubebuilder:object:root=true
-// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
-// +kubebuilder:printcolumn:name="State",type="string",JSONPath=".status.synchronizationState"
-// +kubebuilder:printcolumn:name="Name of secret",type=string,JSONPath=".status.secretName",priority=10
-// +kubebuilder:printcolumn:name="Credentials expire",type=string,JSONPath=".spec.serviceUsers[*].credentialsExpirationTime",priority=20
+// +kubebuilder:resource:shortName={"aivenapp"}
+// +kubebuilder:printcolumn:name="Name of secret",type=string,JSONPath=".spec.secretName"
+// +kubebuilder:printcolumn:name="State",type="string",JSONPath=".status.synchronizationState",priority=10
+// +kubebuilder:printcolumn:name="Synced",type="date",JSONPath=".status.synchronizationTime",priority=20
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",priority=30
 type AivenApplication struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              AivenApplicationSpec    `json:"spec"`
+	Spec              AivenApplicationSpec    `json:"spec,omitempty"`
 	Status            *AivenApplicationStatus `json:"status,omitempty"`
 }
 
-type ApplicationConfig struct {
-	RotationIntervalDays int `json:"rotationIntervalDays,omitempty"`
-}
-
-type ServiceUser struct {
-	// +kubebuilder:validation:MaxLength=64
-	Name string `json:"name"`
-	// +kubebuilder:validation:Format=date-time
-	CredentialsExpirationTime string `json:"credentialsExpirationTime,omitempty"`
-}
-
 type AivenApplicationSpec struct {
-	Pool         string             `json:"pool"`
-	ServiceUsers []ServiceUser      `json:"serviceUsers,omitempty"`
-	Config       *ApplicationConfig `json:"config,omitempty"`
+	// SecretName is the name of the secret containing Aiven credentials
+	SecretName string `json:"secretName"`
+	// Kafka is a section configuring the kafka credentials to provision
+	Kafka KafkaSpec `json:"kafka,omitempty"`
+}
+
+type KafkaSpec struct {
+	// Pool is the Kafka pool (aka cluster) on Aiven this application uses
+	Pool string `json:"pool"`
 }
 
 // +kubebuilder:subresource:status
 type AivenApplicationStatus struct {
-	// +kubebuilder:validation:Format=date-time
-	SynchronizationTime  string   `json:"synchronizationTime,omitempty"`
-	SynchronizationState string   `json:"synchronizationState,omitempty"`
-	SynchronizationHash  string   `json:"synchronizationHash,omitempty"`
-	Errors               []string `json:"errors,omitempty"`
-	Message              string   `json:"message,omitempty"`
-	SecretName           string   `json:"secretName,omitempty"`
-	CurrentUser          string   `json:"currentUser,omitempty"`
+	// SynchronizationHash is the hash of the AivenApplication object
+	SynchronizationHash string `json:"synchronizationHash,omitempty"`
+	// SynchronizationSecretName is the SecretName set in the last successful synchronization
+	SynchronizationSecretName string `json:"synchronizationSecretName,omitempty"`
+	// SynchronizationState denotes whether the provisioning of the AivenApplication has been successfully completed or not
+	SynchronizationState string `json:"synchronizationState,omitempty"`
+	// SynchronizationTime is the last time the Status subresource was updated
+	SynchronizationTime *metav1.Time `json:"synchronizationTime,omitempty"`
 }

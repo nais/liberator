@@ -9,25 +9,28 @@ metadata:
   name: aivenapplications.kafka.nais.io
 spec:
   additionalPrinterColumns:
-  - JSONPath: .metadata.creationTimestamp
-    name: Age
-    type: date
+  - JSONPath: .spec.secretName
+    name: Name of secret
+    type: string
   - JSONPath: .status.synchronizationState
     name: State
-    type: string
-  - JSONPath: .status.secretName
-    name: Name of secret
     priority: 10
     type: string
-  - JSONPath: .spec.serviceUsers[*].credentialsExpirationTime
-    name: Credentials expire
+  - JSONPath: .status.synchronizationTime
+    name: Synced
     priority: 20
-    type: string
+    type: date
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    priority: 30
+    type: date
   group: kafka.nais.io
   names:
     kind: AivenApplication
     listKind: AivenApplicationList
     plural: aivenapplications
+    shortNames:
+    - aivenapp
     singular: aivenapplication
   scope: Namespaced
   subresources: {}
@@ -48,51 +51,43 @@ spec:
           type: object
         spec:
           properties:
-            config:
+            kafka:
+              description: Kafka is a section configuring the kafka credentials to
+                provision
               properties:
-                rotationIntervalDays:
-                  type: integer
+                pool:
+                  description: Pool is the Kafka pool (aka cluster) on Aiven this
+                    application uses
+                  type: string
+              required:
+              - pool
               type: object
-            pool:
+            secretName:
+              description: SecretName is the name of the secret containing Aiven credentials
               type: string
-            serviceUsers:
-              items:
-                properties:
-                  credentialsExpirationTime:
-                    format: date-time
-                    type: string
-                  name:
-                    maxLength: 64
-                    type: string
-                required:
-                - name
-                type: object
-              type: array
           required:
-          - pool
+          - secretName
           type: object
         status:
           properties:
-            currentUser:
-              type: string
-            errors:
-              items:
-                type: string
-              type: array
-            message:
-              type: string
-            secretName:
-              type: string
             synchronizationHash:
+              description: SynchronizationHash is the hash of the AivenApplication
+                object
+              type: string
+            synchronizationSecretName:
+              description: SynchronizationSecretName is the SecretName set in the
+                last successful synchronization
               type: string
             synchronizationState:
+              description: SynchronizationState denotes whether the provisioning of
+                the AivenApplication has been successfully completed or not
               type: string
             synchronizationTime:
+              description: SynchronizationTime is the last time the Status subresource
+                was updated
               format: date-time
               type: string
           type: object
-      required:
-      - spec
       type: object
   version: v1
   versions:
