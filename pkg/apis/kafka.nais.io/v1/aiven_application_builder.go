@@ -33,6 +33,13 @@ func (b AivenApplicationBuilder) WithStatus(status AivenApplicationStatus) Aiven
 	return b
 }
 
+func (b AivenApplicationBuilder) WithAnnotation(key, value string) AivenApplicationBuilder {
+	b.application.SetAnnotations(map[string]string{
+		key: value,
+	})
+	return b
+}
+
 func (b AivenApplicationBuilder) Build() AivenApplication {
 	return b.application
 }

@@ -54,3 +54,12 @@ type AivenApplicationStatus struct {
 	// SynchronizationTime is the last time the Status subresource was updated
 	SynchronizationTime *metav1.Time `json:"synchronizationTime,omitempty"`
 }
+
+func (in *AivenApplication) GetOwnerReference() metav1.OwnerReference {
+	return metav1.OwnerReference{
+		APIVersion: in.APIVersion,
+		Kind:       in.Kind,
+		Name:       in.Name,
+		UID:        in.UID,
+	}
+}
