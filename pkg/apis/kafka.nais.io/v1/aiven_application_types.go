@@ -27,8 +27,8 @@ type AivenApplicationList struct {
 type AivenApplication struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              AivenApplicationSpec    `json:"spec,omitempty"`
-	Status            *AivenApplicationStatus `json:"status,omitempty"`
+	Spec              AivenApplicationSpec   `json:"spec,omitempty"`
+	Status            AivenApplicationStatus `json:"status,omitempty"`
 }
 
 type AivenApplicationSpec struct {
