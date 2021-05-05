@@ -11,12 +11,14 @@ spec:
   additionalPrinterColumns:
   - JSONPath: .spec.secretName
     name: Secret Ref
+    priority: 2
     type: string
   - JSONPath: .status.clientId
     name: Client ID
     type: string
   - JSONPath: .status.synchronizationTenant
     name: Tenant
+    priority: 1
     type: string
   - JSONPath: .metadata.creationTimestamp
     name: Created
