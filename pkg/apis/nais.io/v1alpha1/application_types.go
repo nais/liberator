@@ -242,9 +242,9 @@ const (
 
 type CloudSqlDatabase struct {
 	// +kubebuilder:validation:Required
-	Name         string `json:"name"`
-	EnvVarPrefix string `json:"envVarPrefix,omitempty"`
-	Users		 []CloudSqlDatabaseUser	`json:"users,omitempty"`
+	Name         string                 `json:"name"`
+	EnvVarPrefix string                 `json:"envVarPrefix,omitempty"`
+	Users        []CloudSqlDatabaseUser `json:"users,omitempty"`
 }
 
 type CloudSqlDatabaseUser struct {
@@ -339,7 +339,7 @@ type Service struct {
 }
 
 type Kafka struct {
-	// +kubebuilder:validation:Enum=nav-dev;nav-prod
+	// +kubebuilder:validation:Enum=nav-dev;nav-prod;nav-infrastructure
 	Pool string `json:"pool"`
 }
 
