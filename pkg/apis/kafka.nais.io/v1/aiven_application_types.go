@@ -105,3 +105,8 @@ func (in *AivenApplicationStatus) AddCondition(condition AivenApplicationConditi
 	conditions = append(conditions, condition)
 	in.Conditions = conditions
 }
+
+func (in *AivenApplication) ServiceUserPrefix() string {
+	username := in.GetNamespace() + "." + in.GetName()
+	return username
+}
