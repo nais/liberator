@@ -1,10 +1,7 @@
 package kafka_nais_io_v1
 
 import (
-	"encoding/json"
-	"fmt"
-
-	"github.com/mitchellh/hashstructure"
+	"github.com/nais/liberator/pkg/hash"
 )
 
 func (in *Topic) Hash() (string, error) {
@@ -22,18 +19,9 @@ func (in *Topic) Hash() (string, error) {
 		},
 		Spec: in.Spec,
 	}
-	return hash(data)
+	return hash.Hash(data)
 }
 
 func (in *AivenApplication) Hash() (string, error) {
-	return hash(in.Spec)
-}
-
-func hash(data interface{}) (string, error) {
-	marshalled, err := json.Marshal(data)
-	if err != nil {
-		return "", err
-	}
-	h, err := hashstructure.Hash(marshalled, nil)
-	return fmt.Sprintf("%x", h), err
+	return hash.Hash(in.Spec)
 }

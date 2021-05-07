@@ -21,22 +21,21 @@ func TestTopicHash(t *testing.T) {
 
 func Test_hash(t *testing.T) {
 	tests := []struct {
-		name    string
-		data    interface{}
-		want    string
-		wantErr bool
+		name     string
+		aivenapp *AivenApplication
+		want     string
+		wantErr  bool
 	}{
-		{name: "ClearAivenApplication", data: AivenApplication{}.Spec, want: "ae9606dc1d9142ad", wantErr: false},
-		{name: "AivenApplicationWithSecretName", data: AivenApplication{
+		{name: "ClearAivenApplication", aivenapp: &AivenApplication{}, want: "ae9606dc1d9142ad", wantErr: false},
+		{name: "AivenApplicationWithSecretName", aivenapp: &AivenApplication{
 			Spec: AivenApplicationSpec{
 				SecretName: "this-is-my-secret",
 			},
-		}.Spec, want: "a26742b533308093", wantErr: false},
-		{name: "Empty spec", data: nil, want: "fd836cbf52075630", wantErr: false},
+		}, want: "a26742b533308093", wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := hash(tt.data)
+			got, err := tt.aivenapp.Hash()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("hash() error = %v, wantErr %v", err, tt.wantErr)
 				return
