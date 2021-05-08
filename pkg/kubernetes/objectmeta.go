@@ -17,3 +17,6 @@ func ObjectMeta(name, namespace string, labels map[string]string) metav1.ObjectM
 		Labels:    labels,
 	}
 }
+func UniformResourceScopeName(resource metav1.Object, scope string) string {
+	return fmt.Sprintf("%s:%s:%s", resource.GetClusterName(), resource.GetNamespace(), scope)
+}

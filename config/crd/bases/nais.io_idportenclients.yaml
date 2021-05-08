@@ -93,6 +93,22 @@ spec:
         status:
           description: DigdiratorStatus defines the observed state of Current Client
           properties:
+            applicationScopes:
+              description: Unique Scopes activated and registered with access for
+                this application at digdir
+              properties:
+                scopes:
+                  items:
+                    properties:
+                      name:
+                        type: string
+                      organizationNumbers:
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  type: array
+              type: object
             clientID:
               description: ClientID is the corresponding client ID for this client
                 at Digdir
