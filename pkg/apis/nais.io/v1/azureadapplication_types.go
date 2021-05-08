@@ -26,9 +26,9 @@ const (
 // +kubebuilder:subresource:status
 
 // AzureAdApplication is the Schema for the AzureAdApplications API
-// +kubebuilder:printcolumn:name="Secret Ref",type=string,JSONPath=`.spec.secretName`
+// +kubebuilder:printcolumn:name="Secret Ref",type=string,JSONPath=`.spec.secretName`,priority=2
 // +kubebuilder:printcolumn:name="Client ID",type=string,JSONPath=`.status.clientId`
-// +kubebuilder:printcolumn:name="Tenant",type=string,JSONPath=`.status.synchronizationTenant`
+// +kubebuilder:printcolumn:name="Tenant",type=string,JSONPath=`.status.synchronizationTenant`,priority=1
 // +kubebuilder:printcolumn:name="Created",type="date",JSONPath=".metadata.creationTimestamp"
 // +kubebuilder:printcolumn:name="Synchronized",type="date",JSONPath=".status.synchronizationTime"
 type AzureAdApplication struct {
@@ -101,7 +101,7 @@ type AzureAdClaims struct {
 	Groups []AzureAdGroup `json:"groups,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=NAVident
+// +kubebuilder:validation:Enum=NAVident;azp_name
 type AzureAdExtraClaim string
 
 type AzureAdGroup struct {
