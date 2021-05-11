@@ -23,6 +23,14 @@ var (
 		Type:   AivenApplicationLocalFailure,
 		Status: v1.ConditionFalse,
 	}
+	aivenFailTrue = AivenApplicationCondition{
+		Type:   AivenApplicationAivenFailure,
+		Status: v1.ConditionTrue,
+	}
+	aivenFailFalse = AivenApplicationCondition{
+		Type:   AivenApplicationAivenFailure,
+		Status: v1.ConditionFalse,
+	}
 )
 
 func TestAivenApplicationStatus_AddCondition(t *testing.T) {
@@ -30,6 +38,7 @@ func TestAivenApplicationStatus_AddCondition(t *testing.T) {
 		preExisting  []AivenApplicationCondition
 		newCondition AivenApplicationCondition
 		wanted       []AivenApplicationCondition
+		dropTypes    []AivenApplicationConditionType
 	}
 	tests := []struct {
 		name string
@@ -60,6 +69,18 @@ func TestAivenApplicationStatus_AddCondition(t *testing.T) {
 			newCondition: successTrue,
 			wanted:       []AivenApplicationCondition{localFailFalse, successTrue},
 		}},
+		{name: "FilledAddFailureRemoveSuccess", args: args{
+			preExisting:  []AivenApplicationCondition{localFailFalse, successTrue},
+			newCondition: localFailTrue,
+			wanted:       []AivenApplicationCondition{localFailTrue},
+			dropTypes:    []AivenApplicationConditionType{AivenApplicationSucceeded},
+		}},
+		{name: "FilledFullRemoveMost", args: args{
+			preExisting:  []AivenApplicationCondition{localFailTrue, aivenFailTrue, successFalse},
+			newCondition: successTrue,
+			wanted:       []AivenApplicationCondition{successTrue},
+			dropTypes:    []AivenApplicationConditionType{AivenApplicationAivenFailure, AivenApplicationLocalFailure},
+		}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -71,7 +92,7 @@ func TestAivenApplicationStatus_AddCondition(t *testing.T) {
 			in := &AivenApplicationStatus{
 				Conditions: tt.args.preExisting,
 			}
-			in.AddCondition(tt.args.newCondition)
+			in.AddCondition(tt.args.newCondition, tt.args.dropTypes...)
 			assert.Len(t, in.Conditions, len(tt.args.wanted))
 			for i, c := range in.Conditions {
 				assertConditionsMatch(tt.args.wanted[i], c)
