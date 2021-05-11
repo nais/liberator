@@ -127,17 +127,11 @@ type TokenX struct {
 	MountSecretsAsFilesOnly bool `json:"mountSecretsAsFilesOnly,omitempty"`
 }
 
-// this is
-// a multi-line
-// comment.
-//
-// Example:
-// ```
-//   foo bar baz
-//   neste linje
-// ```
 type IDPorten struct {
 	Enabled   bool   `json:"enabled"`
+	// +nais:doc:Sample=example;two
+	// +nais:doc:Availability="GCP"
+	// +nais:doc:Test="nais"
 	ClientURI string `json:"clientURI,omitempty"`
 	// +kubebuilder:validation:Pattern=`^https:\/\/.+$`
 	RedirectURI string `json:"redirectURI,omitempty"`

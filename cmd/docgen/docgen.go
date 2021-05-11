@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 
+	"github.com/imdario/mergo"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
 	apiext "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
@@ -28,15 +30,32 @@ type Config struct {
 	Output    string
 }
 
-type Node struct {
-	Name     string
-	Type     string
-	Doc      string
-	Array    bool
-	JsonTag  string
-	Required bool
-	Markers  []string
-	Children []*Node
+type Doc struct {
+	// Sample string(s) that can be used in this field
+	Sample []string `marker:"Sample,optional"`
+	// Which cluster(s) or environments the feature is available in
+	Availability string `marker:"Availability,optional"`
+}
+
+// Hijack the "example" field for custom documentation fields
+func (m Doc) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
+	d := &Doc{}
+	if schema.Example != nil {
+		err := json.Unmarshal(schema.Example.Raw, d)
+		if err != nil {
+			return err
+		}
+	}
+	err := mergo.Merge(d, m)
+	if err != nil {
+		return err
+	}
+	b, err := json.Marshal(d)
+	if err != nil {
+		return err
+	}
+	schema.Example = &apiext.JSON{Raw: b}
+	return nil
 }
 
 func main() {
@@ -65,9 +84,15 @@ func run() error {
 	collector := &markers.Collector{
 		Registry: registry,
 	}
+
 	err = crd_markers.Register(registry)
 	if err != nil {
 		return err
+	}
+
+	err = registry.Define("nais:doc", markers.DescribesField, Doc{})
+	if err != nil {
+		return fmt.Errorf("register marker: %w", err)
 	}
 
 	typechecker := &loader.TypeChecker{}
@@ -97,11 +122,16 @@ func run() error {
 
 	pars.NeedCRDFor(gk, nil)
 
+	if len(pars.FlattenedSchemata) == 0 {
+		return fmt.Errorf("no schemas to print")
+	}
+
 	output := os.Stdout
 	if len(cfg.Output) > 0 {
 		output, err = os.OpenFile(cfg.Output, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
 	}
 	mw := &multiwriter{w: output}
+
 	for k, schemata := range pars.FlattenedSchemata {
 		Degenerate(mw, 1, "", k.Name, schemata, schemata)
 	}
@@ -130,7 +160,7 @@ func (m *multiwriter) Error() error {
 }
 
 func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, node apiext.JSONSchemaProps) {
-	if jsonpath == ".metadata" {
+	if jsonpath == ".metadata" || jsonpath == ".status" {
 		return
 	}
 
@@ -154,10 +184,31 @@ func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, nod
 		_, _ = io.WriteString(w, strings.TrimSpace(node.Description))
 		_, _ = io.WriteString(w, "\n\n")
 	}
-
+	if len(node.Enum) > 0 {
+		node.Type = "enum"
+	}
 	_, _ = io.WriteString(w, fmt.Sprintf("* JSONPath: `%s`\n", jsonpath))
 	_, _ = io.WriteString(w, fmt.Sprintf("* Type: `%s`\n", node.Type))
 	_, _ = io.WriteString(w, fmt.Sprintf("* Required: `%s`\n", strconv.FormatBool(required)))
+
+	if node.Example != nil {
+		d := &Doc{}
+		err := json.Unmarshal(node.Example.Raw, d)
+		if err == nil {
+			switch {
+			case len(d.Sample) > 1:
+				_, _ = io.WriteString(w, fmt.Sprintf("* Example values:\n"))
+				for _, sample := range d.Sample {
+					_, _ = io.WriteString(w, fmt.Sprintf("  * `%s`\n", sample))
+				}
+			case len(d.Sample) == 1:
+				_, _ = io.WriteString(w, fmt.Sprintf("* Example value: `%s`\n", d.Sample[0]))
+			}
+			if len(d.Availability) > 0 {
+				_, _ = io.WriteString(w, fmt.Sprintf("* Availability: %s\n", d.Availability))
+			}
+		}
+	}
 
 	if len(node.Pattern) > 0 {
 		_, _ = io.WriteString(w, fmt.Sprintf("* Pattern: `%s`\n", node.Pattern))
@@ -168,7 +219,8 @@ func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, nod
 	if node.Maximum != nil {
 		_, _ = io.WriteString(w, fmt.Sprintf("* Minimum value: `%0.f`\n", *node.Maximum))
 	}
-	if len(node.Enum) > 0 {
+
+	if node.Type == "enum" {
 		_, _ = io.WriteString(w, fmt.Sprintf("* Allowed values:\n"))
 		for _, v := range node.Enum {
 			s := ""
@@ -185,7 +237,17 @@ func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, nod
 	}
 	_, _ = io.WriteString(w, "\n")
 
-	for k, n := range node.Properties {
-		Degenerate(w, level+1, jsonpath+"."+k, k, node, n)
+	if len(node.Properties) == 0 {
+		return
+	}
+
+	keys := make([]string, 0)
+	for k := range node.Properties {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	for _, k := range keys {
+		Degenerate(w, level+1, jsonpath+"."+k, k, node, node.Properties[k])
 	}
 }
