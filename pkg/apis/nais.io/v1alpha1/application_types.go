@@ -152,6 +152,12 @@ type ApplicationSpec struct {
 	Service *Service `json:"service,omitempty"`
 	// Whether to skip injection of certificate authority bundle or not. Defaults to false.
 	SkipCaBundle bool      `json:"skipCaBundle,omitempty"`
+	// Startup probes will be available with Kubernetes 1.18 (in GCP, and 1.17 on-prem). Do not use this feature yet as it will not work.
+	//
+	// Sometimes, you have to deal with legacy applications that might require an additional startup time on their first
+	// initialization. In such cases, it can be tricky to set up liveness probe parameters without compromising the fast
+	// response to deadlocks that motivated such a probe. The trick is to set up a startup probe with the same command,
+	// HTTP or TCP check, with a failureThreshold * periodSeconds long enough to cover the worst case startup time.
 	Startup      *Probe    `json:"startup,omitempty"`
 	Strategy     *Strategy `json:"strategy,omitempty"`
 	TokenX       *TokenX   `json:"tokenx,omitempty"`
@@ -232,11 +238,22 @@ type SecureLogs struct {
 
 // Liveness probe and readiness probe definitions.
 type Probe struct {
+	// HTTP endpoint path that signals 200 OK if the application has started successfully.
 	Path             string `json:"path"`
+	// Port for the startup probe.
+	// Default: .spec.port
 	Port             int    `json:"port,omitempty"`
+	// Number of seconds after the container has started before startup probes are initiated.
+	// Default: 20
 	InitialDelay     int    `json:"initialDelay,omitempty"`
+	// How often (in seconds) to perform the probe.
+	// Default: 10
 	PeriodSeconds    int    `json:"periodSeconds,omitempty"`
+	// When a Pod starts and the probe fails, Kubernetes will try _failureThreshold_ times before giving up. Giving up in
+	// case of a startup probe means restarting the Pod.
 	FailureThreshold int    `json:"failureThreshold,omitempty"`
+	// Number of seconds after which the probe times out.
+	// Default: 1
 	Timeout          int    `json:"timeout,omitempty"`
 }
 
