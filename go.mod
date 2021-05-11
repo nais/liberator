@@ -13,7 +13,10 @@ require (
 	github.com/stretchr/testify v1.6.1
 	golang.org/x/net v0.0.0-20200324143707-d3edc9973b7e // indirect
 	k8s.io/api v0.17.2
+	k8s.io/apiextensions-apiserver v0.17.2 // indirect
 	k8s.io/apimachinery v0.17.2
 	k8s.io/client-go v0.17.2
+	k8s.io/code-generator v0.17.2 // indirect
 	sigs.k8s.io/controller-runtime v0.5.0
+	sigs.k8s.io/controller-tools v0.2.5 // indirect
 )
