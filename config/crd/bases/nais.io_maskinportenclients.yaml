@@ -51,11 +51,10 @@ spec:
         spec:
           description: MaskinportenClientSpec defines the desired state of MaskinportenClient
           properties:
-            scope:
-              description: MaskinportenScopeSpec is a object of internal end external
-                scopes used and produced by the application
+            scopes:
+              description: Scopes is a object of used end exposed scopes by application
               properties:
-                external:
+                exposes:
                   items:
                     properties:
                       AtAgeMax:
@@ -90,14 +89,14 @@ spec:
                       name:
                         description: An external exposed scope to consumers matching
                           the regex starting with `nav:`
-                        pattern: ^nav:[a-z0-9]+(\/?[a-z0-9]+)*(\.[a-z0-9]+)?$
+                        pattern: ^[a-z0-9]+(\/?[a-z0-9]+)*(\.[a-z0-9]+)?$
                         type: string
                     required:
                     - consumers
                     - name
                     type: object
                   type: array
-                internal:
+                use:
                   items:
                     properties:
                       name:
@@ -106,18 +105,9 @@ spec:
                     - name
                     type: object
                   type: array
+              required:
+              - use
               type: object
-            scopes:
-              description: Scopes is a list of valid scopes that the client can request
-                tokens for. Scopes Deprecated
-              items:
-                properties:
-                  name:
-                    type: string
-                required:
-                - name
-                type: object
-              type: array
             secretName:
               description: SecretName is the name of the resulting Secret resource
                 to be created

@@ -134,21 +134,17 @@ type MaskinportenClientList struct {
 }
 
 type MaskinportenScope struct {
-	Name string `json:"name"`
+	UsedScope     []UsedScope    `json:"use"`
+	ExposedScopes []ExposedScope `json:"exposes,omitempty"`
 }
 
-type MaskinportenScopeSpec struct {
-	Internal []InternalScope `json:"internal,omitempty"`
-	External []ExternalScope `json:"external,omitempty"`
-}
-
-type InternalScope struct {
+type UsedScope struct {
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 }
 
-type ExternalScope struct {
-	// +kubebuilder:validation:Pattern=`^nav:[a-z0-9]+(\/?[a-z0-9]+)*(\.[a-z0-9]+)?$`
+type ExposedScope struct {
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]+(\/?[a-z0-9]+)*(\.[a-z0-9]+)?$`
 	// +kubebuilder:validation:Required
 	// An external exposed scope to consumers matching the regex starting with `nav:`
 	Name string `json:"name"`
@@ -160,10 +156,10 @@ type ExternalScope struct {
 	AllowedIntegrations []string `json:"allowedIntegrations,omitempty"`
 	// External consumers able to get a token on provided scope
 	// +kubebuilder:validation:MinItems=1
-	Consumers []ExternalScopeConsumer `json:"consumers"`
+	Consumers []ExposedScopeConsumer `json:"consumers"`
 }
 
-type ExternalScopeConsumer struct {
+type ExposedScopeConsumer struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`^\d{9}$`
 	// Orgno is an external business organisation number
@@ -174,11 +170,8 @@ type ExternalScopeConsumer struct {
 
 // MaskinportenClientSpec defines the desired state of MaskinportenClient
 type MaskinportenClientSpec struct {
-	// Scopes is a list of valid scopes that the client can request tokens for.
-	// Scopes Deprecated
-	Scopes []MaskinportenScope `json:"scopes,omitempty"`
-	// MaskinportenScopeSpec is a object of internal end external scopes used and produced by the application
-	Scope MaskinportenScopeSpec `json:"scope,omitempty"`
+	// Scopes is a object of used end exposed scopes by application
+	Scopes MaskinportenScope `json:"scopes,omitempty"`
 	// SecretName is the name of the resulting Secret resource to be created
 	SecretName string `json:"secretName"`
 }
@@ -204,25 +197,17 @@ func (in *MaskinportenClient) SetStatus(new DigdiratorStatus) {
 	in.Status = new
 }
 
-func (in MaskinportenClient) GetScopes() []string {
+func (in MaskinportenClient) GetUsedScopes() []string {
 	scopes := make([]string, 0)
-	for _, scope := range in.Spec.Scopes {
+	for _, scope := range in.Spec.Scopes.UsedScope {
 		scopes = append(scopes, scope.Name)
 	}
 	return scopes
 }
 
-func (in MaskinportenClient) GetInternalScopes() []string {
-	scopes := make([]string, 0)
-	for _, scope := range in.Spec.Scope.Internal {
-		scopes = append(scopes, scope.Name)
-	}
-	return scopes
-}
-
-func (in MaskinportenClient) GetExternalScopes() []ExternalScope {
-	scopes := make([]ExternalScope, 0)
-	for _, scope := range in.Spec.Scope.External {
+func (in MaskinportenClient) GetExposedScopes() []ExposedScope {
+	scopes := make([]ExposedScope, 0)
+	for _, scope := range in.Spec.Scopes.ExposedScopes {
 		scopes = append(scopes, scope)
 	}
 	return scopes

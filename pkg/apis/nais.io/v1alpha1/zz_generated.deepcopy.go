@@ -584,7 +584,9 @@ func (in *Maskinporten) DeepCopyInto(out *Maskinporten) {
 	if in.Scopes != nil {
 		in, out := &in.Scopes, &out.Scopes
 		*out = make([]v1.MaskinportenScope, len(*in))
-		copy(*out, *in)
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
 	}
 }
 
