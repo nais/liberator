@@ -53,6 +53,7 @@ type Application struct {
 }
 
 // +kubebuilder:validation:Pattern=`^https:\/\/.+$`
+// +nais:doc:Sample="https://myapplication.nav.no"
 type Ingress string
 
 // ApplicationSpec contains the NAIS manifest.
@@ -122,6 +123,7 @@ type ApplicationSpec struct {
 	Maskinporten *Maskinporten `json:"maskinporten,omitempty"`
 
 	// The port number which is exposed by the container and should receive traffic.
+	// +nais:doc:Sample=8080
 	Port int `json:"port,omitempty"`
 
 	// A HTTP GET will be issued to this endpoint at least once before the pod is terminated.
@@ -174,7 +176,7 @@ type ApplicationSpec struct {
 	// Provides secrets management, identity-based access, and encrypting application data for auditing of secrets
 	// for applications, systems, and users.
 	// See https://github.com/navikt/vault-iac/tree/master/doc.
-	// +nais:doc:availability:"on-premises"
+	// +nais:doc:Availability="on-premises"
 	Vault *Vault `json:"vault,omitempty"`
 
 	// Expose web proxy configuration to the application using the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables.
@@ -255,43 +257,53 @@ type SecureLogs struct {
 // Liveness probe and readiness probe definitions.
 type Probe struct {
 	// HTTP endpoint path that signals 200 OK if the application has started successfully.
+	// +nais:doc:Sample="/isalive"
 	Path string `json:"path"`
 	// Port for the startup probe.
-	// Default: .spec.port
+	// +nais:doc:Sample="http"
 	Port int `json:"port,omitempty"`
 	// Number of seconds after the container has started before startup probes are initiated.
-	// Default: 20
+	// +nais:doc:Sample="20"
 	InitialDelay int `json:"initialDelay,omitempty"`
 	// How often (in seconds) to perform the probe.
-	// Default: 10
+	// +nais:doc:Sample="10"
 	PeriodSeconds int `json:"periodSeconds,omitempty"`
 	// When a Pod starts and the probe fails, Kubernetes will try _failureThreshold_ times before giving up. Giving up in
 	// case of a startup probe means restarting the Pod.
+	// +nais:doc:Sample="10"
 	FailureThreshold int `json:"failureThreshold,omitempty"`
 	// Number of seconds after which the probe times out.
-	// Default: 1
+	// +nais:doc:Sample="1"
 	Timeout int `json:"timeout,omitempty"`
 }
 
 type PrometheusConfig struct {
+	// +nais:doc:Sample="true"
 	Enabled bool   `json:"enabled,omitempty"`
+	// +nais:doc:Sample="8080"
 	Port    string `json:"port,omitempty"`
+	// +nais:doc:Sample="/metrics"
 	Path    string `json:"path,omitempty"`
 }
 
 type Replicas struct {
 	// The minimum amount of replicas acceptable for a successful deployment.
+	// +nais:doc:Sample="2"
 	Min int `json:"min,omitempty"`
 	// The pod autoscaler will scale deployments on demand until this maximum has been reached.
+	// +nais:doc:Sample="4"
 	Max int `json:"max,omitempty"`
 	// Amount of CPU usage before the autoscaler kicks in.
+	// +nais:doc:Sample="50"
 	CpuThresholdPercentage int `json:"cpuThresholdPercentage,omitempty"`
 }
 
 type ResourceSpec struct {
 	// +kubebuilder:validation:Pattern=^\d+m?$
+	// +nais:doc:Sample="500m"
 	Cpu string `json:"cpu,omitempty"`
 	// +kubebuilder:validation:Pattern=^\d+[KMG]i$
+	// +nais:doc:Sample="256Mi"
 	Memory string `json:"memory,omitempty"`
 }
 
@@ -409,37 +421,50 @@ type GCP struct {
 }
 
 type EnvVar struct {
+	// +nais:doc:Sample="MY_CUSTOM_VAR"
 	Name      string        `json:"name"`
+	// +nais:doc:Sample="some_value"
 	Value     string        `json:"value,omitempty"`
 	ValueFrom *EnvVarSource `json:"valueFrom,omitempty"`
 }
 
 type EnvFrom struct {
+	// +nais:doc:Sample="configmap-with-envs"
 	ConfigMap string `json:"configmap,omitempty"`
+	// +nais:doc:Sample="secret-with-envs"
 	Secret    string `json:"secret,omitempty"`
 }
 
 type FilesFrom struct {
+	// +nais:doc:Sample="example-files-configmap"
 	ConfigMap string `json:"configmap,omitempty"`
+	// +nais:doc:Sample="my-secret-file"
 	Secret    string `json:"secret,omitempty"`
+	// +nais:doc:Sample="/var/run/secrets"
 	MountPath string `json:"mountPath,omitempty"`
 }
 
 type SecretPath struct {
+	// +nais:doc:Sample="/var/run/secrets/nais.io/vault"
 	MountPath string `json:"mountPath"`
+	// +nais:doc:Sample="/kv/preprod/fss/application/namespace"
 	KvPath    string `json:"kvPath"`
 	// +kubebuilder:validation:Enum=flatten;json;yaml;env;properties;""
+	// +nais:doc:Sample="env"
 	Format string `json:"format,omitempty"`
 }
 
 type Vault struct {
+	// +nais:doc:Sample="true"
 	Enabled bool         `json:"enabled,omitempty"`
+	// +nais:doc:Sample="true"
 	Sidecar bool         `json:"sidecar,omitempty"`
 	Paths   []SecretPath `json:"paths,omitempty"`
 }
 
 type Strategy struct {
 	// +kubebuilder:validation:Enum=Recreate;RollingUpdate
+	// +nais:doc:Sample=RollingUpdate
 	Type string `json:"type"`
 }
 
