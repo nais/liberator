@@ -92,8 +92,11 @@ type ApplicationSpec struct {
 	Readiness       *Probe                   `json:"readiness,omitempty"`
 	Replicas        *Replicas                `json:"replicas,omitempty"`
 	Resources       *ResourceRequirements    `json:"resources,omitempty"`
+	// Whether or not to enable a sidecar container for secure logging.
 	SecureLogs      *SecureLogs              `json:"secureLogs,omitempty"`
+	// How to connect to the default service in your application's container.
 	Service         *Service                 `json:"service,omitempty"`
+	// Whether to skip injection of certificate authority bundle or not. Defaults to false.
 	SkipCaBundle    bool                     `json:"skipCaBundle,omitempty"`
 	Startup         *Probe                   `json:"startup,omitempty"`
 	Strategy        *Strategy                `json:"strategy,omitempty"`
@@ -171,7 +174,9 @@ type AzureApplication struct {
 }
 
 type SecureLogs struct {
-	// Whether or not to enable a sidecar container for secure logging.
+	// If true, mount a volume for secure logs in the pod.
+	// Default: false
+
 	Enabled bool `json:"enabled"`
 }
 
@@ -357,7 +362,9 @@ type Strategy struct {
 
 type Service struct {
 	// +kubebuilder:validation:Enum=http;redis;tcp;grpc
+	// Which protocol the backend service runs on. Default is http.
 	Protocol string `json:"protocol,omitempty"`
+	// Port for the default service. Default port is 80.
 	Port     int32  `json:"port"`
 }
 
