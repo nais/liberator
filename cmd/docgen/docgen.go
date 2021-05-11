@@ -165,8 +165,10 @@ func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, nod
 	}
 
 	if node.Type == "array" {
-		Degenerate(w, level, jsonpath+"[]", key, parent, *node.Items.Schema)
-		return
+		node.Properties = node.Items.Schema.Properties
+		jsonpath += "[]"
+		// Degenerate(w, level, jsonpath+"[]", key, parent, *node.Items.Schema)
+		// return
 	}
 
 	var required bool
@@ -231,7 +233,7 @@ func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, nod
 			if len(s) > 0 {
 				_, _ = io.WriteString(w, fmt.Sprintf("  * `%s`\n", s))
 			} else {
-				_, _ = io.WriteString(w, fmt.Sprintf("  * (empty)\n"))
+				_, _ = io.WriteString(w, fmt.Sprintf("  * _no value_\n"))
 			}
 		}
 	}

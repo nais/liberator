@@ -58,13 +58,26 @@ type Ingress string
 // ApplicationSpec contains the NAIS manifest.
 // Please keep this list sorted for clarity.
 type ApplicationSpec struct {
+	// By default, all traffic is disallowed between applications inside the cluster.
+	// Configure access policies to allow specific applications.
+	// +nais:doc:Availability=GCP
 	AccessPolicy    *nais_io_v1.AccessPolicy `json:"accessPolicy,omitempty"`
 	Azure           *Azure                   `json:"azure,omitempty"`
 	Elastic         *Elastic                 `json:"elastic,omitempty"`
+	// Custom environment variables injected into your container.
 	Env             []EnvVar                 `json:"env,omitempty"`
+	// Will expose all variables in ConfigMap or Secret resource as environment variables.
+	// One of `configmap` or `secret` is required.
+	// +nais:doc:Availability="team namespaces"
 	EnvFrom         []EnvFrom                `json:"envFrom,omitempty"`
+	// List of ConfigMap or Secret resources that will have their contents mounted into the containers as files.
+	// Either `configmap` or `secret` is required.
+	// +nais:doc:Availability="team namespaces"
 	FilesFrom       []FilesFrom              `json:"filesFrom,omitempty"`
+	// +nais:doc:Availability="GCP"
 	GCP             *GCP                     `json:"gcp,omitempty"`
+	// Configures an ID-porten client for this application.
+	// See [ID-porten](https://doc.nais.io/security/auth/idporten/) for more details.
 	IDPorten        *IDPorten                `json:"idporten,omitempty"`
 	Image           string                   `json:"image"`
 	Ingresses       []Ingress                `json:"ingresses,omitempty"`
@@ -111,6 +124,8 @@ type ApplicationList struct {
 }
 
 type Azure struct {
+	// Configures an Azure AD client for this application.
+	// See [Azure AD](https://doc.nais.io/security/auth/azure-ad/) for more details.
 	Application *AzureApplication `json:"application"`
 }
 
@@ -288,12 +303,20 @@ type Maintenance struct {
 }
 
 type Elastic struct {
+	// Provisions an Elasticsearch instance and configures your application so it can access it.
+	// Use the `instance_name` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+	// +nais:doc:Availability=GCP
 	Instance string `json:"instance"`
 }
 
 type GCP struct {
+	// Provision cloud storage buckets and connect them to your application.
 	Buckets      []CloudStorageBucket `json:"buckets,omitempty"`
+	// Provision database instances and connect them to your application.
+	// See [PostgreSQL documentation](https://doc.nais.io/persistence/postgres/) for more details.
 	SqlInstances []CloudSqlInstance   `json:"sqlInstances,omitempty"`
+	// List of _additional_ permissions that should be granted to your application for accessing external GCP resources that have not been provisioned through NAIS.
+	// [Supported resources found here](https://cloud.google.com/config-connector/docs/reference/resource-docs/iam/iampolicymember#external_organization_level_policy_member).
 	Permissions  []CloudIAMPermission `json:"permissions,omitempty"`
 }
 
