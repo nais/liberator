@@ -1,9 +1,14 @@
 package kafka_nais_io_v1
 
 import (
+	"github.com/nais/liberator/pkg/strings"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"time"
+)
+
+const (
+	AivenFinalizer = "aiven.kafka.nais.io"
 )
 
 func init() {
@@ -94,10 +99,22 @@ func (in *AivenApplication) GetOwnerReference() metav1.OwnerReference {
 	}
 }
 
-func (in *AivenApplicationStatus) AddCondition(condition AivenApplicationCondition) {
+func (in *AivenApplication) ServiceUserPrefix() string {
+	username := in.GetNamespace() + "." + in.GetName()
+	return username
+}
+
+func (in *AivenApplicationStatus) AddCondition(condition AivenApplicationCondition, dropTypes ...AivenApplicationConditionType) {
+	var dropTypeStrings []string
+	for _, dropType := range dropTypes {
+		dropTypeStrings = append(dropTypeStrings, string(dropType))
+	}
 	condition.LastUpdateTime = metav1.Time{time.Now()}
 	conditions := make([]AivenApplicationCondition, 0, len(in.Conditions))
 	for _, c := range in.Conditions {
+		if strings.ContainsString(dropTypeStrings, string(c.Type)) {
+			continue
+		}
 		if c.Type != condition.Type {
 			conditions = append(conditions, c)
 		}
@@ -106,7 +123,11 @@ func (in *AivenApplicationStatus) AddCondition(condition AivenApplicationConditi
 	in.Conditions = conditions
 }
 
-func (in *AivenApplication) ServiceUserPrefix() string {
-	username := in.GetNamespace() + "." + in.GetName()
-	return username
+func (in *AivenApplicationStatus) GetConditionOfType(conditionType AivenApplicationConditionType) *AivenApplicationCondition {
+	for _, condition := range in.Conditions {
+		if condition.Type == conditionType {
+			return &condition
+		}
+	}
+	return nil
 }
