@@ -343,6 +343,8 @@ spec:
                   type: array
               type: object
             idporten:
+              description: "this is a multi-line comment. \n Example: ```   foo bar
+                baz   neste linje ```"
               properties:
                 accessTokenLifetime:
                   maximum: 3600

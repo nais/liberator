@@ -127,6 +127,15 @@ type TokenX struct {
 	MountSecretsAsFilesOnly bool `json:"mountSecretsAsFilesOnly,omitempty"`
 }
 
+// this is
+// a multi-line
+// comment.
+//
+// Example:
+// ```
+//   foo bar baz
+//   neste linje
+// ```
 type IDPorten struct {
 	Enabled   bool   `json:"enabled"`
 	ClientURI string `json:"clientURI,omitempty"`
