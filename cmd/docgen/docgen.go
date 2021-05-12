@@ -41,6 +41,21 @@ type Doc struct {
 	Availability string `marker:"Availability,optional"`
 }
 
+type ExtDoc struct {
+	Doc
+	Level       int
+	Title       string
+	Description string
+	Path        string
+	Type        string
+	Required    bool
+	Default     string
+	Pattern     string
+	Minimum     *float64
+	Maximum     *float64
+	Enum        []string
+}
+
 // Hijack the "example" field for custom documentation fields
 func (m Doc) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
 	d := &Doc{}
@@ -184,7 +199,60 @@ func linefmt(format string, args ...interface{}) string {
 	}
 	format = strings.ReplaceAll(format, "``", "_no value_")
 	return format + "<br />\n"
+}
 
+func (m ExtDoc) formatStraight(w io.Writer) {
+	io.WriteString(w, fmt.Sprintf("%s %s\n", strings.Repeat("#", m.Level), m.Title))
+	io.WriteString(w, "\n")
+	if len(m.Description) > 0 {
+		io.WriteString(w, m.Description)
+		io.WriteString(w, "\n\n")
+	}
+	io.WriteString(w, linefmt("Path: `%s`", m.Path))
+	io.WriteString(w, linefmt("Type: `%s`", m.Type))
+	io.WriteString(w, linefmt("Required: `%s`", strconv.FormatBool(m.Required)))
+	switch {
+	case len(m.Default) > 0:
+		io.WriteString(w, linefmt("Default value: `%v`", m.Default))
+	case len(m.Sample) > 1:
+		io.WriteString(w, linefmt("Example values:"))
+		io.WriteString(w, fmt.Sprintf("\n"))
+		for _, sample := range m.Sample {
+			io.WriteString(w, fmt.Sprintf("  * `%s`\n", sample))
+		}
+	case len(m.Sample) == 1:
+		io.WriteString(w, linefmt("Example value: `%s`", m.Sample[0]))
+	}
+	if len(m.Availability) > 0 {
+		io.WriteString(w, linefmt("Availability: %s", m.Availability))
+	}
+	if len(m.Pattern) > 0 {
+		io.WriteString(w, linefmt("Pattern: `%s`", m.Pattern))
+	}
+	if m.Minimum != m.Maximum {
+		io.WriteString(w, linefmt("Minimum value: `%d`", m.Minimum))
+		io.WriteString(w, linefmt("Minimum value: `%d`", m.Maximum))
+	}
+	if len(m.Enum) > 0 {
+		io.WriteString(w, linefmt("Allowed values:"))
+		for _, v := range m.Enum {
+			if len(v) > 0 {
+				io.WriteString(w, fmt.Sprintf("  * `%s`\n", v))
+			} else {
+				io.WriteString(w, fmt.Sprintf("  * _no value_\n"))
+			}
+		}
+	}
+	io.WriteString(w, "\n")
+}
+
+func hasRequired(node apiext.JSONSchemaProps, key string) bool {
+	for _, k := range node.Required {
+		if k == key {
+			return true
+		}
+	}
+	return false
 }
 
 func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, node apiext.JSONSchemaProps) {
@@ -198,87 +266,47 @@ func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, nod
 		jsonpath += "[]"
 	}
 
-	var required bool
-	for _, k := range parent.Required {
-		if k == key {
-			required = true
-			break
-		}
-	}
-
-	_, _ = io.WriteString(w, fmt.Sprintf("%s %s\n", strings.Repeat("#", level), key))
-	_, _ = io.WriteString(w, "\n")
-
-	if len(node.Description) > 0 {
-		_, _ = io.WriteString(w, strings.TrimSpace(node.Description))
-		_, _ = io.WriteString(w, "\n\n")
-	}
 	if len(node.Enum) > 0 {
 		node.Type = "enum"
 	}
-	_, _ = io.WriteString(w, linefmt("Path: `%s`", jsonpath))
-	_, _ = io.WriteString(w, linefmt("Type: `%s`", node.Type))
-	_, _ = io.WriteString(w, linefmt("Required: `%s`", strconv.FormatBool(required)))
+
+	entry := &ExtDoc{
+		Title:       key,
+		Path:        jsonpath,
+		Required:    hasRequired(parent, key),
+		Description: strings.TrimSpace(node.Description),
+		Type:        node.Type,
+	}
 
 	defaultValue, err := getValueFromStruct(strings.Trim(jsonpath, "."), defaultApplication)
-	if err != nil {
-		defaultValue = nil
-	}
-	// if err == nil {
-	// _, _ = io.WriteString(w, fmt.Sprintf("* Default value: `%v`\n", defaultValue))
-	// }
-
-	if node.Example != nil {
-		d := &Doc{}
-		err := json.Unmarshal(node.Example.Raw, d)
-		if err == nil {
-			var def string
-			if defaultValue != nil {
-				def = fmt.Sprintf("%v", defaultValue)
-			}
-			switch {
-			case len(def) > 0:
-				_, _ = io.WriteString(w, linefmt("Default value: `%v`", defaultValue))
-			case len(d.Sample) > 1:
-				_, _ = io.WriteString(w, linefmt("Example values:"))
-				for _, sample := range d.Sample {
-					_, _ = io.WriteString(w, fmt.Sprintf("  * `%s`\n", sample))
-				}
-			case len(d.Sample) == 1:
-				_, _ = io.WriteString(w, linefmt("Example value: `%s`", d.Sample[0]))
-			}
-			if len(d.Availability) > 0 {
-				_, _ = io.WriteString(w, linefmt("Availability: %s", d.Availability))
-			}
-		}
+	if err == nil {
+		entry.Default = fmt.Sprintf("%v", defaultValue)
 	}
 
-	if len(node.Pattern) > 0 {
-		_, _ = io.WriteString(w, linefmt("Pattern: `%s`", node.Pattern))
-	}
-	if node.Minimum != nil {
-		_, _ = io.WriteString(w, linefmt("Minimum value: `%0.f`", *node.Minimum))
-	}
-	if node.Maximum != nil {
-		_, _ = io.WriteString(w, linefmt("Minimum value: `%0.f`", *node.Maximum))
-	}
-
-	if node.Type == "enum" {
-		_, _ = io.WriteString(w, linefmt("Allowed values:"))
+	if len(node.Enum) > 0 {
+		entry.Enum = make([]string, 0, len(entry.Enum))
 		for _, v := range node.Enum {
 			s := ""
 			err := json.Unmarshal(v.Raw, &s)
 			if err != nil {
 				s = string(v.Raw)
 			}
-			if len(s) > 0 {
-				_, _ = io.WriteString(w, fmt.Sprintf("  * `%s`\n", s))
-			} else {
-				_, _ = io.WriteString(w, fmt.Sprintf("  * _no value_\n"))
-			}
+			entry.Enum = append(entry.Enum, s)
 		}
 	}
-	_, _ = io.WriteString(w, "\n")
+
+	if node.Example != nil {
+		d := &Doc{}
+		err := json.Unmarshal(node.Example.Raw, d)
+		if err == nil {
+			err = mergo.Merge(entry, d)
+		}
+		if err == nil {
+			log.Errorf("unable to merge structs: %s", err)
+		}
+	}
+
+	entry.formatStraight(w)
 
 	if len(node.Properties) == 0 {
 		return
