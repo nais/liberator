@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"reflect"
 	"sort"
 	"strconv"
 	"strings"
 
 	"github.com/imdario/mergo"
+	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
 	apiext "k8s.io/apiextensions-apiserver/pkg/apis/apiextensions/v1"
@@ -21,6 +23,8 @@ import (
 )
 
 // Generate documentation for NAIS CRD's
+
+var defaultApplication interface{}
 
 type Config struct {
 	Directory string
@@ -132,6 +136,20 @@ func run() error {
 	}
 	mw := &multiwriter{w: output}
 
+	app := nais_io_v1alpha1.Application{}
+	err = nais_io_v1alpha1.ApplyDefaults(&app)
+	if err != nil {
+		return err
+	}
+	data, err := json.Marshal(app)
+	if err != nil {
+		return err
+	}
+	err = json.Unmarshal(data, &defaultApplication)
+	if err != nil {
+		return err
+	}
+
 	for k, schemata := range pars.FlattenedSchemata {
 		Degenerate(mw, 1, "", k.Name, schemata, schemata)
 	}
@@ -164,11 +182,10 @@ func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, nod
 		return
 	}
 
+	// Override children when encountering an array
 	if node.Type == "array" {
 		node.Properties = node.Items.Schema.Properties
 		jsonpath += "[]"
-		// Degenerate(w, level, jsonpath+"[]", key, parent, *node.Items.Schema)
-		// return
 	}
 
 	var required bool
@@ -193,15 +210,29 @@ func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, nod
 	_, _ = io.WriteString(w, fmt.Sprintf("* Type: `%s`\n", node.Type))
 	_, _ = io.WriteString(w, fmt.Sprintf("* Required: `%s`\n", strconv.FormatBool(required)))
 
+	defaultValue, err := getValueFromStruct(strings.Trim(jsonpath, "."), defaultApplication)
+	if err != nil {
+		defaultValue = nil
+	}
+	// if err == nil {
+	// _, _ = io.WriteString(w, fmt.Sprintf("* Default value: `%v`\n", defaultValue))
+	// }
+
 	if node.Example != nil {
 		d := &Doc{}
 		err := json.Unmarshal(node.Example.Raw, d)
 		if err == nil {
+			var def string
+			if defaultValue != nil {
+				def = fmt.Sprintf("%v", defaultValue)
+			}
 			switch {
+			case len(def) > 0:
+				_, _ = io.WriteString(w, fmt.Sprintf("* Default value: `%v`\n", defaultValue))
 			case len(d.Sample) > 1:
 				_, _ = io.WriteString(w, fmt.Sprintf("* Example values:\n"))
 				for _, sample := range d.Sample {
-					_, _ = io.WriteString(w, fmt.Sprintf("  * `%s`\n", sample))
+					_, _ = io.WriteString(w, fmt.Sprintf("    * `%s`\n", sample))
 				}
 			case len(d.Sample) == 1:
 				_, _ = io.WriteString(w, fmt.Sprintf("* Example value: `%s`\n", d.Sample[0]))
@@ -252,4 +283,55 @@ func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, nod
 	for _, k := range keys {
 		Degenerate(w, level+1, jsonpath+"."+k, k, node, node.Properties[k])
 	}
+}
+
+func getValueFromStruct(keyWithDots string, object interface{}) (interface{}, error) {
+	keySlice := strings.Split(keyWithDots, ".")
+	v := reflect.ValueOf(object)
+	// iterate through field names ,ignore the first name as it might be the current instance name
+	// you can make it recursive also if want to support types like slice,map etc along with struct
+
+	for _, key := range keySlice {
+		if len(key) == 0 {
+			break
+		}
+		for v.Kind() == reflect.Ptr {
+			v = v.Elem()
+		}
+		if v.Kind() != reflect.Map {
+			return nil, fmt.Errorf("only accepts maps; got %T", v)
+		}
+		getKey := func() error {
+			for _, k := range v.MapKeys() {
+				if k.String() == key {
+					v = v.MapIndex(k).Elem()
+					return nil
+				}
+			}
+			return fmt.Errorf("key not found")
+		}
+		err := getKey()
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	if !v.IsValid() {
+		return nil, fmt.Errorf("no value")
+	}
+
+	if v.Kind() == reflect.Ptr {
+		v = v.Elem()
+	}
+
+	switch v.Kind() {
+	case reflect.String:
+	case reflect.Int:
+	case reflect.Bool:
+	case reflect.Float64:
+	default:
+		return nil, fmt.Errorf("only scalar values supported")
+	}
+
+	return v.Interface(), nil
 }
