@@ -262,9 +262,9 @@ func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, nod
 				s = string(v.Raw)
 			}
 			if len(s) > 0 {
-				_, _ = io.WriteString(w, fmt.Sprintf("  * `%s`\n", s))
+				_, _ = io.WriteString(w, fmt.Sprintf("    * `%s`\n", s))
 			} else {
-				_, _ = io.WriteString(w, fmt.Sprintf("  * _no value_\n"))
+				_, _ = io.WriteString(w, fmt.Sprintf("    * _no value_\n"))
 			}
 		}
 	}
