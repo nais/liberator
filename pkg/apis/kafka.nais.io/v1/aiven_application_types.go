@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	AivenFinalizer = "aiven.kafka.nais.io"
+	AivenFinalizer = "aiven.kafka.nais.io/finalizer"
 )
 
 func init() {
