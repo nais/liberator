@@ -1,5 +1,5 @@
 # Makefile setup
-.PHONY: test generate mocks controller-gen
+.PHONY: test generate mocks controller-gen doc
 
 # Lock down version of controller-gen
 # See _code generation_ in README.md

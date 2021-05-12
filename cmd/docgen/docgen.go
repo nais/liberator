@@ -42,18 +42,19 @@ type Doc struct {
 }
 
 type ExtDoc struct {
-	Doc
-	Level       int
-	Title       string
-	Description string
-	Path        string
-	Type        string
-	Required    bool
-	Default     string
-	Pattern     string
-	Minimum     *float64
-	Maximum     *float64
-	Enum        []string
+	Sample       []string
+	Availability string
+	Level        int
+	Title        string
+	Description  string
+	Path         string
+	Type         string
+	Required     bool
+	Default      string
+	Pattern      string
+	Minimum      *float64
+	Maximum      *float64
+	Enum         []string
 }
 
 // Hijack the "example" field for custom documentation fields
@@ -201,6 +202,13 @@ func linefmt(format string, args ...interface{}) string {
 	return format + "<br />\n"
 }
 
+func floatfmt(f *float64) string {
+	if f == nil {
+		return "+Inf"
+	}
+	return strconv.FormatFloat(*f, 'f', 0, 64)
+}
+
 func (m ExtDoc) formatStraight(w io.Writer) {
 	io.WriteString(w, fmt.Sprintf("%s %s\n", strings.Repeat("#", m.Level), m.Title))
 	io.WriteString(w, "\n")
@@ -230,8 +238,9 @@ func (m ExtDoc) formatStraight(w io.Writer) {
 		io.WriteString(w, linefmt("Pattern: `%s`", m.Pattern))
 	}
 	if m.Minimum != m.Maximum {
-		io.WriteString(w, linefmt("Minimum value: `%d`", m.Minimum))
-		io.WriteString(w, linefmt("Minimum value: `%d`", m.Maximum))
+		min := floatfmt(m.Minimum)
+		max := floatfmt(m.Maximum)
+		io.WriteString(w, linefmt("Value range: `%s`-`%s`", min, max))
 	}
 	if len(m.Enum) > 0 {
 		io.WriteString(w, linefmt("Allowed values:"))
@@ -305,10 +314,14 @@ func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, nod
 	}
 
 	entry := &ExtDoc{
-		Title:       key,
-		Path:        jsonpath,
-		Required:    hasRequired(parent, key),
 		Description: strings.TrimSpace(node.Description),
+		Level:       level,
+		Maximum:     node.Maximum,
+		Minimum:     node.Minimum,
+		Path:        jsonpath,
+		Pattern:     node.Pattern,
+		Required:    hasRequired(parent, key),
+		Title:       key,
 		Type:        node.Type,
 	}
 
@@ -333,9 +346,10 @@ func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, nod
 		d := &Doc{}
 		err := json.Unmarshal(node.Example.Raw, d)
 		if err == nil {
-			err = mergo.Merge(entry, d)
+			entry.Availability = d.Availability
+			entry.Sample = d.Sample
 		}
-		if err == nil {
+		if err != nil {
 			log.Errorf("unable to merge structs: %s", err)
 		}
 	}
