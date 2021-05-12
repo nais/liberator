@@ -246,6 +246,40 @@ func (m ExtDoc) formatStraight(w io.Writer) {
 	io.WriteString(w, "\n")
 }
 
+func cell(s string) string {
+	return "| " + s + " "
+}
+
+func (m ExtDoc) formatTable(w io.Writer) {
+	io.WriteString(w, fmt.Sprintf("%s %s\n", strings.Repeat("#", m.Level), m.Title))
+	io.WriteString(w, "\n")
+	if len(m.Description) > 0 {
+		io.WriteString(w, m.Description)
+		io.WriteString(w, "\n\n")
+	}
+	io.WriteString(w, "| Path | Type | Required | Default | Example | Availability | Supported values |\n")
+	io.WriteString(w, "|------|------|----------|---------|---------|--------------|------------------|\n")
+	io.WriteString(w, cell(m.Path))
+	io.WriteString(w, cell(m.Type))
+	io.WriteString(w, cell(strconv.FormatBool(m.Required)))
+	io.WriteString(w, cell(m.Default))
+	if len(m.Sample) > 0 {
+		io.WriteString(w, cell(m.Sample[0]))
+	} else {
+		io.WriteString(w, cell(""))
+	}
+	io.WriteString(w, cell(m.Availability))
+	switch {
+	case m.Minimum != m.Maximum:
+		io.WriteString(w, cell(fmt.Sprintf("%d-%d", m.Minimum, m.Maximum)))
+	case len(m.Enum) > 0:
+		io.WriteString(w, cell(strings.Join(m.Enum, ", ")))
+	case len(m.Pattern) > 0:
+		io.WriteString(w, cell(m.Pattern))
+	}
+	io.WriteString(w, "\n")
+}
+
 func hasRequired(node apiext.JSONSchemaProps, key string) bool {
 	for _, k := range node.Required {
 		if k == key {
