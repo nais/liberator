@@ -99,7 +99,7 @@ type ApplicationSpec struct {
 	// Enable Aiven Kafka for your application.
 	Kafka *Kafka `json:"kafka,omitempty"`
 
-	// If true, a HTTP endpoint will be available at `$ELECTOR_PATH` that returns the current leader.
+	// If true, an HTTP endpoint will be available at `$ELECTOR_PATH` that returns the current leader.
 	// See https://doc.nais.io/addons/leader-election/.
 	LeaderElection bool `json:"leaderElection,omitempty"`
 
@@ -268,8 +268,8 @@ type Probe struct {
 	// How often (in seconds) to perform the probe.
 	// +nais:doc:Sample="10"
 	PeriodSeconds int `json:"periodSeconds,omitempty"`
-	// When a Pod starts and the probe fails, Kubernetes will try _failureThreshold_ times before giving up. Giving up in
-	// case of a startup probe means restarting the Pod.
+	// When a Pod starts, and the probe fails, Kubernetes will try _failureThreshold_ times before giving up.
+	// Giving up in case of a startup probe means restarting the Pod.
 	// +nais:doc:Sample="10"
 	FailureThreshold int `json:"failureThreshold,omitempty"`
 	// Number of seconds after which the probe times out.

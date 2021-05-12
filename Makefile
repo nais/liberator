@@ -20,6 +20,10 @@ generate: controller-gen
 	$(CONTROLLER_GEN) object paths="./pkg/apis/..."
 	$(CONTROLLER_GEN) crd:trivialVersions=true rbac:roleName=manager-role webhook paths="./pkg/apis/..." output:crd:artifacts:config=config/crd/bases
 
+doc:
+	mkdir -p doc
+	go run cmd/docgen/docgen.go --dir ./pkg/apis/... --group nais.io --kind Application --output doc/application.md
+
 mocks:
 	cd pkg/ && mockery --inpackage --all --case snake
 

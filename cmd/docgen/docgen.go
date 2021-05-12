@@ -141,7 +141,7 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	data, err := json.Marshal(app)
+	data, err := json.Marshal(app.Spec)
 	if err != nil {
 		return err
 	}
@@ -150,8 +150,8 @@ func run() error {
 		return err
 	}
 
-	for k, schemata := range pars.FlattenedSchemata {
-		Degenerate(mw, 1, "", k.Name, schemata, schemata)
+	for _, schemata := range pars.FlattenedSchemata {
+		Degenerate(mw, 1, "", "NAIS application", schemata.Properties["spec"], schemata.Properties["spec"])
 	}
 
 	return mw.Error()
@@ -175,6 +175,16 @@ func (m *multiwriter) Write(p []byte) (int, error) {
 
 func (m *multiwriter) Error() error {
 	return m.err
+}
+
+func linefmt(format string, args ...interface{}) string {
+	format = fmt.Sprintf(format, args...)
+	if len(format) == 0 {
+		format = "_no value_"
+	}
+	format = strings.ReplaceAll(format, "``", "_no value_")
+	return format + "<br />\n"
+
 }
 
 func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, node apiext.JSONSchemaProps) {
@@ -206,9 +216,9 @@ func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, nod
 	if len(node.Enum) > 0 {
 		node.Type = "enum"
 	}
-	_, _ = io.WriteString(w, fmt.Sprintf("* JSONPath: `%s`\n", jsonpath))
-	_, _ = io.WriteString(w, fmt.Sprintf("* Type: `%s`\n", node.Type))
-	_, _ = io.WriteString(w, fmt.Sprintf("* Required: `%s`\n", strconv.FormatBool(required)))
+	_, _ = io.WriteString(w, linefmt("Path: `%s`", jsonpath))
+	_, _ = io.WriteString(w, linefmt("Type: `%s`", node.Type))
+	_, _ = io.WriteString(w, linefmt("Required: `%s`", strconv.FormatBool(required)))
 
 	defaultValue, err := getValueFromStruct(strings.Trim(jsonpath, "."), defaultApplication)
 	if err != nil {
@@ -228,33 +238,33 @@ func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, nod
 			}
 			switch {
 			case len(def) > 0:
-				_, _ = io.WriteString(w, fmt.Sprintf("* Default value: `%v`\n", defaultValue))
+				_, _ = io.WriteString(w, linefmt("Default value: `%v`", defaultValue))
 			case len(d.Sample) > 1:
-				_, _ = io.WriteString(w, fmt.Sprintf("* Example values:\n"))
+				_, _ = io.WriteString(w, linefmt("Example values:"))
 				for _, sample := range d.Sample {
-					_, _ = io.WriteString(w, fmt.Sprintf("    * `%s`\n", sample))
+					_, _ = io.WriteString(w, fmt.Sprintf("  * `%s`\n", sample))
 				}
 			case len(d.Sample) == 1:
-				_, _ = io.WriteString(w, fmt.Sprintf("* Example value: `%s`\n", d.Sample[0]))
+				_, _ = io.WriteString(w, linefmt("Example value: `%s`", d.Sample[0]))
 			}
 			if len(d.Availability) > 0 {
-				_, _ = io.WriteString(w, fmt.Sprintf("* Availability: %s\n", d.Availability))
+				_, _ = io.WriteString(w, linefmt("Availability: %s", d.Availability))
 			}
 		}
 	}
 
 	if len(node.Pattern) > 0 {
-		_, _ = io.WriteString(w, fmt.Sprintf("* Pattern: `%s`\n", node.Pattern))
+		_, _ = io.WriteString(w, linefmt("Pattern: `%s`", node.Pattern))
 	}
 	if node.Minimum != nil {
-		_, _ = io.WriteString(w, fmt.Sprintf("* Minimum value: `%0.f`\n", *node.Minimum))
+		_, _ = io.WriteString(w, linefmt("Minimum value: `%0.f`", *node.Minimum))
 	}
 	if node.Maximum != nil {
-		_, _ = io.WriteString(w, fmt.Sprintf("* Minimum value: `%0.f`\n", *node.Maximum))
+		_, _ = io.WriteString(w, linefmt("Minimum value: `%0.f`", *node.Maximum))
 	}
 
 	if node.Type == "enum" {
-		_, _ = io.WriteString(w, fmt.Sprintf("* Allowed values:\n"))
+		_, _ = io.WriteString(w, linefmt("Allowed values:"))
 		for _, v := range node.Enum {
 			s := ""
 			err := json.Unmarshal(v.Raw, &s)
@@ -262,9 +272,9 @@ func Degenerate(w io.Writer, level int, jsonpath string, key string, parent, nod
 				s = string(v.Raw)
 			}
 			if len(s) > 0 {
-				_, _ = io.WriteString(w, fmt.Sprintf("    * `%s`\n", s))
+				_, _ = io.WriteString(w, fmt.Sprintf("  * `%s`\n", s))
 			} else {
-				_, _ = io.WriteString(w, fmt.Sprintf("    * _no value_\n"))
+				_, _ = io.WriteString(w, fmt.Sprintf("  * _no value_\n"))
 			}
 		}
 	}
