@@ -98,16 +98,11 @@ spec:
                 this application at digdir
               properties:
                 scopes:
-                  items:
-                    properties:
-                      name:
-                        type: string
-                      organizationNumbers:
-                        items:
-                          type: string
-                        type: array
-                    type: object
-                  type: array
+                  additionalProperties:
+                    items:
+                      type: string
+                    type: array
+                  type: object
               type: object
             clientID:
               description: ClientID is the corresponding client ID for this client

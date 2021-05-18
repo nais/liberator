@@ -71,30 +71,15 @@ func (in *DigdiratorStatus) SetSynchronizationSecretName(name string) {
 	in.SynchronizationSecretName = name
 }
 
-func (in *DigdiratorStatus) SetApplicationScopes(applicationScopes []string) {
-	scopes := make([]Scope, 0)
-	for _, desiredScope := range applicationScopes {
-		scopes = append(scopes, Scope{
-			Name: desiredScope,
-		})
-	}
-	in.ApplicationScope.Scopes = scopes
-}
-
 func (in *DigdiratorStatus) SetApplicationScopeConsumer(applicationScope string, orgNumbers []string) {
-	scopes := make([]Scope, 0)
-	for _, actualScope := range in.ApplicationScope.Scopes {
-		if actualScope.Name == applicationScope {
-			scopes = append(scopes, Scope{
-				Name:                actualScope.Name,
-				OrganizationNumbers: orgNumbers,
-			})
-		}
+	scopes := make(map[string][]string)
+	scopes = map[string][]string{
+		applicationScope: orgNumbers,
 	}
 	in.ApplicationScope.Scopes = scopes
 }
 
-func (in *DigdiratorStatus) GetApplicationScopes() []Scope {
+func (in *DigdiratorStatus) GetApplicationScopes() map[string][]string {
 	return in.ApplicationScope.Scopes
 }
 
@@ -144,18 +129,18 @@ type UsedScope struct {
 }
 
 type ExposedScope struct {
-	// +kubebuilder:validation:Pattern=`^[a-z0-9]+(\/?[a-z0-9]+)*(\.[a-z0-9]+)?$`
 	// +kubebuilder:validation:Required
-	// An external exposed scope to consumers matching the regex starting with `nav:`
+	Enabled bool `json:"enabled"`
+	// +kubebuilder:validation:Pattern=`^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$`
+	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 	// +kubebuilder:validation:Minimum=30
 	// +kubebuilder:validation:Maximum=680
 	// AtAgeMax Max time in seconds for a issued access_token
-	AtAgeMax int `json:"AtAgeMax,omitempty"`
+	AtAgeMax int `json:"atAgeMax,omitempty"`
 	// +kubebuilder:validation:MinItems=1
 	AllowedIntegrations []string `json:"allowedIntegrations,omitempty"`
 	// External consumers able to get a token on provided scope
-	// +kubebuilder:validation:MinItems=1
 	Consumers []ExposedScopeConsumer `json:"consumers"`
 }
 
@@ -177,12 +162,7 @@ type MaskinportenClientSpec struct {
 }
 
 type ApplicationScope struct {
-	Scopes []Scope `json:"scopes,omitempty"`
-}
-
-type Scope struct {
-	Name                string   `json:"name,omitempty"`
-	OrganizationNumbers []string `json:"organizationNumbers,omitempty"`
+	Scopes map[string][]string `json:"scopes,omitempty"`
 }
 
 func (in *MaskinportenClient) Hash() (string, error) {
@@ -205,10 +185,10 @@ func (in MaskinportenClient) GetUsedScopes() []string {
 	return scopes
 }
 
-func (in MaskinportenClient) GetExposedScopes() []ExposedScope {
-	scopes := make([]ExposedScope, 0)
+func (in MaskinportenClient) GetExposedScopes() map[string]ExposedScope {
+	scopes := make(map[string]ExposedScope)
 	for _, scope := range in.Spec.Scopes.ExposedScopes {
-		scopes = append(scopes, scope)
+		scopes[scope.Name] = scope
 	}
 	return scopes
 }

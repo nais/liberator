@@ -26,14 +26,14 @@ func replace(x string) string {
 	return strings.ReplaceAll(x, "-", "")
 }
 
-func FilterUniformedName(resource metav1.Object, uniformedName, subScope string) string {
-	if !strings.Contains(uniformedName, "/") {
-		return filterClusterPrefix(resource, uniformedName)
+func FilterUniformedName(resource metav1.Object, subScope string) string {
+	if !strings.Contains(subScope, "/") {
+		return filterClusterPrefix(resource, subScope)
 	}
 	// able to use legacy scopes from on-prem in gcp
 	return subScope
 }
 
-func filterClusterPrefix(resource metav1.Object, uniformedScopeName string) string {
-	return strings.TrimPrefix(uniformedScopeName, fmt.Sprintf("%s:", resource.GetClusterName()))
+func filterClusterPrefix(resource metav1.Object, subScope string) string {
+	return strings.TrimPrefix(UniformResourceScopeName(resource, subScope), fmt.Sprintf("%s:", replace(resource.GetClusterName())))
 }
