@@ -436,60 +436,10 @@ spec:
                 scopes:
                   items:
                     properties:
-                      exposes:
-                        items:
-                          properties:
-                            AtAgeMax:
-                              description: AtAgeMax Max time in seconds for a issued
-                                access_token
-                              maximum: 680
-                              minimum: 30
-                              type: integer
-                            allowedIntegrations:
-                              items:
-                                type: string
-                              minItems: 1
-                              type: array
-                            consumers:
-                              description: External consumers able to get a token
-                                on provided scope
-                              items:
-                                properties:
-                                  name:
-                                    description: A Name for describing the consumer
-                                      org number.
-                                    type: string
-                                  orgno:
-                                    description: Orgno is an external business organisation
-                                      number
-                                    pattern: ^\d{9}$
-                                    type: string
-                                required:
-                                - orgno
-                                type: object
-                              minItems: 1
-                              type: array
-                            name:
-                              description: An external exposed scope to consumers
-                                matching the regex starting with `nav:`
-                              pattern: ^[a-z0-9]+(\/?[a-z0-9]+)*(\.[a-z0-9]+)?$
-                              type: string
-                          required:
-                          - consumers
-                          - name
-                          type: object
-                        type: array
-                      use:
-                        items:
-                          properties:
-                            name:
-                              type: string
-                          required:
-                          - name
-                          type: object
-                        type: array
+                      name:
+                        type: string
                     required:
-                    - use
+                    - name
                     type: object
                   type: array
               required:
