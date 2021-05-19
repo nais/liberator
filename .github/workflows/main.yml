@@ -30,7 +30,7 @@ jobs:
           DEPLOY_KEY: ${{ secrets.NAIS_DOC_DEPLOY_KEY }}
           GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
         run: |
-          WS=${GITHUB_WORKSPACE}/doc
+          WS=${GITHUB_WORKSPACE}/naisdoc
           eval "$(ssh-agent -s)"
           ssh-add - <<< "${DEPLOY_KEY}"
           mkdir -p $WS
