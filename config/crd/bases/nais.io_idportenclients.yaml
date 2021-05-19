@@ -94,8 +94,8 @@ spec:
           description: DigdiratorStatus defines the observed state of Current Client
           properties:
             applicationScopes:
-              description: Unique Scopes activated and registered with access for
-                this application at digdir
+              description: ApplicationScope is Unique Scopes activated and registered
+                for this application at digdir
               properties:
                 scopes:
                   additionalProperties:

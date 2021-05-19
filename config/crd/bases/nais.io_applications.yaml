@@ -435,11 +435,17 @@ spec:
                   type: boolean
                 scopes:
                   items:
+                    description: MaskinportenScope contains a lis of scopes used by
+                      an application and scopes exposed by an application
                     properties:
                       exposes:
                         items:
+                          description: ExposedScope is the exposed scopes exported
+                            by the application to grant organization access to resources/apis
                           properties:
                             allowedIntegrations:
+                              description: AllowedIntegrations whitelist of what type
+                                of integration's allowed.
                               items:
                                 type: string
                               minItems: 1
@@ -451,36 +457,45 @@ spec:
                               minimum: 30
                               type: integer
                             consumers:
-                              description: External consumers able to get a token
-                                on provided scope
+                              description: Consumers External consumers granted access
+                                that is able to get a token on specified scope
                               items:
                                 properties:
                                   name:
                                     description: A Name for describing the consumer
-                                      org number.
+                                      of the orgNo.
                                     type: string
                                   orgno:
                                     description: Orgno is an external business organisation
                                       number
                                     pattern: ^\d{9}$
                                     type: string
-                                required:
-                                - orgno
                                 type: object
                               type: array
                             enabled:
+                              description: Enabled if scope is active to be used
                               type: boolean
                             name:
+                              description: 'Name is the subscope to describe the scope,
+                                build: prefix:<product><./:>name'
                               pattern: ^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$
                               type: string
+                            product:
+                              description: Product is the product development area
+                                a application belongs to wil be included to the final
+                                scope
+                              pattern: ^[a-z0-9]+$
+                              type: string
                           required:
-                          - consumers
                           - enabled
                           - name
+                          - product
                           type: object
                         type: array
                       use:
                         items:
+                          description: UsedScope is the scopes used by the application
+                            to gain access
                           properties:
                             name:
                               type: string

@@ -21,7 +21,7 @@ type DigdiratorStatus struct {
 	CorrelationID string `json:"correlationID,omitempty"`
 	// KeyIDs is the list of key IDs for valid JWKs registered for the client at Digdir
 	KeyIDs []string `json:"keyIDs,omitempty"`
-	// Unique Scopes activated and registered with access for this application at digdir
+	// ApplicationScope is Unique Scopes activated and registered for this application at digdir
 	ApplicationScope ApplicationScope `json:"applicationScopes,omitempty"`
 }
 
@@ -118,38 +118,49 @@ type MaskinportenClientList struct {
 	Items           []MaskinportenClient `json:"items"`
 }
 
+// MaskinportenScope contains a lis of scopes used by an application and scopes exposed by an application
 type MaskinportenScope struct {
 	UsedScope     []UsedScope    `json:"use"`
 	ExposedScopes []ExposedScope `json:"exposes,omitempty"`
 }
 
+// UsedScope is the scopes used by the application to gain access
 type UsedScope struct {
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 }
 
+// ExposedScope is the exposed scopes exported by the application to grant organization access to resources/apis
 type ExposedScope struct {
+	// Enabled if scope is active to be used
 	// +kubebuilder:validation:Required
 	Enabled bool `json:"enabled"`
+	// Name is the subscope to describe the scope, build: prefix:<product><./:>name
 	// +kubebuilder:validation:Pattern=`^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$`
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
+	// Product is the product development area a application belongs to wil be included to the final scope
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]+$`
+	Product string `json:"product"`
 	// +kubebuilder:validation:Minimum=30
 	// +kubebuilder:validation:Maximum=680
 	// AtAgeMax Max time in seconds for a issued access_token
 	AtAgeMax int `json:"atAgeMax,omitempty"`
+	// AllowedIntegrations whitelist of what type of integration's allowed.
 	// +kubebuilder:validation:MinItems=1
 	AllowedIntegrations []string `json:"allowedIntegrations,omitempty"`
-	// External consumers able to get a token on provided scope
-	Consumers []ExposedScopeConsumer `json:"consumers"`
+	// Consumers External consumers granted access that is able to get a token on specified scope
+	Consumers []ExposedScopeConsumer `json:"consumers,omitempty"`
 }
 
 type ExposedScopeConsumer struct {
-	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`^\d{9}$`
 	// Orgno is an external business organisation number
+	// +kubebuilder:validation:Pattern=`^\d{9}$`
+	// +kubebuilder:validation:Optional
 	Orgno string `json:"orgno"`
-	// A Name for describing the consumer org number.
+	// A Name for describing the consumer of the orgNo.
+	// +kubebuilder:validation:Optional
 	Name string `json:"name,omitempty"`
 }
 
