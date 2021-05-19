@@ -232,6 +232,7 @@ func ExampleApplicationForDocumentation() *Application {
 			PreStopHookPath: "/internal/stop",
 			Prometheus: &PrometheusConfig{
 				Enabled: true,
+				Port:    "8080",
 				Path:    "/metrics",
 			},
 			Readiness: &Probe{
