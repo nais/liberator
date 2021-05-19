@@ -19,11 +19,16 @@ type AccessPolicyRule struct {
 }
 
 type AccessPolicyInbound struct {
+	// List of NAIS applications that may access your application.
+	// These settings apply both to Zero Trust network connectivity and token validity for Azure AD and TokenX tokens.
 	Rules []AccessPolicyRule `json:"rules"`
 }
 
 type AccessPolicyOutbound struct {
+	// List of NAIS applications that your application needs to access.
+	// These settings apply to Zero Trust network connectivity.
 	Rules    []AccessPolicyRule         `json:"rules,omitempty"`
+	// +nais:doc:Availability=GCP
 	External []AccessPolicyExternalRule `json:"external,omitempty"`
 }
 

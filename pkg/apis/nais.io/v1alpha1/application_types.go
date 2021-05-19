@@ -60,7 +60,6 @@ type Ingress string
 type ApplicationSpec struct {
 	// By default, no traffic is allowed between applications inside the cluster.
 	// Configure access policies to allow specific applications.
-	// +nais:doc:Availability=GCP
 	// +nais:doc:Link="https://doc.nais.io/appendix/zero-trust/"
 	AccessPolicy *nais_io_v1.AccessPolicy `json:"accessPolicy,omitempty"`
 
