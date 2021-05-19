@@ -63,6 +63,10 @@ spec:
               required:
               - pool
               type: object
+            protected:
+              description: A Protected secret will not be deleted by the janitor even
+                when not in use
+              type: boolean
             secretName:
               description: SecretName is the name of the secret containing Aiven credentials
               type: string
