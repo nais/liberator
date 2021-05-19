@@ -13,6 +13,41 @@ jobs:
       - name: go test
         run: go test ./...
 
+  documentation:
+    name: Update documentation
+    if: github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-go@v2
+        with:
+          go-version: "1.15"
+      - name: Generate documentation
+        run: make doc
+      - name: Commit documentation to nais/doc
+        env:
+          DEPLOY_KEY: ${{ secrets.NAIS_DOC_DEPLOY_KEY }}
+          GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
+        run: |
+          WS=${GITHUB_WORKSPACE}/doc
+          eval "$(ssh-agent -s)"
+          ssh-add - <<< "${DEPLOY_KEY}"
+          mkdir -p $WS
+          git clone git@github.com:nais/doc.git $WS
+          cp -v doc/*.md $WS/docs/nais-application/
+          cd $WS
+          git config user.email "aura@nav.no"
+          git config user.name "NAIS deploy pipeline"
+          git add .
+          git --no-pager diff --cached
+          if [ ! -z "$(git diff --cached)" ]; then
+            git commit -a -m "Automatic update of nais application reference/example" -m "liberator commit sha: ${GITHUB_SHA}"
+            git push
+          else
+            echo "No changes; skip commit"
+          fi
+
   deploy:
     name: Deploy to Kubernetes
     if: github.ref == 'refs/heads/main'
