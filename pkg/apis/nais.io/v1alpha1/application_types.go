@@ -58,39 +58,128 @@ type Ingress string
 // ApplicationSpec contains the NAIS manifest.
 // Please keep this list sorted for clarity.
 type ApplicationSpec struct {
-	AccessPolicy    *nais_io_v1.AccessPolicy `json:"accessPolicy,omitempty"`
-	Azure           *Azure                   `json:"azure,omitempty"`
-	Elastic         *Elastic                 `json:"elastic,omitempty"`
-	Env             []EnvVar                 `json:"env,omitempty"`
-	EnvFrom         []EnvFrom                `json:"envFrom,omitempty"`
-	FilesFrom       []FilesFrom              `json:"filesFrom,omitempty"`
-	GCP             *GCP                     `json:"gcp,omitempty"`
-	IDPorten        *IDPorten                `json:"idporten,omitempty"`
-	Image           string                   `json:"image"`
-	Ingresses       []Ingress                `json:"ingresses,omitempty"`
-	Kafka           *Kafka                   `json:"kafka,omitempty"`
-	LeaderElection  bool                     `json:"leaderElection,omitempty"`
-	Liveness        *Probe                   `json:"liveness,omitempty"`
-	Logtransform    string                   `json:"logtransform,omitempty"`
-	Maskinporten    *Maskinporten            `json:"maskinporten,omitempty"`
-	Port            int                      `json:"port,omitempty"`
-	PreStopHookPath string                   `json:"preStopHookPath,omitempty"`
-	Prometheus      *PrometheusConfig        `json:"prometheus,omitempty"`
-	Readiness       *Probe                   `json:"readiness,omitempty"`
-	Replicas        *Replicas                `json:"replicas,omitempty"`
-	Resources       *ResourceRequirements    `json:"resources,omitempty"`
-	SecureLogs      *SecureLogs              `json:"secureLogs,omitempty"`
-	Service         *Service                 `json:"service,omitempty"`
-	SkipCaBundle    bool                     `json:"skipCaBundle,omitempty"`
-	Startup         *Probe                   `json:"startup,omitempty"`
-	Strategy        *Strategy                `json:"strategy,omitempty"`
-	TokenX          *TokenX                  `json:"tokenx,omitempty"`
-	Tracing         *Tracing                 `json:"tracing,omitempty"`
-	Vault           *Vault                   `json:"vault,omitempty"`
-	WebProxy        bool                     `json:"webproxy,omitempty"`
+	// By default, no traffic is allowed between applications inside the cluster.
+	// Configure access policies to allow specific applications.
+	// +nais:doc:Availability=GCP
+	// +nais:doc:Link="https://doc.nais.io/appendix/zero-trust/"
+	AccessPolicy *nais_io_v1.AccessPolicy `json:"accessPolicy,omitempty"`
 
+	Azure   *Azure   `json:"azure,omitempty"`
+	Elastic *Elastic `json:"elastic,omitempty"`
+
+	// Custom environment variables injected into your container.
+	Env []EnvVar `json:"env,omitempty"`
+
+	// Will expose all variables in ConfigMap or Secret resource as environment variables.
+	// One of `configmap` or `secret` is required.
+	// +nais:doc:Availability="team namespaces"
+	EnvFrom []EnvFrom `json:"envFrom,omitempty"`
+
+	// List of ConfigMap or Secret resources that will have their contents mounted into the containers as files.
+	// Either `configmap` or `secret` is required.
+	// +nais:doc:Availability="team namespaces"
+	FilesFrom []FilesFrom `json:"filesFrom,omitempty"`
+
+	// +nais:doc:Availability="GCP"
+	GCP *GCP `json:"gcp,omitempty"`
+
+	// Configures an ID-porten client for this application.
+	// See [ID-porten](https://doc.nais.io/security/auth/idporten/) for more details.
+	IDPorten *IDPorten `json:"idporten,omitempty"`
+
+	// Your application's Docker image location and tag.
+	Image string `json:"image"`
+
+	// List of URLs that will route HTTPS traffic to the application.
+	// All URLs must start with `https://`. Domain availability differs according to which environment your application is running in.
+	// +nais:doc:Link="https://doc.nais.io/clusters/gcp/";"https://doc.nais.io/clusters/on-premises/"
+	Ingresses []Ingress `json:"ingresses,omitempty"`
+
+	// Enable Aiven Kafka for your application.
+	Kafka *Kafka `json:"kafka,omitempty"`
+
+	// If true, an HTTP endpoint will be available at `$ELECTOR_PATH` that returns the current leader.
+	// +nais:doc:Link="https://doc.nais.io/addons/leader-election/"
+	LeaderElection bool `json:"leaderElection,omitempty"`
+
+	// Many applications running for long periods of time eventually transition to broken states,
+	// and cannot recover except by being restarted. Kubernetes provides liveness probes to detect
+	// and remedy such situations. Read more about this over at the
+	// [Kubernetes probes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
+	Liveness *Probe `json:"liveness,omitempty"`
+
+	// Format of the logs from the container. Use this if the container doesn't support
+	// JSON logging and the log is in a special format that need to be parsed.
 	// +kubebuilder:validation:Enum="";accesslog;accesslog_with_processing_time;accesslog_with_referer_useragent;capnslog;logrus;gokit;redis;glog;simple;influxdb;log15
 	Logformat string `json:"logformat,omitempty"`
+
+	// Extra filters for modifying log content. This can e.g. be used for setting loglevel based on http status code.
+	// +kubebuilder:validation:Enum=http_loglevel;dns_loglevel
+	Logtransform string `json:"logtransform,omitempty"`
+
+	// Configures a Maskinporten client for this application.
+	// See [Maskinporten](https://doc.nais.io/security/auth/maskinporten/) for more details.
+	Maskinporten *Maskinporten `json:"maskinporten,omitempty"`
+
+	// The port number which is exposed by the container and should receive traffic.
+	Port int `json:"port,omitempty"`
+
+	// A HTTP GET will be issued to this endpoint at least once before the pod is terminated.
+	// +nais:doc:Link="https://doc.nais.io/nais-application/#handles-termination-gracefully"
+	PreStopHookPath string `json:"preStopHookPath,omitempty"`
+
+	// Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/observability/metrics/).
+	Prometheus *PrometheusConfig `json:"prometheus,omitempty"`
+
+	// Sometimes, applications are temporarily unable to serve traffic. For example, an application might need
+	// to load large data or configuration files during startup, or depend on external services after startup.
+	// In such cases, you don't want to kill the application, but you don’t want to send it requests either.
+	// Kubernetes provides readiness probes to detect and mitigate these situations. A pod with containers
+	// reporting that they are not ready does not receive traffic through Kubernetes Services.
+	// Read more about this over at the [Kubernetes readiness documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
+	Readiness *Probe `json:"readiness,omitempty"`
+
+	// The numbers of pods to run in parallel.
+	Replicas *Replicas `json:"replicas,omitempty"`
+
+	// When Containers have [resource requests](http://kubernetes.io/docs/user-guide/compute-resources/) specified,
+	// the Kubernetes scheduler can make better decisions about which nodes to place pods on.
+	Resources *ResourceRequirements `json:"resources,omitempty"`
+
+	// Whether or not to enable a sidecar container for secure logging.
+	SecureLogs *SecureLogs `json:"secureLogs,omitempty"`
+
+	// How to connect to the default service in your application's container.
+	Service *Service `json:"service,omitempty"`
+
+	// Whether to skip injection of certificate authority bundle or not. Defaults to false.
+	SkipCaBundle bool `json:"skipCaBundle,omitempty"`
+
+	// Startup probes will be available with Kubernetes 1.18 (in GCP, and 1.17 on-prem). Do not use this feature yet as it will not work.
+	//
+	// Sometimes, you have to deal with legacy applications that might require an additional startup time on their first
+	// initialization. In such cases, it can be tricky to set up liveness probe parameters without compromising the fast
+	// response to deadlocks that motivated such a probe. The trick is to set up a startup probe with the same command,
+	// HTTP or TCP check, with a `failureThreshold * periodSeconds` long enough to cover the worst case startup time.
+	Startup *Probe `json:"startup,omitempty"`
+
+	// Specifies the strategy used to replace old Pods by new ones.
+	Strategy *Strategy `json:"strategy,omitempty"`
+
+	// OAuth2 tokens from TokenX for your application.
+	TokenX *TokenX `json:"tokenx,omitempty"`
+
+	Tracing *Tracing `json:"tracing,omitempty"`
+
+	// Provides secrets management, identity-based access, and encrypting application data for auditing of secrets
+	// for applications, systems, and users.
+	// +nais:doc:Link="https://github.com/navikt/vault-iac/tree/master/doc"
+	// +nais:doc:Availability="on-premises"
+	Vault *Vault `json:"vault,omitempty"`
+
+	// Expose web proxy configuration to the application using the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables.
+	// +nais:doc:Availability="on-premises"
+	WebProxy bool `json:"webproxy,omitempty"`
 }
 
 // ApplicationStatus contains different NAIS status properties
@@ -111,6 +200,8 @@ type ApplicationList struct {
 }
 
 type Azure struct {
+	// Configures an Azure AD client for this application.
+	// See [Azure AD](https://doc.nais.io/security/auth/azure-ad/) for more details.
 	Application *AzureApplication `json:"application"`
 }
 
@@ -156,18 +247,26 @@ type AzureApplication struct {
 }
 
 type SecureLogs struct {
-	// Whether or not to enable a sidecar container for secure logging.
+	// Whether to enable a sidecar container for secure logging.
+	// If enabled, a volume is mounted in the pods where secure logs can be saved.
 	Enabled bool `json:"enabled"`
 }
 
 // Liveness probe and readiness probe definitions.
 type Probe struct {
-	Path             string `json:"path"`
-	Port             int    `json:"port,omitempty"`
-	InitialDelay     int    `json:"initialDelay,omitempty"`
-	PeriodSeconds    int    `json:"periodSeconds,omitempty"`
-	FailureThreshold int    `json:"failureThreshold,omitempty"`
-	Timeout          int    `json:"timeout,omitempty"`
+	// HTTP endpoint path that signals 200 OK if the application has started successfully.
+	Path string `json:"path"`
+	// Port for the startup probe.
+	Port int `json:"port,omitempty"`
+	// Number of seconds after the container has started before startup probes are initiated.
+	InitialDelay int `json:"initialDelay,omitempty"`
+	// How often (in seconds) to perform the probe.
+	PeriodSeconds int `json:"periodSeconds,omitempty"`
+	// When a Pod starts, and the probe fails, Kubernetes will try _failureThreshold_ times before giving up.
+	// Giving up in case of a startup probe means restarting the Pod.
+	FailureThreshold int `json:"failureThreshold,omitempty"`
+	// Number of seconds after which the probe times out.
+	Timeout int `json:"timeout,omitempty"`
 }
 
 type PrometheusConfig struct {
@@ -258,14 +357,21 @@ type CloudSqlInstance struct {
 	// +kubebuilder:validation:Required
 	Type CloudSqlInstanceType `json:"type"`
 	Name string               `json:"name,omitempty"`
+	// Server tier, i.e. how much CPU and memory allocated.
+	// Available tiers can be retrieved on the command line
+	// by running `gcloud sql tiers list`.
 	// +kubebuilder:validation:Pattern="db-.+"
 	Tier string `json:"tier,omitempty"`
 	// +kubebuilder:validation:Enum=SSD;HDD
 	DiskType         CloudSqlInstanceDiskType `json:"diskType,omitempty"`
 	HighAvailability bool                     `json:"highAvailability,omitempty"`
+	// How much hard drive space to allocate for the SQL server, in gigabytes.
 	// +kubebuilder:validation:Minimum=10
 	DiskSize       int  `json:"diskSize,omitempty"`
 	DiskAutoresize bool `json:"diskAutoresize,omitempty"`
+	// If specified, run automatic backups of the SQL database at the given hour.
+	// Note that this will backup the whole SQL instance, and not separate databases.
+	// Restores are done using the Google Cloud Console.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=23
 	AutoBackupHour *int         `json:"autoBackupHour,omitempty"`
@@ -288,13 +394,21 @@ type Maintenance struct {
 }
 
 type Elastic struct {
+	// Provisions an Elasticsearch instance and configures your application so it can access it.
+	// Use the `instance_name` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+	// +nais:doc:Availability=GCP
 	Instance string `json:"instance"`
 }
 
 type GCP struct {
-	Buckets      []CloudStorageBucket `json:"buckets,omitempty"`
-	SqlInstances []CloudSqlInstance   `json:"sqlInstances,omitempty"`
-	Permissions  []CloudIAMPermission `json:"permissions,omitempty"`
+	// Provision cloud storage buckets and connect them to your application.
+	Buckets []CloudStorageBucket `json:"buckets,omitempty"`
+	// Provision database instances and connect them to your application.
+	// See [PostgreSQL documentation](https://doc.nais.io/persistence/postgres/) for more details.
+	SqlInstances []CloudSqlInstance `json:"sqlInstances,omitempty"`
+	// List of _additional_ permissions that should be granted to your application for accessing external GCP resources that have not been provisioned through NAIS.
+	// [Supported resources found here](https://cloud.google.com/config-connector/docs/reference/resource-docs/iam/iampolicymember#external_organization_level_policy_member).
+	Permissions []CloudIAMPermission `json:"permissions,omitempty"`
 }
 
 type EnvVar struct {
@@ -334,11 +448,15 @@ type Strategy struct {
 
 type Service struct {
 	// +kubebuilder:validation:Enum=http;redis;tcp;grpc
+	// Which protocol the backend service runs on. Default is http.
 	Protocol string `json:"protocol,omitempty"`
-	Port     int32  `json:"port"`
+	// Port for the default service. Default port is 80.
+	Port int32 `json:"port"`
 }
 
 type Kafka struct {
+	// Configures your application to access an Aiven Kafka cluster.
+	// +nais:doc:Link="https://doc.nais.io/addons/kafka/"
 	// +kubebuilder:validation:Enum=nav-dev;nav-prod;nav-infrastructure
 	Pool string `json:"pool"`
 }

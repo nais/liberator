@@ -1,5 +1,5 @@
 # Makefile setup
-.PHONY: test generate mocks controller-gen
+.PHONY: test generate mocks controller-gen doc
 
 # Lock down version of controller-gen
 # See _code generation_ in README.md
@@ -19,6 +19,10 @@ test:
 generate: controller-gen
 	$(CONTROLLER_GEN) object paths="./pkg/apis/..."
 	$(CONTROLLER_GEN) crd:trivialVersions=true rbac:roleName=manager-role webhook paths="./pkg/apis/..." output:crd:artifacts:config=config/crd/bases
+
+doc:
+	mkdir -p doc
+	go run cmd/docgen/docgen.go --dir ./pkg/apis/... --group nais.io --kind Application --reference-output doc/application.md --example-output doc/example.md
 
 mocks:
 	cd pkg/ && mockery --inpackage --all --case snake
