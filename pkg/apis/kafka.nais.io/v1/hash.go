@@ -21,7 +21,3 @@ func (in *Topic) Hash() (string, error) {
 	}
 	return hash.Hash(data)
 }
-
-func (in *AivenApplication) Hash() (string, error) {
-	return hash.Hash(in.Spec)
-}

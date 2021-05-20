@@ -1,4 +1,4 @@
-package kafka_nais_io_v1
+package aiven_nais_io_v1
 
 import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 

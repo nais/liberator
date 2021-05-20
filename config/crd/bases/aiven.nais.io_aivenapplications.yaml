@@ -6,7 +6,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.2.5
   creationTimestamp: null
-  name: aivenapplications.kafka.nais.io
+  name: aivenapplications.aiven.nais.io
 spec:
   additionalPrinterColumns:
   - JSONPath: .spec.secretName
@@ -24,7 +24,7 @@ spec:
     name: Age
     priority: 30
     type: date
-  group: kafka.nais.io
+  group: aiven.nais.io
   names:
     kind: AivenApplication
     listKind: AivenApplicationList

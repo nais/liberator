@@ -1,4 +1,4 @@
-package kafka_nais_io_v1
+package aiven_nais_io_v1
 
 import (
 	"github.com/nais/liberator/pkg/strings"
@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	AivenFinalizer = "aiven.kafka.nais.io/finalizer"
+	AivenFinalizer = "aiven.nais.io/finalizer"
 )
 
 func init() {
