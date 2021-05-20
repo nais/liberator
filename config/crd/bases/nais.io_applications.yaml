@@ -439,6 +439,17 @@ spec:
                       API and it contains a list of scopes used by an application
                       and scopes exposed by an application
                     properties:
+                      consumes:
+                        items:
+                          description: UsedScope is scope(s) consumed by the application
+                            to gain access to external Api(s)
+                          properties:
+                            name:
+                              type: string
+                          required:
+                          - name
+                          type: object
+                        type: array
                       exposes:
                         items:
                           description: ExposedScope is the exposed scopes exported
@@ -495,19 +506,8 @@ spec:
                           - product
                           type: object
                         type: array
-                      use:
-                        items:
-                          description: UsedScope is the scopes used by the application
-                            to gain access
-                          properties:
-                            name:
-                              type: string
-                          required:
-                          - name
-                          type: object
-                        type: array
                     required:
-                    - use
+                    - consumes
                     type: object
                   type: array
               required:

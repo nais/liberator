@@ -129,11 +129,11 @@ type MaskinportenClientList struct {
 // MaskinportenScope is the Schema for the MaskinportenScope API and it contains a list of scopes used
 // by an application and scopes exposed by an application
 type MaskinportenScope struct {
-	UsedScope     []UsedScope    `json:"use"`
+	UsedScope     []UsedScope    `json:"consumes"`
 	ExposedScopes []ExposedScope `json:"exposes,omitempty"`
 }
 
-// UsedScope is the scopes used by the application to gain access
+// UsedScope is scope(s) consumed by the application to gain access to external Api(s)
 type UsedScope struct {
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`

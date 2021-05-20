@@ -54,6 +54,17 @@ spec:
             scopes:
               description: Scopes is a object of used end exposed scopes by application
               properties:
+                consumes:
+                  items:
+                    description: UsedScope is scope(s) consumed by the application
+                      to gain access to external Api(s)
+                    properties:
+                      name:
+                        type: string
+                    required:
+                    - name
+                    type: object
+                  type: array
                 exposes:
                   items:
                     description: ExposedScope is the exposed scopes exported by the
@@ -109,19 +120,8 @@ spec:
                     - product
                     type: object
                   type: array
-                use:
-                  items:
-                    description: UsedScope is the scopes used by the application to
-                      gain access
-                    properties:
-                      name:
-                        type: string
-                    required:
-                    - name
-                    type: object
-                  type: array
               required:
-              - use
+              - consumes
               type: object
             secretName:
               description: SecretName is the name of the resulting Secret resource
