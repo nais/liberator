@@ -110,6 +110,14 @@ type MaskinportenClient struct {
 	Status DigdiratorStatus       `json:"status,omitempty"`
 }
 
+// MaskinportenClientSpec defines the desired state of MaskinportenClient
+type MaskinportenClientSpec struct {
+	// Scopes is a object of used end exposed scopes by application
+	Scopes MaskinportenScope `json:"scopes,omitempty"`
+	// SecretName is the name of the resulting Secret resource to be created
+	SecretName string `json:"secretName"`
+}
+
 // MaskinportenClientList contains a list of MaskinportenClient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type MaskinportenClientList struct {
@@ -118,7 +126,8 @@ type MaskinportenClientList struct {
 	Items           []MaskinportenClient `json:"items"`
 }
 
-// MaskinportenScope contains a lis of scopes used by an application and scopes exposed by an application
+// MaskinportenScope is the Schema for the MaskinportenScope API and it contains a list of scopes used
+// by an application and scopes exposed by an application
 type MaskinportenScope struct {
 	UsedScope     []UsedScope    `json:"use"`
 	ExposedScopes []ExposedScope `json:"exposes,omitempty"`
@@ -132,44 +141,34 @@ type UsedScope struct {
 
 // ExposedScope is the exposed scopes exported by the application to grant organization access to resources/apis
 type ExposedScope struct {
-	// Enabled if scope is active to be used
+	// Enabled sets scope availible for use and consumer can be granted access
 	// +kubebuilder:validation:Required
 	Enabled bool `json:"enabled"`
-	// Name is the subscope to describe the scope, build: prefix:<product><./:>name
+	// Name is the acutal subscope, build: prefix:<Product><./:>Name
 	// +kubebuilder:validation:Pattern=`^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$`
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
-	// Product is the product development area a application belongs to wil be included to the final scope
+	// Product is the product development area an application belongs to. This wil be included in the final scope
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`^[a-z0-9]+$`
 	Product string `json:"product"`
+	// AtAgeMax Max time in seconds for a issued access_token, defualt is `30`
 	// +kubebuilder:validation:Minimum=30
 	// +kubebuilder:validation:Maximum=680
-	// AtAgeMax Max time in seconds for a issued access_token
 	AtAgeMax int `json:"atAgeMax,omitempty"`
-	// AllowedIntegrations whitelist of what type of integration's allowed.
+	// AllowedIntegrations whitelist of type of integration's allowed. Default is `maskinporten`
 	// +kubebuilder:validation:MinItems=1
 	AllowedIntegrations []string `json:"allowedIntegrations,omitempty"`
-	// Consumers External consumers granted access that is able to get a token on specified scope
+	// Consumers External consumers granted access to this scope and able to get acess_token
 	Consumers []ExposedScopeConsumer `json:"consumers,omitempty"`
 }
 
 type ExposedScopeConsumer struct {
-	// Orgno is an external business organisation number
+	// Orgno is the external business (consumer) organisation number
 	// +kubebuilder:validation:Pattern=`^\d{9}$`
-	// +kubebuilder:validation:Optional
 	Orgno string `json:"orgno"`
-	// A Name for describing the consumer of the orgNo.
-	// +kubebuilder:validation:Optional
+	// Name is a describing name intended for clearity.
 	Name string `json:"name,omitempty"`
-}
-
-// MaskinportenClientSpec defines the desired state of MaskinportenClient
-type MaskinportenClientSpec struct {
-	// Scopes is a object of used end exposed scopes by application
-	Scopes MaskinportenScope `json:"scopes,omitempty"`
-	// SecretName is the name of the resulting Secret resource to be created
-	SecretName string `json:"secretName"`
 }
 
 type ApplicationScope struct {

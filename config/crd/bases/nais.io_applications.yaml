@@ -435,8 +435,9 @@ spec:
                   type: boolean
                 scopes:
                   items:
-                    description: MaskinportenScope contains a lis of scopes used by
-                      an application and scopes exposed by an application
+                    description: MaskinportenScope is the Schema for the MaskinportenScope
+                      API and it contains a list of scopes used by an application
+                      and scopes exposed by an application
                     properties:
                       exposes:
                         items:
@@ -444,46 +445,48 @@ spec:
                             by the application to grant organization access to resources/apis
                           properties:
                             allowedIntegrations:
-                              description: AllowedIntegrations whitelist of what type
-                                of integration's allowed.
+                              description: AllowedIntegrations whitelist of type of
+                                integration's allowed. Default is `maskinporten`
                               items:
                                 type: string
                               minItems: 1
                               type: array
                             atAgeMax:
                               description: AtAgeMax Max time in seconds for a issued
-                                access_token
+                                access_token, defualt is `30`
                               maximum: 680
                               minimum: 30
                               type: integer
                             consumers:
                               description: Consumers External consumers granted access
-                                that is able to get a token on specified scope
+                                to this scope and able to get acess_token
                               items:
                                 properties:
                                   name:
-                                    description: A Name for describing the consumer
-                                      of the orgNo.
+                                    description: Name is a describing name intended
+                                      for clearity.
                                     type: string
                                   orgno:
-                                    description: Orgno is an external business organisation
-                                      number
+                                    description: Orgno is the external business (consumer)
+                                      organisation number
                                     pattern: ^\d{9}$
                                     type: string
+                                required:
+                                - orgno
                                 type: object
                               type: array
                             enabled:
-                              description: Enabled if scope is active to be used
+                              description: Enabled sets scope availible for use and
+                                consumer can be granted access
                               type: boolean
                             name:
-                              description: 'Name is the subscope to describe the scope,
-                                build: prefix:<product><./:>name'
+                              description: 'Name is the acutal subscope, build: prefix:<Product><./:>Name'
                               pattern: ^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$
                               type: string
                             product:
                               description: Product is the product development area
-                                a application belongs to wil be included to the final
-                                scope
+                                an application belongs to. This wil be included in
+                                the final scope
                               pattern: ^[a-z0-9]+$
                               type: string
                           required:
