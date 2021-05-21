@@ -77,8 +77,8 @@ spec:
                           type: string
                         minItems: 1
                         type: array
-                      atAgeMax:
-                        description: AtAgeMax Max time in seconds for a issued access_token,
+                      atMaxAge:
+                        description: AtMaxAge Max time in seconds for a issued access_token,
                           defualt is `30`
                         maximum: 680
                         minimum: 30

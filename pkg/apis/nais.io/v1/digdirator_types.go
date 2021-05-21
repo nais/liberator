@@ -152,10 +152,10 @@ type ExposedScope struct {
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`^[a-z0-9]+$`
 	Product string `json:"product"`
-	// AtAgeMax Max time in seconds for a issued access_token, defualt is `30`
+	// AtMaxAge Max time in seconds for a issued access_token, defualt is `30`
 	// +kubebuilder:validation:Minimum=30
 	// +kubebuilder:validation:Maximum=680
-	AtAgeMax int `json:"atAgeMax,omitempty"`
+	AtMaxAge int `json:"atMaxAge,omitempty"`
 	// AllowedIntegrations whitelist of type of integration's allowed. Default is `maskinporten`
 	// +kubebuilder:validation:MinItems=1
 	AllowedIntegrations []string `json:"allowedIntegrations,omitempty"`
