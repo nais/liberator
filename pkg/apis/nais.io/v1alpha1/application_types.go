@@ -182,6 +182,7 @@ type ApplicationSpec struct {
 	// OAuth2 tokens from TokenX for your application.
 	TokenX *TokenX `json:"tokenx,omitempty"`
 
+	// *DEPRECATED*. Do not use. Will be removed in a future version.
 	Tracing *Tracing `json:"tracing,omitempty"`
 
 	// Provides secrets management, identity-based access, and encrypting application data for auditing of secrets
@@ -219,8 +220,6 @@ type Azure struct {
 }
 
 type Tracing struct {
-	// if enabled, a rule allowing egress to app:jaeger will be appended to
-	// NetworkPolicy
 	Enabled bool `json:"enabled"`
 }
 
