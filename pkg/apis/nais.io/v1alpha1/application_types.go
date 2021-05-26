@@ -181,7 +181,8 @@ type ApplicationSpec struct {
 	// Specifies the strategy used to replace old Pods by new ones.
 	Strategy *Strategy `json:"strategy,omitempty"`
 
-	// OAuth2 tokens from TokenX for your application.
+	// Provisions and configures a TokenX client for your application.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/tokenx/"
 	TokenX *TokenX `json:"tokenx,omitempty"`
 
 	// *DEPRECATED*. Do not use. Will be removed in a future version.
@@ -226,9 +227,9 @@ type Tracing struct {
 }
 
 type TokenX struct {
-	// if enabled, the application will have a jwker secret injected
+	// If enabled, will provision and configure a TokenX client and inject an accompanying secret.
 	Enabled bool `json:"enabled"`
-	// if enabled, secrets for TokenX will be mounted as files only, i.e. not as env.
+	// If enabled, secrets for TokenX will be mounted as files only, i.e. not as env.
 	MountSecretsAsFilesOnly bool `json:"mountSecretsAsFilesOnly,omitempty"`
 }
 
