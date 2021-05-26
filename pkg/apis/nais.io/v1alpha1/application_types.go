@@ -143,7 +143,7 @@ type ApplicationSpec struct {
 	PreStopHookPath string `json:"preStopHookPath,omitempty"`
 
 	// Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/observability/metrics/).
-	// Use this configuration to override the default values
+	// Use this configuration to override the default values.
 	Prometheus *PrometheusConfig `json:"prometheus,omitempty"`
 
 	// Sometimes, applications are temporarily unable to serve traffic. For example, an application might need
@@ -165,7 +165,7 @@ type ApplicationSpec struct {
 	SecureLogs *SecureLogs `json:"secureLogs,omitempty"`
 
 	// Specify which port and protocol is used to connect to the application in the container.
-	// Defaults to HTTP on port 80
+	// Defaults to HTTP on port 80.
 	Service *Service `json:"service,omitempty"`
 
 	// Whether to skip injection of NAV certificate authority bundle or not. Defaults to false.
@@ -230,7 +230,7 @@ type Tracing struct {
 type TokenX struct {
 	// If enabled, will provision and configure a TokenX client and inject an accompanying secret.
 	Enabled bool `json:"enabled"`
-	// If enabled, secrets for TokenX will be mounted as files only, i.e. not as env.
+	// If enabled, secrets for TokenX will be mounted as files only, i.e. not as environment variables.
 	MountSecretsAsFilesOnly bool `json:"mountSecretsAsFilesOnly,omitempty"`
 }
 
@@ -253,7 +253,7 @@ type IDPorten struct {
 	FrontchannelLogoutPath string `json:"frontchannelLogoutPath,omitempty"`
 	// FrontchannelLogoutURI is where ID-porten sends a request to whenever the user has initiated a logout elsewhere as
 	// part of a single logout (front channel logout) process.
-	// E.g. `"https://my.application.ingress/oauth2/logout"`
+	// E.g. `https://my.application.ingress/oauth2/logout`
 	// If unspecified, defaults to `spec.ingress[0] + /oauth2/logout`.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
 	FrontchannelLogoutURI string `json:"frontchannelLogoutURI,omitempty"`
@@ -291,7 +291,7 @@ type AzureApplication struct {
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/#tenants"
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
 	Tenant string `json:"tenant,omitempty"`
-	// Claims defines additional configuration of the emitted claims in tokens returned to the Azure AD application
+	// Claims defines additional configuration of the emitted claims in tokens returned to the Azure AD application.
 	Claims *nais_io_v1.AzureAdClaims `json:"claims,omitempty"`
 }
 
@@ -341,9 +341,9 @@ type ResourceSpec struct {
 }
 
 type ResourceRequirements struct {
-	// Limit defines the maximum amount of resources a container can use before getting evicted
+	// Limit defines the maximum amount of resources a container can use before getting evicted.
 	Limits *ResourceSpec `json:"limits,omitempty"`
-	// Request defines the amount of resources a container is allocated on startup
+	// Request defines the amount of resources a container is allocated on startup.
 	Requests *ResourceSpec `json:"requests,omitempty"`
 }
 
@@ -379,7 +379,8 @@ type LifecycleCondition struct {
 	// Condition is satisfied when the object has the specified number of newer versions.
 	// The older versions will be deleted.
 	NumNewerVersions int `json:"numNewerVersions,omitempty"`
-	// Condition is satisfied when the object has the specified state [LIVE, ARCHIVED, ANY]
+	// Condition is satisfied when the object has the specified state.
+	// +kubebuilder:validation:Enum="";LIVE;ARCHIVED;ANY
 	WithState string `json:"withState,omitempty"`
 }
 
@@ -554,14 +555,14 @@ type Vault struct {
 
 type Strategy struct {
 	// specifies the strategy used to replace old Pods by new ones.
-	// Can be "Recreate" or "RollingUpdate". "RollingUpdate" is the default value
+	// `RollingUpdate` is the default value.
 	// +kubebuilder:validation:Enum=Recreate;RollingUpdate
 	Type string `json:"type"`
 }
 
 type Service struct {
 	// +kubebuilder:validation:Enum=http;redis;tcp;grpc
-	// Which protocol the backend service runs on. Default is http.
+	// Which protocol the backend service runs on. Default is `http`.
 	Protocol string `json:"protocol,omitempty"`
 	// Port for the default service. Default port is 80.
 	Port int32 `json:"port"`
@@ -575,15 +576,18 @@ type Kafka struct {
 }
 
 type CloudIAMResource struct {
+	// Kubernetes _APIVersion_.
 	APIVersion string `json:"apiVersion"`
+	// Kubernetes _Kind_.
 	Kind       string `json:"kind"`
+	// Kubernetes _Name_.
 	Name       string `json:"name,omitempty"`
 }
 
 type CloudIAMPermission struct {
-	// Name of the gcp role to bind the resource to.
+	// Name of the GCP role to bind the resource to.
 	Role string `json:"role"`
-	// Name of the IAM resource to bind the role to.
+	// IAM resource to bind the role to.
 	Resource CloudIAMResource `json:"resource"`
 }
 
