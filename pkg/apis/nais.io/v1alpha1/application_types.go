@@ -66,7 +66,7 @@ type ApplicationSpec struct {
 	AccessPolicy *nais_io_v1.AccessPolicy `json:"accessPolicy,omitempty"`
 
 	// Provisions and configures Azure resources.
-	Azure   *Azure   `json:"azure,omitempty"`
+	Azure *Azure `json:"azure,omitempty"`
 
 	// Override command when starting Docker image.
 	Command []string `json:"command,omitempty"`
@@ -377,6 +377,42 @@ type CloudStorageBucket struct {
 	LifecycleCondition *LifecycleCondition `json:"lifecycleCondition,omitempty"`
 }
 
+// BigQueryPermission defines access level
+type BigQueryPermission string
+
+const (
+	BigQueryPermissionRead      BigQueryPermission = "READ"
+	BigQueryPermissionReadWrite BigQueryPermission = "READWRITE"
+)
+
+func (b BigQueryPermission) String() string {
+	return string(b)
+}
+
+func (b BigQueryPermission) GoogleType() string {
+	switch b {
+	case BigQueryPermissionRead:
+		return "bigquery.dataViewer"
+	case BigQueryPermissionReadWrite:
+		return "bigquery.dataWriter"
+	}
+	return ""
+}
+
+type CloudBigQueryDataset struct {
+	// The name of the BigQuery Dataset.
+	// +kubebuilder:validation:Pattern=`^[a-z0-9][a-z0-9_-]+$`
+	Name string `json:"name"`
+	// Permission level given to application.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Enum=READ;READWRITE
+	Permission BigQueryPermission `json:"permission"`
+	// When set to true will delete the dataset, when the application resource is deleted.
+	CascadingDelete bool `json:"cascadingDelete,omitempty"`
+	// This description will appear on the GCP BigQuery Dataset resource, and will thus also be found on GCP console in browser.
+	Description string `json:"description,omitempty"`
+}
+
 type LifecycleCondition struct {
 	// Condition is satisfied when the object reaches the specified age in days. These will be deleted.
 	Age int `json:"age,omitempty"`
@@ -494,6 +530,12 @@ type GCP struct {
 	// +nais:doc:Link="https://doc.nais.io/persistence/postgres/";"https://cloud.google.com/sql/docs/postgres/instance-settings#impact"
 	// +nais:doc:Availability=GCP
 	SqlInstances []CloudSqlInstance `json:"sqlInstances,omitempty"`
+	// Provision BigQuery datasets and give your application's pod mountable secrets for connecting to each dataset.
+	// Datasets are immutable and cannot be changed.
+	// +nais:doc:Link="https://cloud.google.com/bigquery/docs"
+	// +nais:doc:Availability=GCP
+	BigQueryDatasets []CloudBigQueryDataset `json:"bigQueryDatasets,omitempty"`
+
 	// List of _additional_ permissions that should be granted to your application for accessing external GCP resources that have not been provisioned through NAIS.
 	// +nais:doc:Link="https://cloud.google.com/config-connector/docs/reference/resource-docs/iam/iampolicymember#external_organization_level_policy_member"
 	// +nais:doc:Availability=GCP
@@ -592,9 +634,9 @@ type CloudIAMResource struct {
 	// Kubernetes _APIVersion_.
 	APIVersion string `json:"apiVersion"`
 	// Kubernetes _Kind_.
-	Kind       string `json:"kind"`
+	Kind string `json:"kind"`
 	// Kubernetes _Name_.
-	Name       string `json:"name,omitempty"`
+	Name string `json:"name,omitempty"`
 }
 
 type CloudIAMPermission struct {
@@ -606,10 +648,10 @@ type CloudIAMPermission struct {
 
 type Maskinporten struct {
 	// If enabled, provisions and configures a Maskinporten client at DigDir.
-	Enabled bool                           `json:"enabled"`
+	Enabled bool `json:"enabled"`
 	// List of scopes that your client should request access to.
 	// Ensure that the NAV organization has been granted access to the scope prior to requesting access.
-	Scopes  []nais_io_v1.MaskinportenScope `json:"scopes,omitempty"`
+	Scopes []nais_io_v1.MaskinportenScope `json:"scopes,omitempty"`
 }
 
 func (in *Application) GetObjectKind() schema.ObjectKind {

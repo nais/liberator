@@ -185,6 +185,14 @@ func ExampleApplicationForDocumentation() *Application {
 						Collation:       "nb_NO.UTF8",
 					},
 				},
+				BigQueryDatasets: []CloudBigQueryDataset{
+					{
+						Name:            "mybigquerydataset",
+						CascadingDelete: true,
+						Description:     "Tralalala",
+						Permission:      BigQueryPermissionReadWrite,
+					},
+				},
 				Permissions: []CloudIAMPermission{
 					{
 						Role: "roles/cloudsql.client",
