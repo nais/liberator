@@ -57,6 +57,7 @@ spec:
               items:
                 properties:
                   name:
+                    description: The fully qualified name of the scope.
                     type: string
                 required:
                 - name
