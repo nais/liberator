@@ -100,6 +100,13 @@ func ExampleApplicationForDocumentation() *Application {
 					},
 				},
 			},
+			Command: []string{
+				"/app/myapplication",
+				"--param",
+				"value",
+				"--other-param",
+				"other-value",
+			},
 			Elastic: &Elastic{
 				Instance: "my-elastic-instance",
 			},

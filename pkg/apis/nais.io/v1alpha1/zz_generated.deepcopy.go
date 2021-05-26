@@ -83,8 +83,8 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 	}
 	if in.Command != nil {
 		in, out := &in.Command, &out.Command
-		*out = new(string)
-		**out = **in
+		*out = make([]string, len(*in))
+		copy(*out, *in)
 	}
 	if in.Elastic != nil {
 		in, out := &in.Elastic, &out.Elastic

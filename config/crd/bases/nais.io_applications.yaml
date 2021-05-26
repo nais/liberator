@@ -209,7 +209,9 @@ spec:
               type: object
             command:
               description: Override command when starting Docker image.
-              type: string
+              items:
+                type: string
+              type: array
             elastic:
               properties:
                 instance:

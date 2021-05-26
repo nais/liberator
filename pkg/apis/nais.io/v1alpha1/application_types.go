@@ -69,7 +69,7 @@ type ApplicationSpec struct {
 	Azure   *Azure   `json:"azure,omitempty"`
 
 	// Override command when starting Docker image.
-	Command *string `json:"command,omitempty"`
+	Command []string `json:"command,omitempty"`
 
 	Elastic *Elastic `json:"elastic,omitempty"`
 
