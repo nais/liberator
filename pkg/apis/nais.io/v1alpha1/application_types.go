@@ -67,6 +67,10 @@ type ApplicationSpec struct {
 
 	// Provisions and configures Azure resources.
 	Azure   *Azure   `json:"azure,omitempty"`
+
+	// Override command when starting Docker image.
+	Command *string `json:"command,omitempty"`
+
 	Elastic *Elastic `json:"elastic,omitempty"`
 
 	// Custom environment variables injected into your container.
