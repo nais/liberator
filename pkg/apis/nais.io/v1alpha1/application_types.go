@@ -67,15 +67,27 @@ type ApplicationSpec struct {
 	Elastic *Elastic `json:"elastic,omitempty"`
 
 	// Custom environment variables injected into your container.
+	// Specify either `value` or `valueFrom`, but not both.
 	Env []EnvVar `json:"env,omitempty"`
 
-	// Will expose all variables in ConfigMap or Secret resource as environment variables.
-	// One of `configmap` or `secret` is required.
+	// EnvFrom exposes all variables in the ConfigMap or Secret resources as environment variables.
+	// One of `configMap` or `secret` is required.
+	//
+	// Environment variables will take the form `KEY=VALUE`, where `key` is the ConfigMap or Secret key.
+	// You can specify as many keys as you like in a single ConfigMap or Secret.
+	//
+	// The ConfigMap and Secret resources must live in the same Kubernetes namespace as the Application resource.
 	// +nais:doc:Availability="team namespaces"
 	EnvFrom []EnvFrom `json:"envFrom,omitempty"`
 
 	// List of ConfigMap or Secret resources that will have their contents mounted into the containers as files.
-	// Either `configmap` or `secret` is required.
+	// Either `configMap` or `secret` is required.
+	//
+	// Files will take the path `<mountPath>/<key>`, where `key` is the ConfigMap or Secret key.
+	// You can specify as many keys as you like in a single ConfigMap or Secret, and they will all
+	// be mounted to the same directory.
+	//
+	// The ConfigMap and Secret resources must live in the same Kubernetes namespace as the Application resource.
 	// +nais:doc:Availability="team namespaces"
 	FilesFrom []FilesFrom `json:"filesFrom,omitempty"`
 
@@ -300,6 +312,7 @@ type ResourceRequirements struct {
 }
 
 type ObjectFieldSelector struct {
+	// Field value from the `Pod` spec that should be copied into the environment variable.
 	// +kubebuilder:validation:Enum="";metadata.name;metadata.namespace;metadata.labels;metadata.annotations;spec.nodeName;spec.serviceAccountName;status.hostIP;status.podIP
 	FieldPath string `json:"fieldPath"`
 }
@@ -415,19 +428,39 @@ type GCP struct {
 }
 
 type EnvVar struct {
+	// Environment variable name. May only contain letters, digits, and the underscore `_` character.
+	// +kubebuilder:validation:Required
 	Name      string        `json:"name"`
+	// Environment variable value. Numbers and boolean values must be quoted.
+	// Required unless `valueFrom` is specified.
 	Value     string        `json:"value,omitempty"`
+	// Dynamically set environment variables based on fields found in the Pod spec.
+	// +nais:doc:Link="https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/"
 	ValueFrom *EnvVarSource `json:"valueFrom,omitempty"`
 }
 
 type EnvFrom struct {
+	// Name of the `ConfigMap` where environment variables are specified.
+	// Required unless `secret` is set.
 	ConfigMap string `json:"configmap,omitempty"`
+	// Name of the `Secret` where environment variables are specified.
+	// Required unless `configMap` is set.
 	Secret    string `json:"secret,omitempty"`
 }
 
 type FilesFrom struct {
+	// Name of the `ConfigMap` that contains files that should be mounted into the container.
+	// Required unless `secret` is set.
 	ConfigMap string `json:"configmap,omitempty"`
+	// Name of the `Secret` that contains files that should be mounted into the container.
+	// Required unless `configMap` is set.
+	// If mounting multiple secrets, `mountPath` *MUST* be set to avoid collisions.
 	Secret    string `json:"secret,omitempty"`
+	// Filesystem path inside the pod where files are mounted.
+	// The directory will be created if it does not exist. If the directory exists,
+	// any files in the directory will be made unaccessible.
+	//
+	// Defaults to `/var/run/configmaps/<NAME>` or `/var/run/secrets`, depending on which of them is specified.
 	MountPath string `json:"mountPath,omitempty"`
 }
 
