@@ -1,8 +1,9 @@
 package nais_io_v1
 
 import (
-	"github.com/nais/liberator/pkg/hash"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"github.com/nais/liberator/pkg/hash"
 )
 
 // DigdiratorStatus defines the observed state of Current Client
@@ -105,6 +106,7 @@ type MaskinportenClientList struct {
 }
 
 type MaskinportenScope struct {
+	// The fully qualified name of the scope.
 	Name string `json:"name"`
 }
 

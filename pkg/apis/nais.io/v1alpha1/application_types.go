@@ -7,11 +7,12 @@ import (
 
 	"github.com/google/uuid"
 	hash "github.com/mitchellh/hashstructure"
-	"github.com/nais/liberator/pkg/apis/nais.io/v1"
 	log "github.com/sirupsen/logrus"
 	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+
+	"github.com/nais/liberator/pkg/apis/nais.io/v1"
 )
 
 const (
@@ -59,23 +60,37 @@ type Ingress string
 // Please keep this list sorted for clarity.
 type ApplicationSpec struct {
 	// By default, no traffic is allowed between applications inside the cluster.
-	// Configure access policies to allow specific applications.
-	// +nais:doc:Link="https://doc.nais.io/appendix/zero-trust/"
+	// Configure access policies to explicitly allow communication between applications.
+	// This is also used for granting inbound access in the context of Azure AD and TokenX clients.
+	// +nais:doc:Link="https://doc.nais.io/appendix/zero-trust/";"https://doc.nais.io/security/auth/azure-ad/#pre-authorization";"https://doc.nais.io/security/auth/tokenx/#access-policies"
 	AccessPolicy *nais_io_v1.AccessPolicy `json:"accessPolicy,omitempty"`
 
+	// Provisions and configures Azure resources.
 	Azure   *Azure   `json:"azure,omitempty"`
 	Elastic *Elastic `json:"elastic,omitempty"`
 
 	// Custom environment variables injected into your container.
+	// Specify either `value` or `valueFrom`, but not both.
 	Env []EnvVar `json:"env,omitempty"`
 
-	// Will expose all variables in ConfigMap or Secret resource as environment variables.
-	// One of `configmap` or `secret` is required.
+	// EnvFrom exposes all variables in the ConfigMap or Secret resources as environment variables.
+	// One of `configMap` or `secret` is required.
+	//
+	// Environment variables will take the form `KEY=VALUE`, where `key` is the ConfigMap or Secret key.
+	// You can specify as many keys as you like in a single ConfigMap or Secret.
+	//
+	// The ConfigMap and Secret resources must live in the same Kubernetes namespace as the Application resource.
 	// +nais:doc:Availability="team namespaces"
 	EnvFrom []EnvFrom `json:"envFrom,omitempty"`
 
 	// List of ConfigMap or Secret resources that will have their contents mounted into the containers as files.
-	// Either `configmap` or `secret` is required.
+	// Either `configMap` or `secret` is required.
+	//
+	// Files will take the path `<mountPath>/<key>`, where `key` is the ConfigMap or Secret key.
+	// You can specify as many keys as you like in a single ConfigMap or Secret, and they will all
+	// be mounted to the same directory.
+	//
+	// The ConfigMap and Secret resources must live in the same Kubernetes namespace as the Application resource.
 	// +nais:doc:Availability="team namespaces"
 	FilesFrom []FilesFrom `json:"filesFrom,omitempty"`
 
@@ -128,6 +143,7 @@ type ApplicationSpec struct {
 	PreStopHookPath string `json:"preStopHookPath,omitempty"`
 
 	// Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/observability/metrics/).
+	// Use this configuration to override the default values.
 	Prometheus *PrometheusConfig `json:"prometheus,omitempty"`
 
 	// Sometimes, applications are temporarily unable to serve traffic. For example, an application might need
@@ -148,13 +164,14 @@ type ApplicationSpec struct {
 	// Whether or not to enable a sidecar container for secure logging.
 	SecureLogs *SecureLogs `json:"secureLogs,omitempty"`
 
-	// How to connect to the default service in your application's container.
+	// Specify which port and protocol is used to connect to the application in the container.
+	// Defaults to HTTP on port 80.
 	Service *Service `json:"service,omitempty"`
 
-	// Whether to skip injection of certificate authority bundle or not. Defaults to false.
+	// Whether to skip injection of NAV certificate authority bundle or not. Defaults to false.
 	SkipCaBundle bool `json:"skipCaBundle,omitempty"`
 
-	// Startup probes will be available with Kubernetes 1.18 (in GCP, and 1.17 on-prem). Do not use this feature yet as it will not work.
+	// Startup probes will be available with Kubernetes 1.20. Do not use this feature yet as it will not work.
 	//
 	// Sometimes, you have to deal with legacy applications that might require an additional startup time on their first
 	// initialization. In such cases, it can be tricky to set up liveness probe parameters without compromising the fast
@@ -165,9 +182,11 @@ type ApplicationSpec struct {
 	// Specifies the strategy used to replace old Pods by new ones.
 	Strategy *Strategy `json:"strategy,omitempty"`
 
-	// OAuth2 tokens from TokenX for your application.
+	// Provisions and configures a TokenX client for your application.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/tokenx/"
 	TokenX *TokenX `json:"tokenx,omitempty"`
 
+	// *DEPRECATED*. Do not use. Will be removed in a future version.
 	Tracing *Tracing `json:"tracing,omitempty"`
 
 	// Provides secrets management, identity-based access, and encrypting application data for auditing of secrets
@@ -176,7 +195,7 @@ type ApplicationSpec struct {
 	// +nais:doc:Availability="on-premises"
 	Vault *Vault `json:"vault,omitempty"`
 
-	// Expose web proxy configuration to the application using the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables.
+	// Inject web proxy configuration to the application using the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables.
 	// +nais:doc:Availability="on-premises"
 	WebProxy bool `json:"webproxy,omitempty"`
 }
@@ -205,43 +224,76 @@ type Azure struct {
 }
 
 type Tracing struct {
-	// if enabled, a rule allowing egress to app:jaeger will be appended to
-	// NetworkPolicy
 	Enabled bool `json:"enabled"`
 }
 
 type TokenX struct {
-	// if enabled, the application will have a jwker secret injected
+	// If enabled, will provision and configure a TokenX client and inject an accompanying secret.
 	Enabled bool `json:"enabled"`
-	// if enabled, secrets for TokenX will be mounted as files only, i.e. not as env.
+	// If enabled, secrets for TokenX will be mounted as files only, i.e. not as environment variables.
 	MountSecretsAsFilesOnly bool `json:"mountSecretsAsFilesOnly,omitempty"`
 }
 
 type IDPorten struct {
-	Enabled   bool   `json:"enabled"`
-	ClientURI string `json:"clientURI,omitempty"`
-	// +kubebuilder:validation:Pattern=`^https:\/\/.+$`
-	RedirectURI string `json:"redirectURI,omitempty"`
-	// +kubebuilder:validation:Pattern=`^\/.*$`
-	RedirectPath string `json:"redirectPath,omitempty"`
-	// +kubebuilder:validation:Pattern=`^\/.*$`
-	FrontchannelLogoutPath string   `json:"frontchannelLogoutPath,omitempty"`
-	FrontchannelLogoutURI  string   `json:"frontchannelLogoutURI,omitempty"`
-	PostLogoutRedirectURIs []string `json:"postLogoutRedirectURIs,omitempty"`
-	// +kubebuilder:validation:Minimum=3600
-	// +kubebuilder:validation:Maximum=7200
-	SessionLifetime *int `json:"sessionLifetime,omitempty"`
+	// Whether to enable provisioning of an ID-porten client.
+	// If enabled, an ID-porten client be provisioned.
+	Enabled bool `json:"enabled"`
+	// AccessTokenLifetime is the lifetime in seconds for any issued access token from ID-porten.
+	//
+	// If unspecified, defaults to `3600` seconds (1 hour).
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=3600
 	AccessTokenLifetime *int `json:"accessTokenLifetime,omitempty"`
+	// ClientURI is the URL shown to the user at ID-porten when displaying a 'back' button or on errors.
+	ClientURI string `json:"clientURI,omitempty"`
+	// FrontchannelLogoutPath is a valid path for your application where ID-porten sends a request to whenever the user has
+	// initiated a logout elsewhere as part of a single logout (front channel logout) process.
+	//
+	// If unspecified, defaults to `/oauth2/logout`.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
+	// +kubebuilder:validation:Pattern=`^\/.*$`
+	FrontchannelLogoutPath string `json:"frontchannelLogoutPath,omitempty"`
+	// *DEPRECATED*. Prefer using `frontchannelLogoutPath`.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
+	FrontchannelLogoutURI string `json:"frontchannelLogoutURI,omitempty"`
+	// PostLogoutRedirectURIs are valid URIs that ID-porten will allow redirecting the end-user to after a single logout
+	// has been initiated and performed by the application.
+	//
+	// If unspecified, will default to `[ "https://www.nav.no" ]`
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#self-initiated-logout";"https://docs.digdir.no/oidc_func_sso.html#1-utlogging-fra-egen-tjeneste"
+	PostLogoutRedirectURIs []string `json:"postLogoutRedirectURIs,omitempty"`
+	// RedirectPath is a valid path that ID-porten redirects back to after a successful authorization request.
+	//
+	// If unspecified, will default to `/oauth2/callback`.
+	// +kubebuilder:validation:Pattern=`^\/.*$`
+	RedirectPath string `json:"redirectPath,omitempty"`
+	// *DEPRECATED*. Prefer using `redirectPath`.
+	// +kubebuilder:validation:Pattern=`^https:\/\/.+$`
+	RedirectURI string `json:"redirectURI,omitempty"`
+	// SessionLifetime is the maximum lifetime in seconds for any given user's session in your application.
+	// The timeout starts whenever the user is redirected from the `authorization_endpoint` at ID-porten.
+	//
+	// If unspecified, defaults to `7200` seconds (2 hours).
+	// Note: Attempting to refresh the user's `access_token` beyond this timeout will yield an error.
+	// +kubebuilder:validation:Minimum=3600
+	// +kubebuilder:validation:Maximum=7200
+	SessionLifetime *int `json:"sessionLifetime,omitempty"`
 }
 
 type AzureApplication struct {
-	Enabled   bool     `json:"enabled"`
+	// Whether to enable provisioning of an Azure AD application.
+	// If enabled, an Azure AD application will be provisioned.
+	Enabled bool `json:"enabled"`
+	// ReplyURLs is a list of allowed redirect URLs used when performing OpenID Connect flows for authenticating end-users.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/#reply-urls"
 	ReplyURLs []string `json:"replyURLs,omitempty"`
+	// A Tenant represents an organization in Azure AD.
+	//
+	// If unspecified, will default to `trygdeetaten.no` for development clusters and `nav.no` for production clusters.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/#tenants"
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
 	Tenant string `json:"tenant,omitempty"`
-	// Claims defines additional configuration of the emitted claims in tokens returned to the AzureAdApplication
+	// Claims defines additional configuration of the emitted claims in tokens returned to the Azure AD application.
 	Claims *nais_io_v1.AzureAdClaims `json:"claims,omitempty"`
 }
 
@@ -275,9 +327,9 @@ type PrometheusConfig struct {
 }
 
 type Replicas struct {
-	// The minimum amount of replicas acceptable for a successful deployment.
+	// The minimum amount of running replicas for a deployment.
 	Min int `json:"min,omitempty"`
-	// The pod autoscaler will scale deployments on demand until this maximum has been reached.
+	// The pod autoscaler will increase replicas when required up to the maximum.
 	Max int `json:"max,omitempty"`
 	// Amount of CPU usage before the autoscaler kicks in.
 	CpuThresholdPercentage int `json:"cpuThresholdPercentage,omitempty"`
@@ -291,11 +343,14 @@ type ResourceSpec struct {
 }
 
 type ResourceRequirements struct {
-	Limits   *ResourceSpec `json:"limits,omitempty"`
+	// Limit defines the maximum amount of resources a container can use before getting evicted.
+	Limits *ResourceSpec `json:"limits,omitempty"`
+	// Request defines the amount of resources a container is allocated on startup.
 	Requests *ResourceSpec `json:"requests,omitempty"`
 }
 
 type ObjectFieldSelector struct {
+	// Field value from the `Pod` spec that should be copied into the environment variable.
 	// +kubebuilder:validation:Enum="";metadata.name;metadata.namespace;metadata.labels;metadata.annotations;spec.nodeName;spec.serviceAccountName;status.hostIP;status.podIP
 	FieldPath string `json:"fieldPath"`
 }
@@ -305,19 +360,30 @@ type EnvVarSource struct {
 }
 
 type CloudStorageBucket struct {
-	Name            string `json:"name"`
-	CascadingDelete bool   `json:"cascadingDelete,omitempty"`
+	// The name of the bucket
+	Name string `json:"name"`
+	// Allows deletion of bucket. Set to true if you want to delete the bucket.
+	CascadingDelete bool `json:"cascadingDelete,omitempty"`
+	// The number of days to hold objects in the bucket before it is allowed to delete them.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=36500
-	RetentionPeriodDays *int                `json:"retentionPeriodDays,omitempty"`
-	LifecycleCondition  *LifecycleCondition `json:"lifecycleCondition,omitempty"`
+	RetentionPeriodDays *int `json:"retentionPeriodDays,omitempty"`
+	// Conditions for the bucket to use when selecting objects to delete in cleanup.
+	// +nais:doc:Link="https://cloud.google.com/storage/docs/lifecycle"
+	LifecycleCondition *LifecycleCondition `json:"lifecycleCondition,omitempty"`
 }
 
 type LifecycleCondition struct {
-	Age              int    `json:"age,omitempty"`
-	CreatedBefore    string `json:"createdBefore,omitempty"`
-	NumNewerVersions int    `json:"numNewerVersions,omitempty"`
-	WithState        string `json:"withState,omitempty"`
+	// Condition is satisfied when the object reaches the specified age in days. These will be deleted.
+	Age int `json:"age,omitempty"`
+	// Condition is satisfied when the object is created before midnight on the specified date. These will be deleted.
+	CreatedBefore string `json:"createdBefore,omitempty"`
+	// Condition is satisfied when the object has the specified number of newer versions.
+	// The older versions will be deleted.
+	NumNewerVersions int `json:"numNewerVersions,omitempty"`
+	// Condition is satisfied when the object has the specified state.
+	// +kubebuilder:validation:Enum="";LIVE;ARCHIVED;ANY
+	WithState string `json:"withState,omitempty"`
 }
 
 type CloudSqlInstanceType string
@@ -339,46 +405,62 @@ const (
 )
 
 type CloudSqlDatabase struct {
+	// Database name.
 	// +kubebuilder:validation:Required
-	Name         string                 `json:"name"`
-	EnvVarPrefix string                 `json:"envVarPrefix,omitempty"`
-	Users        []CloudSqlDatabaseUser `json:"users,omitempty"`
+	Name string `json:"name"`
+	// Prefix to add to environment variables made available for database connection.
+	EnvVarPrefix string `json:"envVarPrefix,omitempty"`
+	// The users created to allow database access.
+	Users []CloudSqlDatabaseUser `json:"users,omitempty"`
 }
 
 type CloudSqlDatabaseUser struct {
+	// User name.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="^[_a-zA-Z][_a-zA-Z0-9]+$"
 	Name string `json:"name"`
 }
 
 type CloudSqlInstance struct {
+	// PostgreSQL version.
 	// +kubebuilder:validation:Enum=POSTGRES_11;POSTGRES_12
 	// +kubebuilder:validation:Required
 	Type CloudSqlInstanceType `json:"type"`
-	Name string               `json:"name,omitempty"`
+	// The name of the instance, if omitted the database name will be used.
+	Name string `json:"name,omitempty"`
 	// Server tier, i.e. how much CPU and memory allocated.
 	// Available tiers can be retrieved on the command line
 	// by running `gcloud sql tiers list`.
 	// +kubebuilder:validation:Pattern="db-.+"
 	Tier string `json:"tier,omitempty"`
+	// Disk type to use for storage in the database.
 	// +kubebuilder:validation:Enum=SSD;HDD
-	DiskType         CloudSqlInstanceDiskType `json:"diskType,omitempty"`
-	HighAvailability bool                     `json:"highAvailability,omitempty"`
+	DiskType CloudSqlInstanceDiskType `json:"diskType,omitempty"`
+	// When set to true this will set up standby database for failover.
+	HighAvailability bool `json:"highAvailability,omitempty"`
 	// How much hard drive space to allocate for the SQL server, in gigabytes.
 	// +kubebuilder:validation:Minimum=10
-	DiskSize       int  `json:"diskSize,omitempty"`
+	DiskSize int `json:"diskSize,omitempty"`
+	// When set to true, GCP will automatically increase storage by XXX for the database when
+	// disk usage is above the high water mark.
+	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/instance-settings#threshold"
 	DiskAutoresize bool `json:"diskAutoresize,omitempty"`
 	// If specified, run automatic backups of the SQL database at the given hour.
 	// Note that this will backup the whole SQL instance, and not separate databases.
 	// Restores are done using the Google Cloud Console.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=23
-	AutoBackupHour *int         `json:"autoBackupHour,omitempty"`
-	Maintenance    *Maintenance `json:"maintenance,omitempty"`
+	AutoBackupHour *int `json:"autoBackupHour,omitempty"`
+	// Desired maintenance window for database updates.
+	Maintenance *Maintenance `json:"maintenance,omitempty"`
+	// List of databases that should be created on this Postgres server.
 	// +kubebuilder:validation:Required
-	Databases       []CloudSqlDatabase `json:"databases,omitempty"`
-	CascadingDelete bool               `json:"cascadingDelete,omitempty"`
-	Collation       string             `json:"collation,omitempty"`
+	Databases []CloudSqlDatabase `json:"databases,omitempty"`
+	// Remove the entire Postgres server including all data when the Kubernetes resource is deleted.
+	// *THIS IS A DESTRUCTIVE OPERATION*! Set cascading delete only when you want to remove data forever.
+	CascadingDelete bool `json:"cascadingDelete,omitempty"`
+	// Sort order for `ORDER BY ...` clauses.
+	Collation string `json:"collation,omitempty"`
 }
 
 type Maintenance struct {
@@ -401,53 +483,93 @@ type Elastic struct {
 
 type GCP struct {
 	// Provision cloud storage buckets and connect them to your application.
+	// +nais:doc:Link="https://doc.nais.io/persistence/buckets/"
+	// +nais:doc:Availability=GCP
 	Buckets []CloudStorageBucket `json:"buckets,omitempty"`
 	// Provision database instances and connect them to your application.
-	// See [PostgreSQL documentation](https://doc.nais.io/persistence/postgres/) for more details.
+	// +nais:doc:Link="https://doc.nais.io/persistence/postgres/";"https://cloud.google.com/sql/docs/postgres/instance-settings#impact"
+	// +nais:doc:Availability=GCP
 	SqlInstances []CloudSqlInstance `json:"sqlInstances,omitempty"`
 	// List of _additional_ permissions that should be granted to your application for accessing external GCP resources that have not been provisioned through NAIS.
-	// [Supported resources found here](https://cloud.google.com/config-connector/docs/reference/resource-docs/iam/iampolicymember#external_organization_level_policy_member).
+	// +nais:doc:Link="https://cloud.google.com/config-connector/docs/reference/resource-docs/iam/iampolicymember#external_organization_level_policy_member"
+	// +nais:doc:Availability=GCP
 	Permissions []CloudIAMPermission `json:"permissions,omitempty"`
 }
 
 type EnvVar struct {
-	Name      string        `json:"name"`
-	Value     string        `json:"value,omitempty"`
+	// Environment variable name. May only contain letters, digits, and the underscore `_` character.
+	// +kubebuilder:validation:Required
+	Name string `json:"name"`
+	// Environment variable value. Numbers and boolean values must be quoted.
+	// Required unless `valueFrom` is specified.
+	Value string `json:"value,omitempty"`
+	// Dynamically set environment variables based on fields found in the Pod spec.
+	// +nais:doc:Link="https://kubernetes.io/docs/tasks/inject-data-application/environment-variable-expose-pod-information/"
 	ValueFrom *EnvVarSource `json:"valueFrom,omitempty"`
 }
 
 type EnvFrom struct {
+	// Name of the `ConfigMap` where environment variables are specified.
+	// Required unless `secret` is set.
 	ConfigMap string `json:"configmap,omitempty"`
-	Secret    string `json:"secret,omitempty"`
+	// Name of the `Secret` where environment variables are specified.
+	// Required unless `configMap` is set.
+	Secret string `json:"secret,omitempty"`
 }
 
 type FilesFrom struct {
+	// Name of the `ConfigMap` that contains files that should be mounted into the container.
+	// Required unless `secret` is set.
 	ConfigMap string `json:"configmap,omitempty"`
-	Secret    string `json:"secret,omitempty"`
+	// Name of the `Secret` that contains files that should be mounted into the container.
+	// Required unless `configMap` is set.
+	// If mounting multiple secrets, `mountPath` *MUST* be set to avoid collisions.
+	Secret string `json:"secret,omitempty"`
+	// Filesystem path inside the pod where files are mounted.
+	// The directory will be created if it does not exist. If the directory exists,
+	// any files in the directory will be made unaccessible.
+	//
+	// Defaults to `/var/run/configmaps/<NAME>` or `/var/run/secrets`, depending on which of them is specified.
 	MountPath string `json:"mountPath,omitempty"`
 }
 
 type SecretPath struct {
+	// File system path that the secret will be mounted into.
 	MountPath string `json:"mountPath"`
-	KvPath    string `json:"kvPath"`
+	// Path to Vault key/value store that should be mounted into the file system.
+	KvPath string `json:"kvPath"`
+	// Format of the secret that should be processed.
 	// +kubebuilder:validation:Enum=flatten;json;yaml;env;properties;""
 	Format string `json:"format,omitempty"`
 }
 
 type Vault struct {
-	Enabled bool         `json:"enabled,omitempty"`
-	Sidecar bool         `json:"sidecar,omitempty"`
-	Paths   []SecretPath `json:"paths,omitempty"`
+	// If set to true, fetch secrets from Vault and inject into the pods.
+	Enabled bool `json:"enabled,omitempty"`
+	// If enabled, the sidecar will automatically refresh the token's Time-To-Live before it expires.
+	Sidecar bool `json:"sidecar,omitempty"`
+	// List of secret paths to be read from Vault and injected into the pod's filesystem.
+	// Overriding the `paths` array is optional, and will give you fine-grained control over which Vault paths that will be mounted on the file system.
+	//
+	// By default, the list will contain an entry with
+	//
+	// `kvPath: /kv/<environment>/<zone>/<application>/<namespace>`
+	// `mountPath: /var/run/secrets/nais.io/vault`
+	//
+	// that will always be attempted to be mounted.
+	Paths []SecretPath `json:"paths,omitempty"`
 }
 
 type Strategy struct {
+	// Specifies the strategy used to replace old Pods by new ones.
+	// `RollingUpdate` is the default value.
 	// +kubebuilder:validation:Enum=Recreate;RollingUpdate
 	Type string `json:"type"`
 }
 
 type Service struct {
 	// +kubebuilder:validation:Enum=http;redis;tcp;grpc
-	// Which protocol the backend service runs on. Default is http.
+	// Which protocol the backend service runs on. Default is `http`.
 	Protocol string `json:"protocol,omitempty"`
 	// Port for the default service. Default port is 80.
 	Port int32 `json:"port"`
@@ -461,18 +583,26 @@ type Kafka struct {
 }
 
 type CloudIAMResource struct {
+	// Kubernetes _APIVersion_.
 	APIVersion string `json:"apiVersion"`
+	// Kubernetes _Kind_.
 	Kind       string `json:"kind"`
+	// Kubernetes _Name_.
 	Name       string `json:"name,omitempty"`
 }
 
 type CloudIAMPermission struct {
-	Role     string           `json:"role"`
+	// Name of the GCP role to bind the resource to.
+	Role string `json:"role"`
+	// IAM resource to bind the role to.
 	Resource CloudIAMResource `json:"resource"`
 }
 
 type Maskinporten struct {
+	// If enabled, provisions and configures a Maskinporten client at DigDir.
 	Enabled bool                           `json:"enabled"`
+	// List of scopes that your client should request access to.
+	// Ensure that the NAV organization has been granted access to the scope prior to requesting access.
 	Scopes  []nais_io_v1.MaskinportenScope `json:"scopes,omitempty"`
 }
 

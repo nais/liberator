@@ -105,6 +105,7 @@ type AzureAdClaims struct {
 type AzureAdExtraClaim string
 
 type AzureAdGroup struct {
+	// ID is the actual `object ID` associated with the given group in Azure AD.
 	ID string `json:"id,omitempty"`
 }
 

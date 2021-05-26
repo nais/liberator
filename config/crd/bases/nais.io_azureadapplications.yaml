@@ -75,6 +75,8 @@ spec:
                   items:
                     properties:
                       id:
+                        description: ID is the actual `object ID` associated with
+                          the given group in Azure AD.
                         type: string
                     type: object
                   type: array
@@ -88,10 +90,15 @@ spec:
               items:
                 properties:
                   application:
+                    description: The application's name.
                     type: string
                   cluster:
+                    description: The application's cluster. May be omitted if it should
+                      be in the same cluster as your application.
                     type: string
                   namespace:
+                    description: The application's namespace. May be omitted if it
+                      should be in the same namespace as your application.
                     type: string
                 required:
                 - application

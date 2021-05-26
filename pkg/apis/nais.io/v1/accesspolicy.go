@@ -1,20 +1,28 @@
 package nais_io_v1
 
 type AccessPolicyPortRule struct {
+	// Human-readable identifier for this rule.
 	Name string `json:"name"`
+	// The port used for communication.
 	Port uint32 `json:"port"`
+	// The protocol used for communication.
 	// +kubebuilder:validation:Enum=HTTP;HTTPS;GRPC;HTTP2;MONGO;TCP;TLS
 	Protocol string `json:"protocol"`
 }
 
 type AccessPolicyExternalRule struct {
+	// The _host_ that your application should be able to reach, i.e. without the protocol (e.g. `https://`).
 	Host  string                 `json:"host"`
+	// List of port rules for external communication. Must be specified if using protocols other than HTTPS.
 	Ports []AccessPolicyPortRule `json:"ports,omitempty"`
 }
 
 type AccessPolicyRule struct {
+	// The application's name.
 	Application string `json:"application"`
+	// The application's namespace. May be omitted if it should be in the same namespace as your application.
 	Namespace   string `json:"namespace,omitempty"`
+	// The application's cluster. May be omitted if it should be in the same cluster as your application.
 	Cluster     string `json:"cluster,omitempty"`
 }
 
@@ -28,12 +36,15 @@ type AccessPolicyOutbound struct {
 	// List of NAIS applications that your application needs to access.
 	// These settings apply to Zero Trust network connectivity.
 	Rules    []AccessPolicyRule         `json:"rules,omitempty"`
+	// List of external resources that your applications should be able to reach.
 	// +nais:doc:Availability=GCP
 	External []AccessPolicyExternalRule `json:"external,omitempty"`
 }
 
 type AccessPolicy struct {
+	// Configures inbound access for your application.
 	Inbound  *AccessPolicyInbound  `json:"inbound,omitempty"`
+	// Configures outbound access for your application.
 	Outbound *AccessPolicyOutbound `json:"outbound,omitempty"`
 }
 
