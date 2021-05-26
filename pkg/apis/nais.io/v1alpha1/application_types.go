@@ -321,18 +321,28 @@ type EnvVarSource struct {
 }
 
 type CloudStorageBucket struct {
+	// The name of the bucket
 	Name            string `json:"name"`
+	// Allows deletion of bucket. Set to true if you want to delete the bucket.
 	CascadingDelete bool   `json:"cascadingDelete,omitempty"`
+	// The number of days to hold objects in the bucket before it is allowed to delete them.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=36500
 	RetentionPeriodDays *int                `json:"retentionPeriodDays,omitempty"`
+	// Conditions for the bucket to use when selecting objects to delete in cleanup.
+	// +nais:doc:Link="https://cloud.google.com/storage/docs/lifecycle"
 	LifecycleCondition  *LifecycleCondition `json:"lifecycleCondition,omitempty"`
 }
 
 type LifecycleCondition struct {
+	// Condition is satisfied when the object reaches the specified age in days. These will be deleted.
 	Age              int    `json:"age,omitempty"`
+	// Condition is satisfied when the object is created before midnight on the specified date. These will be deleted.
 	CreatedBefore    string `json:"createdBefore,omitempty"`
+	// Condition is satisfied when the object has the specified number of newer versions.
+	// The older versions will be deleted.
 	NumNewerVersions int    `json:"numNewerVersions,omitempty"`
+	// Condition is satisfied when the object has the specified state [LIVE, ARCHIVED, ANY]
 	WithState        string `json:"withState,omitempty"`
 }
 
@@ -355,34 +365,43 @@ const (
 )
 
 type CloudSqlDatabase struct {
+	// Database name.
 	// +kubebuilder:validation:Required
 	Name         string                 `json:"name"`
+	// Prefix to add to environment variables made available for database connection.
 	EnvVarPrefix string                 `json:"envVarPrefix,omitempty"`
+	// The users created to allow database access.
 	Users        []CloudSqlDatabaseUser `json:"users,omitempty"`
 }
 
 type CloudSqlDatabaseUser struct {
+	// User name
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="^[_a-zA-Z][_a-zA-Z0-9]+$"
 	Name string `json:"name"`
 }
 
 type CloudSqlInstance struct {
+	// PostgreSQL version [POSTGRES_11, POSTGRES_12].
 	// +kubebuilder:validation:Enum=POSTGRES_11;POSTGRES_12
 	// +kubebuilder:validation:Required
 	Type CloudSqlInstanceType `json:"type"`
+	// The name of the database, if omitted the database name will be used.
 	Name string               `json:"name,omitempty"`
 	// Server tier, i.e. how much CPU and memory allocated.
 	// Available tiers can be retrieved on the command line
 	// by running `gcloud sql tiers list`.
 	// +kubebuilder:validation:Pattern="db-.+"
 	Tier string `json:"tier,omitempty"`
+	// Disk type to use for storage in the database [SSD, HDD]
 	// +kubebuilder:validation:Enum=SSD;HDD
 	DiskType         CloudSqlInstanceDiskType `json:"diskType,omitempty"`
+	// When set to true this will set up standby database for failover.
 	HighAvailability bool                     `json:"highAvailability,omitempty"`
 	// How much hard drive space to allocate for the SQL server, in gigabytes.
 	// +kubebuilder:validation:Minimum=10
 	DiskSize       int  `json:"diskSize,omitempty"`
+	// When set to true gcp will automatically increase storage for the database.
 	DiskAutoresize bool `json:"diskAutoresize,omitempty"`
 	// If specified, run automatic backups of the SQL database at the given hour.
 	// Note that this will backup the whole SQL instance, and not separate databases.
@@ -390,6 +409,7 @@ type CloudSqlInstance struct {
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=23
 	AutoBackupHour *int         `json:"autoBackupHour,omitempty"`
+	// Desired maintenance window for database updates.
 	Maintenance    *Maintenance `json:"maintenance,omitempty"`
 	// +kubebuilder:validation:Required
 	Databases       []CloudSqlDatabase `json:"databases,omitempty"`
@@ -417,12 +437,16 @@ type Elastic struct {
 
 type GCP struct {
 	// Provision cloud storage buckets and connect them to your application.
+	// +nais:doc:Link="https://doc.nais.io/persistence/buckets/"
+	// +nais:doc:Availability=GCP
 	Buckets []CloudStorageBucket `json:"buckets,omitempty"`
 	// Provision database instances and connect them to your application.
-	// See [PostgreSQL documentation](https://doc.nais.io/persistence/postgres/) for more details.
+	// +nais:doc:Link="https://doc.nais.io/persistence/postgres/"
+	// +nais:doc:Availability=GCP
 	SqlInstances []CloudSqlInstance `json:"sqlInstances,omitempty"`
 	// List of _additional_ permissions that should be granted to your application for accessing external GCP resources that have not been provisioned through NAIS.
-	// [Supported resources found here](https://cloud.google.com/config-connector/docs/reference/resource-docs/iam/iampolicymember#external_organization_level_policy_member).
+	// +nais:doc:Link="https://cloud.google.com/config-connector/docs/reference/resource-docs/iam/iampolicymember#external_organization_level_policy_member"
+	// +nais:doc:Availability=GCP
 	Permissions []CloudIAMPermission `json:"permissions,omitempty"`
 }
 
@@ -505,7 +529,9 @@ type CloudIAMResource struct {
 }
 
 type CloudIAMPermission struct {
+	// Name of the gcp role to bind the resource to.
 	Role     string           `json:"role"`
+	// Name of the IAM resource to bind the role to.
 	Resource CloudIAMResource `json:"resource"`
 }
 
