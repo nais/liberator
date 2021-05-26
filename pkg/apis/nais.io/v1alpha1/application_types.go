@@ -7,11 +7,12 @@ import (
 
 	"github.com/google/uuid"
 	hash "github.com/mitchellh/hashstructure"
-	"github.com/nais/liberator/pkg/apis/nais.io/v1"
 	log "github.com/sirupsen/logrus"
 	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+
+	"github.com/nais/liberator/pkg/apis/nais.io/v1"
 )
 
 const (
@@ -63,6 +64,7 @@ type ApplicationSpec struct {
 	// +nais:doc:Link="https://doc.nais.io/appendix/zero-trust/"
 	AccessPolicy *nais_io_v1.AccessPolicy `json:"accessPolicy,omitempty"`
 
+	// Provisions and configures Azure resources.
 	Azure   *Azure   `json:"azure,omitempty"`
 	Elastic *Elastic `json:"elastic,omitempty"`
 
@@ -250,11 +252,18 @@ type IDPorten struct {
 }
 
 type AzureApplication struct {
+	// Whether to enable provisioning of an Azure AD application.
+	// If enabled, an Azure AD application will be provisioned.
 	Enabled   bool     `json:"enabled"`
+	// ReplyURLs is a list of allowed redirect URLs used when performing OpenID Connect flows for authenticating end-users.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/#reply-urls"
 	ReplyURLs []string `json:"replyURLs,omitempty"`
+	// A Tenant represents an organization in Azure AD.
+	// If unspecified, will default to `trygdeetaten.no` for development clusters and `nav.no` for production clusters.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/#tenants"
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
 	Tenant string `json:"tenant,omitempty"`
-	// Claims defines additional configuration of the emitted claims in tokens returned to the AzureAdApplication
+	// Claims defines additional configuration of the emitted claims in tokens returned to the Azure AD application
 	Claims *nais_io_v1.AzureAdClaims `json:"claims,omitempty"`
 }
 
