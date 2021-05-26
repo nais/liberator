@@ -128,6 +128,7 @@ type ApplicationSpec struct {
 	PreStopHookPath string `json:"preStopHookPath,omitempty"`
 
 	// Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/observability/metrics/).
+	// Use this configuration to override the default values
 	Prometheus *PrometheusConfig `json:"prometheus,omitempty"`
 
 	// Sometimes, applications are temporarily unable to serve traffic. For example, an application might need
@@ -148,13 +149,14 @@ type ApplicationSpec struct {
 	// Whether or not to enable a sidecar container for secure logging.
 	SecureLogs *SecureLogs `json:"secureLogs,omitempty"`
 
-	// How to connect to the default service in your application's container.
+	// Specify which port and protocol is used to connect to the application in the container.
+	// Defaults to HTTP on port 80
 	Service *Service `json:"service,omitempty"`
 
-	// Whether to skip injection of certificate authority bundle or not. Defaults to false.
+	// Whether to skip injection of NAV certificate authority bundle or not. Defaults to false.
 	SkipCaBundle bool `json:"skipCaBundle,omitempty"`
 
-	// Startup probes will be available with Kubernetes 1.18 (in GCP, and 1.17 on-prem). Do not use this feature yet as it will not work.
+	// Startup probes will be available with Kubernetes 1.20. Do not use this feature yet as it will not work.
 	//
 	// Sometimes, you have to deal with legacy applications that might require an additional startup time on their first
 	// initialization. In such cases, it can be tricky to set up liveness probe parameters without compromising the fast
@@ -176,7 +178,7 @@ type ApplicationSpec struct {
 	// +nais:doc:Availability="on-premises"
 	Vault *Vault `json:"vault,omitempty"`
 
-	// Expose web proxy configuration to the application using the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables.
+	// Inject web proxy configuration to the application using the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables.
 	// +nais:doc:Availability="on-premises"
 	WebProxy bool `json:"webproxy,omitempty"`
 }
@@ -275,9 +277,9 @@ type PrometheusConfig struct {
 }
 
 type Replicas struct {
-	// The minimum amount of replicas acceptable for a successful deployment.
+	// The minimum amount of running replicas for a deployment.
 	Min int `json:"min,omitempty"`
-	// The pod autoscaler will scale deployments on demand until this maximum has been reached.
+	// The pod autoscaler will increase replicas when required up to the maximum.
 	Max int `json:"max,omitempty"`
 	// Amount of CPU usage before the autoscaler kicks in.
 	CpuThresholdPercentage int `json:"cpuThresholdPercentage,omitempty"`
@@ -291,7 +293,9 @@ type ResourceSpec struct {
 }
 
 type ResourceRequirements struct {
-	Limits   *ResourceSpec `json:"limits,omitempty"`
+	// Limit defines the maximum amount of resources a container can use before getting evicted
+	Limits *ResourceSpec `json:"limits,omitempty"`
+	// Request defines the amount of resources a container is allocated on startup
 	Requests *ResourceSpec `json:"requests,omitempty"`
 }
 
@@ -441,6 +445,8 @@ type Vault struct {
 }
 
 type Strategy struct {
+	// specifies the strategy used to replace old Pods by new ones.
+	// Can be "Recreate" or "RollingUpdate". "RollingUpdate" is the default value
 	// +kubebuilder:validation:Enum=Recreate;RollingUpdate
 	Type string `json:"type"`
 }
