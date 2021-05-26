@@ -235,7 +235,7 @@ type TokenX struct {
 type IDPorten struct {
 	// Whether to enable provisioning of an ID-porten client.
 	// If enabled, an ID-porten client be provisioned.
-	Enabled   bool   `json:"enabled"`
+	Enabled bool `json:"enabled"`
 	// AccessTokenLifetime is the lifetime in seconds for any issued access token from ID-porten.
 	// If unspecified, defaults to `3600` seconds (1 hour).
 	// +kubebuilder:validation:Minimum=1
@@ -248,13 +248,13 @@ type IDPorten struct {
 	// If unspecified, defaults to `/oauth2/logout`.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
 	// +kubebuilder:validation:Pattern=`^\/.*$`
-	FrontchannelLogoutPath string   `json:"frontchannelLogoutPath,omitempty"`
+	FrontchannelLogoutPath string `json:"frontchannelLogoutPath,omitempty"`
 	// FrontchannelLogoutURI is where ID-porten sends a request to whenever the user has initiated a logout elsewhere as
 	// part of a single logout (front channel logout) process.
 	// E.g. `"https://my.application.ingress/oauth2/logout"`
 	// If unspecified, defaults to `spec.ingress[0] + /oauth2/logout`.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
-	FrontchannelLogoutURI  string   `json:"frontchannelLogoutURI,omitempty"`
+	FrontchannelLogoutURI string `json:"frontchannelLogoutURI,omitempty"`
 	// PostLogoutRedirectURIs are valid URIs that ID-porten will allow redirecting the end-user to after a single logout
 	// has been initiated and performed by the application.
 	// If unspecified, will default to `[ "https://www.nav.no" ]`
@@ -280,7 +280,7 @@ type IDPorten struct {
 type AzureApplication struct {
 	// Whether to enable provisioning of an Azure AD application.
 	// If enabled, an Azure AD application will be provisioned.
-	Enabled   bool     `json:"enabled"`
+	Enabled bool `json:"enabled"`
 	// ReplyURLs is a list of allowed redirect URLs used when performing OpenID Connect flows for authenticating end-users.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/#reply-urls"
 	ReplyURLs []string `json:"replyURLs,omitempty"`
@@ -529,16 +529,25 @@ type FilesFrom struct {
 }
 
 type SecretPath struct {
+	// File system path that the secret will be mounted into.
 	MountPath string `json:"mountPath"`
-	KvPath    string `json:"kvPath"`
+	// Path to Vault key/value store that should be mounted into the file system.
+	KvPath string `json:"kvPath"`
+	// Format of the secret that should be processed.
 	// +kubebuilder:validation:Enum=flatten;json;yaml;env;properties;""
 	Format string `json:"format,omitempty"`
 }
 
 type Vault struct {
-	Enabled bool         `json:"enabled,omitempty"`
-	Sidecar bool         `json:"sidecar,omitempty"`
-	Paths   []SecretPath `json:"paths,omitempty"`
+	// If set to true, fetch secrets from Vault and inject into the pods.
+	Enabled bool `json:"enabled,omitempty"`
+	// If enabled, the sidecar will automatically refresh the token's Time-To-Live before it expires.
+	Sidecar bool `json:"sidecar,omitempty"`
+	// List of secret paths to be read from Vault and injected into the pod's filesystem.
+	// Overriding the `paths` array is optional, and will give you fine-grained control over which Vault paths that will be mounted on the file system.
+	// By default, the list will contain an entry with `kvPath: /kv/<environment>/<zone>/<application>/<namespace>`, and
+	// `mountPath: /var/run/secrets/nais.io/vault` that will always be attempted to be mounted.
+	Paths []SecretPath `json:"paths,omitempty"`
 }
 
 type Strategy struct {
