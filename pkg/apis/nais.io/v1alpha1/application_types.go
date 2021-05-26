@@ -233,22 +233,48 @@ type TokenX struct {
 }
 
 type IDPorten struct {
+	// Whether to enable provisioning of an ID-porten client.
+	// If enabled, an ID-porten client be provisioned.
 	Enabled   bool   `json:"enabled"`
-	ClientURI string `json:"clientURI,omitempty"`
-	// +kubebuilder:validation:Pattern=`^https:\/\/.+$`
-	RedirectURI string `json:"redirectURI,omitempty"`
-	// +kubebuilder:validation:Pattern=`^\/.*$`
-	RedirectPath string `json:"redirectPath,omitempty"`
-	// +kubebuilder:validation:Pattern=`^\/.*$`
-	FrontchannelLogoutPath string   `json:"frontchannelLogoutPath,omitempty"`
-	FrontchannelLogoutURI  string   `json:"frontchannelLogoutURI,omitempty"`
-	PostLogoutRedirectURIs []string `json:"postLogoutRedirectURIs,omitempty"`
-	// +kubebuilder:validation:Minimum=3600
-	// +kubebuilder:validation:Maximum=7200
-	SessionLifetime *int `json:"sessionLifetime,omitempty"`
+	// AccessTokenLifetime is the lifetime in seconds for any issued access token from ID-porten.
+	// If unspecified, defaults to `3600` seconds (1 hour).
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=3600
 	AccessTokenLifetime *int `json:"accessTokenLifetime,omitempty"`
+	// ClientURI is the URL shown to the user at ID-porten when displaying a 'back' button or on errors.
+	ClientURI string `json:"clientURI,omitempty"`
+	// FrontchannelLogoutPath is a valid path for your application where ID-porten sends a request to whenever the user has
+	// initiated a logout elsewhere as part of a single logout (front channel logout) process.
+	// If unspecified, defaults to `/oauth2/logout`.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
+	// +kubebuilder:validation:Pattern=`^\/.*$`
+	FrontchannelLogoutPath string   `json:"frontchannelLogoutPath,omitempty"`
+	// FrontchannelLogoutURI is where ID-porten sends a request to whenever the user has initiated a logout elsewhere as
+	// part of a single logout (front channel logout) process.
+	// E.g. `"https://my.application.ingress/oauth2/logout"`
+	// If unspecified, defaults to `spec.ingress[0] + /oauth2/logout`.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
+	FrontchannelLogoutURI  string   `json:"frontchannelLogoutURI,omitempty"`
+	// PostLogoutRedirectURIs are valid URIs that ID-porten will allow redirecting the end-user to after a single logout
+	// has been initiated and performed by the application.
+	// If unspecified, will default to `[ "https://www.nav.no" ]`
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#self-initiated-logout";"https://docs.digdir.no/oidc_func_sso.html#1-utlogging-fra-egen-tjeneste"
+	PostLogoutRedirectURIs []string `json:"postLogoutRedirectURIs,omitempty"`
+	// RedirectPath is a valid path that ID-porten redirects back to after a successful authorization request.
+	// If unspecified, will default to `/oauth2/callback`.
+	// +kubebuilder:validation:Pattern=`^\/.*$`
+	RedirectPath string `json:"redirectPath,omitempty"`
+	// RedirectURI is a valid URI that ID-porten redirects back to after a successful authorization request.
+	// Must be a subpath of your application's defined ingress.
+	// +kubebuilder:validation:Pattern=`^https:\/\/.+$`
+	RedirectURI string `json:"redirectURI,omitempty"`
+	// SessionLifetime is the maximum lifetime in seconds for any given user's session in your application.
+	// The timeout starts whenever the user is redirected from the `authorization_endpoint` at ID-porten.
+	// If unspecified, defaults to `7200` seconds (2 hours).
+	// Note: Attempting to refresh the user's `access_token` beyond this timeout will yield an error.
+	// +kubebuilder:validation:Minimum=3600
+	// +kubebuilder:validation:Maximum=7200
+	SessionLifetime *int `json:"sessionLifetime,omitempty"`
 }
 
 type AzureApplication struct {
