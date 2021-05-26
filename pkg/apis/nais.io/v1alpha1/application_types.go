@@ -554,7 +554,7 @@ type Vault struct {
 }
 
 type Strategy struct {
-	// specifies the strategy used to replace old Pods by new ones.
+	// Specifies the strategy used to replace old Pods by new ones.
 	// `RollingUpdate` is the default value.
 	// +kubebuilder:validation:Enum=Recreate;RollingUpdate
 	Type string `json:"type"`
