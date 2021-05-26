@@ -11,7 +11,7 @@ type AccessPolicyPortRule struct {
 }
 
 type AccessPolicyExternalRule struct {
-	// The _host_ that your application should be able to reach, i.e. without the protocol (e.g. `https://`)
+	// The _host_ that your application should be able to reach, i.e. without the protocol (e.g. `https://`).
 	Host  string                 `json:"host"`
 	// List of port rules for external communication. Must be specified if using protocols other than HTTPS.
 	Ports []AccessPolicyPortRule `json:"ports,omitempty"`

@@ -239,6 +239,7 @@ type IDPorten struct {
 	// If enabled, an ID-porten client be provisioned.
 	Enabled bool `json:"enabled"`
 	// AccessTokenLifetime is the lifetime in seconds for any issued access token from ID-porten.
+	//
 	// If unspecified, defaults to `3600` seconds (1 hour).
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=3600
@@ -247,31 +248,31 @@ type IDPorten struct {
 	ClientURI string `json:"clientURI,omitempty"`
 	// FrontchannelLogoutPath is a valid path for your application where ID-porten sends a request to whenever the user has
 	// initiated a logout elsewhere as part of a single logout (front channel logout) process.
+	//
 	// If unspecified, defaults to `/oauth2/logout`.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
 	// +kubebuilder:validation:Pattern=`^\/.*$`
 	FrontchannelLogoutPath string `json:"frontchannelLogoutPath,omitempty"`
-	// FrontchannelLogoutURI is where ID-porten sends a request to whenever the user has initiated a logout elsewhere as
-	// part of a single logout (front channel logout) process.
-	// E.g. `https://my.application.ingress/oauth2/logout`
-	// If unspecified, defaults to `spec.ingress[0] + /oauth2/logout`.
+	// *DEPRECATED*. Prefer using `frontchannelLogoutPath`.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
 	FrontchannelLogoutURI string `json:"frontchannelLogoutURI,omitempty"`
 	// PostLogoutRedirectURIs are valid URIs that ID-porten will allow redirecting the end-user to after a single logout
 	// has been initiated and performed by the application.
+	//
 	// If unspecified, will default to `[ "https://www.nav.no" ]`
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#self-initiated-logout";"https://docs.digdir.no/oidc_func_sso.html#1-utlogging-fra-egen-tjeneste"
 	PostLogoutRedirectURIs []string `json:"postLogoutRedirectURIs,omitempty"`
 	// RedirectPath is a valid path that ID-porten redirects back to after a successful authorization request.
+	//
 	// If unspecified, will default to `/oauth2/callback`.
 	// +kubebuilder:validation:Pattern=`^\/.*$`
 	RedirectPath string `json:"redirectPath,omitempty"`
-	// RedirectURI is a valid URI that ID-porten redirects back to after a successful authorization request.
-	// Must be a subpath of your application's defined ingress.
+	// *DEPRECATED*. Prefer using `redirectPath`.
 	// +kubebuilder:validation:Pattern=`^https:\/\/.+$`
 	RedirectURI string `json:"redirectURI,omitempty"`
 	// SessionLifetime is the maximum lifetime in seconds for any given user's session in your application.
 	// The timeout starts whenever the user is redirected from the `authorization_endpoint` at ID-porten.
+	//
 	// If unspecified, defaults to `7200` seconds (2 hours).
 	// Note: Attempting to refresh the user's `access_token` beyond this timeout will yield an error.
 	// +kubebuilder:validation:Minimum=3600
@@ -287,6 +288,7 @@ type AzureApplication struct {
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/#reply-urls"
 	ReplyURLs []string `json:"replyURLs,omitempty"`
 	// A Tenant represents an organization in Azure AD.
+	//
 	// If unspecified, will default to `trygdeetaten.no` for development clusters and `nav.no` for production clusters.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/#tenants"
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
@@ -548,8 +550,13 @@ type Vault struct {
 	Sidecar bool `json:"sidecar,omitempty"`
 	// List of secret paths to be read from Vault and injected into the pod's filesystem.
 	// Overriding the `paths` array is optional, and will give you fine-grained control over which Vault paths that will be mounted on the file system.
-	// By default, the list will contain an entry with `kvPath: /kv/<environment>/<zone>/<application>/<namespace>`, and
-	// `mountPath: /var/run/secrets/nais.io/vault` that will always be attempted to be mounted.
+	//
+	// By default, the list will contain an entry with
+	//
+	// `kvPath: /kv/<environment>/<zone>/<application>/<namespace>`
+	// `mountPath: /var/run/secrets/nais.io/vault`
+	//
+	// that will always be attempted to be mounted.
 	Paths []SecretPath `json:"paths,omitempty"`
 }
 
@@ -592,7 +599,10 @@ type CloudIAMPermission struct {
 }
 
 type Maskinporten struct {
+	// If enabled, provisions and configures a Maskinporten client at DigDir.
 	Enabled bool                           `json:"enabled"`
+	// List of scopes that your client should request access to.
+	// Ensure that the NAV organization has been granted access to the scope prior to requesting access.
 	Scopes  []nais_io_v1.MaskinportenScope `json:"scopes,omitempty"`
 }
 
