@@ -155,6 +155,55 @@ spec:
               items:
                 type: string
               type: array
+            preAuthorizedApps:
+              description: PreAuthorizedApps is the list of desired pre-authorized
+                apps defined in the spec along with their actual status in Azure AD.
+              properties:
+                invalid:
+                  items:
+                    properties:
+                      clientId:
+                        description: Client ID is the actual client ID of the application
+                          found in Azure AD, if it exists.
+                        type: string
+                      name:
+                        description: Name is the actual name of the application found
+                          in Azure AD.
+                        type: string
+                      reason:
+                        description: Reason is a human-readable message that provides
+                          detailed information about the application and its status.
+                        type: string
+                      servicePrincipalObjectId:
+                        description: Object ID is the actual object ID of the service
+                          principal belonging to the application found in Azure AD,
+                          if it exists.
+                        type: string
+                    type: object
+                  type: array
+                valid:
+                  items:
+                    properties:
+                      clientId:
+                        description: Client ID is the actual client ID of the application
+                          found in Azure AD, if it exists.
+                        type: string
+                      name:
+                        description: Name is the actual name of the application found
+                          in Azure AD.
+                        type: string
+                      reason:
+                        description: Reason is a human-readable message that provides
+                          detailed information about the application and its status.
+                        type: string
+                      servicePrincipalObjectId:
+                        description: Object ID is the actual object ID of the service
+                          principal belonging to the application found in Azure AD,
+                          if it exists.
+                        type: string
+                    type: object
+                  type: array
+              type: object
             servicePrincipalId:
               description: ServicePrincipalId is the Azure applications service principal
                 object ID

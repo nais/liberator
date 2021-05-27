@@ -92,6 +92,24 @@ type AzureAdApplicationStatus struct {
 	SynchronizationTenant string `json:"synchronizationTenant,omitempty"`
 	// SynchronizationTime is the last time the Status subresource was updated
 	SynchronizationTime *metav1.Time `json:"synchronizationTime,omitempty"`
+	// PreAuthorizedApps is the list of desired pre-authorized apps defined in the spec along with their actual status in Azure AD.
+	PreAuthorizedApps AzureAdPreAuthorizedAppsStatus `json:"preAuthorizedApps,omitempty"`
+}
+
+type AzureAdPreAuthorizedAppsStatus struct {
+	Valid   []AzureAdPreAuthorizedApp `json:"valid,omitempty"`
+	Invalid []AzureAdPreAuthorizedApp `json:"invalid,omitempty"`
+}
+
+type AzureAdPreAuthorizedApp struct {
+	// Name is the actual name of the application found in Azure AD.
+	Name string `json:"name,omitempty"`
+	// Client ID is the actual client ID of the application found in Azure AD, if it exists.
+	ClientID string `json:"clientId,omitempty"`
+	// Object ID is the actual object ID of the service principal belonging to the application found in Azure AD, if it exists.
+	ServicePrincipalObjectID string `json:"servicePrincipalObjectId,omitempty"`
+	// Reason is a human-readable message that provides detailed information about the application and its status.
+	Reason string `json:"reason,omitempty"`
 }
 
 type AzureAdClaims struct {
