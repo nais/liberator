@@ -75,7 +75,7 @@ type ApplicationSpec struct {
 
 	// Custom environment variables injected into your container.
 	// Specify either `value` or `valueFrom`, but not both.
-	Env []EnvVar `json:"env,omitempty"`
+	Env EnvVars `json:"env,omitempty"`
 
 	// EnvFrom exposes all variables in the ConfigMap or Secret resources as environment variables.
 	// One of `configMap` or `secret` is required.
@@ -500,6 +500,8 @@ type GCP struct {
 	Permissions []CloudIAMPermission `json:"permissions,omitempty"`
 }
 
+type EnvVars []EnvVar
+
 type EnvVar struct {
 	// Environment variable name. May only contain letters, digits, and the underscore `_` character.
 	// +kubebuilder:validation:Required
@@ -714,4 +716,28 @@ func (in *Application) SkipDeploymentMessage() bool {
 
 func (in *Application) ClientID(cluster string) string {
 	return fmt.Sprintf("%s:%s:%s", cluster, in.ObjectMeta.Namespace, in.ObjectMeta.Name)
+}
+
+
+func (envVar EnvVar) ToKubernetes() v1.EnvVar {
+	if envVar.ValueFrom != nil && envVar.ValueFrom.FieldRef.FieldPath != "" {
+		return v1.EnvVar{
+			Name: envVar.Name,
+			ValueFrom: &v1.EnvVarSource{
+				FieldRef: &v1.ObjectFieldSelector{FieldPath: envVar.ValueFrom.FieldRef.FieldPath},
+			},
+		}
+	} else {
+		return v1.EnvVar{Name: envVar.Name, Value: envVar.Value}
+	}
+}
+
+// Maps environment variables from ApplicationSpec to the ones we use in CreateSpec
+func (envVars EnvVars) ToKubernetes() []v1.EnvVar {
+	var newEnvVars []v1.EnvVar
+	for _, envVar := range envVars {
+		newEnvVars = append(newEnvVars, envVar.ToKubernetes())
+	}
+
+	return newEnvVars
 }
