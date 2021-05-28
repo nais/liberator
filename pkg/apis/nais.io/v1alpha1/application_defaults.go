@@ -64,7 +64,7 @@ func getAppDefaults() *Application {
 				Paths:   []SecretPath{},
 			},
 			Service: &Service{
-				Port: DefaultServicePort,
+				Port:     DefaultServicePort,
 				Protocol: DefaultPortName,
 			},
 			SecureLogs: &SecureLogs{

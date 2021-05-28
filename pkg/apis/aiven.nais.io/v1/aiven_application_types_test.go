@@ -1,4 +1,4 @@
-package kafka_nais_io_v1
+package aiven_nais_io_v1
 
 import (
 	"github.com/stretchr/testify/assert"

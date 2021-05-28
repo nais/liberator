@@ -26,11 +26,13 @@ const (
 // +kubebuilder:subresource:status
 
 // AzureAdApplication is the Schema for the AzureAdApplications API
-// +kubebuilder:printcolumn:name="Secret Ref",type=string,JSONPath=`.spec.secretName`,priority=2
 // +kubebuilder:printcolumn:name="Client ID",type=string,JSONPath=`.status.clientId`
 // +kubebuilder:printcolumn:name="Tenant",type=string,JSONPath=`.status.synchronizationTenant`,priority=1
+// +kubebuilder:printcolumn:name="Secret Ref",type=string,JSONPath=`.spec.secretName`,priority=2
 // +kubebuilder:printcolumn:name="Created",type="date",JSONPath=".metadata.creationTimestamp"
 // +kubebuilder:printcolumn:name="Synchronized",type="date",JSONPath=".status.synchronizationTime"
+// +kubebuilder:printcolumn:name="Assigned",type=integer,description="Number of assigned pre-authorized apps",JSONPath=`.status.preAuthorizedApps.assignedCount`
+// +kubebuilder:printcolumn:name="Unassigned",type=integer,description="Number of unassigned pre-authorized apps",JSONPath=`.status.preAuthorizedApps.unassignedCount`
 type AzureAdApplication struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -92,6 +94,30 @@ type AzureAdApplicationStatus struct {
 	SynchronizationTenant string `json:"synchronizationTenant,omitempty"`
 	// SynchronizationTime is the last time the Status subresource was updated
 	SynchronizationTime *metav1.Time `json:"synchronizationTime,omitempty"`
+	// PreAuthorizedApps contains the list of desired pre-authorized apps defined in the spec, separated by their actual status in Azure AD.
+	PreAuthorizedApps *AzureAdPreAuthorizedAppsStatus `json:"preAuthorizedApps,omitempty"`
+}
+
+type AzureAdPreAuthorizedAppsStatus struct {
+	// Assigned is the list of desired pre-authorized apps that have been pre-authorized to access this application.
+	Assigned []AzureAdPreAuthorizedApp `json:"assigned,omitempty"`
+	// AssignedCount is the size of the list in Assigned.
+	AssignedCount *int `json:"assignedCount,omitempty"`
+	// Unassigned is the list of desired pre-authorized apps that have _not_ been pre-authorized to access this application.
+	Unassigned []AzureAdPreAuthorizedApp `json:"unassigned,omitempty"`
+	// UnassignedCount is the size of the list in Unassigned.
+	UnassignedCount *int `json:"unassignedCount,omitempty"`
+}
+
+type AzureAdPreAuthorizedApp struct {
+	// Name is the actual name of the application found in Azure AD.
+	Name string `json:"name,omitempty"`
+	// Client ID is the actual client ID of the application found in Azure AD, if it exists.
+	ClientID string `json:"clientId,omitempty"`
+	// Object ID is the actual object ID of the service principal belonging to the application found in Azure AD, if it exists.
+	ServicePrincipalObjectID string `json:"servicePrincipalObjectId,omitempty"`
+	// Reason is a human-readable message that provides detailed information about the application and its status.
+	Reason string `json:"reason,omitempty"`
 }
 
 type AzureAdClaims struct {
@@ -105,6 +131,7 @@ type AzureAdClaims struct {
 type AzureAdExtraClaim string
 
 type AzureAdGroup struct {
+	// ID is the actual `object ID` associated with the given group in Azure AD.
 	ID string `json:"id,omitempty"`
 }
 

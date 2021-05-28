@@ -41,15 +41,24 @@ spec:
             accessPolicy:
               properties:
                 inbound:
+                  description: Configures inbound access for your application.
                   properties:
                     rules:
+                      description: List of NAIS applications that may access your
+                        application. These settings apply both to Zero Trust network
+                        connectivity and token validity for Azure AD and TokenX tokens.
                       items:
                         properties:
                           application:
+                            description: The application's name.
                             type: string
                           cluster:
+                            description: The application's cluster. May be omitted
+                              if it should be in the same cluster as your application.
                             type: string
                           namespace:
+                            description: The application's namespace. May be omitted
+                              if it should be in the same namespace as your application.
                             type: string
                         required:
                         - application
@@ -59,21 +68,32 @@ spec:
                   - rules
                   type: object
                 outbound:
+                  description: Configures outbound access for your application.
                   properties:
                     external:
+                      description: List of external resources that your applications
+                        should be able to reach.
                       items:
                         properties:
                           host:
+                            description: The _host_ that your application should be
+                              able to reach, i.e. without the protocol (e.g. `https://`).
                             type: string
                           ports:
+                            description: List of port rules for external communication.
+                              Must be specified if using protocols other than HTTPS.
                             items:
                               properties:
                                 name:
+                                  description: Human-readable identifier for this
+                                    rule.
                                   type: string
                                 port:
+                                  description: The port used for communication.
                                   format: int32
                                   type: integer
                                 protocol:
+                                  description: The protocol used for communication.
                                   enum:
                                   - HTTP
                                   - HTTPS
@@ -94,13 +114,21 @@ spec:
                         type: object
                       type: array
                     rules:
+                      description: List of NAIS applications that your application
+                        needs to access. These settings apply to Zero Trust network
+                        connectivity.
                       items:
                         properties:
                           application:
+                            description: The application's name.
                             type: string
                           cluster:
+                            description: The application's cluster. May be omitted
+                              if it should be in the same cluster as your application.
                             type: string
                           namespace:
+                            description: The application's namespace. May be omitted
+                              if it should be in the same namespace as your application.
                             type: string
                         required:
                         - application

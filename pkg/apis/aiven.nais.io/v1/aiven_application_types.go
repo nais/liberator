@@ -1,4 +1,4 @@
-package kafka_nais_io_v1
+package aiven_nais_io_v1
 
 import (
 	"github.com/nais/liberator/pkg/strings"
@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	AivenFinalizer = "aiven.kafka.nais.io/finalizer"
+	AivenFinalizer = "aiven.nais.io/finalizer"
 )
 
 func init() {
@@ -42,6 +42,8 @@ type AivenApplication struct {
 type AivenApplicationSpec struct {
 	// SecretName is the name of the secret containing Aiven credentials
 	SecretName string `json:"secretName"`
+	// A Protected secret will not be deleted by the janitor even when not in use
+	Protected bool `json:"protected,omitempty"`
 	// Kafka is a section configuring the kafka credentials to provision
 	Kafka KafkaSpec `json:"kafka,omitempty"`
 }
