@@ -169,7 +169,7 @@ func (in *MaskinportenClient) SetStatus(new DigdiratorStatus) {
 	in.Status = new
 }
 
-func (in *MaskinportenClient) GetUsedScopes() []string {
+func (in *MaskinportenClient) GetConsumedScopes() []string {
 	scopes := make([]string, 0)
 	for _, scope := range in.Spec.Scopes.ConsumedScopes {
 		scopes = append(scopes, scope.Name)
