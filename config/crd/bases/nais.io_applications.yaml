@@ -464,7 +464,7 @@ spec:
                               type: array
                             atMaxAge:
                               description: AtMaxAge Max time in seconds for a issued
-                                access_token, defualt is `30`
+                                access_token, default is `30`
                               maximum: 680
                               minimum: 30
                               type: integer
@@ -491,13 +491,14 @@ spec:
                                 consumer can be granted access
                               type: boolean
                             name:
-                              description: 'Name is the acutal subscope, build: prefix:<Product><./:>Name'
+                              description: 'Name is the actual subscope, build: scope
+                                := prefix:<Product></:><Name>'
                               pattern: ^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$
                               type: string
                             product:
                               description: Product is the product development area
-                                an application belongs to. This wil be included in
-                                the final scope
+                                an application belongs to. This will be included in
+                                the final registered scope
                               pattern: ^[a-z0-9]+$
                               type: string
                           required:
@@ -506,8 +507,6 @@ spec:
                           - product
                           type: object
                         type: array
-                    required:
-                    - consumes
                     type: object
                   type: array
               required:

@@ -21,8 +21,6 @@ type DigdiratorStatus struct {
 	CorrelationID string `json:"correlationID,omitempty"`
 	// KeyIDs is the list of key IDs for valid JWKs registered for the client at Digdir
 	KeyIDs []string `json:"keyIDs,omitempty"`
-	// ApplicationScope is Unique Scopes activated and registered for this application at digdir
-	ApplicationScope ApplicationScope `json:"applicationScopes,omitempty"`
 }
 
 func (in *DigdiratorStatus) GetSynchronizationHash() string {
@@ -71,18 +69,6 @@ func (in *DigdiratorStatus) SetSynchronizationSecretName(name string) {
 	in.SynchronizationSecretName = name
 }
 
-func (in *DigdiratorStatus) SetApplicationScopeConsumer(applicationScope string, orgNumbers []string) {
-	scopes := make(map[string][]string)
-	scopes = map[string][]string{
-		applicationScope: orgNumbers,
-	}
-	in.ApplicationScope.Scopes = scopes
-}
-
-func (in *DigdiratorStatus) GetApplicationScopes() map[string][]string {
-	return in.ApplicationScope.Scopes
-}
-
 func init() {
 	SchemeBuilder.Register(
 		&MaskinportenClient{},
@@ -129,7 +115,7 @@ type MaskinportenClientList struct {
 // MaskinportenScope is the Schema for the MaskinportenScope API and it contains a list of scopes used
 // by an application and scopes exposed by an application
 type MaskinportenScope struct {
-	UsedScope     []UsedScope    `json:"consumes"`
+	UsedScope     []UsedScope    `json:"consumes,omitempty"`
 	ExposedScopes []ExposedScope `json:"exposes,omitempty"`
 }
 
@@ -144,18 +130,18 @@ type ExposedScope struct {
 	// Enabled sets scope availible for use and consumer can be granted access
 	// +kubebuilder:validation:Required
 	Enabled bool `json:"enabled"`
-	// Name is the acutal subscope, build: prefix:<Product><./:>Name
+	// Name is the actual subscope, build: scope := prefix:<Product></:><Name>
 	// +kubebuilder:validation:Pattern=`^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$`
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
-	// Product is the product development area an application belongs to. This wil be included in the final scope
+	// Product is the product development area an application belongs to. This will be included in the final registered scope
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`^[a-z0-9]+$`
 	Product string `json:"product"`
-	// AtMaxAge Max time in seconds for a issued access_token, defualt is `30`
+	// AtMaxAge Max time in seconds for a issued access_token, default is `30`
 	// +kubebuilder:validation:Minimum=30
 	// +kubebuilder:validation:Maximum=680
-	AtMaxAge int `json:"atMaxAge,omitempty"`
+	AtMaxAge *int `json:"atMaxAge,omitempty"`
 	// AllowedIntegrations whitelist of type of integration's allowed. Default is `maskinporten`
 	// +kubebuilder:validation:MinItems=1
 	AllowedIntegrations []string `json:"allowedIntegrations,omitempty"`
@@ -171,10 +157,6 @@ type ExposedScopeConsumer struct {
 	Name string `json:"name,omitempty"`
 }
 
-type ApplicationScope struct {
-	Scopes map[string][]string `json:"scopes,omitempty"`
-}
-
 func (in *MaskinportenClient) Hash() (string, error) {
 	return hash.Hash(in.Spec)
 }
@@ -187,7 +169,7 @@ func (in *MaskinportenClient) SetStatus(new DigdiratorStatus) {
 	in.Status = new
 }
 
-func (in MaskinportenClient) GetUsedScopes() []string {
+func (in *MaskinportenClient) GetUsedScopes() []string {
 	scopes := make([]string, 0)
 	for _, scope := range in.Spec.Scopes.UsedScope {
 		scopes = append(scopes, scope.Name)
@@ -195,7 +177,7 @@ func (in MaskinportenClient) GetUsedScopes() []string {
 	return scopes
 }
 
-func (in MaskinportenClient) GetExposedScopes() map[string]ExposedScope {
+func (in *MaskinportenClient) GetExposedScopes() map[string]ExposedScope {
 	scopes := make(map[string]ExposedScope)
 	for _, scope := range in.Spec.Scopes.ExposedScopes {
 		scopes[scope.Name] = scope
