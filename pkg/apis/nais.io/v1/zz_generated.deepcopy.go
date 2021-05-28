@@ -423,10 +423,20 @@ func (in *AzureAdPreAuthorizedAppsStatus) DeepCopyInto(out *AzureAdPreAuthorized
 		*out = make([]AzureAdPreAuthorizedApp, len(*in))
 		copy(*out, *in)
 	}
+	if in.AssignedCount != nil {
+		in, out := &in.AssignedCount, &out.AssignedCount
+		*out = new(int)
+		**out = **in
+	}
 	if in.Unassigned != nil {
 		in, out := &in.Unassigned, &out.Unassigned
 		*out = make([]AzureAdPreAuthorizedApp, len(*in))
 		copy(*out, *in)
+	}
+	if in.UnassignedCount != nil {
+		in, out := &in.UnassignedCount, &out.UnassignedCount
+		*out = new(int)
+		**out = **in
 	}
 }
 

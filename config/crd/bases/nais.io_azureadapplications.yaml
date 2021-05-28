@@ -9,10 +9,6 @@ metadata:
   name: azureadapplications.nais.io
 spec:
   additionalPrinterColumns:
-  - JSONPath: .spec.secretName
-    name: Secret Ref
-    priority: 2
-    type: string
   - JSONPath: .status.clientId
     name: Client ID
     type: string
@@ -20,12 +16,24 @@ spec:
     name: Tenant
     priority: 1
     type: string
+  - JSONPath: .spec.secretName
+    name: Secret Ref
+    priority: 2
+    type: string
   - JSONPath: .metadata.creationTimestamp
     name: Created
     type: date
   - JSONPath: .status.synchronizationTime
     name: Synchronized
     type: date
+  - JSONPath: .status.preAuthorizedApps.assignedCount
+    description: Number of assigned pre-authorized apps
+    name: Assigned
+    type: integer
+  - JSONPath: .status.preAuthorizedApps.unassignedCount
+    description: Number of unassigned pre-authorized apps
+    name: Unassigned
+    type: integer
   group: nais.io
   names:
     kind: AzureAdApplication
@@ -184,6 +192,9 @@ spec:
                         type: string
                     type: object
                   type: array
+                assignedCount:
+                  description: AssignedCount is the size of the list in Assigned.
+                  type: integer
                 unassigned:
                   description: Unassigned is the list of desired pre-authorized apps
                     that have _not_ been pre-authorized to access this application.
@@ -208,6 +219,9 @@ spec:
                         type: string
                     type: object
                   type: array
+                unassignedCount:
+                  description: UnassignedCount is the size of the list in Unassigned.
+                  type: integer
               type: object
             servicePrincipalId:
               description: ServicePrincipalId is the Azure applications service principal
