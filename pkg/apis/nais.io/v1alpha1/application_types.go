@@ -356,7 +356,7 @@ type CloudIAMPermission struct {
 
 type Maskinporten struct {
 	Enabled bool                           `json:"enabled"`
-	Scopes  []nais_io_v1.MaskinportenScope `json:"scopes,omitempty"`
+	Scopes  nais_io_v1.MaskinportenScope `json:"scopes,omitempty"`
 }
 
 func (in *Application) GetObjectKind() schema.ObjectKind {

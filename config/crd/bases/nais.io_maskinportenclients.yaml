@@ -56,7 +56,7 @@ spec:
               properties:
                 consumes:
                   items:
-                    description: UsedScope is scope(s) consumed by the application
+                    description: ConsumedScope is scope(s) consumed by the application
                       to gain access to external Api(s)
                     properties:
                       name:

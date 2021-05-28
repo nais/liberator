@@ -434,81 +434,79 @@ spec:
                 enabled:
                   type: boolean
                 scopes:
-                  items:
-                    description: MaskinportenScope is the Schema for the MaskinportenScope
-                      API and it contains a list of scopes used by an application
-                      and scopes exposed by an application
-                    properties:
-                      consumes:
-                        items:
-                          description: UsedScope is scope(s) consumed by the application
-                            to gain access to external Api(s)
-                          properties:
-                            name:
+                  description: MaskinportenScope is the Schema for the MaskinportenScope
+                    API and it contains a list of scopes used by an application and
+                    scopes exposed by an application
+                  properties:
+                    consumes:
+                      items:
+                        description: ConsumedScope is scope(s) consumed by the application
+                          to gain access to external Api(s)
+                        properties:
+                          name:
+                            type: string
+                        required:
+                        - name
+                        type: object
+                      type: array
+                    exposes:
+                      items:
+                        description: ExposedScope is the exposed scopes exported by
+                          the application to grant organization access to resources/apis
+                        properties:
+                          allowedIntegrations:
+                            description: AllowedIntegrations whitelist of type of
+                              integration's allowed. Default is `maskinporten`
+                            items:
                               type: string
-                          required:
-                          - name
-                          type: object
-                        type: array
-                      exposes:
-                        items:
-                          description: ExposedScope is the exposed scopes exported
-                            by the application to grant organization access to resources/apis
-                          properties:
-                            allowedIntegrations:
-                              description: AllowedIntegrations whitelist of type of
-                                integration's allowed. Default is `maskinporten`
-                              items:
-                                type: string
-                              minItems: 1
-                              type: array
-                            atMaxAge:
-                              description: AtMaxAge Max time in seconds for a issued
-                                access_token, default is `30`
-                              maximum: 680
-                              minimum: 30
-                              type: integer
-                            consumers:
-                              description: Consumers External consumers granted access
-                                to this scope and able to get acess_token
-                              items:
-                                properties:
-                                  name:
-                                    description: Name is a describing name intended
-                                      for clearity.
-                                    type: string
-                                  orgno:
-                                    description: Orgno is the external business (consumer)
-                                      organisation number
-                                    pattern: ^\d{9}$
-                                    type: string
-                                required:
-                                - orgno
-                                type: object
-                              type: array
-                            enabled:
-                              description: Enabled sets scope availible for use and
-                                consumer can be granted access
-                              type: boolean
-                            name:
-                              description: 'Name is the actual subscope, build: scope
-                                := prefix:<Product></:><Name>'
-                              pattern: ^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$
-                              type: string
-                            product:
-                              description: Product is the product development area
-                                an application belongs to. This will be included in
-                                the final registered scope
-                              pattern: ^[a-z0-9]+$
-                              type: string
-                          required:
-                          - enabled
-                          - name
-                          - product
-                          type: object
-                        type: array
-                    type: object
-                  type: array
+                            minItems: 1
+                            type: array
+                          atMaxAge:
+                            description: AtMaxAge Max time in seconds for a issued
+                              access_token, default is `30`
+                            maximum: 680
+                            minimum: 30
+                            type: integer
+                          consumers:
+                            description: Consumers External consumers granted access
+                              to this scope and able to get acess_token
+                            items:
+                              properties:
+                                name:
+                                  description: Name is a describing name intended
+                                    for clearity.
+                                  type: string
+                                orgno:
+                                  description: Orgno is the external business (consumer)
+                                    organisation number
+                                  pattern: ^\d{9}$
+                                  type: string
+                              required:
+                              - orgno
+                              type: object
+                            type: array
+                          enabled:
+                            description: Enabled sets scope availible for use and
+                              consumer can be granted access
+                            type: boolean
+                          name:
+                            description: 'Name is the actual subscope, build: scope
+                              := prefix:<Product></:><Name>'
+                            pattern: ^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$
+                            type: string
+                          product:
+                            description: Product is the product development area an
+                              application belongs to. This will be included in the
+                              final registered scope
+                            pattern: ^[a-z0-9]+$
+                            type: string
+                        required:
+                        - enabled
+                        - name
+                        - product
+                        type: object
+                      type: array
+                  type: object
               required:
               - enabled
               type: object

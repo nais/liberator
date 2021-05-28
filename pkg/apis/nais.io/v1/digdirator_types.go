@@ -115,12 +115,12 @@ type MaskinportenClientList struct {
 // MaskinportenScope is the Schema for the MaskinportenScope API and it contains a list of scopes used
 // by an application and scopes exposed by an application
 type MaskinportenScope struct {
-	UsedScopes    []UsedScope    `json:"consumes,omitempty"`
-	ExposedScopes []ExposedScope `json:"exposes,omitempty"`
+	ConsumedScopes []ConsumedScope `json:"consumes,omitempty"`
+	ExposedScopes  []ExposedScope  `json:"exposes,omitempty"`
 }
 
-// UsedScope is scope(s) consumed by the application to gain access to external Api(s)
-type UsedScope struct {
+// ConsumedScope is scope(s) consumed by the application to gain access to external Api(s)
+type ConsumedScope struct {
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 }
@@ -171,7 +171,7 @@ func (in *MaskinportenClient) SetStatus(new DigdiratorStatus) {
 
 func (in *MaskinportenClient) GetUsedScopes() []string {
 	scopes := make([]string, 0)
-	for _, scope := range in.Spec.Scopes.UsedScopes {
+	for _, scope := range in.Spec.Scopes.ConsumedScopes {
 		scopes = append(scopes, scope.Name)
 	}
 	return scopes

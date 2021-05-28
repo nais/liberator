@@ -10,7 +10,7 @@ import (
 func TestMaskinportenClient_CalculateHash(t *testing.T) {
 	actual, err := minimalMaskinportenClient().Hash()
 	assert.NoError(t, err)
-	assert.Equal(t, "50fa5079e25158cf", actual)
+	assert.Equal(t, "fcd4a1835320374a", actual)
 }
 
 func TestIDPortenClient_Hash(t *testing.T) {
@@ -22,7 +22,7 @@ func TestIDPortenClient_Hash(t *testing.T) {
 func TestMaskinportenClientScopeSpec_Hash(t *testing.T) {
 	actual, err := minimalMaskinportenExtendedClient().Hash()
 	assert.NoError(t, err)
-	assert.Equal(t, "50fa5079e25158cf", actual)
+	assert.Equal(t, "fcd4a1835320374a", actual)
 }
 
 func minimalMaskinportenClient() *v1.MaskinportenClient {
@@ -34,8 +34,8 @@ func minimalMaskinportenClient() *v1.MaskinportenClient {
 		},
 		Spec: v1.MaskinportenClientSpec{
 			Scopes: v1.MaskinportenScope{
-				UsedScope:     nil,
-				ExposedScopes: nil,
+				ConsumedScopes: nil,
+				ExposedScopes:  nil,
 			},
 		},
 	}
@@ -65,8 +65,8 @@ func minimalMaskinportenExtendedClient() *v1.MaskinportenClient {
 		},
 		Spec: v1.MaskinportenClientSpec{
 			Scopes: v1.MaskinportenScope{
-				UsedScope:     nil,
-				ExposedScopes: nil,
+				ConsumedScopes: nil,
+				ExposedScopes:  nil,
 			},
 		},
 	}
