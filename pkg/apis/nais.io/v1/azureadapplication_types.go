@@ -92,13 +92,15 @@ type AzureAdApplicationStatus struct {
 	SynchronizationTenant string `json:"synchronizationTenant,omitempty"`
 	// SynchronizationTime is the last time the Status subresource was updated
 	SynchronizationTime *metav1.Time `json:"synchronizationTime,omitempty"`
-	// PreAuthorizedApps is the list of desired pre-authorized apps defined in the spec along with their actual status in Azure AD.
+	// PreAuthorizedApps contains the list of desired pre-authorized apps defined in the spec, separated by their actual status in Azure AD.
 	PreAuthorizedApps AzureAdPreAuthorizedAppsStatus `json:"preAuthorizedApps,omitempty"`
 }
 
 type AzureAdPreAuthorizedAppsStatus struct {
-	Valid   []AzureAdPreAuthorizedApp `json:"valid,omitempty"`
-	Invalid []AzureAdPreAuthorizedApp `json:"invalid,omitempty"`
+	// Assigned is the list of desired pre-authorized apps that have been pre-authorized to access this application.
+	Assigned []AzureAdPreAuthorizedApp `json:"assigned,omitempty"`
+	// Unassigned is the list of desired pre-authorized apps that have _not_ been pre-authorized to access this application.
+	Unassigned []AzureAdPreAuthorizedApp `json:"unassigned,omitempty"`
 }
 
 type AzureAdPreAuthorizedApp struct {

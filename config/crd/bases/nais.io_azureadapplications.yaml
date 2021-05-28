@@ -156,10 +156,13 @@ spec:
                 type: string
               type: array
             preAuthorizedApps:
-              description: PreAuthorizedApps is the list of desired pre-authorized
-                apps defined in the spec along with their actual status in Azure AD.
+              description: PreAuthorizedApps contains the list of desired pre-authorized
+                apps defined in the spec, separated by their actual status in Azure
+                AD.
               properties:
-                invalid:
+                assigned:
+                  description: Assigned is the list of desired pre-authorized apps
+                    that have been pre-authorized to access this application.
                   items:
                     properties:
                       clientId:
@@ -181,7 +184,9 @@ spec:
                         type: string
                     type: object
                   type: array
-                valid:
+                unassigned:
+                  description: Unassigned is the list of desired pre-authorized apps
+                    that have _not_ been pre-authorized to access this application.
                   items:
                     properties:
                       clientId:
