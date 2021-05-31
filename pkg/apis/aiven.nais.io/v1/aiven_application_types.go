@@ -7,10 +7,6 @@ import (
 	"time"
 )
 
-const (
-	AivenFinalizer = "aiven.nais.io/finalizer"
-)
-
 func init() {
 	SchemeBuilder.Register(
 		&AivenApplicationList{},
