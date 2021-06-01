@@ -199,7 +199,9 @@ type ApplicationSpec struct {
 	// +nais:doc:Availability="on-premises"
 	Vault *Vault `json:"vault,omitempty"`
 
-	// Inject web proxy configuration to the application using the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables.
+	// Inject on-premises web proxy configuration into the application pod.
+	// Most Linux applications should auto-detect these settings from the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables (and their lowercase counterparts).
+	// Java applications can start the JVM using parameters from the `$JAVA_PROXY_OPTIONS` environment variable.
 	// +nais:doc:Availability="on-premises"
 	WebProxy bool `json:"webproxy,omitempty"`
 }
