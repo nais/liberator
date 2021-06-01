@@ -103,12 +103,12 @@ func (in *AivenApplication) GetOwnerReference() metav1.OwnerReference {
 }
 
 func (in *AivenApplication) ServiceUserPrefix() string {
-	return ServiceUserPrefix(in.GetName(), in.GetNamespace())
+	return ServiceUserPrefix(in.GetName(), in.GetNamespace(), MaxServiceUserNameLength)
 }
 
-func ServiceUserPrefix(app, team string) string {
+func ServiceUserPrefix(app, team string, maxlen int) string {
 	username := team + "." + app
-	maxlen := MaxServiceUserNameLength - namegen.SuffixLength
+	maxlen = maxlen - namegen.SuffixLength
 	if len(username) > maxlen {
 		return username[:maxlen]
 	}

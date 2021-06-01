@@ -1,6 +1,8 @@
 package kafka_nais_io_v1
 
 import (
+	"fmt"
+	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	"strconv"
 
 	"github.com/nais/liberator/pkg/namegen"
@@ -125,6 +127,11 @@ func (in TopicACL) Username() string {
 		panic(err)
 	}
 	return username
+}
+
+func (in TopicACL) ACLname() string {
+	// TODO: Use new max length when Aivenator takes over creation of service users
+	return fmt.Sprintf("%s*", aiven_nais_io_v1.ServiceUserPrefix(in.Application, in.Team, MaxServiceUserNameLength))
 }
 
 func (in TopicACL) User() User {
