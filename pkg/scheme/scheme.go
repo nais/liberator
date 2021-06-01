@@ -6,8 +6,6 @@ import (
 	"github.com/nais/liberator/pkg/apis/iam.cnrm.cloud.google.com/v1beta1"
 	"github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
-	"github.com/nais/liberator/pkg/apis/networking.istio.io/v1alpha3"
-	"github.com/nais/liberator/pkg/apis/security.istio.io/v1beta1"
 	"github.com/nais/liberator/pkg/apis/sql.cnrm.cloud.google.com/v1beta1"
 	"github.com/nais/liberator/pkg/apis/storage.cnrm.cloud.google.com/v1beta1"
 	"k8s.io/apimachinery/pkg/api/meta"
@@ -36,9 +34,7 @@ func All() (*runtime.Scheme, error) {
 		iam_cnrm_cloud_google_com_v1beta1.AddToScheme,
 		sql_cnrm_cloud_google_com_v1beta1.AddToScheme,
 		storage_cnrm_cloud_google_com_v1beta1.AddToScheme,
-		networking_istio_io_v1alpha3.AddToScheme,
 		clientgoscheme.AddToScheme,
-		security_istio_io_v1beta1.AddToScheme,
 	)
 }
 
