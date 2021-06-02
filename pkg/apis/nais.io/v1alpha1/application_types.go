@@ -175,12 +175,10 @@ type ApplicationSpec struct {
 	// Whether to skip injection of NAV certificate authority bundle or not. Defaults to false.
 	SkipCaBundle bool `json:"skipCaBundle,omitempty"`
 
-	// Startup probes will be available with Kubernetes 1.20. Do not use this feature yet as it will not work.
-	//
-	// Sometimes, you have to deal with legacy applications that might require an additional startup time on their first
-	// initialization. In such cases, it can be tricky to set up liveness probe parameters without compromising the fast
-	// response to deadlocks that motivated such a probe. The trick is to set up a startup probe with the same command,
-	// HTTP or TCP check, with a `failureThreshold * periodSeconds` long enough to cover the worst case startup time.
+	// Kubernetes uses startup probes to know when a container application has started. If such a probe is configured,
+	// it disables liveness and readiness checks until it succeeds, making sure those probes don't interfere with the
+	// application startup. This can be used to adopt liveness checks on slow starting containers, avoiding them getting
+	// killed by Kubernetes before they are up and running.
 	Startup *Probe `json:"startup,omitempty"`
 
 	// Specifies the strategy used to replace old Pods by new ones.
