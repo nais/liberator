@@ -26,48 +26,48 @@ func ApplyDefaults(app *Application) error {
 func getAppDefaults() *Application {
 	return &Application{
 		Spec: ApplicationSpec{
-			Azure: &Azure{
-				Application: &AzureApplication{
+			Azure: &nais_io_v1.Azure{
+				Application: &nais_io_v1.AzureApplication{
 					Enabled: false,
 				},
 			},
-			Replicas: &Replicas{
+			Replicas: &nais_io_v1.Replicas{
 				Min:                    2,
 				Max:                    4,
 				CpuThresholdPercentage: 50,
 			},
-			Liveness: &Probe{
+			Liveness: &nais_io_v1.Probe{
 				PeriodSeconds:    DefaultProbePeriodSeconds,
 				Timeout:          DefaultProbeTimeoutSeconds,
 				FailureThreshold: DefaultProbeFailureThreshold,
 			},
 			Port: DefaultAppPort,
-			Strategy: &Strategy{
+			Strategy: &nais_io_v1.Strategy{
 				Type: DeploymentStrategyRollingUpdate,
 			},
-			Prometheus: &PrometheusConfig{
+			Prometheus: &nais_io_v1.PrometheusConfig{
 				Path: "/metrics",
 			},
-			Ingresses: []Ingress{},
-			Resources: &ResourceRequirements{
-				Limits: &ResourceSpec{
+			Ingresses: []nais_io_v1.Ingress{},
+			Resources: &nais_io_v1.ResourceRequirements{
+				Limits: &nais_io_v1.ResourceSpec{
 					Cpu:    "500m",
 					Memory: "512Mi",
 				},
-				Requests: &ResourceSpec{
+				Requests: &nais_io_v1.ResourceSpec{
 					Cpu:    "200m",
 					Memory: "256Mi",
 				},
 			},
-			Vault: &Vault{
+			Vault: &nais_io_v1.Vault{
 				Enabled: false,
-				Paths:   []SecretPath{},
+				Paths:   []nais_io_v1.SecretPath{},
 			},
-			Service: &Service{
+			Service: &nais_io_v1.Service{
 				Port:     DefaultServicePort,
 				Protocol: DefaultPortName,
 			},
-			SecureLogs: &SecureLogs{
+			SecureLogs: &nais_io_v1.SecureLogs{
 				Enabled: false,
 			},
 			AccessPolicy: &nais_io_v1.AccessPolicy{
@@ -79,7 +79,7 @@ func getAppDefaults() *Application {
 					External: []nais_io_v1.AccessPolicyExternalRule{},
 				},
 			},
-			TokenX: &TokenX{
+			TokenX: &nais_io_v1.TokenX{
 				Enabled:                 false,
 				MountSecretsAsFilesOnly: false,
 			},
