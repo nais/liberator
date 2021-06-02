@@ -110,8 +110,8 @@ type AzureAdPreAuthorizedAppsStatus struct {
 }
 
 type AzureAdPreAuthorizedApp struct {
-	// Name is the actual name of the application found in Azure AD.
-	Name string `json:"name,omitempty"`
+	// AccessPolicyRule is the desired nais_io_v1.AccessPolicyRule matching the definition in AzureAdApplicationSpec.PreAuthorizedApplications.
+	AccessPolicyRule *AccessPolicyRule `json:"accessPolicyRule,omitempty"`
 	// Client ID is the actual client ID of the application found in Azure AD, if it exists.
 	ClientID string `json:"clientId,omitempty"`
 	// Object ID is the actual object ID of the service principal belonging to the application found in Azure AD, if it exists.
