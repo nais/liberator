@@ -6,6 +6,12 @@ import (
 	v1 "k8s.io/api/core/v1"
 )
 
+const (
+	DeploymentCorrelationIDAnnotation = "nais.io/deploymentCorrelationID"
+	SkipDeploymentMessageAnnotation   = "nais.io/skipDeploymentMessage"
+	DefaultVaultMountPath             = "/var/run/secrets/nais.io/vault"
+)
+
 type Azure struct {
 	// Configures an Azure AD client for this application.
 	// See [Azure AD](https://doc.nais.io/security/auth/azure-ad/) for more details.

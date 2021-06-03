@@ -16,8 +16,6 @@ import (
 )
 
 const (
-	DeploymentCorrelationIDAnnotation      = "nais.io/deploymentCorrelationID"
-	SkipDeploymentMessageAnnotation        = "nais.io/skipDeploymentMessage"
 	DefaultSecretMountPath                 = "/var/run/secrets"
 	DefaultJwkerMountPath                  = "/var/run/secrets/nais.io/jwker"
 	DefaultAzureratorMountPath             = "/var/run/secrets/nais.io/azure"
@@ -283,7 +281,7 @@ func (in *Application) EnsureCorrelationID() error {
 		in.SetAnnotations(map[string]string{})
 	}
 
-	if len(in.Annotations[DeploymentCorrelationIDAnnotation]) != 0 {
+	if len(in.Annotations[nais_io_v1.DeploymentCorrelationIDAnnotation]) != 0 {
 		return nil
 	}
 
@@ -292,13 +290,13 @@ func (in *Application) EnsureCorrelationID() error {
 		return fmt.Errorf("generate deployment correlation ID: %s", err)
 	}
 
-	in.Annotations[DeploymentCorrelationIDAnnotation] = id.String()
+	in.Annotations[nais_io_v1.DeploymentCorrelationIDAnnotation] = id.String()
 
 	return nil
 }
 
 func (in *Application) CorrelationID() string {
-	return in.Annotations[DeploymentCorrelationIDAnnotation]
+	return in.Annotations[nais_io_v1.DeploymentCorrelationIDAnnotation]
 }
 
 func (in *Application) SetDeploymentRolloutStatus(rolloutStatus string) {
@@ -307,7 +305,7 @@ func (in *Application) SetDeploymentRolloutStatus(rolloutStatus string) {
 
 func (in *Application) DefaultSecretPath(base string) nais_io_v1.SecretPath {
 	return nais_io_v1.SecretPath{
-		MountPath: DefaultVaultMountPath,
+		MountPath: nais_io_v1.DefaultVaultMountPath,
 		KvPath:    fmt.Sprintf("%s/%s/%s", base, in.Name, in.Namespace),
 	}
 }
@@ -316,7 +314,7 @@ func (in *Application) SkipDeploymentMessage() bool {
 	if in.Annotations == nil {
 		return false
 	}
-	skip, _ := strconv.ParseBool(in.Annotations[SkipDeploymentMessageAnnotation])
+	skip, _ := strconv.ParseBool(in.Annotations[nais_io_v1.SkipDeploymentMessageAnnotation])
 	return skip
 }
 
