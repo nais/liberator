@@ -9,7 +9,13 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func CreateObjectMeta(name, namespace, correlationID string, labels map[string]string, ownerReferences []metav1.OwnerReference) metav1.ObjectMeta {
+func CreateObjectMeta(name, namespace, correlationID string, inLabels map[string]string, ownerReferences []metav1.OwnerReference) metav1.ObjectMeta {
+	labels := map[string]string{}
+
+	for k, v := range inLabels {
+		labels[k] = v
+	}
+
 	labels["app"] = name
 
 	return metav1.ObjectMeta{
