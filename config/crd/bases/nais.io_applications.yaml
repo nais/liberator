@@ -326,7 +326,7 @@ spec:
                     properties:
                       cascadingDelete:
                         description: When set to true will delete the dataset, when
-                          the application resource is deleted.
+                          the application resource is deleted. Default value is `false`.
                         type: boolean
                       description:
                         description: This description will appear on the GCP BigQuery
@@ -334,11 +334,13 @@ spec:
                           in browser.
                         type: string
                       name:
-                        description: The name of the BigQuery Dataset.
+                        description: The name of the BigQuery Dataset. No default,
+                          must be set.
                         pattern: ^[a-z0-9][a-z0-9_-]+$
                         type: string
                       permission:
-                        description: Permission level given to application.
+                        description: Permission level given to application. No default,
+                          must be set.
                         enum:
                         - READ
                         - READWRITE
