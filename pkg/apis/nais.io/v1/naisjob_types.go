@@ -38,13 +38,13 @@ type NaisjobSpec struct {
 	AccessPolicy *AccessPolicy `json:"accessPolicy,omitempty"`
 
 	// Once a Naisjob reaches activeDeadlineSeconds, all of its running Pods are terminated and the Naisjob status will become type: Failed with reason: DeadlineExceeded.
-	ActiveDeadlineSeconds int `json:"activeDeadlineSeconds,omitempty"`
+	ActiveDeadlineSeconds int64 `json:"activeDeadlineSeconds,omitempty"`
 
 	// Provisions and configures Azure resources.
 	Azure *Azure `json:"azure,omitempty"`
 
 	// Specify the number of retries before considering a Naisjob as failed
-	BackoffLimit int `json:"backoffLimit,omitempty"`
+	BackoffLimit int32 `json:"backoffLimit,omitempty"`
 
 	// Override command when starting Docker image.
 	Command []string `json:"command,omitempty"`
@@ -64,6 +64,8 @@ type NaisjobSpec struct {
 	// The ConfigMap and Secret resources must live in the same Kubernetes namespace as the Naisjob resource.
 	// +nais:doc:Availability="team namespaces"
 	EnvFrom []EnvFrom `json:"envFrom,omitempty"`
+
+	FailedJobsHistoryLimit int32 `json:"faileJjobsHistoryLimit,omitempty"`
 
 	// List of ConfigMap or Secret resources that will have their contents mounted into the containers as files.
 	// Either `configMap` or `secret` is required.
@@ -136,9 +138,12 @@ type NaisjobSpec struct {
 	// killed by Kubernetes before they are up and running.
 	Startup *Probe `json:"startup,omitempty"`
 
+	// specify how many completed jobs should be kept. By default, they are set to 3.
+	SuccessfulJobsHistoryLimit int32 `json:"successfulJobsHistoryLimit,omitempty"`
+
 	// Specify the number of seconds to wait before removing the Job after it has finished (either Completed or Failed).
 	// +nais:doc:Availability="on-premises"
-	TTLSecondsAfterFinished int `json:"ttlSecondsAfterFinished,omitempty"`
+	TTLSecondsAfterFinished int32 `json:"ttlSecondsAfterFinished,omitempty"`
 
 	// Provides secrets management, identity-based access, and encrypting Naisjob data for auditing of secrets
 	// for Naisjobs, systems, and users.

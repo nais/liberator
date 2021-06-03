@@ -154,6 +154,7 @@ spec:
               description: 'Once a Naisjob reaches activeDeadlineSeconds, all of its
                 running Pods are terminated and the Naisjob status will become type:
                 Failed with reason: DeadlineExceeded.'
+              format: int64
               type: integer
             azure:
               description: Provisions and configures Azure resources.
@@ -215,6 +216,7 @@ spec:
             backoffLimit:
               description: Specify the number of retries before considering a Naisjob
                 as failed
+              format: int32
               type: integer
             command:
               description: Override command when starting Docker image.
@@ -295,6 +297,9 @@ spec:
                     type: string
                 type: object
               type: array
+            faileJjobsHistoryLimit:
+              format: int32
+              type: integer
             filesFrom:
               description: "List of ConfigMap or Secret resources that will have their
                 contents mounted into the containers as files. Either `configMap`
@@ -729,9 +734,15 @@ spec:
               required:
               - path
               type: object
+            successfulJobsHistoryLimit:
+              description: specify how many completed jobs should be kept. By default,
+                they are set to 3.
+              format: int32
+              type: integer
             ttlSecondsAfterFinished:
               description: Specify the number of seconds to wait before removing the
                 Job after it has finished (either Completed or Failed).
+              format: int32
               type: integer
             vault:
               description: Provides secrets management, identity-based access, and
