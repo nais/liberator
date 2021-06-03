@@ -37,35 +37,6 @@ func TestApplication_Hash(t *testing.T) {
 	assert.NotEqual(t, hashes[1], hashes[2], "should not match")
 }
 
-func TestApplication_CreateAppNamespaceHash(t *testing.T) {
-	application := &nais_io_v1alpha1.Application{
-		ObjectMeta: v1.ObjectMeta{
-			Name:      "reallylongapplicationname",
-			Namespace: "evenlongernamespacename",
-		},
-	}
-	application2 := &nais_io_v1alpha1.Application{
-		ObjectMeta: v1.ObjectMeta{
-			Name:      "reallylongafoo",
-			Namespace: "evenlongerbar",
-		},
-	}
-	application3 := &nais_io_v1alpha1.Application{
-		ObjectMeta: v1.ObjectMeta{
-			Name:      "short",
-			Namespace: "name",
-		},
-	}
-	appNameHash := application.CreateAppNamespaceHash()
-	appNameHash2 := application2.CreateAppNamespaceHash()
-	appNameHash3 := application3.CreateAppNamespaceHash()
-	assert.Equal(t, "reallylonga-evenlonger-siqwsiq", appNameHash)
-	assert.Equal(t, "reallylonga-evenlonger-piuqbfq", appNameHash2)
-	assert.Equal(t, "short-name-hqb7npi", appNameHash3)
-	assert.True(t, len(appNameHash2) <= 30)
-	assert.True(t, len(appNameHash3) >= 6)
-}
-
 // Test that updating the application spec with new, default-null values does not trigger a hash change.
 func TestHashJSONMarshalling(t *testing.T) {
 	type a struct {
