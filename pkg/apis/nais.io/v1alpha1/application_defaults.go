@@ -18,7 +18,7 @@ const (
 )
 
 // ApplyDefaults sets default values where they are missing from an Application spec.
-func ApplyApplicationDefaults(app *Application) error {
+func (app *Application) ApplyDefaults() error {
 	return mergo.Merge(app, getAppDefaults())
 }
 

@@ -15,7 +15,7 @@ const (
 )
 
 // ApplyDefaults sets default values where they are missing from an Application spec.
-func ApplyNaisjobDefaults(job *Naisjob) error {
+func (job *Naisjob) ApplyDefaults() error {
 	return mergo.Merge(job, getNaisjobDefaults())
 }
 
