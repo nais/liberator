@@ -15,6 +15,7 @@ import (
 
 	yaml2 "github.com/ghodss/yaml"
 	"github.com/imdario/mergo"
+	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
@@ -29,9 +30,31 @@ import (
 
 // Generate documentation for NAIS CRD's
 
-var defaultApplication interface{}
+var defaultResource interface{}
 
-var exampleApplication = getExampleApp()
+var exampleResource interface{}
+
+type DefaultableResource interface {
+	ApplyDefaults() error
+}
+
+type DocumentableResource struct {
+	Resource      DefaultableResource
+	ExampleGetter func() interface{}
+}
+
+var supportedResources = map[string]DocumentableResource{
+	"Application": {
+		Resource:      &nais_io_v1alpha1.Application{},
+		ExampleGetter: func() interface{} { return nais_io_v1alpha1.ExampleApplicationForDocumentation() },
+	},
+	"Naisjob": {
+		Resource:      &nais_io_v1.Naisjob{},
+		ExampleGetter: func() interface{} { return nais_io_v1.ExampleNaisjobForDocumentation() },
+	},
+}
+
+type Renderer func(w io.Writer, level int, jsonpath string, key string, parent, node apiext.JSONSchemaProps)
 
 type Config struct {
 	Directory         string
@@ -159,16 +182,19 @@ func run() error {
 		return fmt.Errorf("schema generation failed; double check the syntax of doctags (+nais:* and +kubebuilder:*")
 	}
 
-	app := nais_io_v1alpha1.Application{}
-	err = app.ApplyDefaults()
+	resourcer, ok := supportedResources[cfg.Kind]
+	if !ok {
+		return fmt.Errorf("kind '%s' is not supported; needs populator config in docgen.go", cfg.Kind)
+	}
+	err = resourcer.Resource.ApplyDefaults()
 	if err != nil {
 		return err
 	}
-	data, err := json.Marshal(app.Spec)
+	err = marshalToInterface(&defaultResource, resourcer.Resource)
 	if err != nil {
 		return err
 	}
-	err = json.Unmarshal(data, &defaultApplication)
+	err = marshalToInterface(&exampleResource, resourcer.ExampleGetter())
 	if err != nil {
 		return err
 	}
@@ -187,7 +213,13 @@ func run() error {
 	return nil
 }
 
-type Renderer func(w io.Writer, level int, jsonpath string, key string, parent, node apiext.JSONSchemaProps)
+func marshalToInterface(dst, src interface{}) error {
+	data, err := json.Marshal(src)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(data, dst)
+}
 
 func Write(renderer Renderer, tpl string, outFile string, base apiext.JSONSchemaProps) error {
 	var err error
@@ -331,21 +363,12 @@ func hasRequired(node apiext.JSONSchemaProps, key string) bool {
 	return false
 }
 
-func injectLinks(yml string) string {
-	// FIXME
-	return yml
-}
-
 func WriteExampleDoc(w io.Writer, level int, jsonpath string, key string, parent, node apiext.JSONSchemaProps) {
-	app := nais_io_v1alpha1.ExampleApplicationForDocumentation()
-
-	js, _ := json.Marshal(app)
+	js, _ := json.Marshal(exampleResource)
 	ym, _ := yaml2.JSONToYAML(js)
 
-	rendered := injectLinks(string(ym))
-
 	io.WriteString(w, "``` yaml\n")
-	io.WriteString(w, rendered)
+	io.WriteString(w, string(ym))
 	io.WriteString(w, "```\n")
 
 	return
@@ -378,7 +401,7 @@ func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, pare
 		jsonpath += "[]"
 	}
 
-	defaultValue, err := getValueFromStruct(strings.Trim(jsonpath, "."), defaultApplication)
+	defaultValue, err := getValueFromStruct("spec"+jsonpath, defaultResource)
 	if err == nil {
 		entry.Default = fmt.Sprintf("%v", defaultValue)
 	}
@@ -409,14 +432,14 @@ func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, pare
 	if len(jsonpath) > 0 {
 		entry.formatStraight(w)
 
-		example, err := getStructSubPath(strings.Trim(jsonpath, "."), exampleApplication)
+		example, err := getStructSubPath("spec"+jsonpath, exampleResource)
 		if err == nil {
 			io.WriteString(w, "??? example\n")
 			io.WriteString(w, "    ``` yaml\n")
 			buf := bytes.NewBuffer(nil)
 			enc := yaml.NewEncoder(buf)
 			enc.SetIndent(2)
-			enc.Encode(map[string]interface{}{"spec": example})
+			enc.Encode(example)
 			scan := bufio.NewScanner(buf)
 			for scan.Scan() {
 				io.WriteString(w, "    "+scan.Text()+"\n")
@@ -438,20 +461,6 @@ func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, pare
 	for _, k := range keys {
 		WriteReferenceDoc(w, level+1, jsonpath+"."+k, k, node, node.Properties[k])
 	}
-}
-
-func getExampleApp() interface{} {
-	app := nais_io_v1alpha1.ExampleApplicationForDocumentation()
-	var marshaled interface{}
-	data, err := json.Marshal(app.Spec)
-	if err != nil {
-		return nil
-	}
-	err = json.Unmarshal(data, &marshaled)
-	if err != nil {
-		return nil
-	}
-	return marshaled
 }
 
 func getStructSubPath(keyWithDots string, object interface{}) (interface{}, error) {
