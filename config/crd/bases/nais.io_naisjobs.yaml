@@ -153,7 +153,8 @@ spec:
             activeDeadlineSeconds:
               description: 'Once a Naisjob reaches activeDeadlineSeconds, all of its
                 running Pods are terminated and the Naisjob status will become type:
-                Failed with reason: DeadlineExceeded.'
+                Failed with reason: DeadlineExceeded. If set, this takes presedence
+                over BackoffLimit.'
               format: int64
               type: integer
             azure:
@@ -298,6 +299,7 @@ spec:
                 type: object
               type: array
             faileJjobsHistoryLimit:
+              description: Specify how many failed Jobs should be kept.
               format: int32
               type: integer
             filesFrom:
@@ -735,13 +737,14 @@ spec:
               - path
               type: object
             successfulJobsHistoryLimit:
-              description: specify how many completed jobs should be kept. By default,
-                they are set to 3.
+              description: Specify how many completed Jobs should be kept.
               format: int32
               type: integer
             ttlSecondsAfterFinished:
               description: Specify the number of seconds to wait before removing the
-                Job after it has finished (either Completed or Failed).
+                Job after it has finished (either Completed or Failed). If the field
+                is unset, this Job won't be cleaned up by the TTL controller after
+                it finishes.
               format: int32
               type: integer
             vault:

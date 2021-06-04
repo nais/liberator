@@ -38,6 +38,7 @@ type NaisjobSpec struct {
 	AccessPolicy *AccessPolicy `json:"accessPolicy,omitempty"`
 
 	// Once a Naisjob reaches activeDeadlineSeconds, all of its running Pods are terminated and the Naisjob status will become type: Failed with reason: DeadlineExceeded.
+	// If set, this takes presedence over BackoffLimit.
 	ActiveDeadlineSeconds int64 `json:"activeDeadlineSeconds,omitempty"`
 
 	// Provisions and configures Azure resources.
@@ -65,6 +66,7 @@ type NaisjobSpec struct {
 	// +nais:doc:Availability="team namespaces"
 	EnvFrom []EnvFrom `json:"envFrom,omitempty"`
 
+	// Specify how many failed Jobs should be kept.
 	FailedJobsHistoryLimit int32 `json:"faileJjobsHistoryLimit,omitempty"`
 
 	// List of ConfigMap or Secret resources that will have their contents mounted into the containers as files.
@@ -138,10 +140,11 @@ type NaisjobSpec struct {
 	// killed by Kubernetes before they are up and running.
 	Startup *Probe `json:"startup,omitempty"`
 
-	// specify how many completed jobs should be kept. By default, they are set to 3.
+	// Specify how many completed Jobs should be kept.
 	SuccessfulJobsHistoryLimit int32 `json:"successfulJobsHistoryLimit,omitempty"`
 
 	// Specify the number of seconds to wait before removing the Job after it has finished (either Completed or Failed).
+	// If the field is unset, this Job won't be cleaned up by the TTL controller after it finishes.
 	// +nais:doc:Availability="on-premises"
 	TTLSecondsAfterFinished int32 `json:"ttlSecondsAfterFinished,omitempty"`
 

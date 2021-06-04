@@ -167,7 +167,7 @@ func run() error {
 	exmw := &multiwriter{w: exampleOut}
 
 	app := nais_io_v1alpha1.Application{}
-	err = nais_io_v1alpha1.ApplyDefaults(&app)
+	err = nais_io_v1alpha1.ApplyApplicationDefaults(&app)
 	if err != nil {
 		return err
 	}

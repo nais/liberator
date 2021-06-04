@@ -8,10 +8,20 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+const (
+	naisjobHash = "123724db529e6aa4"
+)
+
 func TestNaisjobHash(t *testing.T) {
-	actual, err := minimalNaisjob().Hash()
+	job := minimalNaisjob()
+	err := nais_io_v1.ApplyNaisjobDefaults(job)
+	if err != nil {
+		panic(err)
+	}
+	hash, err := job.Hash()
 	assert.NoError(t, err)
-	assert.Equal(t, "39091b68783a6373", actual)
+	assert.Equalf(t, naisjobHash, hash, "Your Naisjob default value changes will trigger a FULL REDEPLOY of ALL NAISJOBS in ALL NAMESPACES across ALL CLUSTERS. If this is what you really want, change the `naisjobHash` constant in this test file to `%s`.", hash)
+
 }
 
 func minimalNaisjob() *nais_io_v1.Naisjob {

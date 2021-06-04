@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	"github.com/mitchellh/hashstructure"
-	"github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
+	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	"github.com/stretchr/testify/assert"
-	"k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -23,7 +23,7 @@ func TestApplication_Hash(t *testing.T) {
 	}
 	hashes := make([]string, len(apps))
 	for i := range apps {
-		err := nais_io_v1alpha1.ApplyDefaults(apps[i])
+		err := nais_io_v1alpha1.ApplyApplicationDefaults(apps[i])
 		if err != nil {
 			panic(err)
 		}
@@ -61,7 +61,7 @@ func TestHashJSONMarshalling(t *testing.T) {
 
 func TestNewCRD(t *testing.T) {
 	app := &nais_io_v1alpha1.Application{}
-	err := nais_io_v1alpha1.ApplyDefaults(app)
+	err := nais_io_v1alpha1.ApplyApplicationDefaults(app)
 	if err != nil {
 		panic(err)
 	}
