@@ -7,7 +7,7 @@ import (
 	"github.com/mitchellh/hashstructure"
 	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	"github.com/stretchr/testify/assert"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -18,8 +18,8 @@ const (
 func TestApplication_Hash(t *testing.T) {
 	apps := []*nais_io_v1alpha1.Application{
 		{Spec: nais_io_v1alpha1.ApplicationSpec{}},
-		{Spec: nais_io_v1alpha1.ApplicationSpec{}, ObjectMeta: v1.ObjectMeta{Annotations: map[string]string{"a": "b", "team": "banan"}}},
-		{Spec: nais_io_v1alpha1.ApplicationSpec{}, ObjectMeta: v1.ObjectMeta{Labels: map[string]string{"a": "b", "team": "banan"}}},
+		{Spec: nais_io_v1alpha1.ApplicationSpec{}, ObjectMeta: metav1.ObjectMeta{Annotations: map[string]string{"a": "b", "team": "banan"}}},
+		{Spec: nais_io_v1alpha1.ApplicationSpec{}, ObjectMeta: metav1.ObjectMeta{Labels: map[string]string{"a": "b", "team": "banan"}}},
 	}
 	hashes := make([]string, len(apps))
 	for i := range apps {

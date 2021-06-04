@@ -3,7 +3,7 @@ package nais_io_v1
 import (
 	"fmt"
 
-	v1 "k8s.io/api/core/v1"
+	corev1 "k8s.io/api/core/v1"
 )
 
 const (
@@ -406,22 +406,22 @@ type Maintenance struct {
 	Hour *int `json:"hour,omitempty"` // must use pointer here to be able to distinguish between no value and value 0 from user.
 }
 
-func (envVar EnvVar) ToKubernetes() v1.EnvVar {
+func (envVar EnvVar) ToKubernetes() corev1.EnvVar {
 	if envVar.ValueFrom != nil && envVar.ValueFrom.FieldRef.FieldPath != "" {
-		return v1.EnvVar{
+		return corev1.EnvVar{
 			Name: envVar.Name,
-			ValueFrom: &v1.EnvVarSource{
-				FieldRef: &v1.ObjectFieldSelector{FieldPath: envVar.ValueFrom.FieldRef.FieldPath},
+			ValueFrom: &corev1.EnvVarSource{
+				FieldRef: &corev1.ObjectFieldSelector{FieldPath: envVar.ValueFrom.FieldRef.FieldPath},
 			},
 		}
 	} else {
-		return v1.EnvVar{Name: envVar.Name, Value: envVar.Value}
+		return corev1.EnvVar{Name: envVar.Name, Value: envVar.Value}
 	}
 }
 
 // Maps environment variables from ApplicationSpec to the ones we use in CreateSpec
-func (envVars EnvVars) ToKubernetes() []v1.EnvVar {
-	var newEnvVars []v1.EnvVar
+func (envVars EnvVars) ToKubernetes() []corev1.EnvVar {
+	var newEnvVars []corev1.EnvVar
 	for _, envVar := range envVars {
 		newEnvVars = append(newEnvVars, envVar.ToKubernetes())
 	}

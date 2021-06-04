@@ -8,7 +8,7 @@ import (
 	"github.com/google/uuid"
 	hash "github.com/mitchellh/hashstructure"
 	log "github.com/sirupsen/logrus"
-	v1 "k8s.io/api/core/v1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
@@ -220,8 +220,8 @@ func (in *Application) GetObjectKind() schema.ObjectKind {
 	return in
 }
 
-func (in *Application) GetObjectReference() v1.ObjectReference {
-	return v1.ObjectReference{
+func (in *Application) GetObjectReference() corev1.ObjectReference {
+	return corev1.ObjectReference{
 		APIVersion:      "v1alpha1",
 		UID:             in.UID,
 		Name:            in.Name,
