@@ -189,7 +189,7 @@ func ExampleApplicationForDocumentation() *Application {
 					{
 						Name:            "mybigquerydataset",
 						CascadingDelete: true,
-						Description:     "Tralalala",
+						Description:     "Contains big data, supporting big queries, for use in big ideas.",
 						Permission:      BigQueryPermissionReadWrite,
 					},
 				},

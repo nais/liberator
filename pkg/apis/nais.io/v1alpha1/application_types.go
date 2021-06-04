@@ -400,17 +400,20 @@ func (b BigQueryPermission) GoogleType() string {
 }
 
 type CloudBigQueryDataset struct {
-	// The name of the BigQuery Dataset. No default, must be set.
+	// Name of the BigQuery Dataset.
+	// The canonical name of the dataset will be `<TEAM_PROJECT_ID>:<NAME>`.
+	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`^[a-z0-9][a-z0-9_-]+$`
 	Name string `json:"name"`
-	// Permission level given to application. No default, must be set.
+	// Permission level given to application.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Enum=READ;READWRITE
 	Permission BigQueryPermission `json:"permission"`
 	// When set to true will delete the dataset, when the application resource is deleted.
 	// Default value is `false`.
 	CascadingDelete bool `json:"cascadingDelete,omitempty"`
-	// This description will appear on the GCP BigQuery Dataset resource, and will thus also be found on GCP console in browser.
+	// Human-readable description of what this BigQuery dataset contains, or is used for.
+	// Will be visible in the GCP Console.
 	Description string `json:"description,omitempty"`
 }
 

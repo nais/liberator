@@ -329,18 +329,17 @@ spec:
                           the application resource is deleted. Default value is `false`.
                         type: boolean
                       description:
-                        description: This description will appear on the GCP BigQuery
-                          Dataset resource, and will thus also be found on GCP console
-                          in browser.
+                        description: Human-readable description of what this BigQuery
+                          dataset contains, or is used for. Will be visible in the
+                          GCP Console.
                         type: string
                       name:
-                        description: The name of the BigQuery Dataset. No default,
-                          must be set.
+                        description: Name of the BigQuery Dataset. The canonical name
+                          of the dataset will be `<TEAM_PROJECT_ID>:<NAME>`.
                         pattern: ^[a-z0-9][a-z0-9_-]+$
                         type: string
                       permission:
-                        description: Permission level given to application. No default,
-                          must be set.
+                        description: Permission level given to application.
                         enum:
                         - READ
                         - READWRITE
