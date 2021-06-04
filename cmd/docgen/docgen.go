@@ -297,6 +297,17 @@ func hasRequired(node apiext.JSONSchemaProps, key string) bool {
 			return true
 		}
 	}
+
+	if node.Items == nil {
+		return false
+	}
+
+	for _, k := range node.Items.Schema.Required {
+		if k == key {
+			return true
+		}
+	}
+
 	return false
 }
 
