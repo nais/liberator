@@ -14,7 +14,7 @@ const (
 
 func TestNaisjobHash(t *testing.T) {
 	job := minimalNaisjob()
-	err := nais_io_v1.ApplyNaisjobDefaults(job)
+	err := job.ApplyDefaults()
 	if err != nil {
 		panic(err)
 	}

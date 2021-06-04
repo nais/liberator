@@ -23,7 +23,7 @@ func TestApplication_Hash(t *testing.T) {
 	}
 	hashes := make([]string, len(apps))
 	for i := range apps {
-		err := nais_io_v1alpha1.ApplyApplicationDefaults(apps[i])
+		err := apps[i].ApplyDefaults()
 		if err != nil {
 			panic(err)
 		}
@@ -61,7 +61,7 @@ func TestHashJSONMarshalling(t *testing.T) {
 
 func TestNewCRD(t *testing.T) {
 	app := &nais_io_v1alpha1.Application{}
-	err := nais_io_v1alpha1.ApplyApplicationDefaults(app)
+	err := app.ApplyDefaults()
 	if err != nil {
 		panic(err)
 	}
