@@ -210,7 +210,7 @@ func (in *Naisjob) LogFields() log.Fields {
 	return log.Fields{
 		"namespace":       in.GetNamespace(),
 		"resourceversion": in.GetResourceVersion(),
-		"Naisjob":         in.GetName(),
+		"naisjob":         in.GetName(),
 		"correlation_id":  in.Status.CorrelationID,
 	}
 }
