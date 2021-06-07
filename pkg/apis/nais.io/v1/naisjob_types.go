@@ -39,7 +39,7 @@ type NaisjobSpec struct {
 
 	// Once a Naisjob reaches activeDeadlineSeconds, all of its running Pods are terminated and the Naisjob status will become type: Failed with reason: DeadlineExceeded.
 	// If set, this takes presedence over BackoffLimit.
-	ActiveDeadlineSeconds int64 `json:"activeDeadlineSeconds,omitempty"`
+	ActiveDeadlineSeconds *int64 `json:"activeDeadlineSeconds,omitempty"`
 
 	// Provisions and configures Azure resources.
 	Azure *Azure `json:"azure,omitempty"`
@@ -146,7 +146,7 @@ type NaisjobSpec struct {
 	// Specify the number of seconds to wait before removing the Job after it has finished (either Completed or Failed).
 	// If the field is unset, this Job won't be cleaned up by the TTL controller after it finishes.
 	// +nais:doc:Availability="on-premises"
-	TTLSecondsAfterFinished int32 `json:"ttlSecondsAfterFinished,omitempty"`
+	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty"`
 
 	// Provides secrets management, identity-based access, and encrypting Naisjob data for auditing of secrets
 	// for Naisjobs, systems, and users.
