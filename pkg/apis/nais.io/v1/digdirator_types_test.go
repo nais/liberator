@@ -1,7 +1,7 @@
 package nais_io_v1_test
 
 import (
-	v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
+	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"testing"
@@ -19,27 +19,27 @@ func TestIDPortenClient_Hash(t *testing.T) {
 	assert.Equal(t, "8b5ebee90b513411", actual)
 }
 
-func minimalMaskinportenClient() *v1.MaskinportenClient {
-	return &v1.MaskinportenClient{
+func minimalMaskinportenClient() *nais_io_v1.MaskinportenClient {
+	return &nais_io_v1.MaskinportenClient{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        "test-app",
 			Namespace:   "test-namespace",
 			ClusterName: "test-cluster",
 		},
-		Spec: v1.MaskinportenClientSpec{
+		Spec: nais_io_v1.MaskinportenClientSpec{
 			Scopes: nil,
 		},
 	}
 }
 
-func minimalIDPortenClient() *v1.IDPortenClient {
-	return &v1.IDPortenClient{
+func minimalIDPortenClient() *nais_io_v1.IDPortenClient {
+	return &nais_io_v1.IDPortenClient{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:        "test-app",
 			Namespace:   "test-namespace",
 			ClusterName: "test-cluster",
 		},
-		Spec: v1.IDPortenClientSpec{
+		Spec: nais_io_v1.IDPortenClientSpec{
 			ClientURI:   "",
 			RedirectURI: "https://test.com",
 			SecretName:  "test",

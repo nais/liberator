@@ -2,34 +2,34 @@ package aiven_nais_io_v1
 
 import (
 	"github.com/stretchr/testify/assert"
-	v1 "k8s.io/api/core/v1"
+	corev1 "k8s.io/api/core/v1"
 	"testing"
 )
 
 var (
 	successTrue = AivenApplicationCondition{
 		Type:   AivenApplicationSucceeded,
-		Status: v1.ConditionTrue,
+		Status: corev1.ConditionTrue,
 	}
 	successFalse = AivenApplicationCondition{
 		Type:   AivenApplicationSucceeded,
-		Status: v1.ConditionFalse,
+		Status: corev1.ConditionFalse,
 	}
 	localFailTrue = AivenApplicationCondition{
 		Type:   AivenApplicationLocalFailure,
-		Status: v1.ConditionTrue,
+		Status: corev1.ConditionTrue,
 	}
 	localFailFalse = AivenApplicationCondition{
 		Type:   AivenApplicationLocalFailure,
-		Status: v1.ConditionFalse,
+		Status: corev1.ConditionFalse,
 	}
 	aivenFailTrue = AivenApplicationCondition{
 		Type:   AivenApplicationAivenFailure,
-		Status: v1.ConditionTrue,
+		Status: corev1.ConditionTrue,
 	}
 	aivenFailFalse = AivenApplicationCondition{
 		Type:   AivenApplicationAivenFailure,
-		Status: v1.ConditionFalse,
+		Status: corev1.ConditionFalse,
 	}
 )
 

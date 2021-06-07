@@ -3,12 +3,12 @@ package kubernetes_test
 import (
 	"github.com/nais/liberator/pkg/kubernetes"
 	"github.com/stretchr/testify/assert"
-	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"testing"
 )
 
 func TestUniformResourceName(t *testing.T) {
-	om := &v1.ObjectMeta{
+	om := &metav1.ObjectMeta{
 		Name:        "test-app",
 		Namespace:   "test-namespace",
 		ClusterName: "test-cluster",
