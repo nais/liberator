@@ -1309,6 +1309,11 @@ func (in *NaisjobSpec) DeepCopyInto(out *NaisjobSpec) {
 		*out = new(AccessPolicy)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.ActiveDeadlineSeconds != nil {
+		in, out := &in.ActiveDeadlineSeconds, &out.ActiveDeadlineSeconds
+		*out = new(int64)
+		**out = **in
+	}
 	if in.Azure != nil {
 		in, out := &in.Azure, &out.Azure
 		*out = new(Azure)
@@ -1379,6 +1384,11 @@ func (in *NaisjobSpec) DeepCopyInto(out *NaisjobSpec) {
 	if in.Startup != nil {
 		in, out := &in.Startup, &out.Startup
 		*out = new(Probe)
+		**out = **in
+	}
+	if in.TTLSecondsAfterFinished != nil {
+		in, out := &in.TTLSecondsAfterFinished, &out.TTLSecondsAfterFinished
+		*out = new(int32)
 		**out = **in
 	}
 	if in.Vault != nil {

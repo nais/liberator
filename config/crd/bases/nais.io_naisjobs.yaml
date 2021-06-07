@@ -298,7 +298,7 @@ spec:
                     type: string
                 type: object
               type: array
-            faileJjobsHistoryLimit:
+            failedJobsHistoryLimit:
               description: Specify how many failed Jobs should be kept.
               format: int32
               type: integer
