@@ -67,7 +67,7 @@ type NaisjobSpec struct {
 	EnvFrom []EnvFrom `json:"envFrom,omitempty"`
 
 	// Specify how many failed Jobs should be kept.
-	FailedJobsHistoryLimit int32 `json:"faileJjobsHistoryLimit,omitempty"`
+	FailedJobsHistoryLimit int32 `json:"failedJobsHistoryLimit,omitempty"`
 
 	// List of ConfigMap or Secret resources that will have their contents mounted into the containers as files.
 	// Either `configMap` or `secret` is required.
