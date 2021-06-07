@@ -8,6 +8,12 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 	intp := func(i int) *int {
 		return &i
 	}
+	int32p := func(i int32) *int32 {
+		return &i
+	}
+	int64p := func(i int64) *int64 {
+		return &i
+	}
 
 	return &Naisjob{
 		TypeMeta: metav1.TypeMeta{
@@ -79,7 +85,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					},
 				},
 			},
-			ActiveDeadlineSeconds: 60,
+			ActiveDeadlineSeconds: int64p(60),
 			Azure: &Azure{
 				Application: &AzureApplication{
 					Enabled: true,
@@ -253,7 +259,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				Timeout:          1,
 			},
 			SuccessfulJobsHistoryLimit: 2,
-			TTLSecondsAfterFinished:    60,
+			TTLSecondsAfterFinished:    int32p(60),
 			Vault: &Vault{
 				Enabled: true,
 				Sidecar: true,
