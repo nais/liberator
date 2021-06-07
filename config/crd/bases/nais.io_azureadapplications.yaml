@@ -173,13 +173,27 @@ spec:
                     that have been pre-authorized to access this application.
                   items:
                     properties:
+                      accessPolicyRule:
+                        description: AccessPolicyRule is the desired nais_io_v1.AccessPolicyRule
+                          matching the definition in AzureAdApplicationSpec.PreAuthorizedApplications.
+                        properties:
+                          application:
+                            description: The application's name.
+                            type: string
+                          cluster:
+                            description: The application's cluster. May be omitted
+                              if it should be in the same cluster as your application.
+                            type: string
+                          namespace:
+                            description: The application's namespace. May be omitted
+                              if it should be in the same namespace as your application.
+                            type: string
+                        required:
+                        - application
+                        type: object
                       clientId:
                         description: Client ID is the actual client ID of the application
                           found in Azure AD, if it exists.
-                        type: string
-                      name:
-                        description: Name is the actual name of the application found
-                          in Azure AD.
                         type: string
                       reason:
                         description: Reason is a human-readable message that provides
@@ -200,13 +214,27 @@ spec:
                     that have _not_ been pre-authorized to access this application.
                   items:
                     properties:
+                      accessPolicyRule:
+                        description: AccessPolicyRule is the desired nais_io_v1.AccessPolicyRule
+                          matching the definition in AzureAdApplicationSpec.PreAuthorizedApplications.
+                        properties:
+                          application:
+                            description: The application's name.
+                            type: string
+                          cluster:
+                            description: The application's cluster. May be omitted
+                              if it should be in the same cluster as your application.
+                            type: string
+                          namespace:
+                            description: The application's namespace. May be omitted
+                              if it should be in the same namespace as your application.
+                            type: string
+                        required:
+                        - application
+                        type: object
                       clientId:
                         description: Client ID is the actual client ID of the application
                           found in Azure AD, if it exists.
-                        type: string
-                      name:
-                        description: Name is the actual name of the application found
-                          in Azure AD.
                         type: string
                       reason:
                         description: Reason is a human-readable message that provides

@@ -1,14 +1,11 @@
 package aiven_nais_io_v1
 
 import (
+	"github.com/nais/liberator/pkg/namegen"
 	"github.com/nais/liberator/pkg/strings"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"time"
-)
-
-const (
-	AivenFinalizer = "aiven.nais.io/finalizer"
 )
 
 func init() {
@@ -17,6 +14,10 @@ func init() {
 		&AivenApplication{},
 	)
 }
+
+const (
+	MaxServiceUserNameLength = 64
+)
 
 // +kubebuilder:object:root=true
 type AivenApplicationList struct {
@@ -102,7 +103,15 @@ func (in *AivenApplication) GetOwnerReference() metav1.OwnerReference {
 }
 
 func (in *AivenApplication) ServiceUserPrefix() string {
-	username := in.GetNamespace() + "." + in.GetName()
+	return ServiceUserPrefix(in.GetName(), in.GetNamespace(), MaxServiceUserNameLength)
+}
+
+func ServiceUserPrefix(app, team string, maxlen int) string {
+	username := team + "." + app
+	maxlen = maxlen - namegen.SuffixLength
+	if len(username) > maxlen {
+		return username[:maxlen]
+	}
 	return username
 }
 

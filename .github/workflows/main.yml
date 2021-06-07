@@ -35,7 +35,10 @@ jobs:
           ssh-add - <<< "${DEPLOY_KEY}"
           mkdir -p $WS
           git clone git@github.com:nais/doc.git $WS
-          cp -v doc/*.md $WS/docs/nais-application/
+          cp -v doc/output/application/reference.md $WS/docs/nais-application/application.md
+          cp -v doc/output/application/example.md $WS/docs/nais-application/example.md
+          cp -v doc/output/naisjob/reference.md $WS/docs/naisjob/reference.md
+          cp -v doc/output/naisjob/example.md $WS/docs/naisjob/example.md
           cd $WS
           git config user.email "aura@nav.no"
           git config user.name "NAIS deploy pipeline"

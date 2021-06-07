@@ -16,3 +16,6 @@
 
 # Go modules
 go.sum
+
+# Generated documentation
+/doc/output

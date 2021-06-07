@@ -6,7 +6,7 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.2.5
   creationTimestamp: null
-  name: applications.nais.io
+  name: naisjobs.nais.io
 spec:
   additionalPrinterColumns:
   - JSONPath: .metadata.creationTimestamp
@@ -20,17 +20,17 @@ spec:
     type: string
   group: nais.io
   names:
-    kind: Application
-    listKind: ApplicationList
-    plural: applications
+    kind: Naisjob
+    listKind: NaisjobList
+    plural: naisjobs
     shortNames:
-    - app
-    singular: application
+    - nj
+    singular: naisjob
   scope: Namespaced
   subresources: {}
   validation:
     openAPIV3Schema:
-      description: Application defines a NAIS application.
+      description: Naisjob defines a NAIS Naisjob.
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -45,14 +45,14 @@ spec:
         metadata:
           type: object
         spec:
-          description: ApplicationSpec contains the NAIS manifest. Please keep this
-            list sorted for clarity.
+          description: NaisjobSpec contains the NAIS manifest. Please keep this list
+            sorted for clarity.
           properties:
             accessPolicy:
-              description: By default, no traffic is allowed between applications
-                inside the cluster. Configure access policies to explicitly allow
-                communication between applications. This is also used for granting
-                inbound access in the context of Azure AD and TokenX clients.
+              description: By default, no traffic is allowed between naisjobs inside
+                the cluster. Configure access policies to explicitly allow communication
+                between naisjobs. This is also used for granting inbound access in
+                the context of Azure AD and TokenX clients.
               properties:
                 inbound:
                   description: Configures inbound access for your application.
@@ -150,6 +150,13 @@ spec:
                       type: array
                   type: object
               type: object
+            activeDeadlineSeconds:
+              description: 'Once a Naisjob reaches activeDeadlineSeconds, all of its
+                running Pods are terminated and the Naisjob status will become type:
+                Failed with reason: DeadlineExceeded. If set, this takes presedence
+                over BackoffLimit.'
+              format: int64
+              type: integer
             azure:
               description: Provisions and configures Azure resources.
               properties:
@@ -207,6 +214,11 @@ spec:
               required:
               - application
               type: object
+            backoffLimit:
+              description: Specify the number of retries before considering a Naisjob
+                as failed
+              format: int32
+              type: integer
             command:
               description: Override command when starting Docker image.
               items:
@@ -273,7 +285,7 @@ spec:
                 where `key` is the ConfigMap or Secret key. You can specify as many
                 keys as you like in a single ConfigMap or Secret. \n The ConfigMap
                 and Secret resources must live in the same Kubernetes namespace as
-                the Application resource."
+                the Naisjob resource."
               items:
                 properties:
                   configmap:
@@ -286,6 +298,10 @@ spec:
                     type: string
                 type: object
               type: array
+            failedJobsHistoryLimit:
+              description: Specify how many failed Jobs should be kept.
+              format: int32
+              type: integer
             filesFrom:
               description: "List of ConfigMap or Secret resources that will have their
                 contents mounted into the containers as files. Either `configMap`
@@ -293,7 +309,7 @@ spec:
                 where `key` is the ConfigMap or Secret key. You can specify as many
                 keys as you like in a single ConfigMap or Secret, and they will all
                 be mounted to the same directory. \n The ConfigMap and Secret resources
-                must live in the same Kubernetes namespace as the Application resource."
+                must live in the same Kubernetes namespace as the Naisjob resource."
               items:
                 properties:
                   configmap:
@@ -501,80 +517,11 @@ spec:
                     type: object
                   type: array
               type: object
-            idporten:
-              description: Configures an ID-porten client for this application. See
-                [ID-porten](https://doc.nais.io/security/auth/idporten/) for more
-                details.
-              properties:
-                accessTokenLifetime:
-                  description: "AccessTokenLifetime is the lifetime in seconds for
-                    any issued access token from ID-porten. \n If unspecified, defaults
-                    to `3600` seconds (1 hour)."
-                  maximum: 3600
-                  minimum: 1
-                  type: integer
-                clientURI:
-                  description: ClientURI is the URL shown to the user at ID-porten
-                    when displaying a 'back' button or on errors.
-                  type: string
-                enabled:
-                  description: Whether to enable provisioning of an ID-porten client.
-                    If enabled, an ID-porten client be provisioned.
-                  type: boolean
-                frontchannelLogoutPath:
-                  description: "FrontchannelLogoutPath is a valid path for your application
-                    where ID-porten sends a request to whenever the user has initiated
-                    a logout elsewhere as part of a single logout (front channel logout)
-                    process. \n If unspecified, defaults to `/oauth2/logout`."
-                  pattern: ^\/.*$
-                  type: string
-                frontchannelLogoutURI:
-                  description: '*DEPRECATED*. Prefer using `frontchannelLogoutPath`.'
-                  type: string
-                postLogoutRedirectURIs:
-                  description: "PostLogoutRedirectURIs are valid URIs that ID-porten
-                    will allow redirecting the end-user to after a single logout has
-                    been initiated and performed by the application. \n If unspecified,
-                    will default to `[ \"https://www.nav.no\" ]`"
-                  items:
-                    type: string
-                  type: array
-                redirectPath:
-                  description: "RedirectPath is a valid path that ID-porten redirects
-                    back to after a successful authorization request. \n If unspecified,
-                    will default to `/oauth2/callback`."
-                  pattern: ^\/.*$
-                  type: string
-                redirectURI:
-                  description: '*DEPRECATED*. Prefer using `redirectPath`.'
-                  pattern: ^https:\/\/.+$
-                  type: string
-                sessionLifetime:
-                  description: "SessionLifetime is the maximum lifetime in seconds
-                    for any given user's session in your application. The timeout
-                    starts whenever the user is redirected from the `authorization_endpoint`
-                    at ID-porten. \n If unspecified, defaults to `7200` seconds (2
-                    hours). Note: Attempting to refresh the user's `access_token`
-                    beyond this timeout will yield an error."
-                  maximum: 7200
-                  minimum: 3600
-                  type: integer
-              required:
-              - enabled
-              type: object
             image:
-              description: Your application's Docker image location and tag.
+              description: Your Naisjob's Docker image location and tag.
               type: string
-            ingresses:
-              description: List of URLs that will route HTTPS traffic to the application.
-                All URLs must start with `https://`. Domain availability differs according
-                to which environment your application is running in.
-              items:
-                pattern: ^https:\/\/.+$
-                type: string
-              type: array
             kafka:
-              description: Enable Aiven Kafka for your application.
+              description: Enable Aiven Kafka for your Naisjob.
               properties:
                 pool:
                   description: Configures your application to access an Aiven Kafka
@@ -587,12 +534,8 @@ spec:
               required:
               - pool
               type: object
-            leaderElection:
-              description: If true, an HTTP endpoint will be available at `$ELECTOR_PATH`
-                that returns the current leader.
-              type: boolean
             liveness:
-              description: Many applications running for long periods of time eventually
+              description: Many Naisjobs running for long periods of time eventually
                 transition to broken states, and cannot recover except by being restarted.
                 Kubernetes provides liveness probes to detect and remedy such situations.
                 Read more about this over at the [Kubernetes probes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
@@ -648,9 +591,9 @@ spec:
               - dns_loglevel
               type: string
             maskinporten:
-              description: Configures a Maskinporten client for this application.
-                See [Maskinporten](https://doc.nais.io/security/auth/maskinporten/)
-                for more details.
+              description: Configures a Maskinporten client for this Naisjob. See
+                [Maskinporten](https://doc.nais.io/security/auth/maskinporten/) for
+                more details.
               properties:
                 enabled:
                   description: If enabled, provisions and configures a Maskinporten
@@ -733,35 +676,19 @@ spec:
               required:
               - enabled
               type: object
-            port:
-              description: The port number which is exposed by the container and should
-                receive traffic.
-              type: integer
             preStopHookPath:
               description: A HTTP GET will be issued to this endpoint at least once
                 before the pod is terminated.
               type: string
-            prometheus:
-              description: Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/observability/metrics/).
-                Use this configuration to override the default values.
-              properties:
-                enabled:
-                  type: boolean
-                path:
-                  type: string
-                port:
-                  type: string
-              type: object
             readiness:
-              description: Sometimes, applications are temporarily unable to serve
-                traffic. For example, an application might need to load large data
-                or configuration files during startup, or depend on external services
-                after startup. In such cases, you don't want to kill the application,
-                but you don’t want to send it requests either. Kubernetes provides
-                readiness probes to detect and mitigate these situations. A pod with
-                containers reporting that they are not ready does not receive traffic
-                through Kubernetes Services. Read more about this over at the [Kubernetes
-                readiness documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
+              description: Sometimes, Naisjobs are temporarily unable to serve traffic.
+                For example, an Naisjob might need to load large data or configuration
+                files during startup, or depend on external services after startup.
+                In such cases, you don't want to kill the Naisjob, but you don’t want
+                to send it requests either. Kubernetes provides readiness probes to
+                detect and mitigate these situations. A pod with containers reporting
+                that they are not ready does not receive traffic through Kubernetes
+                Services. Read more about this over at the [Kubernetes readiness documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
               properties:
                 failureThreshold:
                   description: When a Pod starts, and the probe fails, Kubernetes
@@ -787,20 +714,6 @@ spec:
                   type: integer
               required:
               - path
-              type: object
-            replicas:
-              description: The numbers of pods to run in parallel.
-              properties:
-                cpuThresholdPercentage:
-                  description: Amount of CPU usage before the autoscaler kicks in.
-                  type: integer
-                max:
-                  description: The pod autoscaler will increase replicas when required
-                    up to the maximum.
-                  type: integer
-                min:
-                  description: The minimum amount of running replicas for a deployment.
-                  type: integer
               type: object
             resources:
               description: When Containers have [resource requests](http://kubernetes.io/docs/user-guide/compute-resources/)
@@ -830,6 +743,11 @@ spec:
                       type: string
                   type: object
               type: object
+            schedule:
+              description: The [Cron](https://en.wikipedia.org/wiki/Cron) schedule
+                for running the Naisjob. If not specified, the Naisjob will be run
+                as a one-shot Job.
+              type: string
             secureLogs:
               description: Whether or not to enable a sidecar container for secure
                 logging.
@@ -842,37 +760,17 @@ spec:
               required:
               - enabled
               type: object
-            service:
-              description: Specify which port and protocol is used to connect to the
-                application in the container. Defaults to HTTP on port 80.
-              properties:
-                port:
-                  description: Port for the default service. Default port is 80.
-                  format: int32
-                  type: integer
-                protocol:
-                  description: Which protocol the backend service runs on. Default
-                    is `http`.
-                  enum:
-                  - http
-                  - redis
-                  - tcp
-                  - grpc
-                  type: string
-              required:
-              - port
-              type: object
             skipCaBundle:
               description: Whether to skip injection of NAV certificate authority
                 bundle or not. Defaults to false.
               type: boolean
             startup:
               description: Kubernetes uses startup probes to know when a container
-                application has started. If such a probe is configured, it disables
-                liveness and readiness checks until it succeeds, making sure those
-                probes don't interfere with the application startup. This can be used
-                to adopt liveness checks on slow starting containers, avoiding them
-                getting killed by Kubernetes before they are up and running.
+                Naisjob has started. If such a probe is configured, it disables liveness
+                and readiness checks until it succeeds, making sure those probes don't
+                interfere with the Naisjob startup. This can be used to adopt liveness
+                checks on slow starting containers, avoiding them getting killed by
+                Kubernetes before they are up and running.
               properties:
                 failureThreshold:
                   description: When a Pod starts, and the probe fails, Kubernetes
@@ -899,47 +797,21 @@ spec:
               required:
               - path
               type: object
-            strategy:
-              description: Specifies the strategy used to replace old Pods by new
-                ones.
-              properties:
-                type:
-                  description: Specifies the strategy used to replace old Pods by
-                    new ones. `RollingUpdate` is the default value.
-                  enum:
-                  - Recreate
-                  - RollingUpdate
-                  type: string
-              required:
-              - type
-              type: object
-            tokenx:
-              description: Provisions and configures a TokenX client for your application.
-              properties:
-                enabled:
-                  description: If enabled, will provision and configure a TokenX client
-                    and inject an accompanying secret.
-                  type: boolean
-                mountSecretsAsFilesOnly:
-                  description: If enabled, secrets for TokenX will be mounted as files
-                    only, i.e. not as environment variables.
-                  type: boolean
-              required:
-              - enabled
-              type: object
-            tracing:
-              description: '*DEPRECATED*. Do not use. Will be removed in a future
-                version.'
-              properties:
-                enabled:
-                  type: boolean
-              required:
-              - enabled
-              type: object
+            successfulJobsHistoryLimit:
+              description: Specify how many completed Jobs should be kept.
+              format: int32
+              type: integer
+            ttlSecondsAfterFinished:
+              description: Specify the number of seconds to wait before removing the
+                Job after it has finished (either Completed or Failed). If the field
+                is unset, this Job won't be cleaned up by the TTL controller after
+                it finishes.
+              format: int32
+              type: integer
             vault:
               description: Provides secrets management, identity-based access, and
-                encrypting application data for auditing of secrets for applications,
-                systems, and users.
+                encrypting Naisjob data for auditing of secrets for Naisjobs, systems,
+                and users.
               properties:
                 enabled:
                   description: If set to true, fetch secrets from Vault and inject
@@ -984,17 +856,17 @@ spec:
                   type: boolean
               type: object
             webproxy:
-              description: Inject on-premises web proxy configuration into the application
-                pod. Most Linux applications should auto-detect these settings from
-                the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables
-                (and their lowercase counterparts). Java applications can start the
-                JVM using parameters from the `$JAVA_PROXY_OPTIONS` environment variable.
+              description: Inject on-premises web proxy configuration into the Naisjob
+                pod. Most Linux Naisjobs should auto-detect these settings from the
+                `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables
+                (and their lowercase counterparts). Java Naisjobs can start the JVM
+                using parameters from the `$JAVA_PROXY_OPTIONS` environment variable.
               type: boolean
           required:
           - image
           type: object
         status:
-          description: ApplicationStatus contains different NAIS status properties
+          description: NaisjobStatus contains different NAIS status properties
           properties:
             correlationID:
               type: string
@@ -1014,9 +886,9 @@ spec:
       required:
       - spec
       type: object
-  version: v1alpha1
+  version: v1
   versions:
-  - name: v1alpha1
+  - name: v1
     served: true
     storage: true
 status:

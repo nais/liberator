@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	"github.com/mitchellh/hashstructure"
-	"github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
+	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	"github.com/stretchr/testify/assert"
-	"k8s.io/apimachinery/pkg/apis/meta/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 const (
@@ -18,12 +18,12 @@ const (
 func TestApplication_Hash(t *testing.T) {
 	apps := []*nais_io_v1alpha1.Application{
 		{Spec: nais_io_v1alpha1.ApplicationSpec{}},
-		{Spec: nais_io_v1alpha1.ApplicationSpec{}, ObjectMeta: v1.ObjectMeta{Annotations: map[string]string{"a": "b", "team": "banan"}}},
-		{Spec: nais_io_v1alpha1.ApplicationSpec{}, ObjectMeta: v1.ObjectMeta{Labels: map[string]string{"a": "b", "team": "banan"}}},
+		{Spec: nais_io_v1alpha1.ApplicationSpec{}, ObjectMeta: metav1.ObjectMeta{Annotations: map[string]string{"a": "b", "team": "banan"}}},
+		{Spec: nais_io_v1alpha1.ApplicationSpec{}, ObjectMeta: metav1.ObjectMeta{Labels: map[string]string{"a": "b", "team": "banan"}}},
 	}
 	hashes := make([]string, len(apps))
 	for i := range apps {
-		err := nais_io_v1alpha1.ApplyDefaults(apps[i])
+		err := apps[i].ApplyDefaults()
 		if err != nil {
 			panic(err)
 		}
@@ -35,35 +35,6 @@ func TestApplication_Hash(t *testing.T) {
 
 	assert.Equal(t, hashes[0], hashes[1], "matches, as annotations is ignored")
 	assert.NotEqual(t, hashes[1], hashes[2], "should not match")
-}
-
-func TestApplication_CreateAppNamespaceHash(t *testing.T) {
-	application := &nais_io_v1alpha1.Application{
-		ObjectMeta: v1.ObjectMeta{
-			Name:      "reallylongapplicationname",
-			Namespace: "evenlongernamespacename",
-		},
-	}
-	application2 := &nais_io_v1alpha1.Application{
-		ObjectMeta: v1.ObjectMeta{
-			Name:      "reallylongafoo",
-			Namespace: "evenlongerbar",
-		},
-	}
-	application3 := &nais_io_v1alpha1.Application{
-		ObjectMeta: v1.ObjectMeta{
-			Name:      "short",
-			Namespace: "name",
-		},
-	}
-	appNameHash := application.CreateAppNamespaceHash()
-	appNameHash2 := application2.CreateAppNamespaceHash()
-	appNameHash3 := application3.CreateAppNamespaceHash()
-	assert.Equal(t, "reallylonga-evenlonger-siqwsiq", appNameHash)
-	assert.Equal(t, "reallylonga-evenlonger-piuqbfq", appNameHash2)
-	assert.Equal(t, "short-name-hqb7npi", appNameHash3)
-	assert.True(t, len(appNameHash2) <= 30)
-	assert.True(t, len(appNameHash3) >= 6)
 }
 
 // Test that updating the application spec with new, default-null values does not trigger a hash change.
@@ -90,7 +61,7 @@ func TestHashJSONMarshalling(t *testing.T) {
 
 func TestNewCRD(t *testing.T) {
 	app := &nais_io_v1alpha1.Application{}
-	err := nais_io_v1alpha1.ApplyDefaults(app)
+	err := app.ApplyDefaults()
 	if err != nil {
 		panic(err)
 	}
