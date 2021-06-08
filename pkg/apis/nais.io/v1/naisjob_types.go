@@ -12,6 +12,13 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
+func init() {
+	SchemeBuilder.Register(
+		&Naisjob{},
+		&NaisjobList{},
+	)
+}
+
 // Naisjob defines a NAIS Naisjob.
 //
 // +genclient
