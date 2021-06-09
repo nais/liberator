@@ -403,7 +403,7 @@ type CloudBigQueryDataset struct {
 	// Name of the BigQuery Dataset.
 	// The canonical name of the dataset will be `<TEAM_PROJECT_ID>:<NAME>`.
 	// +kubebuilder:validation:Required
-	// +kubebuilder:validation:Pattern=`^[a-z0-9][a-z0-9_-]+$`
+	// +kubebuilder:validation:Pattern=`^[a-z0-9][a-z0-9_]+$`
 	Name string `json:"name"`
 	// Permission level given to application.
 	// +kubebuilder:validation:Required
