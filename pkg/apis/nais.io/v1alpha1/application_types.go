@@ -392,9 +392,9 @@ func (b BigQueryPermission) String() string {
 func (b BigQueryPermission) GoogleType() string {
 	switch b {
 	case BigQueryPermissionRead:
-		return "bigquery.dataViewer"
+		return "READER"
 	case BigQueryPermissionReadWrite:
-		return "bigquery.dataWriter"
+		return "WRITER"
 	}
 	return ""
 }
