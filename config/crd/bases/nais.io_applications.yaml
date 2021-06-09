@@ -336,7 +336,7 @@ spec:
                       name:
                         description: Name of the BigQuery Dataset. The canonical name
                           of the dataset will be `<TEAM_PROJECT_ID>:<NAME>`.
-                        pattern: ^[a-z0-9][a-z0-9_-]+$
+                        pattern: ^[a-z0-9][a-z0-9_]+$
                         type: string
                       permission:
                         description: Permission level given to application.
