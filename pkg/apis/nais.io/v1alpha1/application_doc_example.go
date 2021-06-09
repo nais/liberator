@@ -143,6 +143,19 @@ func ExampleApplicationForDocumentation() *Application {
 				},
 			},
 			GCP: &nais_io_v1.GCP{
+				BigQueryDatasets: []nais_io_v1.CloudBigQueryDataset{
+					{
+						Name:            "my_bigquery_dataset1",
+						CascadingDelete: true,
+						Description:     "Contains big data, supporting big queries, for use in big ideas.",
+						Permission:      nais_io_v1.BigQueryPermissionReadWrite,
+					},
+					{
+						Name:            "my_bigquery_dataset2",
+						Description:     "Contains big data, supporting big queries, for use in big ideas.",
+						Permission:      nais_io_v1.BigQueryPermissionRead,
+					},
+				},
 				Buckets: []nais_io_v1.CloudStorageBucket{
 					{
 						Name:                "my-cloud-storage-bucket",

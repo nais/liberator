@@ -318,6 +318,37 @@ spec:
               type: array
             gcp:
               properties:
+                bigQueryDatasets:
+                  description: Provision BigQuery datasets and give your application's
+                    pod mountable secrets for connecting to each dataset. Datasets
+                    are immutable and cannot be changed.
+                  items:
+                    properties:
+                      cascadingDelete:
+                        description: When set to true will delete the dataset, when
+                          the application resource is deleted. Default value is `false`.
+                        type: boolean
+                      description:
+                        description: Human-readable description of what this BigQuery
+                          dataset contains, or is used for. Will be visible in the
+                          GCP Console.
+                        type: string
+                      name:
+                        description: Name of the BigQuery Dataset. The canonical name
+                          of the dataset will be `<TEAM_PROJECT_ID>:<NAME>`.
+                        pattern: ^[a-z0-9][a-z0-9_]+$
+                        type: string
+                      permission:
+                        description: Permission level given to application.
+                        enum:
+                        - READ
+                        - READWRITE
+                        type: string
+                    required:
+                    - name
+                    - permission
+                    type: object
+                  type: array
                 buckets:
                   description: Provision cloud storage buckets and connect them to
                     your application.
