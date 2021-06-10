@@ -92,6 +92,11 @@ type IDPorten struct {
 }
 
 type GCP struct {
+	// Provision BigQuery datasets and give your application's pod mountable secrets for connecting to each dataset.
+	// Datasets are immutable and cannot be changed.
+	// +nais:doc:Link="https://cloud.google.com/bigquery/docs"
+	// +nais:doc:Availability=GCP
+	BigQueryDatasets []CloudBigQueryDataset `json:"bigQueryDatasets,omitempty"`
 	// Provision cloud storage buckets and connect them to your application.
 	// +nais:doc:Link="https://doc.nais.io/persistence/buckets/"
 	// +nais:doc:Availability=GCP
@@ -289,6 +294,47 @@ type ResourceRequirements struct {
 	Limits *ResourceSpec `json:"limits,omitempty"`
 	// Request defines the amount of resources a container is allocated on startup.
 	Requests *ResourceSpec `json:"requests,omitempty"`
+}
+
+// BigQueryPermission defines access level
+type BigQueryPermission string
+
+const (
+	BigQueryPermissionRead      BigQueryPermission = "READ"
+	BigQueryPermissionReadWrite BigQueryPermission = "READWRITE"
+)
+
+func (b BigQueryPermission) String() string {
+	return string(b)
+}
+
+func (b BigQueryPermission) GoogleType() string {
+	switch b {
+	case BigQueryPermissionRead:
+		return "READER"
+	case BigQueryPermissionReadWrite:
+		return "WRITER"
+	}
+	return ""
+}
+
+type CloudBigQueryDataset struct {
+	// Name of the BigQuery Dataset.
+	// The canonical name of the dataset will be `<TEAM_PROJECT_ID>:<NAME>`.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`^[a-z0-9][a-z0-9_]+$`
+	Name string `json:"name"`
+	// Permission level given to application.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Enum=READ;READWRITE
+	Permission BigQueryPermission `json:"permission"`
+	// When set to true will delete the dataset, when the application resource is deleted.
+	// NB: If no tables exist in the bigquery dataset, it _will_ delete the dataset even if this value is set/defaulted to `false`.
+	// Default value is `false`.
+	CascadingDelete bool `json:"cascadingDelete,omitempty"`
+	// Human-readable description of what this BigQuery dataset contains, or is used for.
+	// Will be visible in the GCP Console.
+	Description string `json:"description,omitempty"`
 }
 
 type CloudStorageBucket struct {

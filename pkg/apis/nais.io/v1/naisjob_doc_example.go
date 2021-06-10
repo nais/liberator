@@ -151,6 +151,19 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				},
 			},
 			GCP: &GCP{
+				BigQueryDatasets: []CloudBigQueryDataset{
+					{
+						Name:            "my_bigquery_dataset1",
+						CascadingDelete: true,
+						Description:     "Contains big data, supporting big queries, for use in big ideas.",
+						Permission:      BigQueryPermissionReadWrite,
+					},
+					{
+						Name:            "my_bigquery_dataset2",
+						Description:     "Contains big data, supporting big queries, for use in big ideas.",
+						Permission:      BigQueryPermissionRead,
+					},
+				},
 				Buckets: []CloudStorageBucket{
 					{
 						Name:                "my-cloud-storage-bucket",

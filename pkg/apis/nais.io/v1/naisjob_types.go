@@ -12,10 +12,18 @@ import (
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
+func init() {
+	SchemeBuilder.Register(
+		&Naisjob{},
+		&NaisjobList{},
+	)
+}
+
 // Naisjob defines a NAIS Naisjob.
 //
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:printcolumn:name="Schedule",type="string",JSONPath=".spec.schedule"
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 // +kubebuilder:printcolumn:name="Team",type="string",JSONPath=".metadata.labels.team"
 // +kubebuilder:printcolumn:name="State",type="string",JSONPath=".status.synchronizationState"
