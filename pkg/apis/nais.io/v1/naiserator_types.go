@@ -258,7 +258,7 @@ type Maskinporten struct {
 	Enabled bool `json:"enabled"`
 	// List of scopes that your client should request access to.
 	// Ensure that the NAV organization has been granted access to the scope prior to requesting access.
-	Scopes []MaskinportenScope `json:"scopes,omitempty"`
+	Scopes MaskinportenScope `json:"scopes,omitempty"`
 }
 
 type SecureLogs struct {

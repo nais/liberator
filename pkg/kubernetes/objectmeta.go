@@ -18,22 +18,22 @@ func ObjectMeta(name, namespace string, labels map[string]string) metav1.ObjectM
 		Labels:    labels,
 	}
 }
-func UniformResourceScopeName(resource metav1.Object, scope string) string {
-	return replace(fmt.Sprintf("%s:%s:%s.%s", resource.GetClusterName(), resource.GetNamespace(), resource.GetName(), scope))
+func UniformResourceScopeName(resource metav1.Object, product, subScope string) string {
+	return replace(fmt.Sprintf("%s:%s:%s.%s", resource.GetClusterName(), resource.GetNamespace(), resource.GetName(), ToScope(product, subScope)))
 }
 
 func replace(x string) string {
 	return strings.ReplaceAll(x, "-", "")
 }
 
-func FilterUniformedName(resource metav1.Object, uniformedName, subScope string) string {
-	if !strings.Contains(uniformedName, "/") {
-		return filterClusterPrefix(resource, uniformedName)
+func ToScope(product, subScope string) string {
+	if !strings.Contains(subScope, "/") {
+		return toScope(product, subScope, ":")
 	}
 	// able to use legacy scopes from on-prem in gcp
-	return subScope
+	return toScope(product, subScope, "/")
 }
 
-func filterClusterPrefix(resource metav1.Object, uniformedScopeName string) string {
-	return strings.TrimPrefix(uniformedScopeName, fmt.Sprintf("%s:", resource.GetClusterName()))
+func toScope(product, subScope, separator string) string {
+	return fmt.Sprintf("%s%s%s", product, separator, subScope)
 }

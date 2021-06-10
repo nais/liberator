@@ -1,9 +1,8 @@
 package nais_io_v1
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
 	"github.com/nais/liberator/pkg/hash"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // DigdiratorStatus defines the observed state of Current Client
@@ -97,6 +96,14 @@ type MaskinportenClient struct {
 	Status DigdiratorStatus       `json:"status,omitempty"`
 }
 
+// MaskinportenClientSpec defines the desired state of MaskinportenClient
+type MaskinportenClientSpec struct {
+	// Scopes is a object of used end exposed scopes by application
+	Scopes MaskinportenScope `json:"scopes,omitempty"`
+	// SecretName is the name of the resulting Secret resource to be created
+	SecretName string `json:"secretName"`
+}
+
 // MaskinportenClientList contains a list of MaskinportenClient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type MaskinportenClientList struct {
@@ -105,17 +112,49 @@ type MaskinportenClientList struct {
 	Items           []MaskinportenClient `json:"items"`
 }
 
+// MaskinportenScope is the Schema for the MaskinportenScope API and it contains a list of scopes used
+// by an application and scopes exposed by an application
 type MaskinportenScope struct {
-	// The fully qualified name of the scope.
+	ConsumedScopes []ConsumedScope `json:"consumes,omitempty"`
+	ExposedScopes  []ExposedScope  `json:"exposes,omitempty"`
+}
+
+// ConsumedScope is scope(s) consumed by the application to gain access to external Api(s)
+type ConsumedScope struct {
+	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 }
 
-// MaskinportenClientSpec defines the desired state of MaskinportenClient
-type MaskinportenClientSpec struct {
-	// Scopes is a list of valid scopes that the client can request tokens for
-	Scopes []MaskinportenScope `json:"scopes"`
-	// SecretName is the name of the resulting Secret resource to be created
-	SecretName string `json:"secretName"`
+// ExposedScope is the exposed scopes exported by the application to grant organization access to resources/apis
+type ExposedScope struct {
+	// Enabled sets scope availible for use and consumer can be granted access
+	// +kubebuilder:validation:Required
+	Enabled bool `json:"enabled"`
+	// Name is the actual subscope, build: scope := prefix:<Product></:><Name>
+	// +kubebuilder:validation:Pattern=`^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$`
+	// +kubebuilder:validation:Required
+	Name string `json:"name"`
+	// Product is the product development area an application belongs to. This will be included in the final registered scope
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]+$`
+	Product string `json:"product"`
+	// AtMaxAge Max time in seconds for a issued access_token, default is `30`
+	// +kubebuilder:validation:Minimum=30
+	// +kubebuilder:validation:Maximum=680
+	AtMaxAge *int `json:"atMaxAge,omitempty"`
+	// AllowedIntegrations whitelist of type of integration's allowed. Default is `maskinporten`
+	// +kubebuilder:validation:MinItems=1
+	AllowedIntegrations []string `json:"allowedIntegrations,omitempty"`
+	// Consumers External consumers granted access to this scope and able to get acess_token
+	Consumers []ExposedScopeConsumer `json:"consumers,omitempty"`
+}
+
+type ExposedScopeConsumer struct {
+	// Orgno is the external business (consumer) organisation number
+	// +kubebuilder:validation:Pattern=`^\d{9}$`
+	Orgno string `json:"orgno"`
+	// Name is a describing name intended for clearity.
+	Name string `json:"name,omitempty"`
 }
 
 func (in *MaskinportenClient) Hash() (string, error) {
@@ -130,10 +169,18 @@ func (in *MaskinportenClient) SetStatus(new DigdiratorStatus) {
 	in.Status = new
 }
 
-func (in MaskinportenClient) GetScopes() []string {
+func (in *MaskinportenClient) GetConsumedScopes() []string {
 	scopes := make([]string, 0)
-	for _, scope := range in.Spec.Scopes {
+	for _, scope := range in.Spec.Scopes.ConsumedScopes {
 		scopes = append(scopes, scope.Name)
+	}
+	return scopes
+}
+
+func (in *MaskinportenClient) GetExposedScopes() map[string]ExposedScope {
+	scopes := make(map[string]ExposedScope)
+	for _, scope := range in.Spec.Scopes.ExposedScopes {
+		scopes[scope.Name] = scope
 	}
 	return scopes
 }

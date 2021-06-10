@@ -242,9 +242,25 @@ func ExampleApplicationForDocumentation() *Application {
 			Logtransform: "http_loglevel",
 			Maskinporten: &nais_io_v1.Maskinporten{
 				Enabled: true,
-				Scopes: []nais_io_v1.MaskinportenScope{
-					{
-						Name: "some_scope",
+				Scopes: nais_io_v1.MaskinportenScope{
+					ConsumedScopes: []nais_io_v1.ConsumedScope{
+						{
+							Name: "skatt:scope.read",
+						},
+					},
+					ExposedScopes: []nais_io_v1.ExposedScope{
+						{
+							Enabled:             true,
+							Name:                "scope.read",
+							Product:             "arbeid",
+							AllowedIntegrations: []string{"maskinporten"},
+							Consumers: []nais_io_v1.ExposedScopeConsumer{
+								{
+									Orgno: "123456789",
+									Name:  "KST",
+								},
+							},
+						},
 					},
 				},
 			},

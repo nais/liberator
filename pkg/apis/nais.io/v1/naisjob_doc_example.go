@@ -233,9 +233,25 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			Logtransform: "http_loglevel",
 			Maskinporten: &Maskinporten{
 				Enabled: true,
-				Scopes: []MaskinportenScope{
-					{
-						Name: "some_scope",
+				Scopes: MaskinportenScope{
+					ConsumedScopes: []ConsumedScope{
+						{
+							Name: "skatt:scope.read",
+						},
+					},
+					ExposedScopes: []ExposedScope{
+						{
+							Enabled:             true,
+							Name:                "scope.read",
+							Product:             "arbeid",
+							AllowedIntegrations: []string{"maskinporten"},
+							Consumers: []ExposedScopeConsumer{
+								{
+									Orgno: "123456789",
+									Name:  "KST",
+								},
+							},
+						},
 					},
 				},
 			},
