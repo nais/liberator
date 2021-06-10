@@ -11,7 +11,7 @@ func NewAivenApplicationBuilder(name, namespace string) AivenApplicationBuilder 
 		application: AivenApplication{
 			TypeMeta: metav1.TypeMeta{
 				Kind:       "AivenApplication",
-				APIVersion: "kafka.nais.io/v1",
+				APIVersion: "aiven.nais.io/v1",
 			},
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      name,
