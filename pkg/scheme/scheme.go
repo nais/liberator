@@ -3,8 +3,10 @@ package scheme
 import (
 	"fmt"
 
+	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	"github.com/nais/liberator/pkg/apis/bigquery.cnrm.cloud.google.com/v1beta1"
 	"github.com/nais/liberator/pkg/apis/iam.cnrm.cloud.google.com/v1beta1"
+	kafka_nais_io_v1 "github.com/nais/liberator/pkg/apis/kafka.nais.io/v1"
 	"github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	"github.com/nais/liberator/pkg/apis/sql.cnrm.cloud.google.com/v1beta1"
@@ -37,6 +39,8 @@ func All() (*runtime.Scheme, error) {
 		bigquery_cnrm_cloud_google_com_v1beta1.AddToScheme,
 		storage_cnrm_cloud_google_com_v1beta1.AddToScheme,
 		clientgoscheme.AddToScheme,
+		aiven_nais_io_v1.AddToScheme,
+		kafka_nais_io_v1.AddToScheme,
 	)
 }
 
