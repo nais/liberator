@@ -255,10 +255,10 @@ type CloudIAMPermission struct {
 }
 
 type Maskinporten struct {
-	// If enabled, provisions and configures a Maskinporten client with consumed scopes and/or Exposed scopes with at DigDir.
+	// If enabled, provisions and configures a Maskinporten client with consumed scopes and/or Exposed scopes with DigDir.
 	// +nais:doc:Availability="team namespaces"
 	Enabled bool `json:"enabled"`
-	// To Configure Maskinporten clients, consumed scopes and/or exposed scopes
+	// Schema to configure Maskinporten clients with consumed scopes and/or exposed scopes.
 	Scopes MaskinportenScope `json:"scopes,omitempty"`
 }
 

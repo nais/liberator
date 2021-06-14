@@ -114,17 +114,17 @@ type MaskinportenClientList struct {
 }
 
 type MaskinportenScope struct {
-	// MaskinportenScope is the Schema for the ConsumedScopes and  ExposedScopes API and it contains lists of consumed scopes and
-	// exposed scopes.
-	// `ConsumedScopes` is a list of scopes that your client should request access to.
-	// `ExposedScopes` is a list of scopes your application want to expose to other organization and access to the exposed scope is based on organization number.
+	// This is the Schema for the consumes and exposes API.
+	// `consumes` is a list of scopes that your client can request access to.
 	ConsumedScopes []ConsumedScope `json:"consumes,omitempty"`
+	// `exposes` is a list of scopes your application want to expose to other organization where access to the scope is based on organization number.
 	ExposedScopes  []ExposedScope  `json:"exposes,omitempty"`
 }
 
 type ConsumedScope struct {
 	// The scope consumed by the application to gain access to an external organization API.
 	// Ensure that the NAV organization has been granted access to the scope prior to requesting access.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/maskinporten/#consume-scopes"
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 }
@@ -135,17 +135,17 @@ type ExposedScope struct {
 	// +kubebuilder:validation:Required
 	Enabled bool `json:"enabled"`
 	// The actual subscope combined with `Product`.
-	// Ensure that `<Product></:><Name> matches `Pattern`.
+	// Ensure that `<Product><Name>` matches `Pattern`.
 	// +kubebuilder:validation:Pattern=`^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$`
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 	// The product-area your application belongs to e.g. arbeid, helse ...
-	// This will be included in the final scope `nav:<Product></:><Name>`.
+	// This will be included in the final scope `nav:<Product><Name>`.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`^[a-z0-9]+$`
 	Product string `json:"product"`
 	// Max time in seconds for a issued access_token.
-	// Default is `30`
+	// Default is `30` sec.
 	// +kubebuilder:validation:Minimum=30
 	// +kubebuilder:validation:Maximum=680
 	AtMaxAge *int `json:"atMaxAge,omitempty"`
