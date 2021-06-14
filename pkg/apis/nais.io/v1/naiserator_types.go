@@ -48,6 +48,7 @@ type Ingress string
 type IDPorten struct {
 	// Whether to enable provisioning of an ID-porten client.
 	// If enabled, an ID-porten client be provisioned.
+	// +nais:doc:Availability="team namespaces"
 	Enabled bool `json:"enabled"`
 	// AccessTokenLifetime is the lifetime in seconds for any issued access token from ID-porten.
 	//
@@ -254,10 +255,10 @@ type CloudIAMPermission struct {
 }
 
 type Maskinporten struct {
-	// If enabled, provisions and configures a Maskinporten client at DigDir.
+	// If enabled, provisions and configures a Maskinporten client with consumed scopes and/or Exposed scopes with at DigDir.
+	// +nais:doc:Availability="team namespaces"
 	Enabled bool `json:"enabled"`
-	// List of scopes that your client should request access to.
-	// Ensure that the NAV organization has been granted access to the scope prior to requesting access.
+	// To Configure Maskinporten clients, consumed scopes and/or exposed scopes
 	Scopes MaskinportenScope `json:"scopes,omitempty"`
 }
 

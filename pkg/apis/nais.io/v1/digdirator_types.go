@@ -106,54 +106,64 @@ type MaskinportenClientSpec struct {
 
 // MaskinportenClientList contains a list of MaskinportenClient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +nais:doc:Availability="team namespaces"
 type MaskinportenClientList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []MaskinportenClient `json:"items"`
 }
 
-// MaskinportenScope is the Schema for the MaskinportenScope API and it contains a list of scopes used
-// by an application and scopes exposed by an application
 type MaskinportenScope struct {
+	// MaskinportenScope is the Schema for the ConsumedScopes and  ExposedScopes API and it contains lists of consumed scopes and
+	// exposed scopes.
+	// `ConsumedScopes` is a list of scopes that your client should request access to.
+	// `ExposedScopes` is a list of scopes your application want to expose to other organization and access to the exposed scope is based on organization number.
 	ConsumedScopes []ConsumedScope `json:"consumes,omitempty"`
 	ExposedScopes  []ExposedScope  `json:"exposes,omitempty"`
 }
 
-// ConsumedScope is scope(s) consumed by the application to gain access to external Api(s)
 type ConsumedScope struct {
+	// The scope consumed by the application to gain access to an external organization API.
+	// Ensure that the NAV organization has been granted access to the scope prior to requesting access.
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 }
 
-// ExposedScope is the exposed scopes exported by the application to grant organization access to resources/apis
 type ExposedScope struct {
-	// Enabled sets scope availible for use and consumer can be granted access
+	// If Enabled the configured scope is available to be used and consumed by organizations granted access.
+	// +nais:doc:Link="https://doc.nais.io/naisjob/reference/#maskinportenscopesexposesconsumers"
 	// +kubebuilder:validation:Required
 	Enabled bool `json:"enabled"`
-	// Name is the actual subscope, build: scope := prefix:<Product></:><Name>
+	// The actual subscope combined with `Product`.
+	// Ensure that `<Product></:><Name> matches `Pattern`.
 	// +kubebuilder:validation:Pattern=`^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$`
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
-	// Product is the product development area an application belongs to. This will be included in the final registered scope
+	// The product-area your application belongs to e.g. arbeid, helse ...
+	// This will be included in the final scope `nav:<Product></:><Name>`.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`^[a-z0-9]+$`
 	Product string `json:"product"`
-	// AtMaxAge Max time in seconds for a issued access_token, default is `30`
+	// Max time in seconds for a issued access_token.
+	// Default is `30`
 	// +kubebuilder:validation:Minimum=30
 	// +kubebuilder:validation:Maximum=680
 	AtMaxAge *int `json:"atMaxAge,omitempty"`
-	// AllowedIntegrations whitelist of type of integration's allowed. Default is `maskinporten`
+	// Whitelisting of integration's allowed.
+	// Default is `maskinporten`
+	// +nais:doc:Link="https://docs.digdir.no/maskinporten_guide_apitilbyder.html#scope-begrensninger"
 	// +kubebuilder:validation:MinItems=1
 	AllowedIntegrations []string `json:"allowedIntegrations,omitempty"`
-	// Consumers External consumers granted access to this scope and able to get acess_token
+	// External consumers granted access to this scope and able to request access_token.
 	Consumers []ExposedScopeConsumer `json:"consumers,omitempty"`
 }
 
 type ExposedScopeConsumer struct {
-	// Orgno is the external business (consumer) organisation number
+	// The external business/organization number.
 	// +kubebuilder:validation:Pattern=`^\d{9}$`
 	Orgno string `json:"orgno"`
-	// Name is a describing name intended for clearity.
+	// This is a describing field intended for clarity not used for any other purpose.
+	// +optional
 	Name string `json:"name,omitempty"`
 }
 
