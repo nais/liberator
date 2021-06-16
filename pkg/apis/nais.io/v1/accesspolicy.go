@@ -20,11 +20,27 @@ type AccessPolicyExternalRule struct {
 type AccessPolicyRule struct {
 	// The application's name.
 	Application string `json:"application"`
-	// The application's namespace. May be omitted if it should be in the same namespace as your application.
+	// The application's namespace. May be omitted if it should be in the same namespace as your application.F
 	Namespace   string `json:"namespace,omitempty"`
 	// The application's cluster. May be omitted if it should be in the same cluster as your application.
 	Cluster     string `json:"cluster,omitempty"`
+	// Permissions contains a set of permissions that are granted to the given application.
+	// Currently only applicable for Azure AD clients.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad#access-policy"
+	Permissions *AccessPolicyPermissions `json:"permissions,omitempty"`
 }
+
+type AccessPolicyPermissions struct {
+	// Scopes is a list of Azure AD scopes that are granted to the given application.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad#scopes"
+	Scopes []AccessPolicyPermission `json:"scopes,omitempty"`
+	// Roles is a list of Azure AD roles that are granted to the given application.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad#roles"
+	Roles []AccessPolicyPermission `json:"roles,omitempty"`
+}
+
+// +kubebuilder:validation:Pattern=`^[a-z0-9-_./]+$`
+type AccessPolicyPermission string
 
 type AccessPolicyInbound struct {
 	// List of NAIS applications that may access your application.
