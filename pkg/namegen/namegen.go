@@ -39,6 +39,18 @@ func PrefixedRandShortName(prefix, basename string, maxlen int) string {
 	return RandShortName(fmt.Sprintf("%s-%s", prefix, basename), maxlen)
 }
 
+// SuffixedShortName generates a ShortName and appends a given suffix to this, e.g. an incremental counter.
+// The resulting string is truncated to the given maximum length.
+func SuffixedShortName(basename, suffix string, maxlen int) (string, error) {
+	maxlen -= len(suffix) + 1 // length of suffix + 1 byte of separator
+	shortName, err := ShortName(basename, maxlen)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%s-%s", shortName, suffix), nil
+}
+
 func formatName(basename, suffix string, maxlen int) string {
 	if len(basename) > maxlen {
 		basename = basename[:maxlen]
