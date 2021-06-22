@@ -157,11 +157,12 @@ func (in Topic) FullName() string {
 	return in.Namespace + "." + in.Name
 }
 
-func (in Topic) CleanupPolicy() string {
+func (in Topic) CleanupPolicy() *string {
+	var compactDeletion = "compact,deletion"
 	if *in.Spec.Config.CleanupPolicy != BothCleanupPolicies {
-		return *in.Spec.Config.CleanupPolicy
+		return in.Spec.Config.CleanupPolicy
 	}
-	return "compact,delete"
+	return &compactDeletion
 }
 
 func (in TopicACL) Username() string {
