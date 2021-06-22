@@ -2,9 +2,8 @@ package kafka_nais_io_v1
 
 import (
 	"fmt"
-	"strconv"
-
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
+	"strconv"
 
 	"github.com/nais/liberator/pkg/namegen"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -19,6 +18,8 @@ const (
 
 	Finalizer            = "kafkarator.kafka.nais.io"
 	RemoveDataAnnotation = "kafka.nais.io/removeDataWhenResourceIsDeleted"
+
+	BothCleanupPolicies = "both"
 )
 
 func init() {
@@ -51,7 +52,7 @@ type Config struct {
 	// CleanupPolicy is either "delete" or "compact" or both.
 	// This designates the retention policy to use on old log segments.
 	// Defaults to `delete`.
-	// +kubebuilder:validation:Enum=delete;compact;compact,delete
+	// +kubebuilder:validation:Enum=delete;compact;both
 	// +optional
 	CleanupPolicy         *string `json:"cleanupPolicy,omitempty"`
 	// When a producer sets acks to "all" (or "-1"), `min.insync.replicas` specifies the minimum number of replicas
@@ -154,6 +155,13 @@ func (in *Topic) RemoveFinalizer() {
 
 func (in Topic) FullName() string {
 	return in.Namespace + "." + in.Name
+}
+
+func (in Topic) CleanupPolicy() string {
+	if *in.Spec.Config.CleanupPolicy != BothCleanupPolicies {
+		return *in.Spec.Config.CleanupPolicy
+	}
+	return "compact,delete"
 }
 
 func (in TopicACL) Username() string {
