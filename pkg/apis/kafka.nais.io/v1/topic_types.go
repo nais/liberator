@@ -47,14 +47,39 @@ type Topic struct {
 }
 
 type Config struct {
-	CleanupPolicy         *string `json:"cleanupPolicy,omitempty"`
-	MinimumInSyncReplicas *int    `json:"minimumInSyncReplicas,omitempty"`
-	Partitions            *int    `json:"partitions,omitempty"`
-	Replication           *int    `json:"replication,omitempty"`
-	RetentionBytes        *int    `json:"retentionBytes,omitempty"`
-	RetentionHours        *int    `json:"retentionHours,omitempty"`
+	// CleanupPolicy is either "delete" or "compact" or both.
+	// This designates the retention policy to use on old log segments.
+	// Defaults to `delete`.
+	// +kubebuilder:validation:Enum=delete;compact;"compact,delete"
+	CleanupPolicy *string `json:"cleanupPolicy,omitempty"`
+	// When a producer sets acks to "all" (or "-1"), `min.insync.replicas` specifies the minimum number of replicas
+	// that must acknowledge a write for the write to be considered successful.
+	// Defaults to `1`.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=7
+	MinimumInSyncReplicas *int `json:"minimumInSyncReplicas,omitempty"`
+	// The default number of log partitions per topic.
+	// Defaults to `1`.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=1000000
+	Partitions *int `json:"partitions,omitempty"`
+	// The default replication factor for created topics.
+	// Defaults to `3`.
+	// +kubebuilder:validation:Minimum=1
+	// +optional
+	Replication *int `json:"replication,omitempty"`
+	// Configuration controls the maximum size a partition can grow to before we will discard old log segments
+	// to free up space if we are using the "delete" retention policy. By default there is no size limit only a time limit.
+	// Since this limit is enforced at the partition level, multiply it by the number of partitions to compute the topic retention in bytes.
+	// Defaults to `-1`.
+	RetentionBytes *int `json:"retentionBytes,omitempty"`
+	// The number of hours to keep a log file before deleting it.
+	// Defaults to `72`.
+	// +kubebuilder:validation:Maximum=2562047788015
+	RetentionHours *int `json:"retentionHours,omitempty"`
 }
 
+// TopicSpec is a specification of the desired behavior of the topic.
 type TopicSpec struct {
 	Pool   string    `json:"pool"`
 	Config *Config   `json:"config,omitempty"`
@@ -73,11 +98,16 @@ type TopicStatus struct {
 
 type TopicACLs []TopicACL
 
+// TopicACL describes the access granted for the topic.
 type TopicACL struct {
+	// Access type granted for a application.
+	// Defaults to `readwrite`.
 	// +kubebuilder:validation:Enum=read;write;readwrite
-	Access      string `json:"access"`
+	Access string `json:"access"`
+	// The name of the specified application
 	Application string `json:"application"`
-	Team        string `json:"team"`
+	// The team of the specified application
+	Team string `json:"team"`
 }
 
 type User struct {
