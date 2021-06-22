@@ -20,6 +20,7 @@ const (
 	RemoveDataAnnotation = "kafka.nais.io/removeDataWhenResourceIsDeleted"
 
 	BothCleanupPolicies = "both"
+	CompactDelete       = "compact,delete"
 )
 
 func init() {
@@ -53,37 +54,32 @@ type Config struct {
 	// This designates the retention policy to use on old log segments.
 	// Defaults to `delete`.
 	// +kubebuilder:validation:Enum=delete;compact;both
-	// +optional
-	CleanupPolicy         *string `json:"cleanupPolicy,omitempty"`
+	CleanupPolicy *string `json:"cleanupPolicy,omitempty"`
 	// When a producer sets acks to "all" (or "-1"), `min.insync.replicas` specifies the minimum number of replicas
 	// that must acknowledge a write for the write to be considered successful.
 	// Defaults to `1`.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=7
-	// +optional
-	MinimumInSyncReplicas *int    `json:"minimumInSyncReplicas,omitempty"`
+	MinimumInSyncReplicas *int `json:"minimumInSyncReplicas,omitempty"`
 	// The default number of log partitions per topic.
 	// Defaults to `1`.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=1000000
-	// +optional
-	Partitions            *int    `json:"partitions,omitempty"`
+	Partitions *int `json:"partitions,omitempty"`
 	// The default replication factor for created topics.
 	// Defaults to `3`.
 	// +kubebuilder:validation:Minimum=1
 	// +optional
-	Replication           *int    `json:"replication,omitempty"`
+	Replication *int `json:"replication,omitempty"`
 	// Configuration controls the maximum size a partition can grow to before we will discard old log segments
 	// to free up space if we are using the "delete" retention policy. By default there is no size limit only a time limit.
 	// Since this limit is enforced at the partition level, multiply it by the number of partitions to compute the topic retention in bytes.
 	// Defaults to `-1`.
-	// +optional
-	RetentionBytes        *int    `json:"retentionBytes,omitempty"`
+	RetentionBytes *int `json:"retentionBytes,omitempty"`
 	// The number of hours to keep a log file before deleting it.
 	// Defaults to `72`.
 	// +kubebuilder:validation:Maximum=2562047788015
-	// +optional
-	RetentionHours        *int    `json:"retentionHours,omitempty"`
+	RetentionHours *int `json:"retentionHours,omitempty"`
 }
 
 // TopicSpec is a specification of the desired behavior of the topic.
@@ -110,11 +106,11 @@ type TopicACL struct {
 	// Access type granted for a application.
 	// Defaults to `readwrite`.
 	// +kubebuilder:validation:Enum=read;write;readwrite
-	Access      string `json:"access"`
+	Access string `json:"access"`
 	// The name of the specified application
 	Application string `json:"application"`
 	// The team of the specified application
-	Team        string `json:"team"`
+	Team string `json:"team"`
 }
 
 type User struct {
@@ -158,11 +154,15 @@ func (in Topic) FullName() string {
 }
 
 func (in Topic) CleanupPolicy() *string {
-	var compactDelete = "compact,delete"
-	if *in.Spec.Config.CleanupPolicy != BothCleanupPolicies {
-		return in.Spec.Config.CleanupPolicy
+	var compactDelete = CompactDelete
+	if in.Spec.Config == nil {
+		return nil
 	}
-	return &compactDelete
+
+	if in.Spec.Config.CleanupPolicy != nil && *in.Spec.Config.CleanupPolicy == BothCleanupPolicies {
+		return &compactDelete
+	}
+	return in.Spec.Config.CleanupPolicy
 }
 
 func (in TopicACL) Username() string {
