@@ -81,7 +81,7 @@ spec:
                   enum:
                   - delete
                   - compact
-                  - both
+                  - compact,delete
                   type: string
                 minimumInSyncReplicas:
                   description: When a producer sets acks to "all" (or "-1"), `min.insync.replicas`

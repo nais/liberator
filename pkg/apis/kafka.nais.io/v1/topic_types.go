@@ -18,9 +18,6 @@ const (
 
 	Finalizer            = "kafkarator.kafka.nais.io"
 	RemoveDataAnnotation = "kafka.nais.io/removeDataWhenResourceIsDeleted"
-
-	BothCleanupPolicies = "both"
-	CompactDelete       = "compact,delete"
 )
 
 func init() {
@@ -53,7 +50,7 @@ type Config struct {
 	// CleanupPolicy is either "delete" or "compact" or both.
 	// This designates the retention policy to use on old log segments.
 	// Defaults to `delete`.
-	// +kubebuilder:validation:Enum=delete;compact;both
+	// +kubebuilder:validation:Enum=delete;compact;"compact,delete"
 	CleanupPolicy *string `json:"cleanupPolicy,omitempty"`
 	// When a producer sets acks to "all" (or "-1"), `min.insync.replicas` specifies the minimum number of replicas
 	// that must acknowledge a write for the write to be considered successful.
@@ -151,18 +148,6 @@ func (in *Topic) RemoveFinalizer() {
 
 func (in Topic) FullName() string {
 	return in.Namespace + "." + in.Name
-}
-
-func (in Topic) CleanupPolicy() *string {
-	var compactDelete = CompactDelete
-	if in.Spec.Config == nil {
-		return nil
-	}
-
-	if in.Spec.Config.CleanupPolicy != nil && *in.Spec.Config.CleanupPolicy == BothCleanupPolicies {
-		return &compactDelete
-	}
-	return in.Spec.Config.CleanupPolicy
 }
 
 func (in TopicACL) Username() string {
