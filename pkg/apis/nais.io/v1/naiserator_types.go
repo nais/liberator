@@ -38,6 +38,12 @@ type AzureApplication struct {
 type Elastic struct {
 	// Provisions an Elasticsearch instance and configures your application so it can access it.
 	// Use the `instance_name` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+	Instance string `json:"instance"`
+}
+
+type Influx struct {
+	// Provisions an Influx instance and configures your application so it can access it.
+	// Use the prefix: `influx-` + `team` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
 	// +nais:doc:Availability=GCP
 	Instance string `json:"instance"`
 }
