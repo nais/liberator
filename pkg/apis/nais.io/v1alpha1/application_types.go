@@ -68,7 +68,6 @@ type ApplicationSpec struct {
 
 	// To get your own Elastic Search instance head over to the IaC-repo to provision each instance.
 	// See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
-	// +nais:doc:Availability="GCP"
 	Elastic *nais_io_v1.Elastic `json:"elastic,omitempty"`
 
 	// Custom environment variables injected into your container.
