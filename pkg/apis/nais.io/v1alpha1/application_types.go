@@ -66,6 +66,8 @@ type ApplicationSpec struct {
 	// Override command when starting Docker image.
 	Command []string `json:"command,omitempty"`
 
+	// To get your own Elastic Search instance head over to the IaC-repo to provision each instance.
+	// See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
 	Elastic *nais_io_v1.Elastic `json:"elastic,omitempty"`
 
 	// Custom environment variables injected into your container.
@@ -107,6 +109,10 @@ type ApplicationSpec struct {
 	// All URLs must start with `https://`. Domain availability differs according to which environment your application is running in.
 	// +nais:doc:Link="https://doc.nais.io/clusters/gcp/";"https://doc.nais.io/clusters/on-premises/"
 	Ingresses []nais_io_v1.Ingress `json:"ingresses,omitempty"`
+
+	// An InfluxDB via Aiven. A typical use case for influxdb is to store metrics from your application and visualize them in Grafana.
+	// +nais:doc:Availability="GCP"
+	Influx *nais_io_v1.Influx `json:"influx,omitempty"`
 
 	// Enable Aiven Kafka for your application.
 	Kafka *nais_io_v1.Kafka `json:"kafka,omitempty"`

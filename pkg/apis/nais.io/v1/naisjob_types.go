@@ -58,6 +58,8 @@ type NaisjobSpec struct {
 	// Override command when starting Docker image.
 	Command []string `json:"command,omitempty"`
 
+	// To get your own Elastic Search instance head over to the IaC-repo to provision each instance.
+	// See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository
 	Elastic *Elastic `json:"elastic,omitempty"`
 
 	// Custom environment variables injected into your container.
@@ -93,6 +95,11 @@ type NaisjobSpec struct {
 
 	// Your Naisjob's Docker image location and tag.
 	Image string `json:"image"`
+
+	// An Influxdb via Aiven. A typical use case is to store metrics from your application and visualize them in Grafana.
+	// See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository
+	// +nais:doc:Availability="GCP"
+	Influx *Influx `json:"influx,omitempty"`
 
 	// Enable Aiven Kafka for your Naisjob.
 	Kafka *Kafka `json:"kafka,omitempty"`
