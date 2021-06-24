@@ -812,6 +812,8 @@ spec:
                     port:
                       description: Port to access on the container. Defaults to application
                         port. (spec.port)
+                      maximum: 65535
+                      minimum: 1
                       type: integer
                   type: object
               type: object

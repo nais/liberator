@@ -174,14 +174,16 @@ type HttpGetAction struct {
 	Path string `json:"path,omitempty"`
 	// Port to access on the container.
 	// Defaults to application port. (spec.port)
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
 	Port int `json:"port,omitempty"`
 }
 
 type PreStopHook struct {
 	// Exec describes a "run in container" action
-	Exec ExecAction    `json:"exec,omitempty"`
+	Exec *ExecAction    `json:"exec,omitempty"`
 	// Http describes an action based on HTTP Get requests.
-	Http HttpGetAction `json:"http,omitempty"`
+	Http *HttpGetAction `json:"http,omitempty"`
 }
 
 // Liveness probe and readiness probe definitions.
