@@ -42,9 +42,8 @@ type Elastic struct {
 }
 
 type Influx struct {
-	// Provisions an Influx instance and configures your application so it can access it.
+	// Provisions an InfluxDB instance and configures your application to access it.
 	// Use the prefix: `influx-` + `team` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
-	// +nais:doc:Availability=GCP
 	Instance string `json:"instance"`
 }
 
