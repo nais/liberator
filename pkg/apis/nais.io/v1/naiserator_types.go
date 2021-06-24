@@ -176,7 +176,7 @@ type HttpGetAction struct {
 	// Defaults to application port. (spec.port)
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
-	Port int `json:"port,omitempty"`
+	Port *int `json:"port,omitempty"`
 }
 
 type PreStopHook struct {
