@@ -222,6 +222,9 @@ func ExampleApplicationForDocumentation() *Application {
 				RedirectURI:     "https://myapplication.nav.no/oauth2/callback",
 				SessionLifetime: intp(7200),
 			},
+			Influx: &nais_io_v1.Influx{
+				Instance: "influx-instance",
+			},
 			Image: "navikt/testapp:69.0.0",
 			Ingresses: []nais_io_v1.Ingress{
 				"https://myapplication.nav.no",

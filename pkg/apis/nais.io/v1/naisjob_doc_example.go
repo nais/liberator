@@ -217,6 +217,9 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					},
 				},
 			},
+			Influx: &Influx{
+				Instance: "influx-instance",
+			},
 			Image: "navikt/testapp:69.0.0",
 			Kafka: &Kafka{
 				Pool: "nav-dev",
