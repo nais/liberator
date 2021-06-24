@@ -65,6 +65,7 @@ type Config struct {
 	ExampleOutput     string
 	ReferenceTemplate string
 	ExampleTemplate   string
+	JSONSchema        string
 }
 
 type Doc struct {
@@ -130,6 +131,7 @@ func run() error {
 	pflag.StringVar(&cfg.ExampleOutput, "example-output", cfg.ExampleOutput, "example yaml markdown output file")
 	pflag.StringVar(&cfg.ReferenceTemplate, "reference-template", cfg.ReferenceTemplate, "template file for rendering reference doc")
 	pflag.StringVar(&cfg.ExampleTemplate, "example-template", cfg.ExampleTemplate, "template file for rendering example doc")
+	pflag.StringVar(&cfg.JSONSchema, "json-schema-output", cfg.JSONSchema, "if set, generate json schema to the provided file")
 	pflag.Parse()
 
 	packages, err := loader.LoadRoots(cfg.Directory)
@@ -199,6 +201,11 @@ func run() error {
 		return err
 	}
 
+	if cfg.JSONSchema != "" && len(pars.FlattenedSchemata) > 1 {
+		fmt.Fprintln(os.Stderr, "More than one schema, skipping the json schema")
+		cfg.JSONSchema = ""
+	}
+
 	for _, schemata := range pars.FlattenedSchemata {
 		err = Write(WriteReferenceDoc, cfg.ReferenceTemplate, cfg.ReferenceOutput, schemata.Properties["spec"])
 		if err != nil {
@@ -208,9 +215,42 @@ func run() error {
 		if err != nil {
 			return err
 		}
+
+		if cfg.JSONSchema != "" {
+			if err := writeJSONSchema(cfg.JSONSchema, schemata); err != nil {
+				return err
+			}
+		}
 	}
 
 	return nil
+}
+
+func writeJSONSchema(path string, schemata apiext.JSONSchemaProps) error {
+	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	schemata.Schema = apiext.JSONSchemaURL("http://json-schema.org/draft-07/schema")
+
+	// Make some changes to the schema to make it even more useful for validation etc.
+	schemata = setJSONSchemaDefault(schemata, "apiVersion", `"nais.io/v1alpha1"`)
+	schemata = setJSONSchemaDefault(schemata, "kind", `"Application"`)
+
+	schemata = setJSONSchemaRequired(schemata, ".", "kind", "metadata")
+	schemata = setJSONSchemaRequired(schemata, "metadata", "labels")
+	schemata = setJSONSchemaRequired(schemata, "metadata.labels", "team")
+
+	schemata = addJSONSchemaProperty(schemata, "metadata.labels.team", apiext.JSONSchemaProps{
+		Description: "Team name",
+		Type:        "string",
+	})
+
+	enc := json.NewEncoder(f)
+	enc.SetIndent("", "\t")
+	return enc.Encode(schemata)
 }
 
 func marshalToInterface(dst, src interface{}) error {
@@ -582,4 +622,45 @@ func getValueFromStruct(keyWithDots string, object interface{}) (interface{}, er
 	}
 
 	return v.Interface(), nil
+}
+
+func runOnJSONSchemaProperty(root apiext.JSONSchemaProps, path string, f func(*apiext.JSONSchemaProps)) apiext.JSONSchemaProps {
+	if path == "." {
+		f(&root)
+		return root
+	}
+
+	p := strings.Split(path, ".")
+	obj := root.Properties[p[0]]
+	if len(p) == 1 {
+		f(&obj)
+	} else {
+		runOnJSONSchemaProperty(obj, strings.Join(p[1:], "."), f)
+	}
+	root.Properties[p[0]] = obj
+	return root
+}
+
+func setJSONSchemaDefault(root apiext.JSONSchemaProps, path string, value string) apiext.JSONSchemaProps {
+	return runOnJSONSchemaProperty(root, path, func(obj *apiext.JSONSchemaProps) {
+		obj.Default = &apiext.JSON{
+			Raw: []byte(value),
+		}
+	})
+}
+
+func setJSONSchemaRequired(root apiext.JSONSchemaProps, path string, values ...string) apiext.JSONSchemaProps {
+	return runOnJSONSchemaProperty(root, path, func(obj *apiext.JSONSchemaProps) {
+		obj.Required = append(obj.Required, values...)
+	})
+}
+
+func addJSONSchemaProperty(root apiext.JSONSchemaProps, path string, prop apiext.JSONSchemaProps) apiext.JSONSchemaProps {
+	ps := strings.Split(path, ".")
+	return runOnJSONSchemaProperty(root, strings.Join(ps[:len(ps)-1], "."), func(obj *apiext.JSONSchemaProps) {
+		if obj.Properties == nil {
+			obj.Properties = make(map[string]apiext.JSONSchemaProps)
+		}
+		obj.Properties[ps[len(ps)-1]] = prop
+	})
 }

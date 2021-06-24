@@ -29,6 +29,7 @@ doc:
 		--kind Application \
 		--reference-output doc/output/application/reference.md \
 		--example-output doc/output/application/example.md \
+		--json-schema-output doc/output/application-schema.json \
 		--reference-template doc/templates/reference/application.md \
 		--example-template doc/templates/example/application.md \
 		;
