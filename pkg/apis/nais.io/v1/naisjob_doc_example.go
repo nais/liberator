@@ -258,6 +258,15 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					},
 				},
 			},
+			PreStopHook: &PreStopHook{
+				Exec: &ExecAction{
+					Command: []string{"./my", "--shell", "script"},
+				},
+				Http: &HttpGetAction{
+					Path: "/internal/stop",
+					Port: intp(8080),
+				},
+			},
 			PreStopHookPath: "/internal/stop",
 			Readiness: &Probe{
 				FailureThreshold: 10,
