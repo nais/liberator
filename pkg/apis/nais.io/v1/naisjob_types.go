@@ -122,12 +122,12 @@ type NaisjobSpec struct {
 	// The Pod's termination grace period countdown begins before the PreStop hooked is executed.
 	// Regardless of the outcome of the handler, the container will eventually terminate within the Pod's termination grace period. Other management of the container blocks until the hook completes or until the termination grace period is reached.
 	// More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
-	// +nais:doc:Link="https://doc.nais.io/nais-Naisjob/#handles-termination-gracefully"
+	// +nais:doc:Link="https://doc.nais.io/nais-application/#handles-termination-gracefully"
 	PreStopHook *PreStopHook `json:"preStopHook,omitempty"`
 
 	// A HTTP GET will be issued to this endpoint at least once before the pod is terminated.
 	// This feature is deprecated and will be removed in the next major version (nais.io/v1).
-	// +nais:doc:Link="https://doc.nais.io/nais-Naisjob/#handles-termination-gracefully"
+	// +nais:doc:Link="https://doc.nais.io/nais-application/#handles-termination-gracefully"
 	PreStopHookPath string `json:"preStopHookPath,omitempty"`
 
 	// Sometimes, Naisjobs are temporarily unable to serve traffic. For example, an Naisjob might need
