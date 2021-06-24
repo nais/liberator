@@ -204,7 +204,3 @@ func (in *Alert) SetLastSyncedHash(hash string) {
 	a[LastSyncedHashAnnotation] = hash
 	in.SetAnnotations(a)
 }
-
-func init() {
-	SchemeBuilder.Register(&Alert{}, &AlertList{})
-}
