@@ -161,6 +161,29 @@ type FilesFrom struct {
 	MountPath string `json:"mountPath,omitempty"`
 }
 
+type ExecAction struct {
+	// Command is the command line to execute inside the container, the working directory for the command is root ('/') in the container's filesystem.
+	// The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work.
+	// To use a shell, you need to explicitly call out to that shell.
+	// Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+	Command []string `json:"command,omitempty"`
+}
+
+type HttpGetAction struct {
+	// Path to access on the HTTP server.
+	Path string `json:"path,omitempty"`
+	// Port to access on the container.
+	// Defaults to application port. (spec.port)
+	Port int `json:"port,omitempty"`
+}
+
+type PreStopHook struct {
+	// Exec describes a "run in container" action
+	Exec ExecAction    `json:"exec,omitempty"`
+	// Http describes an action based on HTTP Get requests.
+	Http HttpGetAction `json:"http,omitempty"`
+}
+
 // Liveness probe and readiness probe definitions.
 type Probe struct {
 	// HTTP endpoint path that signals 200 OK if the application has started successfully.

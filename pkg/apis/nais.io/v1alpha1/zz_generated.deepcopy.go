@@ -138,6 +138,11 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = new(v1.Maskinporten)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.PreStopHook != nil {
+		in, out := &in.PreStopHook, &out.PreStopHook
+		*out = new(v1.PreStopHook)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Prometheus != nil {
 		in, out := &in.Prometheus, &out.Prometheus
 		*out = new(v1.PrometheusConfig)

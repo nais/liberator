@@ -776,9 +776,49 @@ spec:
               description: The port number which is exposed by the container and should
                 receive traffic.
               type: integer
+            preStopHook:
+              description: 'PreStopHook is called immediately before a container is
+                terminated due to an API request or management event such as liveness/startup
+                probe failure, preemption, resource contention, etc. The handler is
+                not called if the container crashes or exits. The reason for termination
+                is passed to the handler. The Pod''s termination grace period countdown
+                begins before the PreStop hooked is executed. Regardless of the outcome
+                of the handler, the container will eventually terminate within the
+                Pod''s termination grace period. Other management of the container
+                blocks until the hook completes or until the termination grace period
+                is reached. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks'
+              properties:
+                exec:
+                  description: Exec describes a "run in container" action
+                  properties:
+                    command:
+                      description: Command is the command line to execute inside the
+                        container, the working directory for the command is root ('/')
+                        in the container's filesystem. The command is simply exec'd,
+                        it is not run inside a shell, so traditional shell instructions
+                        ('|', etc) won't work. To use a shell, you need to explicitly
+                        call out to that shell. Exit status of 0 is treated as live/healthy
+                        and non-zero is unhealthy.
+                      items:
+                        type: string
+                      type: array
+                  type: object
+                http:
+                  description: Http describes an action based on HTTP Get requests.
+                  properties:
+                    path:
+                      description: Path to access on the HTTP server.
+                      type: string
+                    port:
+                      description: Port to access on the container. Defaults to application
+                        port. (spec.port)
+                      type: integer
+                  type: object
+              type: object
             preStopHookPath:
               description: A HTTP GET will be issued to this endpoint at least once
-                before the pod is terminated.
+                before the pod is terminated. This feature is deprecated and will
+                be removed in the next major version (nais.io/v1).
               type: string
             prometheus:
               description: Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/observability/metrics/).
