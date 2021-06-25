@@ -20,22 +20,26 @@ type AccessPolicyExternalRule struct {
 type AccessPolicyRule struct {
 	// The application's name.
 	Application string `json:"application"`
-	// The application's namespace. May be omitted if it should be in the same namespace as your application.F
+	// The application's namespace. May be omitted if it should be in the same namespace as your application.
 	Namespace   string `json:"namespace,omitempty"`
 	// The application's cluster. May be omitted if it should be in the same cluster as your application.
 	Cluster     string `json:"cluster,omitempty"`
+}
+
+type AccessPolicyInboundRule struct {
+	AccessPolicyRule `json:",inline"`
 	// Permissions contains a set of permissions that are granted to the given application.
 	// Currently only applicable for Azure AD clients.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad#access-policy"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad#fine-grained-access-control"
 	Permissions *AccessPolicyPermissions `json:"permissions,omitempty"`
 }
 
 type AccessPolicyPermissions struct {
-	// Scopes is a list of Azure AD scopes that are granted to the given application.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad#scopes"
+	// Scopes is a set of custom permission scopes that are granted to a given application.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad#custom-scopes"
 	Scopes []AccessPolicyPermission `json:"scopes,omitempty"`
-	// Roles is a list of Azure AD roles that are granted to the given application.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad#roles"
+	// Roles is a set of custom permission roles that are granted to a given application.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad#custom-roles"
 	Roles []AccessPolicyPermission `json:"roles,omitempty"`
 }
 
@@ -45,7 +49,7 @@ type AccessPolicyPermission string
 type AccessPolicyInbound struct {
 	// List of NAIS applications that may access your application.
 	// These settings apply both to Zero Trust network connectivity and token validity for Azure AD and TokenX tokens.
-	Rules []AccessPolicyRule `json:"rules"`
+	Rules []AccessPolicyInboundRule `json:"rules"`
 }
 
 type AccessPolicyOutbound struct {

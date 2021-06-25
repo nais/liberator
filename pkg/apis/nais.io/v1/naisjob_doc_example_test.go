@@ -3,9 +3,10 @@ package nais_io_v1_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/nais/liberator/pkg/testutil"
-	"github.com/stretchr/testify/assert"
 )
 
 var ignoredApplicationFields = []string{
@@ -35,7 +36,7 @@ var ignoredApplicationFields = []string{
 	`.Status.SynchronizationTime`,
 }
 
-// Test that the example Application contain examples for all fields encountered.
+// Test that the example NaisJob contains examples for all fields encountered.
 // Examples MUST contain a non-zero value to be valid, so no empty strings, false booleans, or zero ints.
 func TestExampleNaisjobForDocumentation(t *testing.T) {
 	naisjob := nais_io_v1.ExampleNaisjobForDocumentation()

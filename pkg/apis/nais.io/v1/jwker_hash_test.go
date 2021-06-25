@@ -1,8 +1,9 @@
 package nais_io_v1_test
 
 import (
-	"github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"testing"
+
+	"github.com/nais/liberator/pkg/apis/nais.io/v1"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -11,11 +12,13 @@ const secretName = "verysecret"
 
 var accessPolicy = &nais_io_v1.AccessPolicy{
 	Inbound: &nais_io_v1.AccessPolicyInbound{
-		Rules: []nais_io_v1.AccessPolicyRule{
+		Rules: []nais_io_v1.AccessPolicyInboundRule{
 			{
-				Application: "app1",
-				Namespace:   "ns1",
-				Cluster:     "firstcluster",
+				AccessPolicyRule: nais_io_v1.AccessPolicyRule{
+					Application: "app1",
+					Namespace:   "ns1",
+					Cluster:     "firstcluster",
+				},
 			},
 		},
 	},

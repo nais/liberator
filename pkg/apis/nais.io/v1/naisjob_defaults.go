@@ -55,7 +55,7 @@ func getNaisjobDefaults() *Naisjob {
 			},
 			AccessPolicy: &AccessPolicy{
 				Inbound: &AccessPolicyInbound{
-					Rules: []AccessPolicyRule{},
+					Rules: []AccessPolicyInboundRule{},
 				},
 				Outbound: &AccessPolicyOutbound{
 					Rules:    []AccessPolicyRule{},

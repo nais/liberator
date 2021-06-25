@@ -30,22 +30,55 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 		Spec: NaisjobSpec{
 			AccessPolicy: &AccessPolicy{
 				Inbound: &AccessPolicyInbound{
-					Rules: []AccessPolicyRule{
+					Rules: []AccessPolicyInboundRule{
 						{
-							Application: "app1",
+							AccessPolicyRule: AccessPolicyRule{
+								Application: "app1",
+							},
 						},
 						{
-							Application: "app2",
-							Namespace:   "q1",
+							AccessPolicyRule: AccessPolicyRule{
+								Application: "app2",
+								Namespace:   "q1",
+							},
 						},
 						{
-							Application: "app3",
-							Namespace:   "q2",
-							Cluster:     "dev-gcp",
+							AccessPolicyRule: AccessPolicyRule{
+								Application: "app3",
+								Namespace:   "q2",
+								Cluster:     "dev-gcp",
+							},
 						},
 						{
-							Application: "*",
-							Namespace:   "q3",
+							AccessPolicyRule: AccessPolicyRule{
+								Application: "*",
+								Namespace:   "q3",
+							},
+						},
+						{
+							AccessPolicyRule: AccessPolicyRule{
+								Application: "app4",
+							},
+							Permissions: &AccessPolicyPermissions{
+								Scopes: []AccessPolicyPermission{"custom-scope"},
+							},
+						},
+						{
+							AccessPolicyRule: AccessPolicyRule{
+								Application: "app5",
+							},
+							Permissions: &AccessPolicyPermissions{
+								Roles:  []AccessPolicyPermission{"custom-role"},
+							},
+						},
+						{
+							AccessPolicyRule: AccessPolicyRule{
+								Application: "app6",
+							},
+							Permissions: &AccessPolicyPermissions{
+								Scopes: []AccessPolicyPermission{"custom-scope"},
+								Roles:  []AccessPolicyPermission{"custom-role"},
+							},
 						},
 					},
 				},

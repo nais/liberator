@@ -1,8 +1,9 @@
 package nais_io_v1alpha1
 
 import (
-	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 )
 
 func ExampleApplicationForDocumentation() *Application {
@@ -25,22 +26,55 @@ func ExampleApplicationForDocumentation() *Application {
 		Spec: ApplicationSpec{
 			AccessPolicy: &nais_io_v1.AccessPolicy{
 				Inbound: &nais_io_v1.AccessPolicyInbound{
-					Rules: []nais_io_v1.AccessPolicyRule{
+					Rules: []nais_io_v1.AccessPolicyInboundRule{
 						{
-							Application: "app1",
+							AccessPolicyRule: nais_io_v1.AccessPolicyRule{
+								Application: "app1",
+							},
 						},
 						{
-							Application: "app2",
-							Namespace:   "q1",
+							AccessPolicyRule: nais_io_v1.AccessPolicyRule{
+								Application: "app2",
+								Namespace:   "q1",
+							},
 						},
 						{
-							Application: "app3",
-							Namespace:   "q2",
-							Cluster:     "dev-gcp",
+							AccessPolicyRule: nais_io_v1.AccessPolicyRule{
+								Application: "app3",
+								Namespace:   "q2",
+								Cluster:     "dev-gcp",
+							},
 						},
 						{
-							Application: "*",
-							Namespace:   "q3",
+							AccessPolicyRule: nais_io_v1.AccessPolicyRule{
+								Application: "*",
+								Namespace:   "q3",
+							},
+						},
+						{
+							AccessPolicyRule: nais_io_v1.AccessPolicyRule{
+								Application: "app4",
+							},
+							Permissions: &nais_io_v1.AccessPolicyPermissions{
+								Scopes: []nais_io_v1.AccessPolicyPermission{"custom-scope"},
+							},
+						},
+						{
+							AccessPolicyRule: nais_io_v1.AccessPolicyRule{
+								Application: "app5",
+							},
+							Permissions: &nais_io_v1.AccessPolicyPermissions{
+								Roles:  []nais_io_v1.AccessPolicyPermission{"custom-role"},
+							},
+						},
+						{
+							AccessPolicyRule: nais_io_v1.AccessPolicyRule{
+								Application: "app6",
+							},
+							Permissions: &nais_io_v1.AccessPolicyPermissions{
+								Scopes: []nais_io_v1.AccessPolicyPermission{"custom-scope"},
+								Roles:  []nais_io_v1.AccessPolicyPermission{"custom-role"},
+							},
 						},
 					},
 				},
