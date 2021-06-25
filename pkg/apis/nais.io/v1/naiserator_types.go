@@ -167,27 +167,28 @@ type FilesFrom struct {
 }
 
 type ExecAction struct {
-	// Command is the command line to execute inside the container, the working directory for the command is root ('/') in the container's filesystem.
-	// The command is simply exec'd, it is not run inside a shell, so traditional shell instructions ('|', etc) won't work.
+	// Command is the command line to execute inside the container before the pod is shut down.
+	// The command is not run inside a shell, so traditional shell instructions (pipes, redirects, etc.) won't work.
 	// To use a shell, you need to explicitly call out to that shell.
-	// Exit status of 0 is treated as live/healthy and non-zero is unhealthy.
+	//
+	// If the exit status is non-zero, the pod will still be shut down, and marked as `Failed`.
 	Command []string `json:"command,omitempty"`
 }
 
 type HttpGetAction struct {
 	// Path to access on the HTTP server.
-	Path string `json:"path,omitempty"`
+	Path string `json:"path"`
 	// Port to access on the container.
-	// Defaults to application port. (spec.port)
+	// Defaults to application port, as defined in `.spec.port`.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
 	Port *int `json:"port,omitempty"`
 }
 
 type PreStopHook struct {
-	// Exec describes a "run in container" action
+	// Command that should be run inside the main container just before the pod is shut down by Kubernetes.
 	Exec *ExecAction    `json:"exec,omitempty"`
-	// Http describes an action based on HTTP Get requests.
+	// HTTP GET request that is called just before the pod is shut down by Kubernetes.
 	Http *HttpGetAction `json:"http,omitempty"`
 }
 

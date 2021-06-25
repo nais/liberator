@@ -267,7 +267,6 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					Port: intp(8080),
 				},
 			},
-			PreStopHookPath: "/internal/stop",
 			Readiness: &Probe{
 				FailureThreshold: 10,
 				InitialDelay:     20,

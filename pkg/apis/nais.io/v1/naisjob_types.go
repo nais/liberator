@@ -124,18 +124,10 @@ type NaisjobSpec struct {
 	Maskinporten *Maskinporten `json:"maskinporten,omitempty"`
 
 	// PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
-	// The handler is not called if the container crashes or exits.
+	// The handler is not called if the container crashes or exits by itself.
 	// The reason for termination is passed to the handler.
-	// The Pod's termination grace period countdown begins before the PreStop hooked is executed.
-	// Regardless of the outcome of the handler, the container will eventually terminate within the Pod's termination grace period. Other management of the container blocks until the hook completes or until the termination grace period is reached.
-	// More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks
-	// +nais:doc:Link="https://doc.nais.io/nais-application/#handles-termination-gracefully"
+	// +nais:doc:Link="https://doc.nais.io/naisjob/#handles-termination-gracefully";"https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks"
 	PreStopHook *PreStopHook `json:"preStopHook,omitempty"`
-
-	// A HTTP GET will be issued to this endpoint at least once before the pod is terminated.
-	// This feature is deprecated and will be removed in the next major version (nais.io/v1).
-	// +nais:doc:Link="https://doc.nais.io/nais-application/#handles-termination-gracefully"
-	PreStopHookPath string `json:"preStopHookPath,omitempty"`
 
 	// Sometimes, Naisjobs are temporarily unable to serve traffic. For example, an Naisjob might need
 	// to load large data or configuration files during startup, or depend on external services after startup.
@@ -159,9 +151,9 @@ type NaisjobSpec struct {
 	// Whether to skip injection of NAV certificate authority bundle or not. Defaults to false.
 	SkipCaBundle bool `json:"skipCaBundle,omitempty"`
 
-	// Kubernetes uses startup probes to know when a container Naisjob has started. If such a probe is configured,
+	// Kubernetes uses startup probes to know when a container application has started. If such a probe is configured,
 	// it disables liveness and readiness checks until it succeeds, making sure those probes don't interfere with the
-	// Naisjob startup. This can be used to adopt liveness checks on slow starting containers, avoiding them getting
+	// application startup. This can be used to adopt liveness checks on slow starting containers, avoiding them getting
 	// killed by Kubernetes before they are up and running.
 	Startup *Probe `json:"startup,omitempty"`
 
@@ -173,15 +165,15 @@ type NaisjobSpec struct {
 	// +nais:doc:Availability="on-premises"
 	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty"`
 
-	// Provides secrets management, identity-based access, and encrypting Naisjob data for auditing of secrets
-	// for Naisjobs, systems, and users.
+	// Provides secrets management, identity-based access, and encrypting application data for auditing of secrets
+	// for applications, systems, and users.
 	// +nais:doc:Link="https://github.com/navikt/vault-iac/tree/master/doc"
 	// +nais:doc:Availability="on-premises"
 	Vault *Vault `json:"vault,omitempty"`
 
-	// Inject on-premises web proxy configuration into the Naisjob pod.
-	// Most Linux Naisjobs should auto-detect these settings from the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables (and their lowercase counterparts).
-	// Java Naisjobs can start the JVM using parameters from the `$JAVA_PROXY_OPTIONS` environment variable.
+	// Inject on-premises web proxy configuration into the job container.
+	// Most Linux applications should auto-detect these settings from the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables (and their lowercase counterparts).
+	// Java applications can start the JVM using parameters from the `$JAVA_PROXY_OPTIONS` environment variable.
 	// +nais:doc:Availability="on-premises"
 	WebProxy bool `json:"webproxy,omitempty"`
 }

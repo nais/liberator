@@ -123,6 +123,11 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = make([]v1.Ingress, len(*in))
 		copy(*out, *in)
 	}
+	if in.Influx != nil {
+		in, out := &in.Influx, &out.Influx
+		*out = new(v1.Influx)
+		**out = **in
+	}
 	if in.Kafka != nil {
 		in, out := &in.Kafka, &out.Kafka
 		*out = new(v1.Kafka)
