@@ -268,6 +268,15 @@ func ExampleApplicationForDocumentation() *Application {
 				},
 			},
 			Port:            8080,
+			PreStopHook: &nais_io_v1.PreStopHook{
+				Exec: &nais_io_v1.ExecAction{
+					Command: []string{"./my", "--shell", "script"},
+				},
+				Http: &nais_io_v1.HttpGetAction{
+					Path: "/internal/stop",
+					Port: intp(8080),
+				},
+			},
 			PreStopHookPath: "/internal/stop",
 			Prometheus: &nais_io_v1.PrometheusConfig{
 				Enabled: true,
