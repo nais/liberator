@@ -257,6 +257,7 @@ func ExampleApplicationForDocumentation() *Application {
 							Name:                "scope.read",
 							Product:             "arbeid",
 							AllowedIntegrations: []string{"maskinporten"},
+							AtMaxAge:            intp(60),
 							Consumers: []nais_io_v1.ExposedScopeConsumer{
 								{
 									Orgno: "123456789",
