@@ -196,9 +196,6 @@ type ApplicationSpec struct {
 	// +nais:doc:Link="https://doc.nais.io/security/auth/tokenx/"
 	TokenX *nais_io_v1.TokenX `json:"tokenx,omitempty"`
 
-	// *DEPRECATED*. Do not use. Will be removed in a future version.
-	Tracing *nais_io_v1.Tracing `json:"tracing,omitempty"`
-
 	// Provides secrets management, identity-based access, and encrypting application data for auditing of secrets
 	// for applications, systems, and users.
 	// +nais:doc:Link="https://github.com/navikt/vault-iac/tree/master/doc"

@@ -251,10 +251,6 @@ type Service struct {
 	Port int32 `json:"port"`
 }
 
-type Tracing struct {
-	Enabled bool `json:"enabled"`
-}
-
 type TokenX struct {
 	// If enabled, will provision and configure a TokenX client and inject an accompanying secret.
 	Enabled bool `json:"enabled"`

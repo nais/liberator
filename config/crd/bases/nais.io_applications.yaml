@@ -1023,15 +1023,6 @@ spec:
               required:
               - enabled
               type: object
-            tracing:
-              description: '*DEPRECATED*. Do not use. Will be removed in a future
-                version.'
-              properties:
-                enabled:
-                  type: boolean
-              required:
-              - enabled
-              type: object
             vault:
               description: Provides secrets management, identity-based access, and
                 encrypting application data for auditing of secrets for applications,
