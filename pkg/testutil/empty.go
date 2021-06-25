@@ -54,6 +54,8 @@ func observeMembers(seen map[string]bool, v reflect.Value, path string) {
 
 	switch v.Kind() {
 	case reflect.Invalid:
+		// Nil pointer
+		seen[path] = false
 		return
 
 	case reflect.Struct:

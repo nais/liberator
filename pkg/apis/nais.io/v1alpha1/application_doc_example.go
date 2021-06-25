@@ -151,9 +151,9 @@ func ExampleApplicationForDocumentation() *Application {
 						Permission:      nais_io_v1.BigQueryPermissionReadWrite,
 					},
 					{
-						Name:            "my_bigquery_dataset2",
-						Description:     "Contains big data, supporting big queries, for use in big ideas.",
-						Permission:      nais_io_v1.BigQueryPermissionRead,
+						Name:        "my_bigquery_dataset2",
+						Description: "Contains big data, supporting big queries, for use in big ideas.",
+						Permission:  nais_io_v1.BigQueryPermissionRead,
 					},
 				},
 				Buckets: []nais_io_v1.CloudStorageBucket{
@@ -267,7 +267,7 @@ func ExampleApplicationForDocumentation() *Application {
 					},
 				},
 			},
-			Port:            8080,
+			Port: 8080,
 			PreStopHook: &nais_io_v1.PreStopHook{
 				Exec: &nais_io_v1.ExecAction{
 					Command: []string{"./my", "--shell", "script"},
