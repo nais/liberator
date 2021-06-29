@@ -370,8 +370,10 @@ func (in *AzureAdApplicationSpec) DeepCopyInto(out *AzureAdApplicationSpec) {
 	}
 	if in.PreAuthorizedApplications != nil {
 		in, out := &in.PreAuthorizedApplications, &out.PreAuthorizedApplications
-		*out = make([]AccessPolicyRule, len(*in))
-		copy(*out, *in)
+		*out = make([]AccessPolicyInboundRule, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
 	}
 	if in.Claims != nil {
 		in, out := &in.Claims, &out.Claims

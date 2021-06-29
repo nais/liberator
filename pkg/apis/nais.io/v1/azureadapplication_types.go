@@ -52,8 +52,8 @@ type AzureAdApplicationList struct {
 
 // AzureAdApplicationSpec defines the desired state of AzureAdApplication
 type AzureAdApplicationSpec struct {
-	ReplyUrls                 []AzureAdReplyUrl  `json:"replyUrls,omitempty"`
-	PreAuthorizedApplications []AccessPolicyRule `json:"preAuthorizedApplications,omitempty"`
+	ReplyUrls                 []AzureAdReplyUrl         `json:"replyUrls,omitempty"`
+	PreAuthorizedApplications []AccessPolicyInboundRule `json:"preAuthorizedApplications,omitempty"`
 	// LogoutUrl is the URL where Azure AD sends a request to have the application clear the user's session data.
 	// This is required if single sign-out should work correctly. Must start with 'https'
 	LogoutUrl string `json:"logoutUrl,omitempty"`
@@ -155,7 +155,7 @@ func (in *AzureAdApplication) GetClientId() string {
 func (in *AzureAdApplication) Hash() (string, error) {
 	relevantValues := struct {
 		ReplyUrls                 []AzureAdReplyUrl
-		PreAuthorizedApplications []AccessPolicyRule
+		PreAuthorizedApplications []AccessPolicyInboundRule
 		LogoutUrl                 string
 		Tenant                    string
 		Claims                    *AzureAdClaims
