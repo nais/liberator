@@ -286,7 +286,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					Memory: "256Mi",
 				},
 			},
-			RestartPolicy: "OnFailure",
+			RestartPolicy: "Never",
 			Schedule: "*/15 0 0 0 0",
 			SecureLogs: &SecureLogs{
 				Enabled: true,
