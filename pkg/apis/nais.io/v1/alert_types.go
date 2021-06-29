@@ -22,6 +22,7 @@ func init() {
 type Slack struct {
 	Channel     string `json:"channel"`
 	PrependText string `json:"prependText,omitempty"`
+	SendResolved bool  `json:"send_resolved,omitempty"`
 }
 
 type Email struct {
