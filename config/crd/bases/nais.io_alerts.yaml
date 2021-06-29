@@ -119,6 +119,8 @@ spec:
                       type: string
                     prependText:
                       type: string
+                    send_resolved:
+                      type: boolean
                   required:
                   - channel
                   type: object
