@@ -117,10 +117,16 @@ spec:
                   properties:
                     channel:
                       type: string
+                    icon_emoji:
+                      type: string
+                    icon_url:
+                      type: string
                     prependText:
                       type: string
                     send_resolved:
                       type: boolean
+                    username:
+                      type: string
                   required:
                   - channel
                   type: object
