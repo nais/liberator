@@ -26,7 +26,7 @@ type Slack struct {
 	// Text to prepend every Slack message with severity `danger`.
 	PrependText string `json:"prependText,omitempty"`
 	// Whether or not to notify about resolved alerts.
-	SendResolved bool `json:"send_resolved,omitempty"`
+	SendResolved *bool `json:"send_resolved,omitempty"`
 	// Set your bot's user name.
 	Username string `json:"username,omitempty"`
 	// URL to an image to use as the icon for this message

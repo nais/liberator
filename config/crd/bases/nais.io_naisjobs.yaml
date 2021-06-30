@@ -841,8 +841,8 @@ spec:
             restartPolicy:
               description: RestartPolicy describes how the container should be restarted.
                 Only one of the following restart policies may be specified. If none
-                of the following policies is specified, the default is used (Never). Read
-                more about [Kubernetes handling pod and container failures](https://kubernetes.io/docs/concepts/workloads/controllers/job/#handling-pod-and-container-failures)
+                of the following policies is specified, the default one is Never.
+                Read more about [Kubernetes handling pod and container failures](https://kubernetes.io/docs/concepts/workloads/controllers/job/#handling-pod-and-container-failures)
               enum:
               - OnFailure
               - Never
