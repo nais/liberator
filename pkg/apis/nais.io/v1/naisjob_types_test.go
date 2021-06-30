@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	naisjobHash = "5ceb9ec419f943b3"
+	naisjobHash = "9de7bf5df82dace9"
 )
 
 func TestNaisjobHash(t *testing.T) {
