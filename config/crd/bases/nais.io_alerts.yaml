@@ -132,16 +132,6 @@ spec:
                   required:
                   - to
                   type: object
-                pushover:
-                  description: Not in use
-                  properties:
-                    send_resolved:
-                      type: boolean
-                    user_key:
-                      type: string
-                  required:
-                  - user_key
-                  type: object
                 slack:
                   description: Slack notifications are sent via Slack webhooks.
                   properties:

@@ -47,11 +47,6 @@ type SMS struct {
 	SendResolved bool `json:"send_resolved,omitempty"`
 }
 
-type Pushover struct {
-	UserKey      string `json:"user_key"`
-	SendResolved bool   `json:"send_resolved,omitempty"`
-}
-
 type Receivers struct {
 	// Slack notifications are sent via Slack webhooks.
 	Slack Slack `json:"slack,omitempty"`
@@ -59,8 +54,6 @@ type Receivers struct {
 	Email Email `json:"email,omitempty"`
 	// Alerts via SMS
 	SMS      SMS      `json:"sms,omitempty"`
-	// Not in use
-	Pushover Pushover `json:"pushover,omitempty"`
 }
 
 type Rule struct {
