@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/nais/liberator/pkg/apis/nais.io/v1"
-
 	"github.com/stretchr/testify/assert"
 )
 
