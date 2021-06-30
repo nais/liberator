@@ -23,6 +23,7 @@ generate: controller-gen
 doc:
 	mkdir -p doc/output/application
 	mkdir -p doc/output/naisjob
+	mkdir -p doc/output/alert
 	go run cmd/docgen/docgen.go \
 		--dir ./pkg/apis/... \
 		--group nais.io \
@@ -41,6 +42,15 @@ doc:
 		--example-output doc/output/naisjob/example.md \
 		--reference-template doc/templates/reference/naisjob.md \
 		--example-template doc/templates/example/naisjob.md \
+		;
+	go run cmd/docgen/docgen.go \
+		--dir ./pkg/apis/... \
+		--group nais.io \
+		--kind Alert \
+		--reference-output doc/output/alert/reference.md \
+		--example-output doc/output/alert/example.md \
+		--reference-template doc/templates/reference/alert.md \
+		--example-template doc/templates/example/alert.md \
 		;
 
 mocks:

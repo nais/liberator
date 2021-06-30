@@ -39,6 +39,8 @@ jobs:
           cp -v doc/output/application/example.md $WS/docs/nais-application/example.md
           cp -v doc/output/naisjob/reference.md $WS/docs/naisjob/reference.md
           cp -v doc/output/naisjob/example.md $WS/docs/naisjob/example.md
+          cp -v doc/output/alert/reference.md $WS/docs/observability/alert/reference.md
+          cp -v doc/output/alert/example.md $WS/docs/observability/alert/example.md
           cd $WS
           git config user.email "aura@nav.no"
           git config user.name "NAIS deploy pipeline"

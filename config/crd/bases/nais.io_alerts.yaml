@@ -42,24 +42,34 @@ spec:
               items:
                 properties:
                   action:
+                    description: What human actions are needed to resolve or investigate
+                      this alert.
                     type: string
                   alert:
+                    description: The name of the alert.
                     type: string
                   description:
+                    description: Simple description of the triggered alert.
                     type: string
                   documentation:
+                    description: URL for documentation for this alert.
                     type: string
                   expr:
+                    description: Prometheus expression that triggers an alert.
                     type: string
                   for:
+                    description: Duration before the alert should trigger.
                     pattern: ^\d+[smhdwy]$
                     type: string
                   priority:
+                    description: Not in use
                     type: string
                   severity:
+                    description: Alert level for Slack messages.
                     pattern: ^$|good|warning|danger|#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})
                     type: string
                   sla:
+                    description: Time before the alert should be resolved.
                     type: string
                 required:
                 - action
@@ -69,35 +79,53 @@ spec:
                 type: object
               type: array
             inhibitRules:
+              description: A list of inhibit rules. Read more about it at [prometheus.io/docs](https://prometheus.io/docs/alerting/latest/configuration/#inhibit_rule).
               items:
                 properties:
                   labels:
+                    description: Labels that must have an equal value in the source
+                      and target alert for the inhibition to take effect. These are
+                      key/value pairs, where the value can be a regex.
                     items:
                       type: string
                     type: array
                   sources:
                     additionalProperties:
                       type: string
+                    description: Matchers for which one or more alerts have to exist
+                      for the inhibition to take effect.
                     type: object
                   sourcesRegex:
                     additionalProperties:
                       type: string
+                    description: Regex matchers for which one or more alerts have
+                      to exist for the inhibition to take effect. These are key/value
+                      pairs.
                     type: object
                   targets:
                     additionalProperties:
                       type: string
+                    description: Matchers that have to be fulfilled in the alerts
+                      to be muted. These are key/value pairs.
                     type: object
                   targetsRegex:
                     additionalProperties:
                       type: string
+                    description: Regex matchers that have to be fulfilled in the alerts
+                      to be muted. These are key/value pairs, where the value can
+                      be a regex.
                     type: object
                 type: object
               type: array
             receivers:
+              description: 'A list of notification recievers. You can use one or more
+                of: e-mail, slack, sms. There needs to be at least one receiver.'
               properties:
                 email:
+                  description: Alerts via e-mails
                   properties:
                     send_resolved:
+                      description: Whether or not to notify about resolved alerts.
                       type: boolean
                     to:
                       type: string
@@ -105,6 +133,7 @@ spec:
                   - to
                   type: object
                 pushover:
+                  description: Not in use
                   properties:
                     send_resolved:
                       type: boolean
@@ -114,27 +143,38 @@ spec:
                   - user_key
                   type: object
                 slack:
+                  description: Slack notifications are sent via Slack webhooks.
                   properties:
                     channel:
+                      description: The channel or user to send notifications to. Can
+                        be specified with and without `#`.
                       type: string
                     icon_emoji:
+                      description: Emoji to use as the icon for this message
                       type: string
                     icon_url:
+                      description: URL to an image to use as the icon for this message
                       type: string
                     prependText:
+                      description: Text to prepend every Slack message with severity
+                        `danger`.
                       type: string
                     send_resolved:
+                      description: Whether or not to notify about resolved alerts.
                       type: boolean
                     username:
+                      description: Set your bot's user name.
                       type: string
                   required:
                   - channel
                   type: object
                 sms:
+                  description: Alerts via SMS
                   properties:
                     recipients:
                       type: string
                     send_resolved:
+                      description: Whether or not to notify about resolved alerts.
                       type: boolean
                   required:
                   - recipients
@@ -143,12 +183,22 @@ spec:
             route:
               properties:
                 groupInterval:
+                  description: How long to wait before sending a notification about
+                    new alerts that are added to a group of alerts for which an initial
+                    notification has already been sent. (Usually ~5m or more.)
                   pattern: ([0-9]+(ms|[smhdwy]))?
                   type: string
                 groupWait:
+                  description: How long to initially wait to send a notification for
+                    a group of alerts. Allows to wait for an inhibiting alert to arrive
+                    or collect more initial alerts for the same group. (Usually ~0s
+                    to few minutes.)
                   pattern: ([0-9]+(ms|[smhdwy]))?
                   type: string
                 repeatInterval:
+                  description: How long to wait before sending a notification again
+                    if it has already been sent successfully for an alert. (Usually
+                    ~3h or more).
                   pattern: ([0-9]+(ms|[smhdwy]))?
                   type: string
               type: object
