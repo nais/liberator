@@ -559,27 +559,25 @@ spec:
                     If enabled, an ID-porten client be provisioned.
                   type: boolean
                 frontchannelLogoutPath:
-                  description: "FrontchannelLogoutPath is a valid path for your application
+                  description: FrontchannelLogoutPath is a valid path for your application
                     where ID-porten sends a request to whenever the user has initiated
                     a logout elsewhere as part of a single logout (front channel logout)
-                    process. \n If unspecified, defaults to `/oauth2/logout`."
+                    process.
                   pattern: ^\/.*$
                   type: string
                 frontchannelLogoutURI:
                   description: '*DEPRECATED*. Prefer using `frontchannelLogoutPath`.'
                   type: string
                 postLogoutRedirectURIs:
-                  description: "PostLogoutRedirectURIs are valid URIs that ID-porten
+                  description: PostLogoutRedirectURIs are valid URIs that ID-porten
                     will allow redirecting the end-user to after a single logout has
-                    been initiated and performed by the application. \n If unspecified,
-                    will default to `[ \"https://www.nav.no\" ]`"
+                    been initiated and performed by the application.
                   items:
                     type: string
                   type: array
                 redirectPath:
-                  description: "RedirectPath is a valid path that ID-porten redirects
-                    back to after a successful authorization request. \n If unspecified,
-                    will default to `/oauth2/callback`."
+                  description: RedirectPath is a valid path that ID-porten redirects
+                    back to after a successful authorization request.
                   pattern: ^\/.*$
                   type: string
                 redirectURI:

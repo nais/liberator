@@ -5,6 +5,9 @@ import (
 )
 
 func ExampleAlertForDocumentation() *Alert {
+	boolp := func(i bool) *bool {
+		return &i
+	}
 	return &Alert{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "Alert",
@@ -27,7 +30,7 @@ func ExampleAlertForDocumentation() *Alert {
 				Slack: Slack{
 					Channel:      "#alert-channel",
 					PrependText:  "Oh noes!",
-					SendResolved: true,
+					SendResolved: boolp(true),
 					Username:     "Alertmanager",
 					IconUrl:      "http://lorempixel.com/48/48",
 					IconEmoji:    ":chart_with_upwards_trend:",
@@ -62,7 +65,7 @@ func ExampleAlertForDocumentation() *Alert {
 					TargetsRegex: map[string]string{
 						"key": "value(.)+",
 					},
-					Sources:      map[string]string{
+					Sources: map[string]string{
 						"key": "value",
 					},
 					SourcesRegex: map[string]string{
