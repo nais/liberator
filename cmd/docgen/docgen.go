@@ -75,6 +75,8 @@ type Config struct {
 type Doc struct {
 	// Which cluster(s) or environments the feature is available in
 	Availability string `marker:"Availability,optional"`
+	// Adds Default values to documentation
+	Default string `marker:"Default,optional"`
 	// Links to documentation or other information
 	Link []string `marker:"Link,optional"`
 }
@@ -468,6 +470,7 @@ func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, pare
 		if err == nil {
 			entry.Availability = d.Availability
 			entry.Link = d.Link
+			entry.Default = d.Default
 		} else {
 			log.Errorf("unable to merge structs: %s", err)
 		}
