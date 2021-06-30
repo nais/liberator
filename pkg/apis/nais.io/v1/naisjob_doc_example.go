@@ -248,7 +248,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 							Name:                "scope.read",
 							Product:             "arbeid",
 							AllowedIntegrations: []string{"maskinporten"},
-							AtMaxAge:            intp(60),
+							AtMaxAge:            intp(30),
 							Consumers: []ExposedScopeConsumer{
 								{
 									Orgno: "123456789",

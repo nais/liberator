@@ -136,6 +136,7 @@ type ExposedScope struct {
 	Enabled bool `json:"enabled"`
 	// The actual subscope combined with `Product`.
 	// Ensure that `<Product><Name>` matches `Pattern`.
+	// +nais:doc:Default="false"
 	// +kubebuilder:validation:Pattern=`^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$`
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
@@ -146,11 +147,13 @@ type ExposedScope struct {
 	Product string `json:"product"`
 	// Max time in seconds for a issued access_token.
 	// Default is `30` sec.
+	// +nais:doc:Default="30"
 	// +kubebuilder:validation:Minimum=30
 	// +kubebuilder:validation:Maximum=680
 	AtMaxAge *int `json:"atMaxAge,omitempty"`
 	// Whitelisting of integration's allowed.
 	// Default is `maskinporten`
+	// +nais:doc:Default="maskinporten"
 	// +nais:doc:Link="https://docs.digdir.no/maskinporten_guide_apitilbyder.html#scope-begrensninger"
 	// +kubebuilder:validation:MinItems=1
 	AllowedIntegrations []string `json:"allowedIntegrations,omitempty"`

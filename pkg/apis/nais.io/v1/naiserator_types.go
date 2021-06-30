@@ -58,6 +58,7 @@ type IDPorten struct {
 	// AccessTokenLifetime is the lifetime in seconds for any issued access token from ID-porten.
 	//
 	// If unspecified, defaults to `3600` seconds (1 hour).
+	// +nais:doc:Default="3600"
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=3600
 	AccessTokenLifetime *int `json:"accessTokenLifetime,omitempty"`
@@ -66,8 +67,8 @@ type IDPorten struct {
 	// FrontchannelLogoutPath is a valid path for your application where ID-porten sends a request to whenever the user has
 	// initiated a logout elsewhere as part of a single logout (front channel logout) process.
 	//
-	// If unspecified, defaults to `/oauth2/logout`.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
+	// +nais:doc:Default="/oauth2/logout"
 	// +kubebuilder:validation:Pattern=`^\/.*$`
 	FrontchannelLogoutPath string `json:"frontchannelLogoutPath,omitempty"`
 	// *DEPRECATED*. Prefer using `frontchannelLogoutPath`.
@@ -76,12 +77,12 @@ type IDPorten struct {
 	// PostLogoutRedirectURIs are valid URIs that ID-porten will allow redirecting the end-user to after a single logout
 	// has been initiated and performed by the application.
 	//
-	// If unspecified, will default to `[ "https://www.nav.no" ]`
+	// +nais:doc:Default="https://www.nav.no"
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#self-initiated-logout";"https://docs.digdir.no/oidc_func_sso.html#1-utlogging-fra-egen-tjeneste"
 	PostLogoutRedirectURIs []string `json:"postLogoutRedirectURIs,omitempty"`
 	// RedirectPath is a valid path that ID-porten redirects back to after a successful authorization request.
 	//
-	// If unspecified, will default to `/oauth2/callback`.
+	// +nais:doc:Default="/oauth2/callback"
 	// +kubebuilder:validation:Pattern=`^\/.*$`
 	RedirectPath string `json:"redirectPath,omitempty"`
 	// *DEPRECATED*. Prefer using `redirectPath`.
@@ -92,6 +93,7 @@ type IDPorten struct {
 	//
 	// If unspecified, defaults to `7200` seconds (2 hours).
 	// Note: Attempting to refresh the user's `access_token` beyond this timeout will yield an error.
+	// +nais:doc:Default="7200"
 	// +kubebuilder:validation:Minimum=3600
 	// +kubebuilder:validation:Maximum=7200
 	SessionLifetime *int `json:"sessionLifetime,omitempty"`
@@ -284,6 +286,7 @@ type CloudIAMPermission struct {
 type Maskinporten struct {
 	// If enabled, provisions and configures a Maskinporten client with consumed scopes and/or Exposed scopes with DigDir.
 	// +nais:doc:Availability="team namespaces"
+	// +nais:doc:Default="false"
 	Enabled bool `json:"enabled"`
 	// Schema to configure Maskinporten clients with consumed scopes and/or exposed scopes.
 	Scopes MaskinportenScope `json:"scopes,omitempty"`

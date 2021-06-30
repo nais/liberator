@@ -44,6 +44,7 @@ func getNaisjobDefaults() *Naisjob {
 					Memory: "256Mi",
 				},
 			},
+			RestartPolicy: "Never",
 			SuccessfulJobsHistoryLimit: DefaultSuccessfulJobsHistoryLimit,
 			Vault: &Vault{
 				Enabled: false,
