@@ -44,7 +44,7 @@ type Email struct {
 type SMS struct {
 	Recipients string `json:"recipients"`
 	// Whether or not to notify about resolved alerts.
-	SendResolved bool `json:"send_resolved,omitempty"`
+	SendResolved *bool `json:"send_resolved,omitempty"`
 }
 
 type Receivers struct {
@@ -53,13 +53,13 @@ type Receivers struct {
 	// Alerts via e-mails
 	Email Email `json:"email,omitempty"`
 	// Alerts via SMS
-	SMS      SMS      `json:"sms,omitempty"`
+	SMS SMS `json:"sms,omitempty"`
 }
 
 type Rule struct {
 	// The name of the alert.
 	// +kubebuilder:validation:Required
-	Alert       string `json:"alert"`
+	Alert string `json:"alert"`
 	// Simple description of the triggered alert.
 	Description string `json:"description,omitempty"`
 	// Prometheus expression that triggers an alert.
@@ -71,11 +71,11 @@ type Rule struct {
 	For string `json:"for"`
 	// What human actions are needed to resolve or investigate this alert.
 	// +kubebuilder:validation:Required
-	Action        string `json:"action"`
+	Action string `json:"action"`
 	// URL for documentation for this alert.
 	Documentation string `json:"documentation,omitempty"`
 	// Time before the alert should be resolved.
-	SLA           string `json:"sla,omitempty"`
+	SLA string `json:"sla,omitempty"`
 	// Alert level for Slack messages.
 	// +kubebuilder:validation:Pattern="^$|good|warning|danger|#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})"
 	Severity string `json:"severity,omitempty"`
