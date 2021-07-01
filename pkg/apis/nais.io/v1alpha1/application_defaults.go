@@ -71,7 +71,7 @@ func getAppDefaults() *Application {
 			},
 			AccessPolicy: &nais_io_v1.AccessPolicy{
 				Inbound: &nais_io_v1.AccessPolicyInbound{
-					Rules: []nais_io_v1.AccessPolicyRule{},
+					Rules: []nais_io_v1.AccessPolicyInboundRule{},
 				},
 				Outbound: &nais_io_v1.AccessPolicyOutbound{
 					Rules:    []nais_io_v1.AccessPolicyRule{},

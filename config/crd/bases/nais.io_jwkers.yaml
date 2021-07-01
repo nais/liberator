@@ -60,6 +60,26 @@ spec:
                             description: The application's namespace. May be omitted
                               if it should be in the same namespace as your application.
                             type: string
+                          permissions:
+                            description: Permissions contains a set of permissions
+                              that are granted to the given application. Currently
+                              only applicable for Azure AD clients.
+                            properties:
+                              roles:
+                                description: Roles is a set of custom permission roles
+                                  that are granted to a given application.
+                                items:
+                                  pattern: ^[a-z0-9-_./]+$
+                                  type: string
+                                type: array
+                              scopes:
+                                description: Scopes is a set of custom permission
+                                  scopes that are granted to a given application.
+                                items:
+                                  pattern: ^[a-z0-9-_./]+$
+                                  type: string
+                                type: array
+                            type: object
                         required:
                         - application
                         type: object

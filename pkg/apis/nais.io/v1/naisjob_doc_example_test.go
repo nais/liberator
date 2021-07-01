@@ -35,7 +35,7 @@ var ignoredApplicationFields = []string{
 	`.Status.SynchronizationTime`,
 }
 
-// Test that the example Application contain examples for all fields encountered.
+// Test that the example NaisJob contains examples for all fields encountered.
 // Examples MUST contain a non-zero value to be valid, so no empty strings, false booleans, or zero ints.
 func TestExampleNaisjobForDocumentation(t *testing.T) {
 	naisjob := nais_io_v1.ExampleNaisjobForDocumentation()
