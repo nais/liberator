@@ -41,7 +41,7 @@ func ExampleAlertForDocumentation() *Alert {
 				},
 				SMS: SMS{
 					Recipients:   "12345678",
-					SendResolved: false,
+					SendResolved: boolp(false),
 				},
 			},
 			Alerts: []Rule{
