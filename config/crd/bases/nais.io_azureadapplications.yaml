@@ -12,8 +12,11 @@ spec:
   - JSONPath: .status.clientId
     name: Client ID
     type: string
-  - JSONPath: .status.synchronizationTenant
+  - JSONPath: .status.synchronizationTenantName
     name: Tenant
+    type: string
+  - JSONPath: .status.synchronizationTenant
+    name: Tenant ID
     priority: 1
     type: string
   - JSONPath: .spec.secretName
@@ -293,8 +296,12 @@ spec:
                 the AzureAdApplication has been successfully completed or not
               type: string
             synchronizationTenant:
-              description: SynchronizationTenant is the tenant that the AzureAdApplication
-                was synchronized to
+              description: SynchronizationTenant is the ID of the tenant that the
+                AzureAdApplication was synchronized to.
+              type: string
+            synchronizationTenantName:
+              description: SynchronizationTenantName is the an alias that identifies
+                the tenant that the AzureAdApplication was synchronized to.
               type: string
             synchronizationTime:
               description: SynchronizationTime is the last time the Status subresource
