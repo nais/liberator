@@ -184,7 +184,8 @@ spec:
                       properties:
                         extra:
                           description: Extra is a list of additional claims to be
-                            mapped from an associated claim-mapping policy.
+                            mapped from an associated claim-mapping policy. Currently,
+                            the only supported values are `NAVident` and `azp_name`.
                           items:
                             enum:
                             - NAVident
