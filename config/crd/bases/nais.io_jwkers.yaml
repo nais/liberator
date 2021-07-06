@@ -18,6 +18,7 @@ spec:
     listKind: JwkerList
     plural: jwkers
     singular: jwker
+  preserveUnknownFields: false
   scope: Namespaced
   subresources: {}
   validation:

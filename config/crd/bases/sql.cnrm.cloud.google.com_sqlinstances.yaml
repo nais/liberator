@@ -14,6 +14,7 @@ spec:
     listKind: SQLInstanceList
     plural: sqlinstances
     singular: sqlinstance
+  preserveUnknownFields: false
   scope: Namespaced
   validation:
     openAPIV3Schema:

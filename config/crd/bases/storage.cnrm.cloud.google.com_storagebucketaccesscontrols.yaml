@@ -14,6 +14,7 @@ spec:
     listKind: StorageBucketAccessControlList
     plural: storagebucketaccesscontrols
     singular: storagebucketaccesscontrol
+  preserveUnknownFields: false
   scope: Namespaced
   validation:
     openAPIV3Schema:

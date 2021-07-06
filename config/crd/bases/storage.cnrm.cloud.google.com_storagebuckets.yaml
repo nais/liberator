@@ -14,6 +14,7 @@ spec:
     listKind: StorageBucketList
     plural: storagebuckets
     singular: storagebucket
+  preserveUnknownFields: false
   scope: Namespaced
   validation:
     openAPIV3Schema:

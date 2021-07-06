@@ -27,6 +27,7 @@ spec:
     listKind: TopicList
     plural: topics
     singular: topic
+  preserveUnknownFields: false
   scope: Namespaced
   subresources: {}
   validation:

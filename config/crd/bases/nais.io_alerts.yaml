@@ -18,6 +18,7 @@ spec:
     listKind: AlertList
     plural: alerts
     singular: alert
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}

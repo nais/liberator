@@ -29,6 +29,7 @@ spec:
     shortNames:
     - nj
     singular: naisjob
+  preserveUnknownFields: false
   scope: Namespaced
   subresources: {}
   validation:

@@ -14,6 +14,7 @@ spec:
     listKind: IAMPolicyList
     plural: iampolicies
     singular: iampolicy
+  preserveUnknownFields: false
   scope: Namespaced
   validation:
     openAPIV3Schema:

@@ -45,6 +45,7 @@ spec:
     shortNames:
     - azureapp
     singular: azureadapplication
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}

@@ -30,6 +30,7 @@ spec:
     listKind: MaskinportenClientList
     plural: maskinportenclients
     singular: maskinportenclient
+  preserveUnknownFields: false
   scope: Namespaced
   subresources: {}
   validation:

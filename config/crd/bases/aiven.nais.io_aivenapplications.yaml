@@ -32,6 +32,7 @@ spec:
     shortNames:
     - aivenapp
     singular: aivenapplication
+  preserveUnknownFields: false
   scope: Namespaced
   subresources:
     status: {}
