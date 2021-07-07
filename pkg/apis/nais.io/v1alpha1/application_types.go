@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/google/uuid"
 	hash "github.com/mitchellh/hashstructure"
@@ -265,6 +266,14 @@ func (in Application) Hash() (string, error) {
 		in.Spec,
 		in.Labels,
 		changeCause,
+	}
+
+	// Exempt labels starting with 'nais.io/' from hash generation.
+	// This is neccessary to avoid app re-sync because of automated NAIS processes.
+	for k := range relevantValues.Labels {
+		if strings.HasPrefix(k, "nais.io/") {
+			delete(relevantValues.Labels, k)
+		}
 	}
 
 	marshalled, err := json.Marshal(relevantValues)
