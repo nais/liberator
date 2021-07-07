@@ -264,7 +264,7 @@ func (in Application) Hash() (string, error) {
 		ChangeCause string
 	}{
 		in.Spec,
-		make(map[string]string),
+		nil,
 		changeCause,
 	}
 
@@ -272,6 +272,11 @@ func (in Application) Hash() (string, error) {
 	// This is neccessary to avoid app re-sync because of automated NAIS processes.
 	for k, v := range in.Labels {
 		if !strings.HasPrefix(k, "nais.io/") {
+			if relevantValues.Labels == nil {
+				// cannot be done in initializer, as this would change existing hashes
+				// fixme: do this in initializer when breaking backwards compatibility in hash
+				relevantValues.Labels = make(map[string]string)
+			}
 			relevantValues.Labels[k] = v
 		}
 	}

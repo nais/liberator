@@ -33,7 +33,7 @@ func TestApplication_Hash(t *testing.T) {
 		}
 	}
 
-	assert.Equal(t, hashes[0], hashes[1], "matches, as annotations is ignored")
+	assert.Equal(t, hashes[0], hashes[1], "matches, as annotations are ignored")
 	assert.NotEqual(t, hashes[1], hashes[2], "should not match")
 }
 
