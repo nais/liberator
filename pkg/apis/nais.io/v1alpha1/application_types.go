@@ -264,15 +264,15 @@ func (in Application) Hash() (string, error) {
 		ChangeCause string
 	}{
 		in.Spec,
-		in.Labels,
+		make(map[string]string),
 		changeCause,
 	}
 
 	// Exempt labels starting with 'nais.io/' from hash generation.
 	// This is neccessary to avoid app re-sync because of automated NAIS processes.
-	for k := range relevantValues.Labels {
-		if strings.HasPrefix(k, "nais.io/") {
-			delete(relevantValues.Labels, k)
+	for k, v := range in.Labels {
+		if !strings.HasPrefix(k, "nais.io/") {
+			relevantValues.Labels[k] = v
 		}
 	}
 
