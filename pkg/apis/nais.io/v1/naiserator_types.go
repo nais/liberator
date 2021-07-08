@@ -23,12 +23,12 @@ type AzureApplication struct {
 	// If enabled, an Azure AD application will be provisioned.
 	Enabled bool `json:"enabled"`
 	// ReplyURLs is a list of allowed redirect URLs used when performing OpenID Connect flows for authenticating end-users.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/#reply-urls"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#reply-urls"
 	ReplyURLs []string `json:"replyURLs,omitempty"`
 	// A Tenant represents an organization in Azure AD.
 	//
 	// If unspecified, will default to `trygdeetaten.no` for development clusters and `nav.no` for production clusters.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/#tenants"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/concepts#tenants"
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
 	Tenant string `json:"tenant,omitempty"`
 	// Claims defines additional configuration of the emitted claims in tokens returned to the Azure AD application.

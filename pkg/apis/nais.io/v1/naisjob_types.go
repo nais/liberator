@@ -42,7 +42,7 @@ type NaisjobSpec struct {
 	// By default, no traffic is allowed between naisjobs inside the cluster.
 	// Configure access policies to explicitly allow communication between naisjobs.
 	// This is also used for granting inbound access in the context of Azure AD and TokenX clients.
-	// +nais:doc:Link="https://doc.nais.io/appendix/zero-trust/";"https://doc.nais.io/security/auth/azure-ad/#pre-authorization";"https://doc.nais.io/security/auth/tokenx/#access-policies"
+	// +nais:doc:Link="https://doc.nais.io/appendix/zero-trust/";"https://doc.nais.io/security/auth/azure-ad/access-policy";"https://doc.nais.io/security/auth/tokenx/#access-policies"
 	AccessPolicy *AccessPolicy `json:"accessPolicy,omitempty"`
 
 	// Once a Naisjob reaches activeDeadlineSeconds, all of its running Pods are terminated and the Naisjob status will become type: Failed with reason: DeadlineExceeded.

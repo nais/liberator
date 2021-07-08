@@ -58,7 +58,7 @@ type ApplicationSpec struct {
 	// By default, no traffic is allowed between applications inside the cluster.
 	// Configure access policies to explicitly allow communication between applications.
 	// This is also used for granting inbound access in the context of Azure AD and TokenX clients.
-	// +nais:doc:Link="https://doc.nais.io/appendix/zero-trust/";"https://doc.nais.io/security/auth/azure-ad/#pre-authorization";"https://doc.nais.io/security/auth/tokenx/#access-policies"
+	// +nais:doc:Link="https://doc.nais.io/appendix/zero-trust/";"https://doc.nais.io/security/auth/azure-ad/access-policy";"https://doc.nais.io/security/auth/tokenx/#access-policies"
 	AccessPolicy *nais_io_v1.AccessPolicy `json:"accessPolicy,omitempty"`
 
 	// Provisions and configures Azure resources.
