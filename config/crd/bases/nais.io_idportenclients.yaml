@@ -30,6 +30,7 @@ spec:
     listKind: IDPortenClientList
     plural: idportenclients
     singular: idportenclient
+  preserveUnknownFields: false
   scope: Namespaced
   subresources: {}
   validation:

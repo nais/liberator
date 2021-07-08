@@ -26,6 +26,7 @@ spec:
     shortNames:
     - app
     singular: application
+  preserveUnknownFields: false
   scope: Namespaced
   subresources: {}
   validation:
