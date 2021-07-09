@@ -1,4 +1,4 @@
-# liberator
+# liberator [![Go Reference](https://pkg.go.dev/badge/github.com/nais/liberator.svg)](https://pkg.go.dev/github.com/nais/liberator)
 
 Collection of small Go libraries used by NAIS operators.
 
