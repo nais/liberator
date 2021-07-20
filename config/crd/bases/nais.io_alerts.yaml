@@ -173,6 +173,18 @@ spec:
               type: object
             route:
               properties:
+                group_by:
+                  description: "The labels by which incoming alerts are grouped together.
+                    For example, multiple alerts coming in for cluster=A and alertname=LatencyHigh
+                    would be batched into a single group. \n To aggregate by all possible
+                    labels use '...' as the sole label name. This effectively disables
+                    aggregation entirely, passing through all alerts as-is. This is
+                    unlikely to be what you want, unless you have a very low alert
+                    volume or your upstream notification system performs its own grouping.
+                    Example: group_by: [...]"
+                  items:
+                    type: string
+                  type: array
                 groupInterval:
                   description: How long to wait before sending a notification about
                     new alerts that are added to a group of alerts for which an initial

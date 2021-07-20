@@ -25,6 +25,7 @@ func ExampleAlertForDocumentation() *Alert {
 				GroupWait:      "30s",
 				GroupInterval:  "5m",
 				RepeatInterval: "3h",
+				GroupBy:        []string{"<label_name>"},
 			},
 			Receivers: Receivers{
 				Slack: Slack{
