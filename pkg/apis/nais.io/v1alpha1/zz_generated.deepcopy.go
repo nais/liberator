@@ -81,6 +81,11 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = new(v1.Azure)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Cleanup != nil {
+		in, out := &in.Cleanup, &out.Cleanup
+		*out = new(v1.Cleanup)
+		**out = **in
+	}
 	if in.Command != nil {
 		in, out := &in.Command, &out.Command
 		*out = make([]string, len(*in))

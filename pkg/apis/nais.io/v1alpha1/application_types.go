@@ -64,6 +64,9 @@ type ApplicationSpec struct {
 	// Provisions and configures Azure resources.
 	Azure *nais_io_v1.Azure `json:"azure,omitempty"`
 
+	// Configuration for automatic cleanup of failing pods
+	Cleanup *nais_io_v1.Cleanup `json:"cleanup,omitempty"`
+
 	// Override command when starting Docker image.
 	Command []string `json:"command,omitempty"`
 

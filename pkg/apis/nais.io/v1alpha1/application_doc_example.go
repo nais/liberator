@@ -1,8 +1,9 @@
 package nais_io_v1alpha1
 
 import (
-	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 )
 
 func ExampleApplicationForDocumentation() *Application {
@@ -63,7 +64,7 @@ func ExampleApplicationForDocumentation() *Application {
 								Application: "app5",
 							},
 							Permissions: &nais_io_v1.AccessPolicyPermissions{
-								Roles:  []nais_io_v1.AccessPolicyPermission{"custom-role"},
+								Roles: []nais_io_v1.AccessPolicyPermission{"custom-role"},
 							},
 						},
 						{
@@ -132,6 +133,11 @@ func ExampleApplicationForDocumentation() *Application {
 						},
 					},
 				},
+			},
+			Cleanup: &nais_io_v1.Cleanup{
+				Enabled:     true,
+				Rollback:    true,
+				GracePeriod: "24h",
 			},
 			Command: []string{
 				"/app/myapplication",
