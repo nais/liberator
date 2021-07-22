@@ -235,7 +235,7 @@ spec:
                 enabled:
                   description: 'Enables automatic cleanup Default: `true`'
                   type: boolean
-                grace_period:
+                gracePeriod:
                   description: 'Default: `24h`'
                   pattern: ^[0-9]+h$
                   type: string

@@ -11,5 +11,5 @@ type Cleanup struct {
 	Rollback bool `json:"rollback"`
 	// +kubebuilder:validation:Pattern=`^[0-9]+h$`
 	// Default: `24h`
-	GracePeriod string `json:"grace_period,omitempty"`
+	GracePeriod string `json:"gracePeriod,omitempty"`
 }
