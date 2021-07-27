@@ -8,7 +8,7 @@ type Cleanup struct {
 	// If `true` the deployment will be rolled back to the previous working version.
 	// If `false` the deployment will be scaled down to zero replicas instead.
 	// Default: `true`
-	Rollback bool `json:"rollback"`
+	Rollback bool `json:"rollback,omitempty"`
 	// +kubebuilder:validation:Pattern=`^[0-9]+h$`
 	// Default: `24h`
 	GracePeriod string `json:"gracePeriod,omitempty"`

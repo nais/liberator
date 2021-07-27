@@ -247,7 +247,6 @@ spec:
                   type: boolean
               required:
               - enabled
-              - rollback
               type: object
             command:
               description: Override command when starting Docker image.
