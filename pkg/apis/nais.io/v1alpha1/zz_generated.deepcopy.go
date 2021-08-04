@@ -84,7 +84,7 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 	if in.Cleanup != nil {
 		in, out := &in.Cleanup, &out.Cleanup
 		*out = new(v1.Cleanup)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.Command != nil {
 		in, out := &in.Command, &out.Command
