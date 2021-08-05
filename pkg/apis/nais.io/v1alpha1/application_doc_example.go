@@ -136,7 +136,7 @@ func ExampleApplicationForDocumentation() *Application {
 			},
 			Cleanup: &nais_io_v1.Cleanup{
 				Enabled:     true,
-				Rollback:    true,
+				Strategy:    []nais_io_v1.CleanupStrategy{"downscale"},
 				GracePeriod: "24h",
 			},
 			Command: []string{

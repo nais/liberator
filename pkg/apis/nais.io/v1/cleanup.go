@@ -4,12 +4,21 @@ type Cleanup struct {
 	// Enables automatic cleanup
 	// Default: `true`
 	Enabled bool `json:"enabled"`
-	// Rollback sets whether a deployment is rolled back or scaled down.
-	// If `true` the deployment will be rolled back to the previous working version.
-	// If `false` the deployment will be scaled down to zero replicas instead.
-	// Default: `true`
-	Rollback bool `json:"rollback,omitempty"`
+	// Strategy sets how a deployment might be handled.
+	// Setting this to an empty list is equivalent to setting `enabled: false`.
+	// Default: `["abort-rollout", "downscale"]`.
+	//
+	// - `abort-rollout`: if new pods in a deployment are failing, but previous pods from the previous working
+	//    revision are still running, Babylon can roll the deployment back to the working revision,
+	//    aborting the rollout.
+	//
+	// - `downscale`: if all pods in a deployment are failing, Babylon will set replicaset to 0
+	// +kubebuilder:validation:UniqueItems=true
+	Strategy []CleanupStrategy `json:"strategy,omitempty"`
 	// +kubebuilder:validation:Pattern=`^[0-9]+h$`
 	// Default: `24h`
 	GracePeriod string `json:"gracePeriod,omitempty"`
 }
+
+// +kubebuilder:validation:Enum=abort-rollout;downscale
+type CleanupStrategy string
