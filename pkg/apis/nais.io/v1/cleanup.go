@@ -13,7 +13,6 @@ type Cleanup struct {
 	//    aborting the rollout.
 	//
 	// - `downscale`: if all pods in a deployment are failing, Babylon will set replicaset to 0
-	// +kubebuilder:validation:UniqueItems=true
 	Strategy []CleanupStrategy `json:"strategy,omitempty"`
 	// +kubebuilder:validation:Pattern=`^[0-9]+h$`
 	// Default: `24h`

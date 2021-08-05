@@ -241,20 +241,19 @@ spec:
                   type: string
                 strategy:
                   description: "Strategy sets how a deployment might be handled. Setting
-                    this to an empty list is equivalent to setting `enabled: false`
-                    \n - `abort-rollout`: if new pods in a deployment are failing,
-                    but previous pods from the previous working    revision are still
-                    running, Babylon can roll the deployment back to the working revision,
-                    \   aborting the rollout. \n - `downscale`: if all pods in a deployment
-                    are failing, Babylon will set replicaset to 0 Default: `[\"abort-rollout\",
-                    \"downscale\"]`"
+                    this to an empty list is equivalent to setting `enabled: false`.
+                    Default: `[\"abort-rollout\", \"downscale\"]`. \n - `abort-rollout`:
+                    if new pods in a deployment are failing, but previous pods from
+                    the previous working    revision are still running, Babylon can
+                    roll the deployment back to the working revision,    aborting
+                    the rollout. \n - `downscale`: if all pods in a deployment are
+                    failing, Babylon will set replicaset to 0"
                   items:
                     enum:
                     - abort-rollout
                     - downscale
                     type: string
                   type: array
-                  uniqueItems: true
               required:
               - enabled
               type: object
