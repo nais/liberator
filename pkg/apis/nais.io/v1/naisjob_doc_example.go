@@ -124,11 +124,8 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			ActiveDeadlineSeconds: int64p(60),
 			Azure: &Azure{
 				Application: &AzureApplication{
-					Enabled: true,
-					ReplyURLs: []string{
-						"https://myapplication.nav.no/oauth2/callback",
-					},
-					Tenant: "nav.no",
+					Enabled:       true,
+					AllowAllUsers: (*AzureAdAllowAllUsers)(boolp(true)),
 					Claims: &AzureAdClaims{
 						Extra: []AzureAdExtraClaim{
 							"NAVident",
@@ -140,7 +137,11 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 							},
 						},
 					},
-					SinglePageApplication: boolp(true),
+					ReplyURLs: []string{
+						"https://myapplication.nav.no/oauth2/callback",
+					},
+					SinglePageApplication: (*AzureAdSinglePageApplication)(boolp(true)),
+					Tenant:                "nav.no",
 				},
 			},
 			BackoffLimit: 5,

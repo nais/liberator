@@ -30,13 +30,10 @@ type AzureApplication struct {
 	// If unspecified, will default to `trygdeetaten.no` for development clusters and `nav.no` for production clusters.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/concepts#tenants"
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
-	Tenant string `json:"tenant,omitempty"`
-	// Claims defines additional configuration of the emitted claims in tokens returned to the Azure AD application.
-	Claims *AzureAdClaims `json:"claims,omitempty"`
-	// SinglePageApplication denotes whether or not this Azure AD application should be registered as a single-page-application.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#single-page-application"
-	// +nais:doc:Default="false"
-	SinglePageApplication *bool `json:"singlePageApplication,omitempty"`
+	Tenant                string                        `json:"tenant,omitempty"`
+	Claims                *AzureAdClaims                `json:"claims,omitempty"`
+	SinglePageApplication *AzureAdSinglePageApplication `json:"singlePageApplication,omitempty"`
+	AllowAllUsers         *AzureAdAllowAllUsers         `json:"allowAllUsers,omitempty"`
 }
 
 type Elastic struct {

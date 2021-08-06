@@ -177,6 +177,12 @@ spec:
                 application:
                   description: Configures an Azure AD client for this application.
                   properties:
+                    allowAllUsers:
+                      description: AllowAllUsers denotes whether or not all users
+                        within the tenant should be allowed to access this AzureAdApplication.
+                        If undefined will default to `true` when Spec.Claims.Groups
+                        is undefined, and `false` if Spec,Claims.Groups is defined.
+                      type: boolean
                     claims:
                       description: Claims defines additional configuration of the
                         emitted claims in tokens returned to the Azure AD application.
@@ -193,7 +199,9 @@ spec:
                           type: array
                         groups:
                           description: Groups is a list of Azure AD group IDs to be
-                            emitted in the 'Groups' claim.
+                            emitted in the 'Groups' claim. This also restricts access
+                            to only contain users of the defined groups unless overridden
+                            by Spec.AllowAllUsers.
                           items:
                             properties:
                               id:

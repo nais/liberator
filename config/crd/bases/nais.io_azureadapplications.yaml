@@ -68,9 +68,15 @@ spec:
         spec:
           description: AzureAdApplicationSpec defines the desired state of AzureAdApplication
           properties:
+            allowAllUsers:
+              description: AllowAllUsers denotes whether or not all users within the
+                tenant should be allowed to access this AzureAdApplication. If undefined
+                will default to `true` when Spec.Claims.Groups is undefined, and `false`
+                if Spec,Claims.Groups is defined.
+              type: boolean
             claims:
               description: Claims defines additional configuration of the emitted
-                claims in tokens returned to the AzureAdApplication
+                claims in tokens returned to the Azure AD application.
               properties:
                 extra:
                   description: Extra is a list of additional claims to be mapped from
@@ -84,7 +90,8 @@ spec:
                   type: array
                 groups:
                   description: Groups is a list of Azure AD group IDs to be emitted
-                    in the 'Groups' claim.
+                    in the 'Groups' claim. This also restricts access to only contain
+                    users of the defined groups unless overridden by Spec.AllowAllUsers.
                   items:
                     properties:
                       id:
@@ -155,8 +162,8 @@ spec:
                 to be created
               type: string
             singlePageApplication:
-              description: SinglePageApplication denotes whether or not this AzureAdApplication
-                should be registered as a single-page application.
+              description: SinglePageApplication denotes whether or not this Azure
+                AD application should be registered as a single-page-application.
               type: boolean
             tenant:
               description: Tenant is an optional alias for targeting a tenant matching

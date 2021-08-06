@@ -119,11 +119,8 @@ func ExampleApplicationForDocumentation() *Application {
 			},
 			Azure: &nais_io_v1.Azure{
 				Application: &nais_io_v1.AzureApplication{
-					Enabled: true,
-					ReplyURLs: []string{
-						"https://myapplication.nav.no/oauth2/callback",
-					},
-					Tenant: "nav.no",
+					Enabled:       true,
+					AllowAllUsers: (*nais_io_v1.AzureAdAllowAllUsers)(boolp(true)),
 					Claims: &nais_io_v1.AzureAdClaims{
 						Extra: []nais_io_v1.AzureAdExtraClaim{
 							"NAVident",
@@ -135,7 +132,11 @@ func ExampleApplicationForDocumentation() *Application {
 							},
 						},
 					},
-					SinglePageApplication: boolp(true),
+					ReplyURLs: []string{
+						"https://myapplication.nav.no/oauth2/callback",
+					},
+					SinglePageApplication: (*nais_io_v1.AzureAdSinglePageApplication)(boolp(true)),
+					Tenant:                "nav.no",
 				},
 			},
 			Cleanup: &nais_io_v1.Cleanup{

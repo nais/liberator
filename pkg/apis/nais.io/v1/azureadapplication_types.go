@@ -53,23 +53,21 @@ type AzureAdApplicationList struct {
 
 // AzureAdApplicationSpec defines the desired state of AzureAdApplication
 type AzureAdApplicationSpec struct {
-	ReplyUrls                 []AzureAdReplyUrl         `json:"replyUrls,omitempty"`
-	PreAuthorizedApplications []AccessPolicyInboundRule `json:"preAuthorizedApplications,omitempty"`
+	AllowAllUsers *AzureAdAllowAllUsers `json:"allowAllUsers,omitempty"`
+	Claims        *AzureAdClaims        `json:"claims,omitempty"`
 	// LogoutUrl is the URL where Azure AD sends a request to have the application clear the user's session data.
 	// This is required if single sign-out should work correctly. Must start with 'https'
-	LogoutUrl string `json:"logoutUrl,omitempty"`
+	LogoutUrl                 string                    `json:"logoutUrl,omitempty"`
+	PreAuthorizedApplications []AccessPolicyInboundRule `json:"preAuthorizedApplications,omitempty"`
+	ReplyUrls                 []AzureAdReplyUrl         `json:"replyUrls,omitempty"`
 	// SecretName is the name of the resulting Secret resource to be created
 	SecretName string `json:"secretName"`
+	// SecretKeyPrefix is an optional user-defined prefix applied to the keys in the secret output, replacing the default prefix.
+	SecretKeyPrefix       string                        `json:"secretKeyPrefix,omitempty"`
+	SinglePageApplication *AzureAdSinglePageApplication `json:"singlePageApplication,omitempty"`
 	// Tenant is an optional alias for targeting a tenant matching an instance of Azurerator that targets said tenant.
 	// Can be omitted if only running a single instance or targeting the default tenant.
 	Tenant string `json:"tenant,omitempty"`
-	// Claims defines additional configuration of the emitted claims in tokens returned to the AzureAdApplication
-	Claims *AzureAdClaims `json:"claims,omitempty"`
-	// SecretKeyPrefix is an optional user-defined prefix applied to the keys in the secret output, replacing the default prefix.
-	SecretKeyPrefix string `json:"secretKeyPrefix,omitempty"`
-	// SinglePageApplication denotes whether or not this AzureAdApplication should be registered as a single-page application.
-	// +nais:doc:Default="false"
-	SinglePageApplication *bool `json:"singlePageApplication,omitempty"`
 }
 
 // AzureAdApplicationStatus defines the observed state of AzureAdApplication
@@ -126,12 +124,16 @@ type AzureAdPreAuthorizedApp struct {
 	Reason string `json:"reason,omitempty"`
 }
 
+// Claims defines additional configuration of the emitted claims in tokens returned to the Azure AD application.
 type AzureAdClaims struct {
 	// Extra is a list of additional claims to be mapped from an associated claim-mapping policy.
 	// Currently, the only supported values are `NAVident` and `azp_name`.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#extra"
 	Extra []AzureAdExtraClaim `json:"extra,omitempty"`
 	// Groups is a list of Azure AD group IDs to be emitted in the 'Groups' claim.
+	// This also restricts access to only contain users of the defined groups unless overridden by Spec.AllowAllUsers.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#groups"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#users"
 	Groups []AzureAdGroup `json:"groups,omitempty"`
 }
 
@@ -147,6 +149,17 @@ type AzureAdGroup struct {
 type AzureAdReplyUrl struct {
 	Url string `json:"url,omitempty"`
 }
+
+// SinglePageApplication denotes whether or not this Azure AD application should be registered as a single-page-application.
+// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#single-page-application"
+// +nais:doc:Default="false"
+type AzureAdSinglePageApplication bool
+
+// AllowAllUsers denotes whether or not all users within the tenant should be allowed to access this AzureAdApplication.
+// If undefined will default to `true` when Spec.Claims.Groups is undefined, and `false` if Spec,Claims.Groups is defined.
+// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#users"
+// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#groups"
+type AzureAdAllowAllUsers bool
 
 func (in *AzureAdApplication) GetObjectId() string {
 	return in.Status.ObjectId
@@ -168,7 +181,8 @@ func (in *AzureAdApplication) Hash() (string, error) {
 		Tenant                    string
 		Claims                    *AzureAdClaims
 		SecretKeyPrefix           string
-		SinglePageApplication     *bool `json:"singlePageApplication,omitempty"`
+		SinglePageApplication     *AzureAdSinglePageApplication `json:"singlePageApplication,omitempty"`
+		AllowAllUsers             *AzureAdAllowAllUsers         `json:"allowAllUsers,omitempty"`
 	}{
 		ReplyUrls:                 in.Spec.ReplyUrls,
 		PreAuthorizedApplications: in.Spec.PreAuthorizedApplications,
@@ -177,6 +191,7 @@ func (in *AzureAdApplication) Hash() (string, error) {
 		Claims:                    in.Spec.Claims,
 		SecretKeyPrefix:           in.Spec.SecretKeyPrefix,
 		SinglePageApplication:     in.Spec.SinglePageApplication,
+		AllowAllUsers:             in.Spec.AllowAllUsers,
 	}
 	return hash.Hash(relevantValues)
 }
