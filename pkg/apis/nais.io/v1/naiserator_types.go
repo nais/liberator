@@ -63,7 +63,7 @@ type IDPorten struct {
 	// +kubebuilder:validation:Maximum=3600
 	AccessTokenLifetime *int `json:"accessTokenLifetime,omitempty"`
 	// ClientURI is the URL shown to the user at ID-porten when displaying a 'back' button or on errors.
-	ClientURI string `json:"clientURI,omitempty"`
+	ClientURI IDPortenURI `json:"clientURI,omitempty"`
 	// FrontchannelLogoutPath is a valid path for your application where ID-porten sends a request to whenever the user has
 	// initiated a logout elsewhere as part of a single logout (front channel logout) process.
 	//
@@ -73,21 +73,20 @@ type IDPorten struct {
 	FrontchannelLogoutPath string `json:"frontchannelLogoutPath,omitempty"`
 	// *DEPRECATED*. Prefer using `frontchannelLogoutPath`.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
-	FrontchannelLogoutURI string `json:"frontchannelLogoutURI,omitempty"`
+	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI,omitempty"`
 	// PostLogoutRedirectURIs are valid URIs that ID-porten will allow redirecting the end-user to after a single logout
 	// has been initiated and performed by the application.
 	//
 	// +nais:doc:Default="https://www.nav.no"
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#self-initiated-logout";"https://docs.digdir.no/oidc_func_sso.html#1-utlogging-fra-egen-tjeneste"
-	PostLogoutRedirectURIs []string `json:"postLogoutRedirectURIs,omitempty"`
+	PostLogoutRedirectURIs []IDPortenURI `json:"postLogoutRedirectURIs,omitempty"`
 	// RedirectPath is a valid path that ID-porten redirects back to after a successful authorization request.
 	//
 	// +nais:doc:Default="/oauth2/callback"
 	// +kubebuilder:validation:Pattern=`^\/.*$`
 	RedirectPath string `json:"redirectPath,omitempty"`
 	// *DEPRECATED*. Prefer using `redirectPath`.
-	// +kubebuilder:validation:Pattern=`^https:\/\/.+$`
-	RedirectURI string `json:"redirectURI,omitempty"`
+	RedirectURI IDPortenURI `json:"redirectURI,omitempty"`
 	// SessionLifetime is the maximum lifetime in seconds for any given user's session in your application.
 	// The timeout starts whenever the user is redirected from the `authorization_endpoint` at ID-porten.
 	//

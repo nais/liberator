@@ -254,7 +254,7 @@ func ExampleApplicationForDocumentation() *Application {
 				Enabled:                true,
 				FrontchannelLogoutPath: "/oauth2/logout",
 				FrontchannelLogoutURI:  "https://myapplication.nav.no/oauth2/logout",
-				PostLogoutRedirectURIs: []string{
+				PostLogoutRedirectURIs: []nais_io_v1.IDPortenURI{
 					"https://www.nav.no",
 				},
 				RedirectPath:    "/oauth2/callback",

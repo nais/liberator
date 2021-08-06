@@ -1,10 +1,11 @@
 package nais_io_v1_test
 
 import (
+	"testing"
+
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"testing"
 )
 
 func TestMaskinportenClient_CalculateHash(t *testing.T) {
@@ -49,7 +50,6 @@ func minimalIDPortenClient() *nais_io_v1.IDPortenClient {
 			ClusterName: "test-cluster",
 		},
 		Spec: nais_io_v1.IDPortenClientSpec{
-			ClientURI:   "",
 			RedirectURI: "https://test.com",
 			SecretName:  "test",
 		},

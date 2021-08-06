@@ -1057,7 +1057,7 @@ func (in *IDPorten) DeepCopyInto(out *IDPorten) {
 	}
 	if in.PostLogoutRedirectURIs != nil {
 		in, out := &in.PostLogoutRedirectURIs, &out.PostLogoutRedirectURIs
-		*out = make([]string, len(*in))
+		*out = make([]IDPortenURI, len(*in))
 		copy(*out, *in)
 	}
 	if in.SessionLifetime != nil {
@@ -1141,7 +1141,7 @@ func (in *IDPortenClientSpec) DeepCopyInto(out *IDPortenClientSpec) {
 	*out = *in
 	if in.PostLogoutRedirectURIs != nil {
 		in, out := &in.PostLogoutRedirectURIs, &out.PostLogoutRedirectURIs
-		*out = make([]string, len(*in))
+		*out = make([]IDPortenURI, len(*in))
 		copy(*out, *in)
 	}
 	if in.SessionLifetime != nil {

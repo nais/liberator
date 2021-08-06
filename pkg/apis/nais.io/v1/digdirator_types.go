@@ -236,16 +236,15 @@ type IDPortenClientList struct {
 // IDPortenClientSpec defines the desired state of IDPortenClient
 type IDPortenClientSpec struct {
 	// ClientURI is the URL to the client to be used at DigDir when displaying a 'back' button or on errors
-	ClientURI string `json:"clientURI,omitempty"`
+	ClientURI IDPortenURI `json:"clientURI,omitempty"`
 	// RedirectURI is the redirect URI to be registered at DigDir
-	// +kubebuilder:validation:Pattern=`^https:\/\/.+$`
-	RedirectURI string `json:"redirectURI"`
+	RedirectURI IDPortenURI `json:"redirectURI"`
 	// SecretName is the name of the resulting Secret resource to be created
 	SecretName string `json:"secretName"`
 	// FrontchannelLogoutURI is the URL that ID-porten sends a requests to whenever a logout is triggered by another application using the same session
-	FrontchannelLogoutURI string `json:"frontchannelLogoutURI,omitempty"`
+	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI,omitempty"`
 	// PostLogoutRedirectURI is a list of valid URIs that ID-porten may redirect to after logout
-	PostLogoutRedirectURIs []string `json:"postLogoutRedirectURIs,omitempty"`
+	PostLogoutRedirectURIs []IDPortenURI `json:"postLogoutRedirectURIs,omitempty"`
 	// SessionLifetime is the maximum session lifetime in seconds for a logged in end-user for this client.
 	// +kubebuilder:validation:Minimum=3600
 	// +kubebuilder:validation:Maximum=7200
@@ -255,6 +254,9 @@ type IDPortenClientSpec struct {
 	// +kubebuilder:validation:Maximum=3600
 	AccessTokenLifetime *int `json:"accessTokenLifetime,omitempty"`
 }
+
+// +kubebuilder:validation:Pattern=`^https:\/\/.+$`
+type IDPortenURI string
 
 func (in *IDPortenClient) Hash() (string, error) {
 	return hash.Hash(in.Spec)
