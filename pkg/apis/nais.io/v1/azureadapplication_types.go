@@ -60,13 +60,16 @@ type AzureAdApplicationSpec struct {
 	LogoutUrl string `json:"logoutUrl,omitempty"`
 	// SecretName is the name of the resulting Secret resource to be created
 	SecretName string `json:"secretName"`
-	// Tenant is an optional alias for targeting a tenant that an instance of Azurerator that processes resources for said tenant.
+	// Tenant is an optional alias for targeting a tenant matching an instance of Azurerator that targets said tenant.
 	// Can be omitted if only running a single instance or targeting the default tenant.
 	Tenant string `json:"tenant,omitempty"`
 	// Claims defines additional configuration of the emitted claims in tokens returned to the AzureAdApplication
 	Claims *AzureAdClaims `json:"claims,omitempty"`
 	// SecretKeyPrefix is an optional user-defined prefix applied to the keys in the secret output, replacing the default prefix.
 	SecretKeyPrefix string `json:"secretKeyPrefix,omitempty"`
+	// SinglePageApplication denotes whether or not this AzureAdApplication should be registered as a single-page application.
+	// +nais:doc:Default="false"
+	SinglePageApplication *bool `json:"singlePageApplication,omitempty"`
 }
 
 // AzureAdApplicationStatus defines the observed state of AzureAdApplication
@@ -128,6 +131,7 @@ type AzureAdClaims struct {
 	// Currently, the only supported values are `NAVident` and `azp_name`.
 	Extra []AzureAdExtraClaim `json:"extra,omitempty"`
 	// Groups is a list of Azure AD group IDs to be emitted in the 'Groups' claim.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#groups"
 	Groups []AzureAdGroup `json:"groups,omitempty"`
 }
 
@@ -164,6 +168,7 @@ func (in *AzureAdApplication) Hash() (string, error) {
 		Tenant                    string
 		Claims                    *AzureAdClaims
 		SecretKeyPrefix           string
+		SinglePageApplication     *bool `json:"singlePageApplication,omitempty"`
 	}{
 		ReplyUrls:                 in.Spec.ReplyUrls,
 		PreAuthorizedApplications: in.Spec.PreAuthorizedApplications,
@@ -171,6 +176,7 @@ func (in *AzureAdApplication) Hash() (string, error) {
 		Tenant:                    in.Spec.Tenant,
 		Claims:                    in.Spec.Claims,
 		SecretKeyPrefix:           in.Spec.SecretKeyPrefix,
+		SinglePageApplication:     in.Spec.SinglePageApplication,
 	}
 	return hash.Hash(relevantValues)
 }

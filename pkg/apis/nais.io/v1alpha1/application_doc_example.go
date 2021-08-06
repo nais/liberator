@@ -10,6 +10,9 @@ func ExampleApplicationForDocumentation() *Application {
 	intp := func(i int) *int {
 		return &i
 	}
+	boolp := func(b bool) *bool {
+		return &b
+	}
 
 	return &Application{
 		TypeMeta: metav1.TypeMeta{
@@ -132,6 +135,7 @@ func ExampleApplicationForDocumentation() *Application {
 							},
 						},
 					},
+					SinglePageApplication: boolp(true),
 				},
 			},
 			Cleanup: &nais_io_v1.Cleanup{

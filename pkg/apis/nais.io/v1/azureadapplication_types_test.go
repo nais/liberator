@@ -1,10 +1,11 @@
 package nais_io_v1_test
 
 import (
+	"testing"
+
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"testing"
 )
 
 const (

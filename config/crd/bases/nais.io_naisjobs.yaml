@@ -186,8 +186,6 @@ spec:
               properties:
                 application:
                   description: Configures an Azure AD client for this application.
-                    See [Azure AD](https://doc.nais.io/security/auth/azure-ad/) for
-                    more details.
                   properties:
                     claims:
                       description: Claims defines additional configuration of the
@@ -225,6 +223,10 @@ spec:
                       items:
                         type: string
                       type: array
+                    singlePageApplication:
+                      description: SinglePageApplication denotes whether or not this
+                        Azure AD application should be registered as a single-page-application.
+                      type: boolean
                     tenant:
                       description: "A Tenant represents an organization in Azure AD.
                         \n If unspecified, will default to `trygdeetaten.no` for development

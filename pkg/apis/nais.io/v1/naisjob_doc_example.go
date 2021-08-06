@@ -14,6 +14,9 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 	int64p := func(i int64) *int64 {
 		return &i
 	}
+	boolp := func(b bool) *bool {
+		return &b
+	}
 
 	return &Naisjob{
 		TypeMeta: metav1.TypeMeta{
@@ -137,6 +140,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 							},
 						},
 					},
+					SinglePageApplication: boolp(true),
 				},
 			},
 			BackoffLimit: 5,

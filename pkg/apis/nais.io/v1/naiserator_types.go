@@ -14,7 +14,7 @@ const (
 
 type Azure struct {
 	// Configures an Azure AD client for this application.
-	// See [Azure AD](https://doc.nais.io/security/auth/azure-ad/) for more details.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/"
 	Application *AzureApplication `json:"application"`
 }
 
@@ -33,6 +33,10 @@ type AzureApplication struct {
 	Tenant string `json:"tenant,omitempty"`
 	// Claims defines additional configuration of the emitted claims in tokens returned to the Azure AD application.
 	Claims *AzureAdClaims `json:"claims,omitempty"`
+	// SinglePageApplication denotes whether or not this Azure AD application should be registered as a single-page-application.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#single-page-application"
+	// +nais:doc:Default="false"
+	SinglePageApplication *bool `json:"singlePageApplication,omitempty"`
 }
 
 type Elastic struct {
@@ -188,7 +192,7 @@ type HttpGetAction struct {
 
 type PreStopHook struct {
 	// Command that should be run inside the main container just before the pod is shut down by Kubernetes.
-	Exec *ExecAction    `json:"exec,omitempty"`
+	Exec *ExecAction 	`json:"exec,omitempty"`
 	// HTTP GET request that is called just before the pod is shut down by Kubernetes.
 	Http *HttpGetAction `json:"http,omitempty"`
 }
