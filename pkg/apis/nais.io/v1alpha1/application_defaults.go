@@ -83,6 +83,9 @@ func getAppDefaults() *Application {
 				Enabled:                 false,
 				MountSecretsAsFilesOnly: false,
 			},
+			// Snorlax: &Snorlax{
+			// 	Strategy: SnorlaxDisabled,
+			// },
 		},
 	}
 }
