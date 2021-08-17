@@ -18,6 +18,7 @@ test:
 # Generate code
 generate: controller-gen
 	$(CONTROLLER_GEN) object paths="./pkg/apis/..."
+	$(CONTROLLER_GEN) webhook paths="./pkg/apis/..."
 	$(CONTROLLER_GEN) crd:trivialVersions=true,preserveUnknownFields=false rbac:roleName=manager-role webhook paths="./pkg/apis/..." output:crd:artifacts:config=config/crd/bases
 
 doc:
