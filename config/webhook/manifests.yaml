@@ -1,26 +1,25 @@
-
 ---
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: ValidatingWebhookConfiguration
 metadata:
-  creationTimestamp: null
+  annotations:
+    cert-manager.io/inject-ca-from: nais/serving-cert
   name: validating-webhook-configuration
 webhooks:
-- clientConfig:
-    caBundle: Cg==
-    service:
-      name: webhook-service
-      namespace: system
-      path: /validate-nais-io-v1alpha1-application
-  failurePolicy: Fail
-  name: validation.application.nais.io
-  rules:
-  - apiGroups:
-    - nais.io
-    apiVersions:
-    - v1alpha1
-    operations:
-    - CREATE
-    - UPDATE
-    resources:
-    - application
+  - clientConfig:
+      service:
+        name: naiserator
+        namespace: nais
+        path: /validate-nais-io-v1alpha1-applications
+    failurePolicy: Fail
+    name: validation.applications.nais.io
+    rules:
+      - apiGroups:
+          - nais.io
+        apiVersions:
+          - v1alpha1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - applications

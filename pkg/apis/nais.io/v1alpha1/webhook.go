@@ -19,7 +19,8 @@ func (a *Application) SetupWebhookWithManager(mgr ctrl.Manager) error {
 		Complete()
 }
 
-// +kubebuilder:webhook:verbs=create;update,path=/validate-nais-io-v1alpha1-application,mutating=false,failurePolicy=fail,groups=nais.io,resources=application,versions=v1alpha1,name=validation.application.nais.io
+// The generated manifest is invalid, so we use kubebuilder to make the intiial manifest, and then update with annotations and correct name manually
+// DISABLE: +kubebuilder:webhook:verbs=create;update,path=/validate-nais-io-v1alpha1-applications,mutating=false,failurePolicy=fail,groups=nais.io,resources=applications,versions=v1alpha1,name=validation.applications.nais.io
 
 var _ webhook.Validator = &Application{}
 
