@@ -2,6 +2,7 @@ package nais_io_v1alpha1
 
 import (
 	"github.com/imdario/mergo"
+	"github.com/nais/liberator/pkg/intutil"
 
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 )
@@ -32,8 +33,8 @@ func getAppDefaults() *Application {
 				},
 			},
 			Replicas: &nais_io_v1.Replicas{
-				Min:                    2,
-				Max:                    4,
+				Min:                    intutil.Intp(2),
+				Max:                    intutil.Intp(4),
 				CpuThresholdPercentage: 50,
 			},
 			Liveness: &nais_io_v1.Probe{
