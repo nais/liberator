@@ -8,7 +8,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 )
 
-func DeepComparison(new, old interface{}, path *field.Path) error {
+func NaisCompare(new, old interface{}, path *field.Path) error {
 	newValue := reflect.ValueOf(new)
 	oldValue := reflect.ValueOf(old)
 	if newValue.Kind() == reflect.Ptr {

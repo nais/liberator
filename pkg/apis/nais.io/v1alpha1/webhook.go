@@ -35,7 +35,7 @@ func (a *Application) ValidateUpdate(old runtime.Object) error {
 		return apierrors.NewBadRequest(fmt.Sprintf("expected an Application but got a %T", old))
 	}
 	// Perform actual comparison
-	err := webhookvalidator.DeepComparison(a.Spec, oldA.Spec, field.NewPath("spec"))
+	err := webhookvalidator.NaisCompare(a.Spec, oldA.Spec, field.NewPath("spec"))
 	if err != nil {
 		if allErrs, ok := err.(errors.Aggregate); ok {
 			return apierrors.NewInvalid(

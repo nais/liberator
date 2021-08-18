@@ -12,7 +12,6 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
-	"k8s.io/apimachinery/pkg/util/validation/field"
 
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 )
@@ -212,15 +211,6 @@ type ApplicationSpec struct {
 	// Java applications can start the JVM using parameters from the `$JAVA_PROXY_OPTIONS` environment variable.
 	// +nais:doc:Availability="on-premises"
 	WebProxy bool `json:"webproxy,omitempty"`
-}
-
-func (a *ApplicationSpec) ValidateUpdate(other ApplicationSpec, path *field.Path) field.ErrorList {
-	var allErrs field.ErrorList
-
-	if err := a.GCP.ValidateUpdate(other.GCP, path.Child("gcp")); err != nil {
-		allErrs = append(allErrs, err...)
-	}
-	return allErrs
 }
 
 // ApplicationStatus contains different NAIS status properties

@@ -66,6 +66,7 @@ func Webhooks(mgr ctrl.Manager) error {
 	}
 
 	webhooks := []webhook{
+		// List of types that implements one or more webhook interfaces
 		&nais_io_v1alpha1.Application{},
 	}
 

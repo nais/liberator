@@ -177,7 +177,7 @@ func TestDeepComparison(t *testing.T) {
 
 	for name, tt := range tests {
 		t.Run(name, func(t *testing.T) {
-			err := DeepComparison(tt.New, tt.Old, field.NewPath("test"))
+			err := NaisCompare(tt.New, tt.Old, field.NewPath("test"))
 			if len(tt.TestErrors) == 0 {
 				if err != nil {
 					t.Fatalf("expected error: %v", err)

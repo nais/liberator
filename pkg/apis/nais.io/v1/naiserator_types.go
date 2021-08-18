@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	corev1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/util/validation/field"
 )
 
 const (
@@ -119,37 +118,6 @@ type GCP struct {
 	// +nais:doc:Link="https://cloud.google.com/config-connector/docs/reference/resource-docs/iam/iampolicymember#external_organization_level_policy_member"
 	// +nais:doc:Availability=GCP
 	Permissions []CloudIAMPermission `json:"permissions,omitempty"`
-}
-
-func (g *GCP) ValidateUpdate(other *GCP, path *field.Path) field.ErrorList {
-	var allErrs field.ErrorList
-
-	if err := g.validateSqlInstancesUpdate(other.SqlInstances, path.Child("sqlInstances")); err != nil {
-		allErrs = append(allErrs, err...)
-	}
-	return allErrs
-}
-
-func (g *GCP) validateSqlInstancesUpdate(other []CloudSqlInstance, path *field.Path) field.ErrorList {
-	var allErrs field.ErrorList
-
-	oldInstances := map[string]CloudSqlInstance{}
-	for _, oi := range other {
-		oldInstances[oi.Name] = oi
-	}
-
-	for _, si := range g.SqlInstances {
-		oi, ok := oldInstances[si.Name]
-		if !ok {
-			continue
-		}
-
-		if oi.Collation != si.Collation {
-			allErrs = append(allErrs, field.Invalid(path.Child(si.Name), si.Collation, "field is immutable"))
-		}
-	}
-
-	return allErrs
 }
 
 type EnvVars []EnvVar
