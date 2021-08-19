@@ -19,17 +19,21 @@ const (
 	DeploymentStrategyRecreate      = "Recreate"
 )
 
-var (
-	minReplicas = 2
-	maxReplicas = 4
-)
 // ApplyDefaults sets default values where they are missing from an Application spec.
 func (app *Application) ApplyDefaults() error {
-	if app.replicasDefined() {
-		minReplicas = *app.Spec.Replicas.Min
-		maxReplicas = *app.Spec.Replicas.Max
+	replicasIsZero := app.replicasDefined() && app.replicasIsZero()
+
+	err := mergo.Merge(app, getAppDefaults())
+	if err != nil {
+		return err
 	}
-	return mergo.Merge(app, getAppDefaults())
+
+	if replicasIsZero {
+		app.Spec.Replicas.Min = intutil.Intp(0)
+		app.Spec.Replicas.Max = intutil.Intp(0)
+	}
+
+	return nil
 }
 
 func (app *Application) replicasDefined() bool {
@@ -37,7 +41,10 @@ func (app *Application) replicasDefined() bool {
 		return true
 	}
 	return false
+}
 
+func (app *Application) replicasIsZero() bool {
+	return *app.Spec.Replicas.Min == 0 && * app.Spec.Replicas.Max == 0
 }
 
 func getAppDefaults() *Application {
@@ -49,8 +56,8 @@ func getAppDefaults() *Application {
 				},
 			},
 			Replicas: &nais_io_v1.Replicas{
-				Min:                    intutil.Intp(minReplicas),
-				Max:                    intutil.Intp(maxReplicas),
+				Min:                    intutil.Intp(2),
+				Max:                    intutil.Intp(4),
 				CpuThresholdPercentage: 50,
 			},
 			Liveness: &nais_io_v1.Probe{
