@@ -306,9 +306,9 @@ type PrometheusConfig struct {
 
 type Replicas struct {
 	// The minimum amount of running replicas for a deployment.
-	Min int `json:"min,omitempty"`
+	Min *int `json:"min,omitempty"`
 	// The pod autoscaler will increase replicas when required up to the maximum.
-	Max int `json:"max,omitempty"`
+	Max *int `json:"max,omitempty"`
 	// Amount of CPU usage before the autoscaler kicks in.
 	CpuThresholdPercentage int `json:"cpuThresholdPercentage,omitempty"`
 }
