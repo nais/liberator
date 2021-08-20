@@ -21,17 +21,16 @@ func NaisCompare(new, old interface{}, path *field.Path) error {
 		return fmt.Errorf("type mismatch")
 	}
 
-	cerr := compareObjects(newValue, oldValue, path)
-	return cerr.ToAggregate()
+	return compareObjects(newValue, oldValue, path).ToAggregate()
 }
 
 func compareObjects(new, old reflect.Value, path *field.Path) (allErrs field.ErrorList) {
-	switch new.Kind() {
-	case reflect.Slice, reflect.Array:
+	if new.Kind() == reflect.Slice || new.Kind() == reflect.Array {
+		// Must be handled as a special case when comparing objects in slices
 		return sliceMutationError(new, old, path)
-	case reflect.Struct:
-		// Run the rest function
-	default:
+	}
+	if new.Kind() != reflect.Struct {
+		// Only structs (iow: their fields) can have the "immutable" tag set
 		return nil
 	}
 
@@ -46,7 +45,6 @@ func compareObjects(new, old reflect.Value, path *field.Path) (allErrs field.Err
 		}
 
 		oldField := old.Field(i)
-
 		if newField.Kind() == reflect.Ptr {
 			// Derefence pointer if this current field is a pointer
 			if newField.IsNil() || oldField.IsNil() {
@@ -59,17 +57,16 @@ func compareObjects(new, old reflect.Value, path *field.Path) (allErrs field.Err
 		}
 
 		tags := propertyMap(newStruct.Field(i))
-
 		newPath := path.Child(jsonName(newStruct.Field(i)))
 		if !tags["immutable"] {
-			// If field is a struct, and it's not immutable, recursively descend and compare
+			// Recursively descend into the fields of the current struct
 			if err := compareObjects(newField, oldField, newPath); err != nil {
 				allErrs = append(allErrs, err...)
 				continue
 			}
 		}
 
-		if tags["immutable"] && hasMutationError(newField, oldField) {
+		if tags["immutable"] && valuesDiffer(newField, oldField) {
 			// If field is set to immutable, check if there's a change
 			allErrs = append(allErrs, field.Invalid(newPath, newField.Interface(), "field is immutable"))
 			continue
@@ -88,6 +85,7 @@ func propertyMap(field reflect.StructField) map[string]bool {
 	return tags
 }
 
+// jsonName returns the name of the field by default, override if `json:"name"` is set
 func jsonName(field reflect.StructField) string {
 	t := field.Tag.Get("json")
 	tag := field.Name
@@ -99,18 +97,19 @@ func jsonName(field reflect.StructField) string {
 	return tag
 }
 
-func hasMutationError(new, old reflect.Value) bool {
+func valuesDiffer(new, old reflect.Value) bool {
 	return !reflect.DeepEqual(new.Interface(), old.Interface())
 }
 
+// sliceMutationError compares two slices, and returns errors if they differ
+//	Does not support slices of pointers (pointers of any kind), potential future todo.
 func sliceMutationError(new, old reflect.Value, path *field.Path) (allErrs field.ErrorList) {
 	if new.Len() == 0 || old.Len() == 0 {
-		return nil
+		// We don't want to compare unless both slices have elements within them
+		return allErrs
 	}
 	if new.Type().Elem().Kind() != reflect.Struct {
-		if hasMutationError(new, old) {
-			allErrs = append(allErrs, field.Invalid(path, new.Interface(), "field is immutable"))
-		}
+		// Immutability tag can only be used on fields within a struct
 		return allErrs
 	}
 
@@ -121,13 +120,15 @@ func sliceMutationError(new, old reflect.Value, path *field.Path) (allErrs field
 
 OUTER:
 	for i := 0; i < new.Len(); i++ {
+		// For each element in "new" slice
 		newVal := new.Index(i)
 
 		for j := 0; j < old.Len(); j++ {
+			// compared with each element in "old" slice
 			oldVal := old.Index(j)
-
 			for _, key := range keys {
-				if reflect.DeepEqual(newVal.FieldByName(key).Interface(), oldVal.FieldByName(key).Interface()) {
+				// Use the comparison keys found with keysToCheck to compare the elements from the two slices
+				if !valuesDiffer(newVal.FieldByName(key), oldVal.FieldByName(key)) {
 					errs := compareObjects(newVal, oldVal, path.Child(fmt.Sprint(i)))
 					if errs != nil {
 						allErrs = append(allErrs, errs...)

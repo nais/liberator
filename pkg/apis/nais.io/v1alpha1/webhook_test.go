@@ -8,7 +8,7 @@ import (
 )
 
 var expectedErrors = []string{
-	"spec.gcp.bigQueryDatasets",
+	"spec.gcp.bigQueryDatasets.0.permission",
 }
 
 func inputApp() *Application {
@@ -17,7 +17,8 @@ func inputApp() *Application {
 	app.Spec.GCP = &nais_io_v1.GCP{
 		BigQueryDatasets: []nais_io_v1.CloudBigQueryDataset{
 			{
-				Name: "newname",
+				Name:       "name",
+				Permission: nais_io_v1.BigQueryPermissionRead,
 			},
 		},
 	}
@@ -31,7 +32,8 @@ func oldApp() *Application {
 	app.Spec.GCP = &nais_io_v1.GCP{
 		BigQueryDatasets: []nais_io_v1.CloudBigQueryDataset{
 			{
-				Name: "name",
+				Name:       "name",
+				Permission: nais_io_v1.BigQueryPermissionReadWrite,
 			},
 		},
 	}

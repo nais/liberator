@@ -359,13 +359,16 @@ type CloudBigQueryDataset struct {
 	// Permission level given to application.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Enum=READ;READWRITE
+	// +nais:doc:Immutable=true
 	Permission BigQueryPermission `json:"permission" nais:"immutable"`
 	// When set to true will delete the dataset, when the application resource is deleted.
 	// NB: If no tables exist in the bigquery dataset, it _will_ delete the dataset even if this value is set/defaulted to `false`.
 	// Default value is `false`.
+	// +nais:doc:Immutable=true
 	CascadingDelete bool `json:"cascadingDelete,omitempty" nais:"immutable"`
 	// Human-readable description of what this BigQuery dataset contains, or is used for.
 	// Will be visible in the GCP Console.
+	// +nais:doc:Immutable=true
 	Description string `json:"description,omitempty" nais:"immutable"`
 }
 
