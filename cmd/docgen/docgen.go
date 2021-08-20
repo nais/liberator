@@ -366,6 +366,9 @@ func (m ExtDoc) formatStraight(w io.Writer) {
 	}
 	io.WriteString(w, linefmt("Type: `%s`", m.Type))
 	io.WriteString(w, linefmt("Required: `%s`", strconv.FormatBool(m.Required)))
+	if m.Immutable {
+		io.WriteString(w, linefmt("Immutable: `%v`", m.Immutable))
+	}
 	if len(m.Default) > 0 {
 		io.WriteString(w, linefmt("Default value: `%v`", m.Default))
 	}
@@ -374,9 +377,6 @@ func (m ExtDoc) formatStraight(w io.Writer) {
 	}
 	if len(m.Pattern) > 0 {
 		io.WriteString(w, linefmt("Pattern: `%s`", m.Pattern))
-	}
-	if m.Immutable {
-		io.WriteString(w, linefmt("Immutable: `%v`", m.Immutable))
 	}
 	if m.Minimum != m.Maximum {
 		min := floatfmt(m.Minimum)

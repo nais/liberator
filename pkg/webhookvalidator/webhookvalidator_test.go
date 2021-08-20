@@ -173,6 +173,45 @@ func TestDeepComparison(t *testing.T) {
 				"test.Slice",
 			},
 		},
+		"Slice of struct with immutable fields fail if not equal on key": {
+			New: mediumStruct{
+				SliceStruct: []SmallStruct{
+					{
+						A: 2,
+						C: 5,
+					},
+				},
+			},
+			Old: mediumStruct{
+				SliceStruct: []SmallStruct{
+					{
+						A: 2,
+						C: 8,
+					},
+				},
+			},
+			TestErrors: []string{
+				"test.SliceStruct.0.C",
+			},
+		},
+		"Slice of struct with immutable fields pass if equal on key": {
+			New: mediumStruct{
+				SliceStruct: []SmallStruct{
+					{
+						A: 2,
+						C: 9,
+					},
+				},
+			},
+			Old: mediumStruct{
+				SliceStruct: []SmallStruct{
+					{
+						A: 2,
+						C: 9,
+					},
+				},
+			},
+		},
 	}
 
 	for name, tt := range tests {
@@ -212,8 +251,9 @@ func TestDeepComparison(t *testing.T) {
 }
 
 type SmallStruct struct {
-	A     int `nais:"immutable"`
+	A     int `nais:"immutable,key"`
 	B     int
+	C     int            `nais:"immutable"`
 	Slice []int          `nais:"immutable"`
 	Map   map[string]int `nais:"immutable"`
 }
@@ -221,6 +261,7 @@ type SmallStruct struct {
 type mediumStruct struct {
 	Sub          SmallStruct
 	SubImmutable SmallStruct `nais:"immutable"`
+	SliceStruct  []SmallStruct
 }
 
 type inlineStruct struct {

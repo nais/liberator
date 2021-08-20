@@ -104,8 +104,7 @@ type GCP struct {
 	// Datasets are immutable and cannot be changed.
 	// +nais:doc:Link="https://cloud.google.com/bigquery/docs"
 	// +nais:doc:Availability=GCP
-	// +nais:doc:Immutable=true
-	BigQueryDatasets []CloudBigQueryDataset `json:"bigQueryDatasets,omitempty" nais:"immutable"`
+	BigQueryDatasets []CloudBigQueryDataset `json:"bigQueryDatasets,omitempty"`
 	// Provision cloud storage buckets and connect them to your application.
 	// +nais:doc:Link="https://doc.nais.io/persistence/buckets/"
 	// +nais:doc:Availability=GCP
@@ -355,18 +354,19 @@ type CloudBigQueryDataset struct {
 	// The canonical name of the dataset will be `<TEAM_PROJECT_ID>:<NAME>`.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`^[a-z0-9][a-z0-9_]+$`
-	Name string `json:"name"`
+	// +nais:doc:Immutable=true
+	Name string `json:"name" nais:"immutable,key"`
 	// Permission level given to application.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Enum=READ;READWRITE
-	Permission BigQueryPermission `json:"permission"`
+	Permission BigQueryPermission `json:"permission" nais:"immutable"`
 	// When set to true will delete the dataset, when the application resource is deleted.
 	// NB: If no tables exist in the bigquery dataset, it _will_ delete the dataset even if this value is set/defaulted to `false`.
 	// Default value is `false`.
-	CascadingDelete bool `json:"cascadingDelete,omitempty"`
+	CascadingDelete bool `json:"cascadingDelete,omitempty" nais:"immutable"`
 	// Human-readable description of what this BigQuery dataset contains, or is used for.
 	// Will be visible in the GCP Console.
-	Description string `json:"description,omitempty"`
+	Description string `json:"description,omitempty" nais:"immutable"`
 }
 
 type CloudStorageBucket struct {
