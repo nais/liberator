@@ -189,7 +189,7 @@ type HttpGetAction struct {
 
 type PreStopHook struct {
 	// Command that should be run inside the main container just before the pod is shut down by Kubernetes.
-	Exec *ExecAction 	`json:"exec,omitempty"`
+	Exec *ExecAction `json:"exec,omitempty"`
 	// HTTP GET request that is called just before the pod is shut down by Kubernetes.
 	Http *HttpGetAction `json:"http,omitempty"`
 }
@@ -354,18 +354,22 @@ type CloudBigQueryDataset struct {
 	// The canonical name of the dataset will be `<TEAM_PROJECT_ID>:<NAME>`.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern=`^[a-z0-9][a-z0-9_]+$`
-	Name string `json:"name"`
+	// +nais:doc:Immutable=true
+	Name string `json:"name" nais:"immutable,key"`
 	// Permission level given to application.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Enum=READ;READWRITE
-	Permission BigQueryPermission `json:"permission"`
+	// +nais:doc:Immutable=true
+	Permission BigQueryPermission `json:"permission" nais:"immutable"`
 	// When set to true will delete the dataset, when the application resource is deleted.
 	// NB: If no tables exist in the bigquery dataset, it _will_ delete the dataset even if this value is set/defaulted to `false`.
 	// Default value is `false`.
-	CascadingDelete bool `json:"cascadingDelete,omitempty"`
+	// +nais:doc:Immutable=true
+	CascadingDelete bool `json:"cascadingDelete,omitempty" nais:"immutable"`
 	// Human-readable description of what this BigQuery dataset contains, or is used for.
 	// Will be visible in the GCP Console.
-	Description string `json:"description,omitempty"`
+	// +nais:doc:Immutable=true
+	Description string `json:"description,omitempty" nais:"immutable"`
 }
 
 type CloudStorageBucket struct {

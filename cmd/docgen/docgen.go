@@ -79,7 +79,11 @@ type Doc struct {
 	Default string `marker:"Default,optional"`
 	// Links to documentation or other information
 	Link []string `marker:"Link,optional"`
+	// Immutable declares the field as immutable
+	Immutable bool `marker:"Immutable,optional"`
 }
+
+type Immutable struct{}
 
 type ExtDoc struct {
 	Availability string
@@ -95,6 +99,7 @@ type ExtDoc struct {
 	Required     bool
 	Title        string
 	Type         string
+	Immutable    bool
 }
 
 // Hijack the "example" field for custom documentation fields
@@ -361,6 +366,9 @@ func (m ExtDoc) formatStraight(w io.Writer) {
 	}
 	io.WriteString(w, linefmt("Type: `%s`", m.Type))
 	io.WriteString(w, linefmt("Required: `%s`", strconv.FormatBool(m.Required)))
+	if m.Immutable {
+		io.WriteString(w, linefmt("Immutable: `%v`", m.Immutable))
+	}
 	if len(m.Default) > 0 {
 		io.WriteString(w, linefmt("Default value: `%v`", m.Default))
 	}
@@ -471,6 +479,7 @@ func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, pare
 			entry.Availability = d.Availability
 			entry.Link = d.Link
 			entry.Default = d.Default
+			entry.Immutable = d.Immutable
 		} else {
 			log.Errorf("unable to merge structs: %s", err)
 		}

@@ -4,16 +4,17 @@ import (
 	"fmt"
 
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
-	"github.com/nais/liberator/pkg/apis/bigquery.cnrm.cloud.google.com/v1beta1"
-	"github.com/nais/liberator/pkg/apis/iam.cnrm.cloud.google.com/v1beta1"
+	bigquery_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/bigquery.cnrm.cloud.google.com/v1beta1"
+	iam_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/iam.cnrm.cloud.google.com/v1beta1"
 	kafka_nais_io_v1 "github.com/nais/liberator/pkg/apis/kafka.nais.io/v1"
-	"github.com/nais/liberator/pkg/apis/nais.io/v1"
-	"github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
-	"github.com/nais/liberator/pkg/apis/sql.cnrm.cloud.google.com/v1beta1"
-	"github.com/nais/liberator/pkg/apis/storage.cnrm.cloud.google.com/v1beta1"
+	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
+	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
+	sql_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/sql.cnrm.cloud.google.com/v1beta1"
+	storage_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/storage.cnrm.cloud.google.com/v1beta1"
 	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
+	ctrl "sigs.k8s.io/controller-runtime"
 )
 
 // Creates a new runtime.Scheme object and adds a list of schemes to it.
@@ -57,4 +58,28 @@ func TypeName(resource runtime.Object) string {
 		namespace = obj.GetNamespace()
 	}
 	return fmt.Sprintf("resource '%s' named '%s' in namespace '%s'", kind, name, namespace)
+}
+
+func Webhooks(mgr ctrl.Manager) error {
+	type webhook interface {
+		SetupWebhookWithManager(ctrl.Manager) error
+	}
+
+	webhooks := []webhook{
+		// List of types that implements one or more webhook interfaces
+		&nais_io_v1alpha1.Application{},
+	}
+
+	errors := []error{}
+	for _, wh := range webhooks {
+		if err := wh.SetupWebhookWithManager(mgr); err != nil {
+			errors = append(errors, err)
+		}
+	}
+
+	if len(errors) > 0 {
+		return fmt.Errorf("got %v errors: %+v", len(errors), errors)
+	}
+
+	return nil
 }
