@@ -1,11 +1,12 @@
 package aiven_nais_io_v1
 
 import (
+	"time"
+
 	"github.com/nais/liberator/pkg/namegen"
 	"github.com/nais/liberator/pkg/strings"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"time"
 )
 
 func init() {
@@ -40,6 +41,11 @@ type AivenApplication struct {
 	Status            AivenApplicationStatus `json:"status,omitempty"`
 }
 
+type ElasticSpec struct {
+	// Use the `instance_name` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+	Instance string `json:"instance"`
+}
+
 type AivenApplicationSpec struct {
 	// SecretName is the name of the secret containing Aiven credentials
 	SecretName string `json:"secretName"`
@@ -47,6 +53,8 @@ type AivenApplicationSpec struct {
 	Protected bool `json:"protected,omitempty"`
 	// Kafka is a section configuring the kafka credentials to provision
 	Kafka KafkaSpec `json:"kafka,omitempty"`
+	// Elastic is a section configuring the Elastic credentials to provision
+	Elastic ElasticSpec `json:"elastic,omitemty"`
 }
 
 type KafkaSpec struct {
