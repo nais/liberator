@@ -1,8 +1,9 @@
 package nais_io_v1alpha1
 
 import (
-	"github.com/nais/liberator/pkg/intutil"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	"github.com/nais/liberator/pkg/intutil"
 
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 )
@@ -266,6 +267,9 @@ func ExampleApplicationForDocumentation() *Application {
 				RedirectPath:    "/oauth2/callback",
 				RedirectURI:     "https://myapplication.nav.no/oauth2/callback",
 				SessionLifetime: intp(7200),
+				Sidecar: &nais_io_v1.IDPortenSidecar{
+					Enabled: true,
+				},
 			},
 			Influx: &nais_io_v1.Influx{
 				Instance: "influx-instance",

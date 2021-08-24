@@ -657,6 +657,16 @@ spec:
                   maximum: 7200
                   minimum: 3600
                   type: integer
+                sidecar:
+                  description: "Sidecar configures a sidecar that intercepts requests
+                    and performs the OIDC flow if necessary. \n **EXPERIMENTAL, NOT
+                    PRODUCTION READY**"
+                  properties:
+                    enabled:
+                      type: boolean
+                  required:
+                  - enabled
+                  type: object
               required:
               - enabled
               type: object

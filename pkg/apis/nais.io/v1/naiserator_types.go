@@ -97,6 +97,15 @@ type IDPorten struct {
 	// +kubebuilder:validation:Minimum=3600
 	// +kubebuilder:validation:Maximum=7200
 	SessionLifetime *int `json:"sessionLifetime,omitempty"`
+
+	// Sidecar configures a sidecar that intercepts requests and performs the OIDC flow if necessary.
+	//
+	// **EXPERIMENTAL, NOT PRODUCTION READY**
+	Sidecar *IDPortenSidecar `json:"sidecar,omitempty"`
+}
+
+type IDPortenSidecar struct {
+	Enabled bool `json:"enabled"`
 }
 
 type GCP struct {
