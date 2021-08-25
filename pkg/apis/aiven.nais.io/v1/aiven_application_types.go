@@ -43,7 +43,7 @@ type AivenApplication struct {
 
 type ElasticSpec struct {
 	// Use the `instance_name` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
-	Instance string `json:"instance"`
+	Instance string `json:"instance,omitempty"`
 	// Access level for elastic user
 	// +kubebuilder:validation:Enum=read,write,readwrite,admin
 	Access string `json:"access,omitempty"`
@@ -57,7 +57,7 @@ type AivenApplicationSpec struct {
 	// Kafka is a section configuring the kafka credentials to provision
 	Kafka KafkaSpec `json:"kafka,omitempty"`
 	// Elastic is a section configuring the Elastic credentials to provision
-	Elastic ElasticSpec `json:"elastic,omitemty"`
+	Elastic *ElasticSpec `json:"elastic,omitempty"`
 }
 
 type KafkaSpec struct {
