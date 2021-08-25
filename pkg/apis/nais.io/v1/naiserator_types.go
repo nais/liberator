@@ -89,7 +89,9 @@ type IDPorten struct {
 	// +nais:doc:Default="/oauth2/callback"
 	// +kubebuilder:validation:Pattern=`^\/.*$`
 	RedirectPath string `json:"redirectPath,omitempty"`
-	// *DEPRECATED*. Prefer using `redirectPath`.
+	// Use `redirectPath` instead.
+	//
+	// +nais:doc:Deprecated=true
 	RedirectURI IDPortenURI `json:"redirectURI,omitempty"`
 	// SessionLifetime is the maximum lifetime in seconds for any given user's session in your application.
 	// The timeout starts whenever the user is redirected from the `authorization_endpoint` at ID-porten.
@@ -103,7 +105,7 @@ type IDPorten struct {
 
 	// Sidecar configures a sidecar that intercepts requests and performs the OIDC flow if necessary.
 	//
-	// **EXPERIMENTAL, NOT PRODUCTION READY**
+	// +nais:doc:Experimental=true
 	Sidecar *IDPortenSidecar `json:"sidecar,omitempty"`
 }
 

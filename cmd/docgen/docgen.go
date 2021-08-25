@@ -81,9 +81,11 @@ type Doc struct {
 	Link []string `marker:"Link,optional"`
 	// Immutable declares the field as immutable
 	Immutable bool `marker:"Immutable,optional"`
+	// Deprecated declares the field obsolete
+	Deprecated bool `marker:"Deprecated,optional"`
+	// Experimental declares the field as subject to instability, change, or removal
+	Experimental bool `marker:"Experimental,optional"`
 }
-
-type Immutable struct{}
 
 type ExtDoc struct {
 	Availability string
@@ -100,6 +102,8 @@ type ExtDoc struct {
 	Title        string
 	Type         string
 	Immutable    bool
+	Deprecated   bool
+	Experimental bool
 }
 
 // Hijack the "example" field for custom documentation fields
@@ -357,6 +361,12 @@ func (m ExtDoc) formatStraight(w io.Writer) {
 		io.WriteString(w, m.Description)
 		io.WriteString(w, "\n\n")
 	}
+	if m.Experimental {
+		io.WriteString(w, "!!! warning \"Experimental feature\"\n    This feature has not undergone much testing, and is subject to API change, instability, or removal.\n\n")
+	}
+	if m.Deprecated {
+		io.WriteString(w, "!!! failure \"Deprecated\"\n    This feature is deprecated, preserved only for backwards compatibility.\n\n")
+	}
 	if len(m.Link) > 0 {
 		io.WriteString(w, "Relevant information:\n\n")
 		for _, link := range m.Link {
@@ -479,6 +489,8 @@ func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, pare
 			entry.Availability = d.Availability
 			entry.Link = d.Link
 			entry.Default = d.Default
+			entry.Deprecated = d.Deprecated
+			entry.Experimental = d.Experimental
 			entry.Immutable = d.Immutable
 		} else {
 			log.Errorf("unable to merge structs: %s", err)
