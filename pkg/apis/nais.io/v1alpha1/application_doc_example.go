@@ -155,6 +155,7 @@ func ExampleApplicationForDocumentation() *Application {
 			},
 			Elastic: &nais_io_v1.Elastic{
 				Instance: "my-elastic-instance",
+				Access:   "readwrite",
 			},
 			Env: []nais_io_v1.EnvVar{
 				{

@@ -71,7 +71,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 								Application: "app5",
 							},
 							Permissions: &AccessPolicyPermissions{
-								Roles:  []AccessPolicyPermission{"custom-role"},
+								Roles: []AccessPolicyPermission{"custom-role"},
 							},
 						},
 						{
@@ -154,6 +154,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			},
 			Elastic: &Elastic{
 				Instance: "my-elastic-instance",
+				Access:   "readwrite",
 			},
 			Env: []EnvVar{
 				{
@@ -197,9 +198,9 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 						Permission:      BigQueryPermissionReadWrite,
 					},
 					{
-						Name:            "my_bigquery_dataset2",
-						Description:     "Contains big data, supporting big queries, for use in big ideas.",
-						Permission:      BigQueryPermissionRead,
+						Name:        "my_bigquery_dataset2",
+						Description: "Contains big data, supporting big queries, for use in big ideas.",
+						Permission:  BigQueryPermissionRead,
 					},
 				},
 				Buckets: []CloudStorageBucket{
@@ -325,7 +326,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				},
 			},
 			RestartPolicy: "Never",
-			Schedule: "*/15 0 0 0 0",
+			Schedule:      "*/15 0 0 0 0",
 			SecureLogs: &SecureLogs{
 				Enabled: true,
 			},
