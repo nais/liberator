@@ -43,6 +43,46 @@ go mod edit -dropreplace github.com/nais/liberator
 go get -u github.com/nais/liberator@HEAD
 ```
 
+### Immutable parts of spec
+
+You can define fields as immutable using the field tag `nais:"immutable"`:
+```go
+type MySpec struct {
+	MutableString string `json:"mutableString"`
+	ImmutableString string `json:"immutableString" nais:"immutable"`
+}
+```
+
+You can also use this on slices. When defined on a field with type slice, the entire slice is immutable and cannot be changed. If the slice contains structs, individual elements of the slice will be tested against each other. This requires another field flag, `nais:"key"`, to identify which of the elements in the slice to match against each other. You can specify more than one in a "one of" matching process.
+
+```go
+type Apps struct {
+	Name string `json:"name" nais:"immutable,key"`
+	Awesomeness int `json:"awesomeness" nais:"immutable"`
+}
+
+type AppList struct {
+	Items []Apps `json:"name"`
+}
+```
+
+#### Documentation
+
+Documenting immutable fields must be done using the comment `// +nais:doc:Immutable=true`:
+
+```go
+type Apps struct {
+	// +nais:doc:Immutable=true
+	Name string `json:"name" nais:"immutable,key"`
+	// +nais:doc:Immutable=true
+	Awesomeness int `json:"awesomeness" nais:"immutable"`
+}
+
+type AppList struct {
+	Items []Apps `json:"name"`
+}
+```
+
 ### Kubernetes dependencies
 
 The `controller-tools` dependency in `go.mod` locks the versions of
