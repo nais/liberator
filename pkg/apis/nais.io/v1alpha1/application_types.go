@@ -187,6 +187,9 @@ type ApplicationSpec struct {
 	// Whether to skip injection of NAV certificate authority bundle or not. Defaults to false.
 	SkipCaBundle bool `json:"skipCaBundle,omitempty"`
 
+	// Snorlax defines some instructions which might help save costs. Only used in the development cluster on GCP.
+	Snorlax *Snorlax `json:"snorlax,omitempty"`
+
 	// Kubernetes uses startup probes to know when a container application has started. If such a probe is configured,
 	// it disables liveness and readiness checks until it succeeds, making sure those probes don't interfere with the
 	// application startup. This can be used to adopt liveness checks on slow starting containers, avoiding them getting

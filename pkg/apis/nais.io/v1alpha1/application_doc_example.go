@@ -364,6 +364,10 @@ func ExampleApplicationForDocumentation() *Application {
 				Protocol: DefaultPortName,
 			},
 			SkipCaBundle: true,
+			Snorlax: &Snorlax{
+				Strategy:      SnorlaxEnabled,
+				NoSuspendCron: "* 07-17 * * 1-5",
+			},
 			Startup: &nais_io_v1.Probe{
 				FailureThreshold: 10,
 				InitialDelay:     20,
