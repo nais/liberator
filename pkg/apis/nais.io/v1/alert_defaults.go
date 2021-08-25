@@ -11,6 +11,6 @@ func (alert *Alert) ApplyDefaults() error {
 
 func getAlertDefaults() *Alert {
 	return &Alert{
-		Spec:       AlertSpec{},
+		Spec: AlertSpec{},
 	}
 }

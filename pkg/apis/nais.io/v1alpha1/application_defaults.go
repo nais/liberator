@@ -44,7 +44,7 @@ func (app *Application) replicasDefined() bool {
 }
 
 func (app *Application) replicasIsZero() bool {
-	return *app.Spec.Replicas.Min == 0 && * app.Spec.Replicas.Max == 0
+	return *app.Spec.Replicas.Min == 0 && *app.Spec.Replicas.Max == 0
 }
 
 func getAppDefaults() *Application {
@@ -107,9 +107,6 @@ func getAppDefaults() *Application {
 				Enabled:                 false,
 				MountSecretsAsFilesOnly: false,
 			},
-			// Snorlax: &Snorlax{
-			// 	Strategy: SnorlaxDisabled,
-			// },
 		},
 	}
 }
