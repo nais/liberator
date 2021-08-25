@@ -55,7 +55,7 @@ type AivenApplicationSpec struct {
 	// A Protected secret will not be deleted by the janitor even when not in use
 	Protected bool `json:"protected,omitempty"`
 	// Kafka is a section configuring the kafka credentials to provision
-	Kafka KafkaSpec `json:"kafka,omitempty"`
+	Kafka *KafkaSpec `json:"kafka,omitempty"`
 	// Elastic is a section configuring the Elastic credentials to provision
 	Elastic *ElasticSpec `json:"elastic,omitempty"`
 }
