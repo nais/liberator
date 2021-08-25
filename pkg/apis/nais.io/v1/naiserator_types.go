@@ -75,7 +75,9 @@ type IDPorten struct {
 	// +nais:doc:Default="/oauth2/logout"
 	// +kubebuilder:validation:Pattern=`^\/.*$`
 	FrontchannelLogoutPath string `json:"frontchannelLogoutPath,omitempty"`
-	// *DEPRECATED*. Prefer using `frontchannelLogoutPath`.
+	// Prefer using `frontchannelLogoutPath`.
+	//
+	// +nais:doc:Deprecated=true
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
 	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI,omitempty"`
 	// PostLogoutRedirectURIs are valid URIs that ID-porten will allow redirecting the end-user to after a single logout
@@ -98,18 +100,25 @@ type IDPorten struct {
 	//
 	// If unspecified, defaults to `7200` seconds (2 hours).
 	// Note: Attempting to refresh the user's `access_token` beyond this timeout will yield an error.
+	//
 	// +nais:doc:Default="7200"
 	// +kubebuilder:validation:Minimum=3600
 	// +kubebuilder:validation:Maximum=7200
 	SessionLifetime *int `json:"sessionLifetime,omitempty"`
 
-	// Sidecar configures a sidecar that intercepts requests and performs the OIDC flow if necessary.
+	// Sidecar configures a sidecar that intercepts every HTTP request, and performs the OIDC flow if necessary.
+	// All requests to ingress + `/oauth2` will be processed only by the sidecar, whereas all other requests
+	// will be proxied to the application.
+	//
+	// If the client is authenticated with IDPorten, the `Authorization` header will be set to `Bearer <JWT>`.
 	//
 	// +nais:doc:Experimental=true
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar/"
 	Sidecar *IDPortenSidecar `json:"sidecar,omitempty"`
 }
 
 type IDPortenSidecar struct {
+	// Enable the sidecar.
 	Enabled bool `json:"enabled"`
 }
 
