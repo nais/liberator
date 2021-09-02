@@ -40,6 +40,9 @@ type Elastic struct {
 	// Provisions an Elasticsearch instance and configures your application so it can access it.
 	// Use the `instance_name` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
 	Instance string `json:"instance"`
+	// Access level for elastic user
+	// +kubebuilder:validation:Enum=read;write;readwrite;admin
+	Access string `json:"access,omitempty"`
 }
 
 type Influx struct {
@@ -72,7 +75,9 @@ type IDPorten struct {
 	// +nais:doc:Default="/oauth2/logout"
 	// +kubebuilder:validation:Pattern=`^\/.*$`
 	FrontchannelLogoutPath string `json:"frontchannelLogoutPath,omitempty"`
-	// *DEPRECATED*. Prefer using `frontchannelLogoutPath`.
+	// Prefer using `frontchannelLogoutPath`.
+	//
+	// +nais:doc:Deprecated=true
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
 	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI,omitempty"`
 	// PostLogoutRedirectURIs are valid URIs that ID-porten will allow redirecting the end-user to after a single logout
@@ -86,25 +91,34 @@ type IDPorten struct {
 	// +nais:doc:Default="/oauth2/callback"
 	// +kubebuilder:validation:Pattern=`^\/.*$`
 	RedirectPath string `json:"redirectPath,omitempty"`
-	// *DEPRECATED*. Prefer using `redirectPath`.
+	// Use `redirectPath` instead.
+	//
+	// +nais:doc:Deprecated=true
 	RedirectURI IDPortenURI `json:"redirectURI,omitempty"`
 	// SessionLifetime is the maximum lifetime in seconds for any given user's session in your application.
 	// The timeout starts whenever the user is redirected from the `authorization_endpoint` at ID-porten.
 	//
 	// If unspecified, defaults to `7200` seconds (2 hours).
 	// Note: Attempting to refresh the user's `access_token` beyond this timeout will yield an error.
+	//
 	// +nais:doc:Default="7200"
 	// +kubebuilder:validation:Minimum=3600
 	// +kubebuilder:validation:Maximum=7200
 	SessionLifetime *int `json:"sessionLifetime,omitempty"`
 
-	// Sidecar configures a sidecar that intercepts requests and performs the OIDC flow if necessary.
+	// Sidecar configures a sidecar that intercepts every HTTP request, and performs the OIDC flow if necessary.
+	// All requests to ingress + `/oauth2` will be processed only by the sidecar, whereas all other requests
+	// will be proxied to the application.
 	//
-	// **EXPERIMENTAL, NOT PRODUCTION READY**
+	// If the client is authenticated with IDPorten, the `Authorization` header will be set to `Bearer <JWT>`.
+	//
+	// +nais:doc:Experimental=true
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar/"
 	Sidecar *IDPortenSidecar `json:"sidecar,omitempty"`
 }
 
 type IDPortenSidecar struct {
+	// Enable the sidecar.
 	Enabled bool `json:"enabled"`
 }
 

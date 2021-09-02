@@ -27,7 +27,7 @@ func minimalApplication() *nais_io_v1.AzureAdApplication {
 			ClusterName: "test-cluster",
 		},
 		Spec: nais_io_v1.AzureAdApplicationSpec{
-			SecretName:                "test",
+			SecretName: "test",
 		},
 		Status: nais_io_v1.AzureAdApplicationStatus{
 			PasswordKeyIds:            []string{"test"},

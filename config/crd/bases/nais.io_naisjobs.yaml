@@ -264,6 +264,14 @@ spec:
                 IaC-repo to provision each instance. See [navikt/aiven-iac](https://github.com/navikt/aiven-iac)
                 repository
               properties:
+                access:
+                  description: Access level for elastic user
+                  enum:
+                  - read
+                  - write
+                  - readwrite
+                  - admin
+                  type: string
                 instance:
                   description: Provisions an Elasticsearch instance and configures
                     your application so it can access it. Use the `instance_name`

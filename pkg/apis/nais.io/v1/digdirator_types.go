@@ -118,7 +118,7 @@ type MaskinportenScope struct {
 	// `consumes` is a list of scopes that your client can request access to.
 	ConsumedScopes []ConsumedScope `json:"consumes,omitempty"`
 	// `exposes` is a list of scopes your application want to expose to other organization where access to the scope is based on organization number.
-	ExposedScopes  []ExposedScope  `json:"exposes,omitempty"`
+	ExposedScopes []ExposedScope `json:"exposes,omitempty"`
 }
 
 type ConsumedScope struct {
