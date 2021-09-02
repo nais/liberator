@@ -2,8 +2,9 @@ package kafka_nais_io_v1
 
 import (
 	"fmt"
-	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	"strconv"
+
+	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 
 	"github.com/nais/liberator/pkg/namegen"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -105,9 +106,11 @@ type TopicACL struct {
 	// +kubebuilder:validation:Enum=read;write;readwrite
 	Access string `json:"access"`
 	// The name of the specified application
-	Application string `json:"application"`
+	Application string `json:"application,omitempty"`
 	// The team of the specified application
 	Team string `json:"team"`
+	// Users other than application
+	AdditionalUser string `json:"additionalUser,omitempty"`
 }
 
 type User struct {
@@ -151,7 +154,7 @@ func (in Topic) FullName() string {
 }
 
 func (in TopicACL) Username() string {
-	username := in.Team + "." + in.Application
+	username := in.Team + "." + in.userInUse()
 	username, err := namegen.ShortName(username, MaxServiceUserNameLength)
 	if err != nil {
 		panic(err)
@@ -159,9 +162,16 @@ func (in TopicACL) Username() string {
 	return username
 }
 
+func (in TopicACL) userInUse() string {
+	if in.AdditionalUser != "" {
+		return in.AdditionalUser
+	}
+	return in.Application
+}
+
 func (in TopicACL) ACLname() string {
 	// TODO: Use new max length when Aivenator takes over creation of service users
-	return fmt.Sprintf("%s*", aiven_nais_io_v1.ServiceUserPrefix(in.Application, in.Team, MaxServiceUserNameLength))
+	return fmt.Sprintf("%s*", aiven_nais_io_v1.ServiceUserPrefix(in.userInUse(), in.Team, MaxServiceUserNameLength))
 }
 
 func (in TopicACL) User() User {

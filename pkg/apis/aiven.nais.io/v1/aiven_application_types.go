@@ -1,11 +1,12 @@
 package aiven_nais_io_v1
 
 import (
+	"time"
+
 	"github.com/nais/liberator/pkg/namegen"
 	"github.com/nais/liberator/pkg/strings"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"time"
 )
 
 func init() {
@@ -45,6 +46,8 @@ type AivenApplicationSpec struct {
 	SecretName string `json:"secretName"`
 	// A Protected secret will not be deleted by the janitor even when not in use
 	Protected bool `json:"protected,omitempty"`
+	// User credential spec configuration
+	UserSpec *UserSpec `json:"user-spec,omitempty"`
 	// Kafka is a section configuring the kafka credentials to provision
 	Kafka KafkaSpec `json:"kafka,omitempty"`
 }
@@ -52,6 +55,11 @@ type AivenApplicationSpec struct {
 type KafkaSpec struct {
 	// Pool is the Kafka pool (aka cluster) on Aiven this application uses
 	Pool string `json:"pool"`
+}
+
+type UserSpec struct {
+	// Time for personal secret configured in days
+	TimeToLive int `json:"timeToLive,omitempty"`
 }
 
 type AivenApplicationConditionType string

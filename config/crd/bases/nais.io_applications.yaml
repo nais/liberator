@@ -534,7 +534,7 @@ spec:
                               items:
                                 properties:
                                   name:
-                                    description: User name.
+                                    description: ServiceUser name.
                                     pattern: ^[_a-zA-Z][_a-zA-Z0-9]+$
                                     type: string
                                 required:

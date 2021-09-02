@@ -71,6 +71,13 @@ spec:
             secretName:
               description: SecretName is the name of the secret containing Aiven credentials
               type: string
+            user-spec:
+              description: User credential spec configuration
+              properties:
+                timeToLive:
+                  description: Time for personal secret configured in days
+                  type: integer
+              type: object
           required:
           - secretName
           type: object
