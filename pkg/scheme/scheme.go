@@ -8,6 +8,7 @@ import (
 	iam_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/iam.cnrm.cloud.google.com/v1beta1"
 	kafka_nais_io_v1 "github.com/nais/liberator/pkg/apis/kafka.nais.io/v1"
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
+	skatteetaten_no_v1alpha1 "github.com/nais/liberator/pkg/apis/nebula.skatteetaten.no/v1alpha1"
 	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	sql_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/sql.cnrm.cloud.google.com/v1beta1"
 	storage_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/storage.cnrm.cloud.google.com/v1beta1"
@@ -15,6 +16,12 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
+
+	azurev1alpha1 "github.com/Azure/azure-service-operator/api/v1alpha1"
+	azurev1alpha2 "github.com/Azure/azure-service-operator/api/v1alpha2"
+	imagev1beta1 "github.com/fluxcd/image-reflector-controller/api/v1beta1"
+	networkingv1beta1 "istio.io/client-go/pkg/apis/networking/v1beta1"
+	securityv1beta1 "istio.io/client-go/pkg/apis/security/v1beta1"
 )
 
 // Creates a new runtime.Scheme object and adds a list of schemes to it.
@@ -35,6 +42,7 @@ func All() (*runtime.Scheme, error) {
 	return Scheme(
 		nais_io_v1alpha1.AddToScheme,
 		nais_io_v1.AddToScheme,
+		skatteetaten_no_v1alpha1.AddToScheme,
 		iam_cnrm_cloud_google_com_v1beta1.AddToScheme,
 		sql_cnrm_cloud_google_com_v1beta1.AddToScheme,
 		bigquery_cnrm_cloud_google_com_v1beta1.AddToScheme,
@@ -42,6 +50,11 @@ func All() (*runtime.Scheme, error) {
 		clientgoscheme.AddToScheme,
 		aiven_nais_io_v1.AddToScheme,
 		kafka_nais_io_v1.AddToScheme,
+		azurev1alpha1.AddToScheme,
+		azurev1alpha2.AddToScheme,
+		imagev1beta1.AddToScheme,
+		networkingv1beta1.AddToScheme,
+		securityv1beta1.AddToScheme,
 	)
 }
 
