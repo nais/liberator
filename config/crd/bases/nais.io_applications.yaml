@@ -676,6 +676,12 @@ spec:
                     enabled:
                       description: Enable the sidecar.
                       type: boolean
+                    level:
+                      description: Desired security level for all authentication requests.
+                      enum:
+                      - Level3
+                      - Level4
+                      type: string
                   required:
                   - enabled
                   type: object

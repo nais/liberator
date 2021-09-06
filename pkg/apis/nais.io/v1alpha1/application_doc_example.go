@@ -270,6 +270,7 @@ func ExampleApplicationForDocumentation() *Application {
 				SessionLifetime: intp(7200),
 				Sidecar: &nais_io_v1.IDPortenSidecar{
 					Enabled: true,
+					Level: "Level4",
 				},
 			},
 			Influx: &nais_io_v1.Influx{

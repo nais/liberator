@@ -120,6 +120,11 @@ type IDPorten struct {
 type IDPortenSidecar struct {
 	// Enable the sidecar.
 	Enabled bool `json:"enabled"`
+	// Desired security level for all authentication requests.
+	// +nais:doc:Default="Level4"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#security-levels"
+	// +kubebuilder:validation:Enum=Level3;Level4
+	Level string `json:"level,omitempty"`
 }
 
 type GCP struct {
