@@ -53,7 +53,6 @@ func getNaisjobDefaults() *Naisjob {
 			SecureLogs: &SecureLogs{
 				Enabled: false,
 			},
-			SidecarCleanup: true,
 			AccessPolicy: &AccessPolicy{
 				Inbound: &AccessPolicyInbound{
 					Rules: []AccessPolicyInboundRule{},

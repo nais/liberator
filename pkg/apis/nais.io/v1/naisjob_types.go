@@ -156,7 +156,7 @@ type NaisjobSpec struct {
 
 	// Whether or not to enable cleanup of sidecars once the main container has shut down.
 	// +nais:doc:Default="true"
-	SidecarCleanup bool `json:"sidecarCleanup,omitempty"`
+	SidecarCleanup *bool `json:"sidecarCleanup,omitempty"`
 
 	// Whether to skip injection of NAV certificate authority bundle or not. Defaults to false.
 	SkipCaBundle bool `json:"skipCaBundle,omitempty"`

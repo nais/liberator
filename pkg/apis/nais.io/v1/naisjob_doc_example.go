@@ -330,7 +330,8 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			SecureLogs: &SecureLogs{
 				Enabled: true,
 			},
-			SkipCaBundle: true,
+			SidecarCleanup: boolp(true),
+			SkipCaBundle:   true,
 			Startup: &Probe{
 				FailureThreshold: 10,
 				InitialDelay:     20,

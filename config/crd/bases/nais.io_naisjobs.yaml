@@ -904,6 +904,10 @@ spec:
               required:
               - enabled
               type: object
+            sidecarCleanup:
+              description: Whether or not to enable cleanup of sidecars once the main
+                container has shut down.
+              type: boolean
             skipCaBundle:
               description: Whether to skip injection of NAV certificate authority
                 bundle or not. Defaults to false.
