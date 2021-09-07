@@ -1,42 +1,13 @@
 
 ---
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.2.5
+    controller-gen.kubebuilder.io/version: v0.5.0
   creationTimestamp: null
   name: azureadapplications.nais.io
 spec:
-  additionalPrinterColumns:
-  - JSONPath: .status.clientId
-    name: Client ID
-    type: string
-  - JSONPath: .status.synchronizationTenantName
-    name: Tenant
-    type: string
-  - JSONPath: .status.synchronizationTenant
-    name: Tenant ID
-    priority: 1
-    type: string
-  - JSONPath: .spec.secretName
-    name: Secret Ref
-    priority: 2
-    type: string
-  - JSONPath: .metadata.creationTimestamp
-    name: Created
-    type: date
-  - JSONPath: .status.synchronizationTime
-    name: Synchronized
-    type: date
-  - JSONPath: .status.preAuthorizedApps.assignedCount
-    description: Number of assigned pre-authorized apps
-    name: Assigned
-    type: integer
-  - JSONPath: .status.preAuthorizedApps.unassignedCount
-    description: Number of unassigned pre-authorized apps
-    name: Unassigned
-    type: integer
   group: nais.io
   names:
     kind: AzureAdApplication
@@ -45,288 +16,259 @@ spec:
     shortNames:
     - azureapp
     singular: azureadapplication
-  preserveUnknownFields: false
   scope: Namespaced
-  subresources:
-    status: {}
-  validation:
-    openAPIV3Schema:
-      description: AzureAdApplication is the Schema for the AzureAdApplications API
-      properties:
-        apiVersion:
-          description: 'APIVersion defines the versioned schema of this representation
-            of an object. Servers should convert recognized schemas to the latest
-            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-          type: string
-        kind:
-          description: 'Kind is a string value representing the REST resource this
-            object represents. Servers may infer this from the endpoint the client
-            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-          type: string
-        metadata:
-          type: object
-        spec:
-          description: AzureAdApplicationSpec defines the desired state of AzureAdApplication
-          properties:
-            allowAllUsers:
-              description: AllowAllUsers denotes whether or not all users within the
-                tenant should be allowed to access this AzureAdApplication. If undefined
-                will default to `true` when Spec.Claims.Groups is undefined, and `false`
-                if Spec,Claims.Groups is defined.
-              type: boolean
-            claims:
-              description: Claims defines additional configuration of the emitted
-                claims in tokens returned to the Azure AD application.
-              properties:
-                extra:
-                  description: Extra is a list of additional claims to be mapped from
-                    an associated claim-mapping policy. Currently, the only supported
-                    values are `NAVident` and `azp_name`.
-                  items:
-                    enum:
-                    - NAVident
-                    - azp_name
-                    type: string
-                  type: array
-                groups:
-                  description: Groups is a list of Azure AD group IDs to be emitted
-                    in the 'Groups' claim. This also restricts access to only contain
-                    users of the defined groups unless overridden by Spec.AllowAllUsers.
-                  items:
-                    properties:
-                      id:
-                        description: ID is the actual `object ID` associated with
-                          the given group in Azure AD.
-                        type: string
-                    type: object
-                  type: array
-              type: object
-            logoutUrl:
-              description: LogoutUrl is the URL where Azure AD sends a request to
-                have the application clear the user's session data. This is required
-                if single sign-out should work correctly. Must start with 'https'
-              type: string
-            preAuthorizedApplications:
-              items:
-                properties:
-                  application:
-                    description: The application's name.
-                    type: string
-                  cluster:
-                    description: The application's cluster. May be omitted if it should
-                      be in the same cluster as your application.
-                    type: string
-                  namespace:
-                    description: The application's namespace. May be omitted if it
-                      should be in the same namespace as your application.
-                    type: string
-                  permissions:
-                    description: Permissions contains a set of permissions that are
-                      granted to the given application. Currently only applicable
-                      for Azure AD clients.
-                    properties:
-                      roles:
-                        description: Roles is a set of custom permission roles that
-                          are granted to a given application.
-                        items:
-                          pattern: ^[a-z0-9-_./]+$
-                          type: string
-                        type: array
-                      scopes:
-                        description: Scopes is a set of custom permission scopes that
-                          are granted to a given application.
-                        items:
-                          pattern: ^[a-z0-9-_./]+$
-                          type: string
-                        type: array
-                    type: object
-                required:
-                - application
-                type: object
-              type: array
-            replyUrls:
-              items:
-                description: AzureAdReplyUrl defines the valid reply URLs for callbacks
-                  after OIDC flows for this application
-                properties:
-                  url:
-                    type: string
-                type: object
-              type: array
-            secretKeyPrefix:
-              description: SecretKeyPrefix is an optional user-defined prefix applied
-                to the keys in the secret output, replacing the default prefix.
-              type: string
-            secretName:
-              description: SecretName is the name of the resulting Secret resource
-                to be created
-              type: string
-            singlePageApplication:
-              description: SinglePageApplication denotes whether or not this Azure
-                AD application should be registered as a single-page-application.
-              type: boolean
-            tenant:
-              description: Tenant is an optional alias for targeting a tenant matching
-                an instance of Azurerator that targets said tenant. Can be omitted
-                if only running a single instance or targeting the default tenant.
-              type: string
-          required:
-          - secretName
-          type: object
-        status:
-          description: AzureAdApplicationStatus defines the observed state of AzureAdApplication
-          properties:
-            certificateKeyIds:
-              description: CertificateKeyIds is the list of key IDs for the latest
-                valid certificate credentials in use
-              items:
-                type: string
-              type: array
-            clientId:
-              description: ClientId is the Azure application client ID
-              type: string
-            correlationId:
-              description: CorrelationId is the ID referencing the processing transaction
-                last performed on this resource
-              type: string
-            objectId:
-              description: ObjectId is the Azure AD Application object ID
-              type: string
-            passwordKeyIds:
-              description: PasswordKeyIds is the list of key IDs for the latest valid
-                password credentials in use
-              items:
-                type: string
-              type: array
-            preAuthorizedApps:
-              description: PreAuthorizedApps contains the list of desired pre-authorized
-                apps defined in the spec, separated by their actual status in Azure
-                AD.
-              properties:
-                assigned:
-                  description: Assigned is the list of desired pre-authorized apps
-                    that have been pre-authorized to access this application.
-                  items:
-                    properties:
-                      accessPolicyRule:
-                        description: AccessPolicyRule is the desired nais_io_v1.AccessPolicyRule
-                          matching the definition in AzureAdApplicationSpec.PreAuthorizedApplications.
-                        properties:
-                          application:
-                            description: The application's name.
-                            type: string
-                          cluster:
-                            description: The application's cluster. May be omitted
-                              if it should be in the same cluster as your application.
-                            type: string
-                          namespace:
-                            description: The application's namespace. May be omitted
-                              if it should be in the same namespace as your application.
-                            type: string
-                        required:
-                        - application
-                        type: object
-                      clientId:
-                        description: Client ID is the actual client ID of the application
-                          found in Azure AD, if it exists.
-                        type: string
-                      reason:
-                        description: Reason is a human-readable message that provides
-                          detailed information about the application and its status.
-                        type: string
-                      servicePrincipalObjectId:
-                        description: Object ID is the actual object ID of the service
-                          principal belonging to the application found in Azure AD,
-                          if it exists.
-                        type: string
-                    type: object
-                  type: array
-                assignedCount:
-                  description: AssignedCount is the size of the list in Assigned.
-                  type: integer
-                unassigned:
-                  description: Unassigned is the list of desired pre-authorized apps
-                    that have _not_ been pre-authorized to access this application.
-                  items:
-                    properties:
-                      accessPolicyRule:
-                        description: AccessPolicyRule is the desired nais_io_v1.AccessPolicyRule
-                          matching the definition in AzureAdApplicationSpec.PreAuthorizedApplications.
-                        properties:
-                          application:
-                            description: The application's name.
-                            type: string
-                          cluster:
-                            description: The application's cluster. May be omitted
-                              if it should be in the same cluster as your application.
-                            type: string
-                          namespace:
-                            description: The application's namespace. May be omitted
-                              if it should be in the same namespace as your application.
-                            type: string
-                        required:
-                        - application
-                        type: object
-                      clientId:
-                        description: Client ID is the actual client ID of the application
-                          found in Azure AD, if it exists.
-                        type: string
-                      reason:
-                        description: Reason is a human-readable message that provides
-                          detailed information about the application and its status.
-                        type: string
-                      servicePrincipalObjectId:
-                        description: Object ID is the actual object ID of the service
-                          principal belonging to the application found in Azure AD,
-                          if it exists.
-                        type: string
-                    type: object
-                  type: array
-                unassignedCount:
-                  description: UnassignedCount is the size of the list in Unassigned.
-                  type: integer
-              type: object
-            servicePrincipalId:
-              description: ServicePrincipalId is the Azure applications service principal
-                object ID
-              type: string
-            synchronizationHash:
-              description: SynchronizationHash is the hash of the AzureAdApplication
-                object
-              type: string
-            synchronizationSecretName:
-              description: SynchronizationSecretName is the SecretName set in the
-                last successful synchronization
-              type: string
-            synchronizationSecretRotationTime:
-              description: SynchronizationSecretRotationTime is the last time the
-                AzureAdApplication had its keys rotated.
-              format: date-time
-              type: string
-            synchronizationState:
-              description: SynchronizationState denotes whether the provisioning of
-                the AzureAdApplication has been successfully completed or not
-              type: string
-            synchronizationTenant:
-              description: SynchronizationTenant is the ID of the tenant that the
-                AzureAdApplication was synchronized to.
-              type: string
-            synchronizationTenantName:
-              description: SynchronizationTenantName is the an alias that identifies
-                the tenant that the AzureAdApplication was synchronized to.
-              type: string
-            synchronizationTime:
-              description: SynchronizationTime is the last time the Status subresource
-                was updated
-              format: date-time
-              type: string
-          type: object
-      type: object
-  version: v1
   versions:
-  - name: v1
+  - additionalPrinterColumns:
+    - jsonPath: .status.clientId
+      name: Client ID
+      type: string
+    - jsonPath: .status.synchronizationTenantName
+      name: Tenant
+      type: string
+    - jsonPath: .status.synchronizationTenant
+      name: Tenant ID
+      priority: 1
+      type: string
+    - jsonPath: .spec.secretName
+      name: Secret Ref
+      priority: 2
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Created
+      type: date
+    - jsonPath: .status.synchronizationTime
+      name: Synchronized
+      type: date
+    - description: Number of assigned pre-authorized apps
+      jsonPath: .status.preAuthorizedApps.assignedCount
+      name: Assigned
+      type: integer
+    - description: Number of unassigned pre-authorized apps
+      jsonPath: .status.preAuthorizedApps.unassignedCount
+      name: Unassigned
+      type: integer
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: AzureAdApplication is the Schema for the AzureAdApplications API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: AzureAdApplicationSpec defines the desired state of AzureAdApplication
+            properties:
+              allowAllUsers:
+                description: AllowAllUsers denotes whether or not all users within the tenant should be allowed to access this AzureAdApplication. If undefined will default to `true` when Spec.Claims.Groups is undefined, and `false` if Spec,Claims.Groups is defined.
+                type: boolean
+              claims:
+                description: Claims defines additional configuration of the emitted claims in tokens returned to the Azure AD application.
+                properties:
+                  extra:
+                    description: Extra is a list of additional claims to be mapped from an associated claim-mapping policy. Currently, the only supported values are `NAVident` and `azp_name`.
+                    items:
+                      enum:
+                      - NAVident
+                      - azp_name
+                      type: string
+                    type: array
+                  groups:
+                    description: Groups is a list of Azure AD group IDs to be emitted in the 'Groups' claim. This also restricts access to only contain users of the defined groups unless overridden by Spec.AllowAllUsers.
+                    items:
+                      properties:
+                        id:
+                          description: ID is the actual `object ID` associated with the given group in Azure AD.
+                          type: string
+                      type: object
+                    type: array
+                type: object
+              logoutUrl:
+                description: LogoutUrl is the URL where Azure AD sends a request to have the application clear the user's session data. This is required if single sign-out should work correctly. Must start with 'https'
+                type: string
+              preAuthorizedApplications:
+                items:
+                  properties:
+                    application:
+                      description: The application's name.
+                      type: string
+                    cluster:
+                      description: The application's cluster. May be omitted if it should be in the same cluster as your application.
+                      type: string
+                    namespace:
+                      description: The application's namespace. May be omitted if it should be in the same namespace as your application.
+                      type: string
+                    permissions:
+                      description: Permissions contains a set of permissions that are granted to the given application. Currently only applicable for Azure AD clients.
+                      properties:
+                        roles:
+                          description: Roles is a set of custom permission roles that are granted to a given application.
+                          items:
+                            pattern: ^[a-z0-9-_./]+$
+                            type: string
+                          type: array
+                        scopes:
+                          description: Scopes is a set of custom permission scopes that are granted to a given application.
+                          items:
+                            pattern: ^[a-z0-9-_./]+$
+                            type: string
+                          type: array
+                      type: object
+                  required:
+                  - application
+                  type: object
+                type: array
+              replyUrls:
+                items:
+                  description: AzureAdReplyUrl defines the valid reply URLs for callbacks after OIDC flows for this application
+                  properties:
+                    url:
+                      type: string
+                  type: object
+                type: array
+              secretKeyPrefix:
+                description: SecretKeyPrefix is an optional user-defined prefix applied to the keys in the secret output, replacing the default prefix.
+                type: string
+              secretName:
+                description: SecretName is the name of the resulting Secret resource to be created
+                type: string
+              singlePageApplication:
+                description: SinglePageApplication denotes whether or not this Azure AD application should be registered as a single-page-application.
+                type: boolean
+              tenant:
+                description: Tenant is an optional alias for targeting a tenant matching an instance of Azurerator that targets said tenant. Can be omitted if only running a single instance or targeting the default tenant.
+                type: string
+            required:
+            - secretName
+            type: object
+          status:
+            description: AzureAdApplicationStatus defines the observed state of AzureAdApplication
+            properties:
+              certificateKeyIds:
+                description: CertificateKeyIds is the list of key IDs for the latest valid certificate credentials in use
+                items:
+                  type: string
+                type: array
+              clientId:
+                description: ClientId is the Azure application client ID
+                type: string
+              correlationId:
+                description: CorrelationId is the ID referencing the processing transaction last performed on this resource
+                type: string
+              objectId:
+                description: ObjectId is the Azure AD Application object ID
+                type: string
+              passwordKeyIds:
+                description: PasswordKeyIds is the list of key IDs for the latest valid password credentials in use
+                items:
+                  type: string
+                type: array
+              preAuthorizedApps:
+                description: PreAuthorizedApps contains the list of desired pre-authorized apps defined in the spec, separated by their actual status in Azure AD.
+                properties:
+                  assigned:
+                    description: Assigned is the list of desired pre-authorized apps that have been pre-authorized to access this application.
+                    items:
+                      properties:
+                        accessPolicyRule:
+                          description: AccessPolicyRule is the desired nais_io_v1.AccessPolicyRule matching the definition in AzureAdApplicationSpec.PreAuthorizedApplications.
+                          properties:
+                            application:
+                              description: The application's name.
+                              type: string
+                            cluster:
+                              description: The application's cluster. May be omitted if it should be in the same cluster as your application.
+                              type: string
+                            namespace:
+                              description: The application's namespace. May be omitted if it should be in the same namespace as your application.
+                              type: string
+                          required:
+                          - application
+                          type: object
+                        clientId:
+                          description: Client ID is the actual client ID of the application found in Azure AD, if it exists.
+                          type: string
+                        reason:
+                          description: Reason is a human-readable message that provides detailed information about the application and its status.
+                          type: string
+                        servicePrincipalObjectId:
+                          description: Object ID is the actual object ID of the service principal belonging to the application found in Azure AD, if it exists.
+                          type: string
+                      type: object
+                    type: array
+                  assignedCount:
+                    description: AssignedCount is the size of the list in Assigned.
+                    type: integer
+                  unassigned:
+                    description: Unassigned is the list of desired pre-authorized apps that have _not_ been pre-authorized to access this application.
+                    items:
+                      properties:
+                        accessPolicyRule:
+                          description: AccessPolicyRule is the desired nais_io_v1.AccessPolicyRule matching the definition in AzureAdApplicationSpec.PreAuthorizedApplications.
+                          properties:
+                            application:
+                              description: The application's name.
+                              type: string
+                            cluster:
+                              description: The application's cluster. May be omitted if it should be in the same cluster as your application.
+                              type: string
+                            namespace:
+                              description: The application's namespace. May be omitted if it should be in the same namespace as your application.
+                              type: string
+                          required:
+                          - application
+                          type: object
+                        clientId:
+                          description: Client ID is the actual client ID of the application found in Azure AD, if it exists.
+                          type: string
+                        reason:
+                          description: Reason is a human-readable message that provides detailed information about the application and its status.
+                          type: string
+                        servicePrincipalObjectId:
+                          description: Object ID is the actual object ID of the service principal belonging to the application found in Azure AD, if it exists.
+                          type: string
+                      type: object
+                    type: array
+                  unassignedCount:
+                    description: UnassignedCount is the size of the list in Unassigned.
+                    type: integer
+                type: object
+              servicePrincipalId:
+                description: ServicePrincipalId is the Azure applications service principal object ID
+                type: string
+              synchronizationHash:
+                description: SynchronizationHash is the hash of the AzureAdApplication object
+                type: string
+              synchronizationSecretName:
+                description: SynchronizationSecretName is the SecretName set in the last successful synchronization
+                type: string
+              synchronizationSecretRotationTime:
+                description: SynchronizationSecretRotationTime is the last time the AzureAdApplication had its keys rotated.
+                format: date-time
+                type: string
+              synchronizationState:
+                description: SynchronizationState denotes whether the provisioning of the AzureAdApplication has been successfully completed or not
+                type: string
+              synchronizationTenant:
+                description: SynchronizationTenant is the ID of the tenant that the AzureAdApplication was synchronized to.
+                type: string
+              synchronizationTenantName:
+                description: SynchronizationTenantName is the an alias that identifies the tenant that the AzureAdApplication was synchronized to.
+                type: string
+              synchronizationTime:
+                description: SynchronizationTime is the last time the Status subresource was updated
+                format: date-time
+                type: string
+            type: object
+        type: object
     served: true
     storage: true
+    subresources:
+      status: {}
 status:
   acceptedNames:
     kind: ""
