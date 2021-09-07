@@ -18,6 +18,7 @@ package v1alpha1
 
 import (
 	"fmt"
+
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -185,17 +186,18 @@ type ImagePolicyConfig struct {
 	Semver string `json:"semver,omitempty"`
 }
 
-// ApplicationStatus defines the observed state of Application
+// ApplicationStatus contains different NAIS status properties
 type ApplicationStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	Conditions []metav1.Condition `json:"conditions"`
+	SynchronizationTime     int64  `json:"synchronizationTime,omitempty"`
+	RolloutCompleteTime     int64  `json:"rolloutCompleteTime,omitempty"`
+	CorrelationID           string `json:"correlationID,omitempty"`
+	DeploymentRolloutStatus string `json:"deploymentRolloutStatus,omitempty"`
+	SynchronizationState    string `json:"synchronizationState,omitempty"`
+	SynchronizationHash     string `json:"synchronizationHash,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:resource:shortName=app
-//+kubebuilder:subresource:status
-
 // Application is the Schema for the applications API
 type Application struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -218,13 +220,6 @@ func init() {
 	SchemeBuilder.Register(&Application{}, &ApplicationList{})
 }
 
-func (p *Application) GetConditions() []metav1.Condition {
-	return p.Status.Conditions
-}
-
-func (p *Application) SetConditions(conditions []metav1.Condition) {
-	p.Status.Conditions = conditions
-}
 
 func (a Application) StandardObjectMeta() metav1.ObjectMeta {
 	return metav1.ObjectMeta{
