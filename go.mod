@@ -3,6 +3,7 @@ module github.com/nais/liberator
 go 1.16
 
 require (
+	github.com/fluxcd/image-reflector-controller/api v0.11.1
 	github.com/ghodss/yaml v1.0.0
 	github.com/google/uuid v1.1.2
 	github.com/imdario/mergo v0.3.12
@@ -14,6 +15,7 @@ require (
 	github.com/spf13/viper v1.7.0
 	github.com/stretchr/testify v1.7.0
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
+	istio.io/client-go v1.11.2
 	k8s.io/api v0.21.3
 	k8s.io/apiextensions-apiserver v0.21.3
 	k8s.io/apimachinery v0.21.3
