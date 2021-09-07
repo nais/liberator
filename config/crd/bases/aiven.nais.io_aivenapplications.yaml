@@ -70,6 +70,10 @@ spec:
                     repository.
                   type: string
               type: object
+            expiresAt:
+              description: Timestamp for personal time limited secret. Configured
+                with ISO timestamp.
+              type: string
             kafka:
               description: Kafka is a section configuring the kafka credentials to
                 provision
@@ -88,13 +92,6 @@ spec:
             secretName:
               description: SecretName is the name of the secret containing Aiven credentials
               type: string
-            user-spec:
-              description: User credential spec configuration
-              properties:
-                timeToLive:
-                  description: Time for personal secret configured in days
-                  type: integer
-              type: object
           required:
           - secretName
           type: object
