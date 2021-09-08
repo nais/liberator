@@ -253,7 +253,7 @@ func (in *Application) GetObjectKind() schema.ObjectKind {
 	return in
 }
 
-func (in *Application) GetObjectReference() v1.ObjectReference {
+func (in Application) GetObjectReference() v1.ObjectReference {
 	return v1.ObjectReference{
 		APIVersion:      "v1alpha1",
 		UID:             in.UID,
@@ -264,7 +264,7 @@ func (in *Application) GetObjectReference() v1.ObjectReference {
 	}
 }
 
-func (in *Application) GetOwnerReference() metav1.OwnerReference {
+func (in Application) GetOwnerReference() metav1.OwnerReference {
 	return metav1.OwnerReference{
 		APIVersion: "v1alpha1",
 		Kind:       "Application",
@@ -311,7 +311,7 @@ func (in Application) Hash() (string, error) {
 	return fmt.Sprintf("%x", h), err
 }
 
-func (in *Application) LogFields() log.Fields {
+func (in Application) LogFields() log.Fields {
 	return log.Fields{
 		"namespace":       in.GetNamespace(),
 		"resourceversion": in.GetResourceVersion(),
@@ -322,7 +322,7 @@ func (in *Application) LogFields() log.Fields {
 
 // If the application was not deployed with a correlation ID annotation,
 // generate a random UUID and add it to annotations.
-func (in *Application) EnsureCorrelationID() error {
+func (in Application) EnsureCorrelationID() error {
 	if in.Annotations == nil {
 		in.SetAnnotations(map[string]string{})
 	}
@@ -341,22 +341,22 @@ func (in *Application) EnsureCorrelationID() error {
 	return nil
 }
 
-func (in *Application) CorrelationID() string {
+func (in Application) CorrelationID() string {
 	return in.Annotations[nais_io_v1.DeploymentCorrelationIDAnnotation]
 }
 
-func (in *Application) SetDeploymentRolloutStatus(rolloutStatus string) {
+func (in Application) SetDeploymentRolloutStatus(rolloutStatus string) {
 	in.Status.DeploymentRolloutStatus = rolloutStatus
 }
 
-func (in *Application) DefaultSecretPath(base string) nais_io_v1.SecretPath {
+func (in Application) DefaultSecretPath(base string) nais_io_v1.SecretPath {
 	return nais_io_v1.SecretPath{
 		MountPath: nais_io_v1.DefaultVaultMountPath,
 		KvPath:    fmt.Sprintf("%s/%s/%s", base, in.Name, in.Namespace),
 	}
 }
 
-func (in *Application) SkipDeploymentMessage() bool {
+func (in Application) SkipDeploymentMessage() bool {
 	if in.Annotations == nil {
 		return false
 	}
@@ -364,6 +364,6 @@ func (in *Application) SkipDeploymentMessage() bool {
 	return skip
 }
 
-func (in *Application) ClientID(cluster string) string {
+func (in Application) ClientID(cluster string) string {
 	return fmt.Sprintf("%s:%s:%s", cluster, in.ObjectMeta.Namespace, in.ObjectMeta.Name)
 }
