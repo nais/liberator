@@ -54,8 +54,8 @@ type AivenApplicationSpec struct {
 	SecretName string `json:"secretName"`
 	// A Protected secret will not be deleted by the janitor even when not in use
 	Protected bool `json:"protected,omitempty"`
-	// A timestamp that indicates time of expire for personal secret.
-	// The format used is RFC3339 = "2006-01-02T15:04:05Z07:00"
+	// A timestamp that indicates time-to-expire-date for personal secrets.
+	// Format RFC3339 = "2006-01-02T15:04:05Z07:00"
 	// +kubebuilder:validation:Type=string
 	// +kubebuilder:validation:Format=date-time
 	ExpiresAt *metav1.Time `json:"expiresAt,omitempty"`
