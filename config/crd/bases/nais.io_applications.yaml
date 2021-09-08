@@ -689,7 +689,7 @@ spec:
                       - nb
                       - nn
                       - en
-                      - es
+                      - se
                       type: string
                   required:
                   - enabled

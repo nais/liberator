@@ -128,7 +128,7 @@ type IDPortenSidecar struct {
 	// Default user interface locale for all authentication requests.
 	// +nais:doc:Default="nb"
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#locales"
-	// +kubebuilder:validation:Enum=nb;nn;en;es
+	// +kubebuilder:validation:Enum=nb;nn;en;se
 	Locale string `json:"locale,omitempty"`
 }
 
