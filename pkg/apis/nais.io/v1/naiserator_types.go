@@ -507,6 +507,31 @@ type CloudSqlInstance struct {
 	CascadingDelete bool `json:"cascadingDelete,omitempty"`
 	// Sort order for `ORDER BY ...` clauses.
 	Collation string `json:"collation,omitempty"`
+	// Enables point-in-time recovery for sql instances using write-ahead logs.
+	PointInTimeRecovery bool `json:"pointInTimeRecovery,omitempty"`
+	// Configures query insights which are now default for new sql instances.
+	Insights InsightsConfiguration `json:"insights,omitempty"`
+}
+
+type InsightsConfiguration struct {
+	// True if Query Insights feature is enabled.
+	// +nais:doc:Default="true"
+	Enabled *bool `json:"enabled"`
+	// Maximum query length stored in bytes. Between 256 and 4500. Default to 1024.
+	// +kubebuilder:validation:Minimum=256
+	// +kubebuilder:validation:Maximum=4500
+	QueryStringLength int `json:"queryStringLength"`
+	// True if Query Insights will record application tags from query when enabled.
+	RecordApplicationTags bool `json:"recordApplicationTags"`
+	// True if Query Insights will record client address when enabled.
+	RecordClientAddress bool `json:"recordClientAddress"`
+}
+
+func (i *InsightsConfiguration) IsEnabled() bool {
+	if i.Enabled == nil {
+		return true
+	}
+	return *i.Enabled
 }
 
 type Maintenance struct {
