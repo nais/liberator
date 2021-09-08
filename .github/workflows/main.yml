@@ -35,7 +35,7 @@ jobs:
           make doc
       - name: Commit documentation to nais/doc
         run: |
-          cd nais-doc
+          cd naisdoc
           cp -v ../liberator/doc/output/application/reference.md docs/nais-application/application.md
           cp -v ../liberator/doc/output/application/example.md docs/nais-application/example.md
           cp -v ../liberator/doc/output/naisjob/reference.md docs/naisjob/reference.md
