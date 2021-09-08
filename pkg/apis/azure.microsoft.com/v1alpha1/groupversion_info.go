@@ -4,6 +4,7 @@
 // package v1alpha1 contains API Schema definitions for the azure v1alpha1 API group
 // +kubebuilder:object:generate=true
 // +groupName=azure.microsoft.com
+// +versionName=v1alpha1
 package azure_microsoft_com_v1alpha1
 
 import (

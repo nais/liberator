@@ -17,6 +17,7 @@ limitations under the License.
 // Package v1alpha1 contains API Schema definitions for the image v1alpha1 API group
 // +kubebuilder:object:generate=true
 // +groupName=image.toolkit.fluxcd.io
+// +versionName=v1alpha2
 package fluxcd_io_image_reflector_v1alpha2
 
 import (
