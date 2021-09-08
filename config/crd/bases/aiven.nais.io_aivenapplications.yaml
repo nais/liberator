@@ -71,8 +71,9 @@ spec:
                   type: string
               type: object
             expiresAt:
-              description: Timestamp for personal time limited secret. Configured
-                with ISO timestamp.
+              description: A timestamp that indicates time of expire for personal
+                secret. The format used is RFC3339 = "2006-01-02T15:04:05Z07:00"
+              format: date-time
               type: string
             kafka:
               description: Kafka is a section configuring the kafka credentials to
