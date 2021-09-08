@@ -17,10 +17,18 @@ limitations under the License.
 package v1alpha1
 
 import (
+	"encoding/json"
 	"fmt"
+	"strconv"
+	"strings"
 
+	"github.com/google/uuid"
+	hash "github.com/mitchellh/hashstructure"
+	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
+	log "github.com/sirupsen/logrus"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
@@ -238,4 +246,124 @@ func (a Application) StandardLabels() map[string]string {
 	return map[string]string{
 		"app": a.Name,
 	}
+}
+
+
+func (in *Application) GetObjectKind() schema.ObjectKind {
+	return in
+}
+
+func (in *Application) GetObjectReference() v1.ObjectReference {
+	return v1.ObjectReference{
+		APIVersion:      "v1alpha1",
+		UID:             in.UID,
+		Name:            in.Name,
+		Kind:            "Application",
+		ResourceVersion: in.ResourceVersion,
+		Namespace:       in.Namespace,
+	}
+}
+
+func (in *Application) GetOwnerReference() metav1.OwnerReference {
+	return metav1.OwnerReference{
+		APIVersion: "v1alpha1",
+		Kind:       "Application",
+		Name:       in.Name,
+		UID:        in.UID,
+	}
+}
+
+func (in Application) Hash() (string, error) {
+	// struct including the relevant fields for
+	// creating a hash of an Application object
+	var changeCause string
+	if in.Annotations != nil {
+		changeCause = in.Annotations["kubernetes.io/change-cause"]
+	}
+	relevantValues := struct {
+		AppSpec     ApplicationSpec
+		Labels      map[string]string
+		ChangeCause string
+	}{
+		in.Spec,
+		nil,
+		changeCause,
+	}
+
+	// Exempt labels starting with 'nais.io/' from hash generation.
+	// This is neccessary to avoid app re-sync because of automated NAIS processes.
+	for k, v := range in.Labels {
+		if !strings.HasPrefix(k, "nais.io/") {
+			if relevantValues.Labels == nil {
+				// cannot be done in initializer, as this would change existing hashes
+				// fixme: do this in initializer when breaking backwards compatibility in hash
+				relevantValues.Labels = make(map[string]string)
+			}
+			relevantValues.Labels[k] = v
+		}
+	}
+
+	marshalled, err := json.Marshal(relevantValues)
+	if err != nil {
+		return "", err
+	}
+	h, err := hash.Hash(marshalled, nil)
+	return fmt.Sprintf("%x", h), err
+}
+
+func (in *Application) LogFields() log.Fields {
+	return log.Fields{
+		"namespace":       in.GetNamespace(),
+		"resourceversion": in.GetResourceVersion(),
+		"application":     in.GetName(),
+		"correlation_id":  in.Status.CorrelationID,
+	}
+}
+
+// If the application was not deployed with a correlation ID annotation,
+// generate a random UUID and add it to annotations.
+func (in *Application) EnsureCorrelationID() error {
+	if in.Annotations == nil {
+		in.SetAnnotations(map[string]string{})
+	}
+
+	if len(in.Annotations[nais_io_v1.DeploymentCorrelationIDAnnotation]) != 0 {
+		return nil
+	}
+
+	id, err := uuid.NewRandom()
+	if err != nil {
+		return fmt.Errorf("generate deployment correlation ID: %s", err)
+	}
+
+	in.Annotations[nais_io_v1.DeploymentCorrelationIDAnnotation] = id.String()
+
+	return nil
+}
+
+func (in *Application) CorrelationID() string {
+	return in.Annotations[nais_io_v1.DeploymentCorrelationIDAnnotation]
+}
+
+func (in *Application) SetDeploymentRolloutStatus(rolloutStatus string) {
+	in.Status.DeploymentRolloutStatus = rolloutStatus
+}
+
+func (in *Application) DefaultSecretPath(base string) nais_io_v1.SecretPath {
+	return nais_io_v1.SecretPath{
+		MountPath: nais_io_v1.DefaultVaultMountPath,
+		KvPath:    fmt.Sprintf("%s/%s/%s", base, in.Name, in.Namespace),
+	}
+}
+
+func (in *Application) SkipDeploymentMessage() bool {
+	if in.Annotations == nil {
+		return false
+	}
+	skip, _ := strconv.ParseBool(in.Annotations[nais_io_v1.SkipDeploymentMessageAnnotation])
+	return skip
+}
+
+func (in *Application) ClientID(cluster string) string {
+	return fmt.Sprintf("%s:%s:%s", cluster, in.ObjectMeta.Namespace, in.ObjectMeta.Name)
 }
