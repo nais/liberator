@@ -7,7 +7,7 @@ jobs:
     name: Run tests
     runs-on: ubuntu-latest
     container:
-      image: golang:1.17
+      image: golang:1.15
     steps:
       - uses: actions/checkout@v2
       - name: go test
@@ -29,7 +29,7 @@ jobs:
           path: naisdoc
       - uses: actions/setup-go@v2
         with:
-          go-version: "1.17"
+          go-version: "1.15"
       - name: Generate documentation
         run: make doc
       - name: Commit documentation to nais/doc
