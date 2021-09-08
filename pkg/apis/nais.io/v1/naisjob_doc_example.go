@@ -243,6 +243,13 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 						},
 						CascadingDelete: true,
 						Collation:       "nb_NO.UTF8",
+						PointInTimeRecovery: true,
+						Insights: InsightsConfiguration{
+							Enabled:               boolp(true),
+							QueryStringLength:     4500,
+							RecordApplicationTags: true,
+							RecordClientAddress:   true,
+						},
 					},
 				},
 				Permissions: []CloudIAMPermission{

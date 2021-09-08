@@ -53,9 +53,9 @@ type SQLInstanceInsightsConfiguration struct {
 }
 
 type SQLInstanceBackupConfiguration struct {
-	Enabled             bool   `json:"enabled"`
-	StartTime           string `json:"startTime"`
-	PointInTimeRecovery bool   `json:"pointInTimeRecovery"`
+	Enabled                    bool   `json:"enabled"`
+	StartTime                  string `json:"startTime"`
+	PointInTimeRecoveryEnabled bool   `json:"pointInTimeRecoveryEnabled"`
 }
 
 type SQLInstanceIpConfiguration struct {

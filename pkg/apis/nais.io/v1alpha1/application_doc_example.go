@@ -243,6 +243,13 @@ func ExampleApplicationForDocumentation() *Application {
 						},
 						CascadingDelete: true,
 						Collation:       "nb_NO.UTF8",
+						PointInTimeRecovery: true,
+						Insights: nais_io_v1.InsightsConfiguration{
+							Enabled:               boolp(true),
+							QueryStringLength:     4500,
+							RecordApplicationTags: true,
+							RecordClientAddress:   true,
+						},
 					},
 				},
 				Permissions: []nais_io_v1.CloudIAMPermission{
