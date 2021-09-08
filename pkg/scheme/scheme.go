@@ -22,6 +22,10 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
+	istio_networking_v1alpha3 "istio.io/client-go/pkg/apis/networking/v1alpha3"
+	istio_networking_v1beta1 "istio.io/client-go/pkg/apis/networking/v1beta1"
+	istio_security_v1beta1 "istio.io/client-go/pkg/apis/security/v1beta1"
+	istio_telemetry_v1alpha1 "istio.io/client-go/pkg/apis/telemetry/v1alpha1"
 )
 
 // Creates a new runtime.Scheme object and adds a list of schemes to it.
@@ -56,6 +60,10 @@ func All() (*runtime.Scheme, error) {
 		fluxcd_io_image_reflector_v1alpha1.AddToScheme,
 		fluxcd_io_image_reflector_v1alpha2.AddToScheme,
 		fluxcd_io_image_reflector_v1beta1.AddToScheme,
+		istio_networking_v1alpha3.AddToScheme,
+		istio_networking_v1beta1.AddToScheme,
+		istio_security_v1beta1.AddToScheme,
+		istio_telemetry_v1alpha1.AddToScheme,
 	)
 }
 
