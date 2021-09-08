@@ -16,16 +16,15 @@ import (
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	skatteetaten_no_v1alpha1 "github.com/nais/liberator/pkg/apis/nebula.skatteetaten.no/v1alpha1"
+	networking_istio_io_v1alpha3 "github.com/nais/liberator/pkg/apis/networking.istio.io/v1alpha3"
+	security_istio_io_v1beta1 "github.com/nais/liberator/pkg/apis/security.istio.io/v1beta1"
 	sql_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/sql.cnrm.cloud.google.com/v1beta1"
 	storage_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/storage.cnrm.cloud.google.com/v1beta1"
 	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	ctrl "sigs.k8s.io/controller-runtime"
-	istio_networking_v1alpha3 "istio.io/client-go/pkg/apis/networking/v1alpha3"
-	istio_networking_v1beta1 "istio.io/client-go/pkg/apis/networking/v1beta1"
-	istio_security_v1beta1 "istio.io/client-go/pkg/apis/security/v1beta1"
-	istio_telemetry_v1alpha1 "istio.io/client-go/pkg/apis/telemetry/v1alpha1"
+
 )
 
 // Creates a new runtime.Scheme object and adds a list of schemes to it.
@@ -60,10 +59,9 @@ func All() (*runtime.Scheme, error) {
 		fluxcd_io_image_reflector_v1alpha1.AddToScheme,
 		fluxcd_io_image_reflector_v1alpha2.AddToScheme,
 		fluxcd_io_image_reflector_v1beta1.AddToScheme,
-		istio_networking_v1alpha3.AddToScheme,
-		istio_networking_v1beta1.AddToScheme,
-		istio_security_v1beta1.AddToScheme,
-		istio_telemetry_v1alpha1.AddToScheme,
+		networking_istio_io_v1alpha3.AddToScheme,
+		security_istio_io_v1beta1.AddToScheme,
+
 	)
 }
 
