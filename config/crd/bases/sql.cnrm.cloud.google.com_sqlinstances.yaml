@@ -85,7 +85,6 @@ spec:
                     recordClientAddress:
                       type: boolean
                   required:
-                  - queryStringLength
                   - recordApplicationTags
                   - recordClientAddress
                   type: object

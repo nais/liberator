@@ -516,21 +516,22 @@ type CloudSqlInstance struct {
 type InsightsConfiguration struct {
 	// True if Query Insights feature is enabled.
 	// +nais:doc:Default="true"
-	Enabled *bool `json:"enabled"`
+	Enabled *bool `json:"enabled,omitempty"`
 	// Maximum query length stored in bytes. Between 256 and 4500. Default to 1024.
 	// +kubebuilder:validation:Minimum=256
 	// +kubebuilder:validation:Maximum=4500
-	QueryStringLength int `json:"queryStringLength"`
+	QueryStringLength int `json:"queryStringLength,omitempty"`
 	// True if Query Insights will record application tags from query when enabled.
-	RecordApplicationTags bool `json:"recordApplicationTags"`
+	RecordApplicationTags bool `json:"recordApplicationTags,omitempty"`
 	// True if Query Insights will record client address when enabled.
-	RecordClientAddress bool `json:"recordClientAddress"`
+	RecordClientAddress bool `json:"recordClientAddress,omitempty"`
 }
 
 func (i *InsightsConfiguration) IsEnabled() bool {
 	if i.Enabled == nil {
 		return true
 	}
+
 	return *i.Enabled
 }
 

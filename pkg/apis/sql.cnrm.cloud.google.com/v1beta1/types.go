@@ -47,7 +47,7 @@ type SQLInstanceSettings struct {
 
 type SQLInstanceInsightsConfiguration struct {
 	QueryInsightsEnabled  bool `json:"queryInsightsEnabled,omitempty"`
-	QueryStringLength     int  `json:"queryStringLength"`
+	QueryStringLength     int  `json:"queryStringLength,omitempty"`
 	RecordApplicationTags bool `json:"recordApplicationTags"`
 	RecordClientAddress   bool `json:"recordClientAddress"`
 }

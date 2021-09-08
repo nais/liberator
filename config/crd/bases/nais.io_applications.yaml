@@ -594,11 +594,6 @@ spec:
                             description: True if Query Insights will record client
                               address when enabled.
                             type: boolean
-                        required:
-                        - enabled
-                        - queryStringLength
-                        - recordApplicationTags
-                        - recordClientAddress
                         type: object
                       maintenance:
                         description: Desired maintenance window for database updates.
