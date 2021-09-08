@@ -61,9 +61,6 @@ spec:
                     - write
                     - readwrite
                     type: string
-                  additionalUser:
-                    description: Users other than application
-                    type: string
                   application:
                     description: The name of the specified application
                     type: string

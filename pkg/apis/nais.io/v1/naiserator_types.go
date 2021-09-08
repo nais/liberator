@@ -451,7 +451,7 @@ type CloudSqlDatabase struct {
 }
 
 type CloudSqlDatabaseUser struct {
-	// ServiceUser name.
+	// User name.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:Pattern="^[_a-zA-Z][_a-zA-Z0-9]+$"
 	Name string `json:"name"`
