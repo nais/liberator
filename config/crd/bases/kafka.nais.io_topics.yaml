@@ -69,6 +69,7 @@ spec:
                     type: string
                 required:
                 - access
+                - application
                 - team
                 type: object
               type: array

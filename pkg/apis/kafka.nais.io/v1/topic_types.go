@@ -106,7 +106,7 @@ type TopicACL struct {
 	// +kubebuilder:validation:Enum=read;write;readwrite
 	Access string `json:"access"`
 	// The name of the specified application
-	Application string `json:"application,omitempty"`
+	Application string `json:"application"`
 	// The team of the specified application
 	Team string `json:"team"`
 }
