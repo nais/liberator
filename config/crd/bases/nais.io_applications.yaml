@@ -677,10 +677,19 @@ spec:
                       description: Enable the sidecar.
                       type: boolean
                     level:
-                      description: Desired security level for all authentication requests.
+                      description: Default security level for all authentication requests.
                       enum:
                       - Level3
                       - Level4
+                      type: string
+                    locale:
+                      description: Default user interface locale for all authentication
+                        requests.
+                      enum:
+                      - nb
+                      - nn
+                      - en
+                      - es
                       type: string
                   required:
                   - enabled
