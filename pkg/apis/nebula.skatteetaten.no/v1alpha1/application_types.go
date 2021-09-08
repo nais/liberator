@@ -34,6 +34,44 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
+func init() {
+	SchemeBuilder.Register(&Application{}, &ApplicationList{})
+}
+
+
+// +genclient
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+// +kubebuilder:printcolumn:name="State",type="string",JSONPath=".status.synchronizationState"
+// +kubebuilder:resource:path="applications",shortName="nap",singular="application"
+// Application is the Schema for the applications API
+type Application struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   ApplicationSpec   `json:"spec,omitempty"`
+	Status ApplicationStatus `json:"status,omitempty"`
+}
+
+// ApplicationStatus contains different NAIS status properties
+type ApplicationStatus struct {
+	SynchronizationTime     int64  `json:"synchronizationTime,omitempty"`
+	RolloutCompleteTime     int64  `json:"rolloutCompleteTime,omitempty"`
+	CorrelationID           string `json:"correlationID,omitempty"`
+	DeploymentRolloutStatus string `json:"deploymentRolloutStatus,omitempty"`
+	SynchronizationState    string `json:"synchronizationState,omitempty"`
+	SynchronizationHash     string `json:"synchronizationHash,omitempty"`
+}
+
+//+kubebuilder:object:root=true
+
+// ApplicationList contains a list of Application
+type ApplicationList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []Application `json:"items"`
+}
+
 // ApplicationSpec defines the desired state of Application
 type ApplicationSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
@@ -194,39 +232,6 @@ type ImagePolicyConfig struct {
 	Semver string `json:"semver,omitempty"`
 }
 
-// ApplicationStatus contains different NAIS status properties
-type ApplicationStatus struct {
-	SynchronizationTime     int64  `json:"synchronizationTime,omitempty"`
-	RolloutCompleteTime     int64  `json:"rolloutCompleteTime,omitempty"`
-	CorrelationID           string `json:"correlationID,omitempty"`
-	DeploymentRolloutStatus string `json:"deploymentRolloutStatus,omitempty"`
-	SynchronizationState    string `json:"synchronizationState,omitempty"`
-	SynchronizationHash     string `json:"synchronizationHash,omitempty"`
-}
-
-//+kubebuilder:object:root=true
-//+kubebuilder:resource:shortName=app
-// Application is the Schema for the applications API
-type Application struct {
-	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-
-	Spec   ApplicationSpec   `json:"spec,omitempty"`
-	Status ApplicationStatus `json:"status,omitempty"`
-}
-
-//+kubebuilder:object:root=true
-
-// ApplicationList contains a list of Application
-type ApplicationList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Application `json:"items"`
-}
-
-func init() {
-	SchemeBuilder.Register(&Application{}, &ApplicationList{})
-}
 
 
 func (a Application) StandardObjectMeta() metav1.ObjectMeta {

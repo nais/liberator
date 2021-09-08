@@ -8,16 +8,24 @@ metadata:
   creationTimestamp: null
   name: applications.application.nebula.skatteetaten.no
 spec:
+  additionalPrinterColumns:
+  - JSONPath: .metadata.creationTimestamp
+    name: Age
+    type: date
+  - JSONPath: .status.synchronizationState
+    name: State
+    type: string
   group: application.nebula.skatteetaten.no
   names:
     kind: Application
     listKind: ApplicationList
     plural: applications
     shortNames:
-    - app
+    - nap
     singular: application
   preserveUnknownFields: false
   scope: Namespaced
+  subresources: {}
   validation:
     openAPIV3Schema:
       description: Application is the Schema for the applications API
