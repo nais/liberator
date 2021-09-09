@@ -158,3 +158,7 @@ func (in *AivenApplicationStatus) GetConditionOfType(conditionType AivenApplicat
 	}
 	return nil
 }
+
+func (in *AivenApplication) FormatExpiresAt() string {
+	return in.Spec.ExpiresAt.Format(time.RFC3339)
+}
