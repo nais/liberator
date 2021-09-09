@@ -54,6 +54,11 @@ type AivenApplicationSpec struct {
 	SecretName string `json:"secretName"`
 	// A Protected secret will not be deleted by the janitor even when not in use
 	Protected bool `json:"protected,omitempty"`
+	// A timestamp that indicates time-to-expire-date for personal secrets.
+	// Format RFC3339 = "2006-01-02T15:04:05Z07:00"
+	// +kubebuilder:validation:Type=string
+	// +kubebuilder:validation:Format=date-time
+	ExpiresAt *metav1.Time `json:"expiresAt,omitempty"`
 	// Kafka is a section configuring the kafka credentials to provision
 	Kafka *KafkaSpec `json:"kafka,omitempty"`
 	// Elastic is a section configuring the Elastic credentials to provision

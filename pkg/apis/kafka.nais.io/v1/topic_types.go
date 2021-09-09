@@ -2,8 +2,9 @@ package kafka_nais_io_v1
 
 import (
 	"fmt"
-	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	"strconv"
+
+	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 
 	"github.com/nais/liberator/pkg/namegen"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
