@@ -84,13 +84,10 @@ spec:
                         items:
                           properties:
                             name:
-                              default: default
                               type: string
                             port:
-                              default: 8080
                               type: integer
                             protocol:
-                              default: TCP
                               type: string
                           required:
                           - port
@@ -104,10 +101,8 @@ spec:
                   additionalProperties:
                     properties:
                       application:
-                        default: '*'
                         type: string
                       enabled:
-                        default: true
                         type: boolean
                       namespace:
                         type: string
@@ -115,13 +110,10 @@ spec:
                         items:
                           properties:
                             name:
-                              default: default
                               type: string
                             port:
-                              default: 8080
                               type: integer
                             protocol:
-                              default: TCP
                               type: string
                           required:
                           - port
@@ -137,25 +129,18 @@ spec:
                 branch:
                   type: string
                 enabled:
-                  default: true
                   type: boolean
                 semver:
                   type: string
               type: object
             ingress:
-              default:
-                public:
-                  default:
-                    enabled: true
               properties:
                 internal:
                   additionalProperties:
                     properties:
                       application:
-                        default: '*'
                         type: string
                       enabled:
-                        default: true
                         type: boolean
                       methods:
                         items:
@@ -171,13 +156,10 @@ spec:
                         items:
                           properties:
                             name:
-                              default: default
                               type: string
                             port:
-                              default: 8080
                               type: integer
                             protocol:
-                              default: TCP
                               type: string
                           required:
                           - port
@@ -189,17 +171,14 @@ spec:
                   additionalProperties:
                     properties:
                       enabled:
-                        default: true
                         type: boolean
                       gateway:
-                        default: istio-ingressgateway
                         type: string
                       hostPrefix:
                         type: string
                       overrideHostname:
                         type: string
                       port:
-                        default: 8080
                         type: integer
                     type: object
                   type: object
@@ -209,13 +188,6 @@ spec:
                 image:
                   type: string
                 resources:
-                  default:
-                    limits:
-                      cpu: 500m
-                      memory: 512Mi
-                    requests:
-                      cpu: 200m
-                      memory: 256Mi
                   description: 'TODO: defaults'
                   properties:
                     limits:
@@ -245,19 +217,14 @@ spec:
               - image
               type: object
             replicas:
-              default:
-                min: 2
-                minAvailable: 1
               properties:
                 hpaTargetCPUUtilizationPercentage:
                   type: integer
                 max:
                   type: integer
                 min:
-                  default: 2
                   type: integer
                 minAvailable:
-                  default: 1
                   format: int32
                   type: integer
               required:
@@ -265,7 +232,6 @@ spec:
               - minAvailable
               type: object
             unsecuredebugdisableallaccesspolicies:
-              default: false
               type: boolean
           required:
           - pod

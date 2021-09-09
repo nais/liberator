@@ -82,7 +82,6 @@ type ApplicationSpec struct {
 	ImagePolicy *ImagePolicyConfig `json:"imagePolicy,omitempty"`
 
 	// +optional
-	// +kubebuilder:default={min: 2, minAvailable: 1}
 	Replicas Replicas `json:"replicas"`
 
 	Pod PodConfig `json:"pod"`
@@ -90,13 +89,11 @@ type ApplicationSpec struct {
 	Azure *AzureConfig `json:"azure,omitempty"`
 
 	// +optional
-	// +kubebuilder:default={public: {default: { enabled: true }}}
 	Ingress *IngressConfig `json:"ingress,omitempty"`
 
 	// +optional
 	Egress *EgressConfig `json:"egress,omitempty"`
 
-	// +kubebuilder:default=false
 	UnsecureDebugDisableAllAccessPolicies bool `json:"unsecuredebugdisableallaccesspolicies,omitempty"`
 }
 
@@ -111,23 +108,17 @@ type EgressConfig struct {
 }
 
 type PortConfig struct {
-	// +kubebuilder:default="default"
 	Name string `json:"name,omitempty"`
-	// +kubebuilder:default=8080
 	Port uint16 `json:"port"`
-	// +kubebuilder:default="TCP"
 	Protocol string `json:"protocol,omitempty"`
 }
 
 type PublicIngressConfig struct {
 	// +optional
-	// +kubebuilder:default=true
 	Enabled bool `json:"enabled"`
 	// +optional
-	// +kubebuilder:default=8080
 	Port uint16 `json:"port,omitempty"`
 	// +optional
-	// +kubebuilder:default=istio-ingressgateway
 	Gateway          string `json:"gateway,omitempty"`
 	HostPrefix       string `json:"hostPrefix,omitempty"`
 	OverrideHostname string `json:"overrideHostname,omitempty"`
@@ -135,10 +126,8 @@ type PublicIngressConfig struct {
 
 type InternalIngressConfig struct {
 	// +optional
-	// +kubebuilder:default=true
 	Enabled bool `json:"enabled,omitempty"`
 	// +optional
-	// +kubebuilder:default="*"
 	Application string `json:"application,omitempty"`
 	// +optional
 	Namespace string `json:"namespace,omitempty"`
@@ -158,10 +147,8 @@ type ExternalEgressConfig struct {
 
 type InternalEgressConfig struct {
 	// +optional
-	// +kubebuilder:default=true
 	Enabled bool `json:"enabled,omitempty"`
 	// +optional
-	// +kubebuilder:default="*"
 	Application string `json:"application,omitempty"`
 	// +optional
 	Namespace string `json:"namespace,omitempty"`
@@ -204,25 +191,21 @@ type PodConfig struct {
 
 	//TODO: defaults
 	// +optional
-	// +kubebuilder:default={limits: { cpu: "500m", memory: "512Mi"}, requests: { cpu: "200m", memory: "256Mi"}}
 	Resource v1.ResourceRequirements `json:"resources"`
 }
 
 type Replicas struct {
 
-	// +kubebuilder:default:=2
 	Min int `json:"min"`
 	Max int `json:"max,omitempty"`
 
 	HpaTargetCPUUtilizationPercentage int `json:"hpaTargetCPUUtilizationPercentage,omitempty"`
 
-	// +kubebuilder:default:=1
 	MinAvailable int32 `json:"minAvailable"`
 }
 
 type ImagePolicyConfig struct {
 	// +optional
-	// +kubebuilder:default:=true
 	Enabled bool `json:"enabled"`
 
 	// +optional

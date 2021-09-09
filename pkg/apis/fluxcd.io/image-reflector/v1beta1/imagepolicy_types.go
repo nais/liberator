@@ -78,7 +78,6 @@ type AlphabeticalPolicy struct {
 	// Order specifies the sorting order of the tags. Given the letters of the
 	// alphabet as tags, ascending order would select Z, and descending order
 	// would select A.
-	// +kubebuilder:default:="asc"
 	// +kubebuilder:validation:Enum=asc;desc
 	// +optional
 	Order string `json:"order,omitempty"`
@@ -89,7 +88,6 @@ type NumericalPolicy struct {
 	// Order specifies the sorting order of the tags. Given the integer values
 	// from 0 to 9 as tags, ascending order would select 9, and descending order
 	// would select 0.
-	// +kubebuilder:default:="asc"
 	// +kubebuilder:validation:Enum=asc;desc
 	// +optional
 	Order string `json:"order,omitempty"`
