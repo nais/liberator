@@ -84,3 +84,31 @@ jobs:
         else
           echo "No changes; skip commit"
         fi
+
+  json-spec:
+    name: Generate and upload json-spec
+    if: github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-go@v2
+      with:
+        go-version: "1.15"
+    - name: Generate json-spec
+      run: make doc && ./hack/build-json-spec.sh
+    - uses: actions-hub/gcloud@356.0.0
+      env:
+        PROJECT_ID: nais-json-schema-2c91
+        APPLICATION_CREDENTIALS: ${{ secrets.NAIS_JSON_SCHEMA_BUCKET_SA }}
+      with:
+        args: |
+          -qm \
+          -h 'Cache-Control:private, max-age=0, no-transform' \
+          cp -r \
+          doc/output/openapi/kubernetes \
+          doc/output/openapi/nais \
+          doc/output/openapi/nais-all.json \
+          doc/output/openapi/nais-k8s-all.json \
+          gs://nais-json-schema-2c91
+        cli: gsutil
