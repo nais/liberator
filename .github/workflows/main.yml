@@ -94,10 +94,8 @@ jobs:
       with:
         go-version: "1.15"
     - name: Generate json-spec
-      # The docker image used in build-json-spec.sh has expected errors, but returns non-0
-      continue-on-error: true
       run: make doc && ./hack/build-json-spec.sh
-    - uses: actions-hub/gcloud@master
+    - uses: actions-hub/gcloud@356.0.0
       env:
         PROJECT_ID: nais-json-schema-2c91
         APPLICATION_CREDENTIALS: ${{ secrets.NAIS_JSON_SCHEMA_BUCKET_SA }}

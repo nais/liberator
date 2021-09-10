@@ -45,6 +45,3 @@ jq_k8s='
 '
 jq -s "$jq_k8s" "$OPENAPI_DIR/kubernetes/_definitions.json" "$OPENAPI_DIR/nais-all.json" > \
 		"$OPENAPI_DIR/nais-k8s-all.json"
-
-# Upload to k8s
-# gsutil -m  -h "Cache-Control:private, max-age=0, no-transform" cp -r "$OPENAPI_DIR/"{kubernetes,nais,nais-all.json,nais-k8s-all.json} $BUCKET
