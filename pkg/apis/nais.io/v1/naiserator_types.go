@@ -510,7 +510,7 @@ type CloudSqlInstance struct {
 	// Enables point-in-time recovery for sql instances using write-ahead logs.
 	PointInTimeRecovery bool `json:"pointInTimeRecovery,omitempty"`
 	// Configures query insights which are now default for new sql instances.
-	Insights InsightsConfiguration `json:"insights,omitempty"`
+	Insights *InsightsConfiguration `json:"insights,omitempty"`
 }
 
 type InsightsConfiguration struct {
@@ -527,8 +527,9 @@ type InsightsConfiguration struct {
 	RecordClientAddress bool `json:"recordClientAddress,omitempty"`
 }
 
+// IsEnabled returns true if Enabled is true, nil or if InsightsConfiguration is nil.
 func (i *InsightsConfiguration) IsEnabled() bool {
-	if i.Enabled == nil {
+	if i == nil || i.Enabled == nil {
 		return true
 	}
 

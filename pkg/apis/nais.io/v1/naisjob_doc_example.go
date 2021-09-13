@@ -241,10 +241,10 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 								},
 							},
 						},
-						CascadingDelete: true,
-						Collation:       "nb_NO.UTF8",
+						CascadingDelete:     true,
+						Collation:           "nb_NO.UTF8",
 						PointInTimeRecovery: true,
-						Insights: InsightsConfiguration{
+						Insights: &InsightsConfiguration{
 							Enabled:               boolp(true),
 							QueryStringLength:     4500,
 							RecordApplicationTags: true,
