@@ -472,7 +472,7 @@ type CloudSqlInstance struct {
 	// +kubebuilder:validation:Enum=POSTGRES_11;POSTGRES_12
 	// +kubebuilder:validation:Required
 	Type CloudSqlInstanceType `json:"type"`
-	// The name of the instance, if omitted the database name will be used.
+	// The name of the instance, if omitted the application name will be used.
 	Name string `json:"name,omitempty"`
 	// Server tier, i.e. how much CPU and memory allocated.
 	// Available tiers can be retrieved on the command line
