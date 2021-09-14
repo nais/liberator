@@ -82,7 +82,7 @@ type ApplicationSpec struct {
 	ImagePolicy *ImagePolicyConfig `json:"imagePolicy,omitempty"`
 
 	// +optional
-	Replicas Replicas `json:"replicas"`
+	Replicas nais_io_v1.Replicas `json:"replicas"`
 
 	Pod PodConfig `json:"pod"`
 
@@ -192,17 +192,12 @@ type PodConfig struct {
 	//TODO: defaults
 	// +optional
 	Resource v1.ResourceRequirements `json:"resources"`
-}
-
-type Replicas struct {
-
-	Min int `json:"min"`
-	Max int `json:"max,omitempty"`
-
-	HpaTargetCPUUtilizationPercentage int `json:"hpaTargetCPUUtilizationPercentage,omitempty"`
 
 	MinAvailable int32 `json:"minAvailable"`
+
 }
+
+
 
 type ImagePolicyConfig struct {
 	// +optional

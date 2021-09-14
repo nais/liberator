@@ -187,6 +187,9 @@ spec:
               properties:
                 image:
                   type: string
+                minAvailable:
+                  format: int32
+                  type: integer
                 resources:
                   description: 'TODO: defaults'
                   properties:
@@ -215,21 +218,20 @@ spec:
                   type: object
               required:
               - image
+              - minAvailable
               type: object
             replicas:
               properties:
-                hpaTargetCPUUtilizationPercentage:
+                cpuThresholdPercentage:
+                  description: Amount of CPU usage before the autoscaler kicks in.
                   type: integer
                 max:
+                  description: The pod autoscaler will increase replicas when required
+                    up to the maximum.
                   type: integer
                 min:
+                  description: The minimum amount of running replicas for a deployment.
                   type: integer
-                minAvailable:
-                  format: int32
-                  type: integer
-              required:
-              - min
-              - minAvailable
               type: object
             unsecuredebugdisableallaccesspolicies:
               type: boolean
