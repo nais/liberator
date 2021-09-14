@@ -573,6 +573,28 @@ spec:
                         description: When set to true this will set up standby database
                           for failover.
                         type: boolean
+                      insights:
+                        description: Configures query insights which are now default
+                          for new sql instances.
+                        properties:
+                          enabled:
+                            description: True if Query Insights feature is enabled.
+                            type: boolean
+                          queryStringLength:
+                            description: Maximum query length stored in bytes. Between
+                              256 and 4500. Default to 1024.
+                            maximum: 4500
+                            minimum: 256
+                            type: integer
+                          recordApplicationTags:
+                            description: True if Query Insights will record application
+                              tags from query when enabled.
+                            type: boolean
+                          recordClientAddress:
+                            description: True if Query Insights will record client
+                              address when enabled.
+                            type: boolean
+                        type: object
                       maintenance:
                         description: Desired maintenance window for database updates.
                         properties:
@@ -589,6 +611,10 @@ spec:
                         description: The name of the instance, if omitted the application
                           name will be used.
                         type: string
+                      pointInTimeRecovery:
+                        description: Enables point-in-time recovery for sql instances
+                          using write-ahead logs.
+                        type: boolean
                       tier:
                         description: Server tier, i.e. how much CPU and memory allocated.
                           Available tiers can be retrieved on the command line by
