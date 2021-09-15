@@ -249,7 +249,7 @@ func (in Application) GetObjectReference() v1.ObjectReference {
 
 func (in Application) GetOwnerReference() metav1.OwnerReference {
 	return metav1.OwnerReference{
-		APIVersion: "v1alpha1",
+		APIVersion: "application.nebula.skatteetaten.no/v1alpha1",
 		Kind:       "Application",
 		Name:       in.Name,
 		UID:        in.UID,
