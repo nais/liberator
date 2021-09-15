@@ -24,13 +24,14 @@ doc:
 	mkdir -p doc/output/application
 	mkdir -p doc/output/naisjob
 	mkdir -p doc/output/alert
+	mkdir -p doc/output/openapi/nais
 	go run cmd/docgen/docgen.go \
 		--dir ./pkg/apis/... \
 		--group nais.io \
 		--kind Application \
 		--reference-output doc/output/application/reference.md \
 		--example-output doc/output/application/example.md \
-		--json-schema-output doc/output/application-schema.json \
+		--openapi-output doc/output/openapi/nais \
 		--reference-template doc/templates/reference/application.md \
 		--example-template doc/templates/example/application.md \
 		;
@@ -40,6 +41,7 @@ doc:
 		--kind Naisjob \
 		--reference-output doc/output/naisjob/reference.md \
 		--example-output doc/output/naisjob/example.md \
+		--openapi-output doc/output/openapi/nais \
 		--reference-template doc/templates/reference/naisjob.md \
 		--example-template doc/templates/example/naisjob.md \
 		;
@@ -49,6 +51,7 @@ doc:
 		--kind Alert \
 		--reference-output doc/output/alert/reference.md \
 		--example-output doc/output/alert/example.md \
+		--openapi-output doc/output/openapi/nais \
 		--reference-template doc/templates/reference/alert.md \
 		--example-template doc/templates/example/alert.md \
 		;

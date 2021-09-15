@@ -120,6 +120,16 @@ type IDPorten struct {
 type IDPortenSidecar struct {
 	// Enable the sidecar.
 	Enabled bool `json:"enabled"`
+	// Default security level for all authentication requests.
+	// +nais:doc:Default="Level4"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#security-levels"
+	// +kubebuilder:validation:Enum=Level3;Level4
+	Level string `json:"level,omitempty"`
+	// Default user interface locale for all authentication requests.
+	// +nais:doc:Default="nb"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#locales"
+	// +kubebuilder:validation:Enum=nb;nn;en;se
+	Locale string `json:"locale,omitempty"`
 }
 
 type GCP struct {
@@ -462,7 +472,7 @@ type CloudSqlInstance struct {
 	// +kubebuilder:validation:Enum=POSTGRES_11;POSTGRES_12
 	// +kubebuilder:validation:Required
 	Type CloudSqlInstanceType `json:"type"`
-	// The name of the instance, if omitted the database name will be used.
+	// The name of the instance, if omitted the application name will be used.
 	Name string `json:"name,omitempty"`
 	// Server tier, i.e. how much CPU and memory allocated.
 	// Available tiers can be retrieved on the command line
@@ -497,6 +507,33 @@ type CloudSqlInstance struct {
 	CascadingDelete bool `json:"cascadingDelete,omitempty"`
 	// Sort order for `ORDER BY ...` clauses.
 	Collation string `json:"collation,omitempty"`
+	// Enables point-in-time recovery for sql instances using write-ahead logs.
+	PointInTimeRecovery bool `json:"pointInTimeRecovery,omitempty"`
+	// Configures query insights which are now default for new sql instances.
+	Insights *InsightsConfiguration `json:"insights,omitempty"`
+}
+
+type InsightsConfiguration struct {
+	// True if Query Insights feature is enabled.
+	// +nais:doc:Default="true"
+	Enabled *bool `json:"enabled,omitempty"`
+	// Maximum query length stored in bytes. Between 256 and 4500. Default to 1024.
+	// +kubebuilder:validation:Minimum=256
+	// +kubebuilder:validation:Maximum=4500
+	QueryStringLength int `json:"queryStringLength,omitempty"`
+	// True if Query Insights will record application tags from query when enabled.
+	RecordApplicationTags bool `json:"recordApplicationTags,omitempty"`
+	// True if Query Insights will record client address when enabled.
+	RecordClientAddress bool `json:"recordClientAddress,omitempty"`
+}
+
+// IsEnabled returns true if Enabled is true, nil or if InsightsConfiguration is nil.
+func (i *InsightsConfiguration) IsEnabled() bool {
+	if i == nil || i.Enabled == nil {
+		return true
+	}
+
+	return *i.Enabled
 }
 
 type Maintenance struct {

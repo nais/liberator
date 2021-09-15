@@ -33,20 +33,29 @@ type SQLDatabaseFlag struct {
 }
 
 type SQLInstanceSettings struct {
-	AvailabilityType    string                         `json:"availabilityType"`
-	BackupConfiguration SQLInstanceBackupConfiguration `json:"backupConfiguration"`
-	IpConfiguration     SQLInstanceIpConfiguration     `json:"ipConfiguration"`
-	DiskAutoresize      bool                           `json:"diskAutoresize"`
-	DiskSize            int                            `json:"diskSize"`
-	DiskType            string                         `json:"diskType"`
-	Tier                string                         `json:"tier"`
-	MaintenanceWindow   *MaintenanceWindow             `json:"maintenanceWindow,omitempty"`
-	DatabaseFlags       []SQLDatabaseFlag              `json:"databaseFlags"`
+	AvailabilityType    string                           `json:"availabilityType"`
+	BackupConfiguration SQLInstanceBackupConfiguration   `json:"backupConfiguration"`
+	InsightsConfig      SQLInstanceInsightsConfiguration `json:"insightsConfig"`
+	IpConfiguration     SQLInstanceIpConfiguration       `json:"ipConfiguration"`
+	DiskAutoresize      bool                             `json:"diskAutoresize"`
+	DiskSize            int                              `json:"diskSize"`
+	DiskType            string                           `json:"diskType"`
+	Tier                string                           `json:"tier"`
+	MaintenanceWindow   *MaintenanceWindow               `json:"maintenanceWindow,omitempty"`
+	DatabaseFlags       []SQLDatabaseFlag                `json:"databaseFlags"`
+}
+
+type SQLInstanceInsightsConfiguration struct {
+	QueryInsightsEnabled  bool `json:"queryInsightsEnabled,omitempty"`
+	QueryStringLength     int  `json:"queryStringLength,omitempty"`
+	RecordApplicationTags bool `json:"recordApplicationTags"`
+	RecordClientAddress   bool `json:"recordClientAddress"`
 }
 
 type SQLInstanceBackupConfiguration struct {
-	Enabled   bool   `json:"enabled"`
-	StartTime string `json:"startTime"`
+	Enabled                    bool   `json:"enabled"`
+	StartTime                  string `json:"startTime"`
+	PointInTimeRecoveryEnabled bool   `json:"pointInTimeRecoveryEnabled"`
 }
 
 type SQLInstanceIpConfiguration struct {

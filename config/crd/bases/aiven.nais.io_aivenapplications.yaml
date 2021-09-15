@@ -70,6 +70,11 @@ spec:
                     repository.
                   type: string
               type: object
+            expiresAt:
+              description: A timestamp that indicates time-to-expire-date for personal
+                secrets. Format RFC3339 = "2006-01-02T15:04:05Z07:00"
+              format: date-time
+              type: string
             kafka:
               description: Kafka is a section configuring the kafka credentials to
                 provision

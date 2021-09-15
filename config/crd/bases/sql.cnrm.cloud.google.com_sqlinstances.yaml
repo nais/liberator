@@ -47,10 +47,13 @@ spec:
                   properties:
                     enabled:
                       type: boolean
+                    pointInTimeRecoveryEnabled:
+                      type: boolean
                     startTime:
                       type: string
                   required:
                   - enabled
+                  - pointInTimeRecoveryEnabled
                   - startTime
                   type: object
                 databaseFlags:
@@ -71,6 +74,20 @@ spec:
                   type: integer
                 diskType:
                   type: string
+                insightsConfig:
+                  properties:
+                    queryInsightsEnabled:
+                      type: boolean
+                    queryStringLength:
+                      type: integer
+                    recordApplicationTags:
+                      type: boolean
+                    recordClientAddress:
+                      type: boolean
+                  required:
+                  - recordApplicationTags
+                  - recordClientAddress
+                  type: object
                 ipConfiguration:
                   properties:
                     requireSsl:
@@ -97,6 +114,7 @@ spec:
               - diskAutoresize
               - diskSize
               - diskType
+              - insightsConfig
               - ipConfiguration
               - tier
               type: object

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"reflect"
 	"sort"
 	"strconv"
@@ -146,7 +147,7 @@ func run() error {
 	pflag.StringVar(&cfg.ExampleOutput, "example-output", cfg.ExampleOutput, "example yaml markdown output file")
 	pflag.StringVar(&cfg.ReferenceTemplate, "reference-template", cfg.ReferenceTemplate, "template file for rendering reference doc")
 	pflag.StringVar(&cfg.ExampleTemplate, "example-template", cfg.ExampleTemplate, "template file for rendering example doc")
-	pflag.StringVar(&cfg.JSONSchema, "json-schema-output", cfg.JSONSchema, "if set, generate json schema to the provided file")
+	pflag.StringVar(&cfg.JSONSchema, "openapi-output", cfg.JSONSchema, "if set, generate json schema to the provided file")
 	pflag.Parse()
 
 	packages, err := loader.LoadRoots(cfg.Directory)
@@ -232,7 +233,17 @@ func run() error {
 		}
 
 		if cfg.JSONSchema != "" {
-			if err := writeJSONSchema(cfg.JSONSchema, schemata); err != nil {
+			kind, err := getValueFromStruct("kind", exampleResource)
+			if err != nil {
+				return err
+			}
+
+			apiVersion, err := getValueFromStruct("apiVersion", exampleResource)
+			if err != nil {
+				return err
+			}
+
+			if err := writeJSONSchema(cfg.JSONSchema, kind.(string), cfg.Group, apiVersion.(string), schemata); err != nil {
 				return err
 			}
 		}
@@ -241,31 +252,61 @@ func run() error {
 	return nil
 }
 
-func writeJSONSchema(path string, schemata apiext.JSONSchemaProps) error {
+func writeJSONSchema(path, kind, group, apiVersion string, schemata apiext.JSONSchemaProps) error {
+	path = filepath.Join(path, strings.ReplaceAll(apiVersion+"_"+kind, "/", "_")+".json")
 	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		return err
 	}
 	defer f.Close()
 
-	schemata.Schema = apiext.JSONSchemaURL("http://json-schema.org/draft-07/schema")
+	schemata.Schema = apiext.JSONSchemaURL("http://json-schema.org/schema#")
+	schemata.AdditionalProperties = &apiext.JSONSchemaPropsOrBool{
+		Allows: false,
+	}
 
 	// Make some changes to the schema to make it even more useful for validation etc.
-	schemata = setJSONSchemaDefault(schemata, "apiVersion", `"nais.io/v1alpha1"`)
-	schemata = setJSONSchemaDefault(schemata, "kind", `"Application"`)
+	schemata = setJSONSchemaEnum(schemata, "kind", strconv.Quote(kind))
+	schemata = setJSONSchemaEnum(schemata, "apiVersion", strconv.Quote(apiVersion))
 
-	schemata = setJSONSchemaRequired(schemata, ".", "kind", "metadata")
-	schemata = setJSONSchemaRequired(schemata, "metadata", "labels")
+	schemata = setJSONSchemaRequired(schemata, ".", "kind", "metadata", "apiVersion")
+	schemata = setJSONSchemaRequired(schemata, "metadata", "name", "namespace", "labels")
 	schemata = setJSONSchemaRequired(schemata, "metadata.labels", "team")
 
-	schemata = addJSONSchemaProperty(schemata, "metadata.labels.team", apiext.JSONSchemaProps{
-		Description: "Team name",
-		Type:        "string",
-	})
+	var additionalPropertiesFalse func(props map[string]apiext.JSONSchemaProps)
+	additionalPropertiesFalse = func(props map[string]apiext.JSONSchemaProps) {
+		for v, prop := range props {
+			if prop.AdditionalProperties == nil && prop.Type == "object" {
+				prop.AdditionalProperties = &apiext.JSONSchemaPropsOrBool{
+					Allows: false,
+				}
+			}
+			additionalPropertiesFalse(prop.Properties)
+			props[v] = prop
+		}
+	}
 
+	additionalPropertiesFalse(schemata.Properties)
+
+	inter := make(map[string]interface{})
+	b, err := json.Marshal(schemata)
+	if err != nil {
+		return err
+	}
+	if err := json.Unmarshal(b, &inter); err != nil {
+		return err
+	}
+
+	inter["x-kubernetes-group-version-kind"] = []map[string]string{
+		{
+			"group":   group,
+			"kind":    kind,
+			"version": apiVersion,
+		},
+	}
 	enc := json.NewEncoder(f)
-	enc.SetIndent("", "\t")
-	return enc.Encode(schemata)
+	enc.SetIndent("", "  ")
+	return enc.Encode(inter)
 }
 
 func marshalToInterface(dst, src interface{}) error {
@@ -677,9 +718,28 @@ func setJSONSchemaDefault(root apiext.JSONSchemaProps, path string, value string
 	})
 }
 
+func setJSONSchemaEnum(root apiext.JSONSchemaProps, path string, value string) apiext.JSONSchemaProps {
+	return runOnJSONSchemaProperty(root, path, func(obj *apiext.JSONSchemaProps) {
+		obj.Enum = append(obj.Enum, apiext.JSON{
+			Raw: []byte(value),
+		})
+	})
+}
+
 func setJSONSchemaRequired(root apiext.JSONSchemaProps, path string, values ...string) apiext.JSONSchemaProps {
 	return runOnJSONSchemaProperty(root, path, func(obj *apiext.JSONSchemaProps) {
-		obj.Required = append(obj.Required, values...)
+		if obj.Properties == nil {
+			obj.Properties = make(map[string]apiext.JSONSchemaProps)
+		}
+
+		for _, val := range values {
+			if _, ok := obj.Properties[val]; !ok {
+				obj.Properties[val] = apiext.JSONSchemaProps{
+					Type: "string",
+				}
+			}
+			obj.Required = append(obj.Required, val)
+		}
 	})
 }
 

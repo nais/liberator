@@ -9,7 +9,7 @@ jobs:
     container:
       image: golang:1.15
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
       - name: go test
         run: go test ./...
 
@@ -19,31 +19,33 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+        with:
+          path: liberator
+      - uses: actions/checkout@v2
+        with:
+          repository: nais/doc
+          token: ${{ secrets.SRVNAIS_REPO_PUSH_PAT }}
+          path: naisdoc
       - uses: actions/setup-go@v2
         with:
           go-version: "1.15"
       - name: Generate documentation
-        run: make doc
-      - name: Commit documentation to nais/doc
-        env:
-          DEPLOY_KEY: ${{ secrets.NAIS_DOC_DEPLOY_KEY }}
-          GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
         run: |
-          WS=${GITHUB_WORKSPACE}/naisdoc
-          eval "$(ssh-agent -s)"
-          ssh-add - <<< "${DEPLOY_KEY}"
-          mkdir -p $WS
-          git clone git@github.com:nais/doc.git $WS
-          cp -v doc/output/application/reference.md $WS/docs/nais-application/application.md
-          cp -v doc/output/application/example.md $WS/docs/nais-application/example.md
-          cp -v doc/output/naisjob/reference.md $WS/docs/naisjob/reference.md
-          cp -v doc/output/naisjob/example.md $WS/docs/naisjob/example.md
-          cp -v doc/output/alert/reference.md $WS/docs/observability/alerts/reference.md
-          cp -v doc/output/alert/example.md $WS/docs/observability/alerts/example.md
-          cd $WS
-          git config user.email "aura@nav.no"
-          git config user.name "NAIS deploy pipeline"
+          cd liberator
+          make doc
+      - name: Commit documentation to nais/doc
+        run: |
+          cd naisdoc
+          cp -v ../liberator/doc/output/application/reference.md docs/nais-application/application.md
+          cp -v ../liberator/doc/output/application/example.md docs/nais-application/example.md
+          cp -v ../liberator/doc/output/naisjob/reference.md docs/naisjob/reference.md
+          cp -v ../liberator/doc/output/naisjob/example.md docs/naisjob/example.md
+          cp -v ../liberator/doc/output/alert/reference.md docs/observability/alerts/reference.md
+          cp -v ../liberator/doc/output/alert/example.md docs/observability/alerts/example.md
+
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git add .
           git --no-pager diff --cached
           if [ ! -z "$(git diff --cached)" ]; then
@@ -59,21 +61,21 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v2
+      with:
+        path: liberator
+    - name: Checkout nais-yaml
+      uses: actions/checkout@v2
+      with:
+        repository: navikt/nais-yaml
+        token: ${{ secrets.SRVNAIS_REPO_PUSH_PAT }}
+        path: nais-yaml
     - name: Commit CRDs to nais-yaml
-      env:
-        DEPLOY_KEY: ${{ secrets.NAIS_YAML_DEPLOY_KEY }}
-        GIT_SSH_COMMAND: "ssh -o StrictHostKeyChecking=no"
       run: |
-        NAIS_YAML=${GITHUB_WORKSPACE}/nais-yaml
-        eval "$(ssh-agent -s)"
-        ssh-add - <<< "${DEPLOY_KEY}"
-        mkdir -p $NAIS_YAML
-        git clone git@github.com:navikt/nais-yaml.git $NAIS_YAML
-        cat config/crd/bases/*nais.io_*.yaml > $NAIS_YAML/templates/zz-generated-nais-crds.yaml
-        cd $NAIS_YAML
-        git config user.email "aura@nav.no"
-        git config user.name "NAIS deploy pipeline"
+        cd nais-yaml
+        cat ../liberator/config/crd/bases/*nais.io_*.yaml > templates/zz-generated-nais-crds.yaml
+        git config user.name "$GITHUB_ACTOR"
+        git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
         git add .
         git --no-pager diff --cached
         if [ ! -z "$(git diff --cached)" ]; then
@@ -82,3 +84,31 @@ jobs:
         else
           echo "No changes; skip commit"
         fi
+
+  json-spec:
+    name: Generate and upload json-spec
+    if: github.ref == 'refs/heads/main'
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-go@v2
+      with:
+        go-version: "1.15"
+    - name: Generate json-spec
+      run: make doc && ./hack/build-json-spec.sh
+    - uses: actions-hub/gcloud@356.0.0
+      env:
+        PROJECT_ID: nais-json-schema-2c91
+        APPLICATION_CREDENTIALS: ${{ secrets.NAIS_JSON_SCHEMA_BUCKET_SA }}
+      with:
+        args: |
+          -qm \
+          -h 'Cache-Control:private, max-age=0, no-transform' \
+          cp -r \
+          doc/output/openapi/kubernetes \
+          doc/output/openapi/nais \
+          doc/output/openapi/nais-all.json \
+          doc/output/openapi/nais-k8s-all.json \
+          gs://nais-json-schema-2c91
+        cli: gsutil
