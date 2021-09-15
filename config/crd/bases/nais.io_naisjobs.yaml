@@ -529,7 +529,9 @@ spec:
                               description: Database name.
                               type: string
                             users:
-                              description: The users created to allow database access.
+                              description: Add extra users for database access. These
+                                users need to be manually given access to database
+                                tables.
                               items:
                                 properties:
                                   name:
