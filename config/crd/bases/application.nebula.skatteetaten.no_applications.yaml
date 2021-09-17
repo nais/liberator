@@ -72,6 +72,10 @@ spec:
                     - users
                     type: object
                   type: array
+                resourceGroup:
+                  type: string
+              required:
+              - resourceGroup
               type: object
             egress:
               properties:

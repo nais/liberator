@@ -157,6 +157,9 @@ type InternalEgressConfig struct {
 }
 
 type AzureConfig struct {
+
+	ResourceGroup string `json:"resourceGroup"`
+
 	PostgreDatabases []*PostgreDatabaseConfig `json:"postgresDatabase,omitempty"`
 }
 
@@ -166,24 +169,10 @@ type PostgreDatabaseConfig struct {
 	Users  []*PostgreDatabaseUser `json:"users"`
 }
 
-func (p PostgreDatabaseConfig) AzureName(application Application) string {
-	return fmt.Sprintf("pgd-%s-%s-%s", application.Namespace, application.Name, p.Name)
-}
-func (p PostgreDatabaseConfig) AzureServerName(application Application) string {
-	return fmt.Sprintf("pgs-%s-%s", application.Namespace, p.Server)
-}
 
 type PostgreDatabaseUser struct {
 	Name string `json:"name"`
 	Role string `json:"role"`
-}
-
-func (p PostgreDatabaseUser) AzureName(application Application) string {
-	return fmt.Sprintf("pgu-%s-%s", application.Name, p.Name)
-}
-
-func (p PostgreDatabaseUser) SecretName(application Application) string {
-	return fmt.Sprintf("postgresqluser-%s", p.AzureName(application))
 }
 
 type PodConfig struct {
@@ -197,8 +186,6 @@ type PodConfig struct {
 
 }
 
-
-
 type ImagePolicyConfig struct {
 	// +optional
 	Enabled bool `json:"enabled"`
@@ -211,34 +198,13 @@ type ImagePolicyConfig struct {
 }
 
 
-
-func (a Application) StandardObjectMeta() metav1.ObjectMeta {
-	return metav1.ObjectMeta{
-		Name:      a.Name,
-		Namespace: a.Namespace,
-		Labels:    a.StandardLabels(),
-	}
-}
-
-func (a Application) StandardLabelSelector() map[string]string {
-	return map[string]string{
-		"app": a.Name,
-	}
-}
-func (a Application) StandardLabels() map[string]string {
-	return map[string]string{
-		"app": a.Name,
-	}
-}
-
-
 func (in *Application) GetObjectKind() schema.ObjectKind {
 	return in
 }
 
 func (in Application) GetObjectReference() v1.ObjectReference {
 	return v1.ObjectReference{
-		APIVersion:      "v1alpha1",
+		APIVersion:      "application.nebula.skatteetaten.no/v1alpha1",
 		UID:             in.UID,
 		Name:            in.Name,
 		Kind:            "Application",
@@ -277,6 +243,14 @@ func (in Application) Hash() (string, error) {
 	// This is neccessary to avoid app re-sync because of automated NAIS processes.
 	for k, v := range in.Labels {
 		if !strings.HasPrefix(k, "nais.io/") {
+			if relevantValues.Labels == nil {
+				// cannot be done in initializer, as this would change existing hashes
+				// fixme: do this in initializer when breaking backwards compatibility in hash
+				relevantValues.Labels = make(map[string]string)
+			}
+			relevantValues.Labels[k] = v
+		}
+		if !strings.HasPrefix(k, "skatteetaten.no") {
 			if relevantValues.Labels == nil {
 				// cannot be done in initializer, as this would change existing hashes
 				// fixme: do this in initializer when breaking backwards compatibility in hash
