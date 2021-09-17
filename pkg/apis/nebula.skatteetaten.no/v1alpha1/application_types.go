@@ -23,8 +23,11 @@ import (
 	"strings"
 
 	"github.com/google/uuid"
+	"github.com/imdario/mergo"
 	hash "github.com/mitchellh/hashstructure"
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
+	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
+	"github.com/nais/liberator/pkg/intutil"
 	log "github.com/sirupsen/logrus"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -82,7 +85,7 @@ type ApplicationSpec struct {
 	ImagePolicy *ImagePolicyConfig `json:"imagePolicy,omitempty"`
 
 	// +optional
-	Replicas nais_io_v1.Replicas `json:"replicas"`
+	Replicas *nais_io_v1.Replicas `json:"replicas"`
 
 	Pod PodConfig `json:"pod"`
 
@@ -157,7 +160,6 @@ type InternalEgressConfig struct {
 }
 
 type AzureConfig struct {
-
 	ResourceGroup string `json:"resourceGroup"`
 
 	PostgreDatabases []*PostgreDatabaseConfig `json:"postgresDatabase,omitempty"`
@@ -323,4 +325,77 @@ func (in Application) SkipDeploymentMessage() bool {
 
 func (in Application) ClientID(cluster string) string {
 	return fmt.Sprintf("%s:%s:%s", cluster, in.ObjectMeta.Namespace, in.ObjectMeta.Name)
+}
+
+func (in Application) ToNaisApplication() *nais_io_v1alpha1.Application {
+
+	naisApp :=&nais_io_v1alpha1.Application{
+		ObjectMeta: in.ObjectMeta,
+		Spec: nais_io_v1alpha1.ApplicationSpec{
+			Replicas: in.Spec.Replicas,
+			Image:    in.Spec.Pod.Image,
+			Resources: &nais_io_v1.ResourceRequirements{
+				Limits: &nais_io_v1.ResourceSpec{
+					Cpu:    in.Spec.Pod.Resource.Limits.Cpu().String(),
+					Memory: in.Spec.Pod.Resource.Limits.Memory().String(),
+				},
+				Requests: &nais_io_v1.ResourceSpec{
+					Cpu:    in.Spec.Pod.Resource.Requests.Cpu().String(),
+					Memory: in.Spec.Pod.Resource.Requests.Memory().String(),
+				},
+			},
+		},
+	}
+
+	naisApp.ApplyDefaults()
+	return naisApp
+}
+
+// ApplyDefaults sets default values where they are missing from an Application spec.
+func (app *Application) ApplyDefaults() error {
+	replicasIsZero := app.replicasDefined() && app.replicasIsZero()
+
+	err := mergo.Merge(app, getAppDefaults())
+	if err != nil {
+		return err
+	}
+
+	if replicasIsZero {
+		app.Spec.Replicas.Min = intutil.Intp(0)
+		app.Spec.Replicas.Max = intutil.Intp(0)
+	}
+
+	return nil
+}
+
+func (app *Application) replicasDefined() bool {
+	if app.Spec.Replicas != nil && app.Spec.Replicas.Min != nil && app.Spec.Replicas.Max != nil {
+		return true
+	}
+	return false
+}
+
+func (app *Application) replicasIsZero() bool {
+	return *app.Spec.Replicas.Min == 0 && *app.Spec.Replicas.Max == 0
+}
+
+func getAppDefaults() *Application {
+	return &Application{
+		Spec: ApplicationSpec{
+			Replicas: &nais_io_v1.Replicas{
+				Min:                    intutil.Intp(2),
+				Max:                    intutil.Intp(4),
+				CpuThresholdPercentage: 50,
+			},
+			Ingress: &IngressConfig{
+				Public: map[string]PublicIngressConfig{
+					"default": {
+						Enabled:          true,
+						Port: 8080,
+						Gateway: "istio-gateway",
+					},
+				},
+			},
+		},
+	}
 }

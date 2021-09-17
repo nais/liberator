@@ -6,6 +6,7 @@
 package v1alpha1
 
 import (
+	v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -76,7 +77,11 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = new(ImagePolicyConfig)
 		**out = **in
 	}
-	in.Replicas.DeepCopyInto(&out.Replicas)
+	if in.Replicas != nil {
+		in, out := &in.Replicas, &out.Replicas
+		*out = new(v1.Replicas)
+		(*in).DeepCopyInto(*out)
+	}
 	in.Pod.DeepCopyInto(&out.Pod)
 	if in.Azure != nil {
 		in, out := &in.Azure, &out.Azure
