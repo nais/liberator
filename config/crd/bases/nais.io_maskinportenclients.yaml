@@ -1,181 +1,179 @@
 
 ---
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.2.5
+    controller-gen.kubebuilder.io/version: v0.6.2
   creationTimestamp: null
   name: maskinportenclients.nais.io
 spec:
-  additionalPrinterColumns:
-  - JSONPath: .spec.secretName
-    name: Secret Ref
-    type: string
-  - JSONPath: .status.clientID
-    name: ClientID
-    type: string
-  - JSONPath: .metadata.creationTimestamp
-    name: Age
-    type: date
-  - JSONPath: .metadata.creationTimestamp
-    name: Created
-    type: date
-  - JSONPath: .status.synchronizationTime
-    name: Synchronized
-    type: date
   group: nais.io
   names:
     kind: MaskinportenClient
     listKind: MaskinportenClientList
     plural: maskinportenclients
     singular: maskinportenclient
-  preserveUnknownFields: false
   scope: Namespaced
-  subresources: {}
-  validation:
-    openAPIV3Schema:
-      description: MaskinportenClient is the Schema for the MaskinportenClient API
-      properties:
-        apiVersion:
-          description: 'APIVersion defines the versioned schema of this representation
-            of an object. Servers should convert recognized schemas to the latest
-            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-          type: string
-        kind:
-          description: 'Kind is a string value representing the REST resource this
-            object represents. Servers may infer this from the endpoint the client
-            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
-          type: string
-        metadata:
-          type: object
-        spec:
-          description: MaskinportenClientSpec defines the desired state of MaskinportenClient
-          properties:
-            scopes:
-              description: Scopes is a object of used end exposed scopes by application
-              properties:
-                consumes:
-                  description: This is the Schema for the consumes and exposes API.
-                    `consumes` is a list of scopes that your client can request access
-                    to.
-                  items:
-                    properties:
-                      name:
-                        description: The scope consumed by the application to gain
-                          access to an external organization API. Ensure that the
-                          NAV organization has been granted access to the scope prior
-                          to requesting access.
-                        type: string
-                    required:
-                    - name
-                    type: object
-                  type: array
-                exposes:
-                  description: '`exposes` is a list of scopes your application want
-                    to expose to other organization where access to the scope is based
-                    on organization number.'
-                  items:
-                    properties:
-                      allowedIntegrations:
-                        description: Whitelisting of integration's allowed. Default
-                          is `maskinporten`
-                        items:
-                          type: string
-                        minItems: 1
-                        type: array
-                      atMaxAge:
-                        description: Max time in seconds for a issued access_token.
-                          Default is `30` sec.
-                        maximum: 680
-                        minimum: 30
-                        type: integer
-                      consumers:
-                        description: External consumers granted access to this scope
-                          and able to request access_token.
-                        items:
-                          properties:
-                            name:
-                              description: This is a describing field intended for
-                                clarity not used for any other purpose.
-                              type: string
-                            orgno:
-                              description: The external business/organization number.
-                              pattern: ^\d{9}$
-                              type: string
-                          required:
-                          - orgno
-                          type: object
-                        type: array
-                      enabled:
-                        description: If Enabled the configured scope is available
-                          to be used and consumed by organizations granted access.
-                        type: boolean
-                      name:
-                        description: The actual subscope combined with `Product`.
-                          Ensure that `<Product><Name>` matches `Pattern`.
-                        pattern: ^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$
-                        type: string
-                      product:
-                        description: The product-area your application belongs to
-                          e.g. arbeid, helse ... This will be included in the final
-                          scope `nav:<Product><Name>`.
-                        pattern: ^[a-z0-9]+$
-                        type: string
-                    required:
-                    - enabled
-                    - name
-                    - product
-                    type: object
-                  type: array
-              type: object
-            secretName:
-              description: SecretName is the name of the resulting Secret resource
-                to be created
-              type: string
-          required:
-          - secretName
-          type: object
-        status:
-          description: DigdiratorStatus defines the observed state of Current Client
-          properties:
-            clientID:
-              description: ClientID is the corresponding client ID for this client
-                at Digdir
-              type: string
-            correlationID:
-              description: CorrelationID is the ID referencing the processing transaction
-                last performed on this resource
-              type: string
-            keyIDs:
-              description: KeyIDs is the list of key IDs for valid JWKs registered
-                for the client at Digdir
-              items:
-                type: string
-              type: array
-            synchronizationHash:
-              description: SynchronizationHash is the hash of the Instance object
-              type: string
-            synchronizationSecretName:
-              description: SynchronizationSecretName is the SecretName set in the
-                last successful synchronization
-              type: string
-            synchronizationState:
-              description: SynchronizationState denotes the last known state of the
-                Instance during synchronization
-              type: string
-            synchronizationTime:
-              description: SynchronizationTime is the last time the Status subresource
-                was updated
-              format: date-time
-              type: string
-          type: object
-      type: object
-  version: v1
   versions:
-  - name: v1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.secretName
+      name: Secret Ref
+      type: string
+    - jsonPath: .status.clientID
+      name: ClientID
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    - jsonPath: .metadata.creationTimestamp
+      name: Created
+      type: date
+    - jsonPath: .status.synchronizationTime
+      name: Synchronized
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: MaskinportenClient is the Schema for the MaskinportenClient API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: MaskinportenClientSpec defines the desired state of MaskinportenClient
+            properties:
+              scopes:
+                description: Scopes is a object of used end exposed scopes by application
+                properties:
+                  consumes:
+                    description: This is the Schema for the consumes and exposes API.
+                      `consumes` is a list of scopes that your client can request
+                      access to.
+                    items:
+                      properties:
+                        name:
+                          description: The scope consumed by the application to gain
+                            access to an external organization API. Ensure that the
+                            NAV organization has been granted access to the scope
+                            prior to requesting access.
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    type: array
+                  exposes:
+                    description: '`exposes` is a list of scopes your application want
+                      to expose to other organization where access to the scope is
+                      based on organization number.'
+                    items:
+                      properties:
+                        allowedIntegrations:
+                          description: Whitelisting of integration's allowed. Default
+                            is `maskinporten`
+                          items:
+                            type: string
+                          minItems: 1
+                          type: array
+                        atMaxAge:
+                          description: Max time in seconds for a issued access_token.
+                            Default is `30` sec.
+                          maximum: 680
+                          minimum: 30
+                          type: integer
+                        consumers:
+                          description: External consumers granted access to this scope
+                            and able to request access_token.
+                          items:
+                            properties:
+                              name:
+                                description: This is a describing field intended for
+                                  clarity not used for any other purpose.
+                                type: string
+                              orgno:
+                                description: The external business/organization number.
+                                pattern: ^\d{9}$
+                                type: string
+                            required:
+                            - orgno
+                            type: object
+                          type: array
+                        enabled:
+                          description: If Enabled the configured scope is available
+                            to be used and consumed by organizations granted access.
+                          type: boolean
+                        name:
+                          description: The actual subscope combined with `Product`.
+                            Ensure that `<Product><Name>` matches `Pattern`.
+                          pattern: ^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$
+                          type: string
+                        product:
+                          description: The product-area your application belongs to
+                            e.g. arbeid, helse ... This will be included in the final
+                            scope `nav:<Product><Name>`.
+                          pattern: ^[a-z0-9]+$
+                          type: string
+                      required:
+                      - enabled
+                      - name
+                      - product
+                      type: object
+                    type: array
+                type: object
+              secretName:
+                description: SecretName is the name of the resulting Secret resource
+                  to be created
+                type: string
+            required:
+            - secretName
+            type: object
+          status:
+            description: DigdiratorStatus defines the observed state of Current Client
+            properties:
+              clientID:
+                description: ClientID is the corresponding client ID for this client
+                  at Digdir
+                type: string
+              correlationID:
+                description: CorrelationID is the ID referencing the processing transaction
+                  last performed on this resource
+                type: string
+              keyIDs:
+                description: KeyIDs is the list of key IDs for valid JWKs registered
+                  for the client at Digdir
+                items:
+                  type: string
+                type: array
+              synchronizationHash:
+                description: SynchronizationHash is the hash of the Instance object
+                type: string
+              synchronizationSecretName:
+                description: SynchronizationSecretName is the SecretName set in the
+                  last successful synchronization
+                type: string
+              synchronizationState:
+                description: SynchronizationState denotes the last known state of
+                  the Instance during synchronization
+                type: string
+              synchronizationTime:
+                description: SynchronizationTime is the last time the Status subresource
+                  was updated
+                format: date-time
+                type: string
+            type: object
+        type: object
     served: true
     storage: true
+    subresources: {}
 status:
   acceptedNames:
     kind: ""

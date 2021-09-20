@@ -95,7 +95,9 @@ Check for compatibility here: https://github.com/kubernetes-sigs/controller-tool
 |--------------------|------------------------|
 | 1.17               | v0.2.5                 |
 | 1.18               | v0.4.1                 |
-| 1.19               | master                 |
+| 1.19               | ??                     |
+| 1.20               | ??                     |
+| 1.21               | v0.6.2                 |
 
 ### Code generation
 
