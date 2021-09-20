@@ -295,7 +295,7 @@ type TokenX struct {
 
 type Kafka struct {
 	// Configures your application to access an Aiven Kafka cluster.
-	// +nais:doc:Link="https://doc.nais.io/addons/kafka/"
+	// +nais:doc:Link="https://doc.nais.io/persistence/kafka/"
 	// +kubebuilder:validation:Enum=nav-dev;nav-prod;nav-infrastructure
 	Pool string `json:"pool"`
 }
