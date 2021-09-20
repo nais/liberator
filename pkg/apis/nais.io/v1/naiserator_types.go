@@ -456,7 +456,7 @@ type CloudSqlDatabase struct {
 	Name string `json:"name"`
 	// Prefix to add to environment variables made available for database connection.
 	EnvVarPrefix string `json:"envVarPrefix,omitempty"`
-	// The users created to allow database access.
+	// Add extra users for database access. These users need to be manually given access to database tables.
 	Users []CloudSqlDatabaseUser `json:"users,omitempty"`
 }
 
