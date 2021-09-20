@@ -3,7 +3,7 @@
 
 # Lock down version of controller-gen
 # See _code generation_ in README.md
-CONTROLLER_GEN_VERSION ?= "v0.2.5"
+CONTROLLER_GEN_VERSION ?= "v0.6.2"
 
 # Get the currently used golang install path (in GOPATH/bin, unless GOBIN is set)
 ifeq (,$(shell go env GOBIN))
