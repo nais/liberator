@@ -111,3 +111,19 @@ func (in *Application) GetResources() *nais_io_v1.ResourceRequirements {
 		},
 	}
 }
+
+func (in *Application) GetIngress() *IngressConfig{
+	return 	&IngressConfig{
+		Public: map[string]PublicIngressConfig{
+			"default": {
+				Enabled: true,
+				Port:    8080,
+				Gateway: "istio-gateway",
+			},
+		},
+	}
+}
+
+func (in *Application) GetEgress() *EgressConfig{
+	return in.Spec.Egress
+}

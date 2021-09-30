@@ -352,15 +352,6 @@ func getAppDefaults() *Application {
 				Max:                    intutil.Intp(4),
 				CpuThresholdPercentage: 50,
 			},
-			Ingress: &IngressConfig{
-				Public: map[string]PublicIngressConfig{
-					"default": {
-						Enabled:          true,
-						Port: 8080,
-						Gateway: "istio-gateway",
-					},
-				},
-			},
 		},
 	}
 }
