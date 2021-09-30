@@ -127,3 +127,15 @@ func (in *Application) GetIngress() *IngressConfig{
 func (in *Application) GetEgress() *EgressConfig{
 	return in.Spec.Egress
 }
+
+func (in *Application) GetImagePolicy() *ImagePolicyConfig {
+	return in.Spec.ImagePolicy
+}
+
+func (in *Application) GetAzureResourceGroup() string {
+	return in.Spec.Azure.ResourceGroup
+}
+
+func (in *Application) GetPostgresDatabases() []*PostgreDatabaseConfig {
+	return in.Spec.Azure.PostgreDatabases
+}
