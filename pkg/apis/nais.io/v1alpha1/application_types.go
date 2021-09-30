@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/google/uuid"
 	hash "github.com/mitchellh/hashstructure"
 	log "github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
@@ -289,27 +288,6 @@ func (in *Application) LogFields() log.Fields {
 		"application":     in.GetName(),
 		"correlation_id":  in.Status.CorrelationID,
 	}
-}
-
-// If the application was not deployed with a correlation ID annotation,
-// generate a random UUID and add it to annotations.
-func (in *Application) EnsureCorrelationID() error {
-	if in.Annotations == nil {
-		in.SetAnnotations(map[string]string{})
-	}
-
-	if len(in.Annotations[nais_io_v1.DeploymentCorrelationIDAnnotation]) != 0 {
-		return nil
-	}
-
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return fmt.Errorf("generate deployment correlation ID: %s", err)
-	}
-
-	in.Annotations[nais_io_v1.DeploymentCorrelationIDAnnotation] = id.String()
-
-	return nil
 }
 
 func (in *Application) CorrelationID() string {
