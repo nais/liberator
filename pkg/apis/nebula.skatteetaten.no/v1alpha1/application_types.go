@@ -26,7 +26,6 @@ import (
 	"github.com/imdario/mergo"
 	hash "github.com/mitchellh/hashstructure"
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
-	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	"github.com/nais/liberator/pkg/intutil"
 	log "github.com/sirupsen/logrus"
 	v1 "k8s.io/api/core/v1"
@@ -53,17 +52,7 @@ type Application struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	Spec   ApplicationSpec   `json:"spec,omitempty"`
-	Status ApplicationStatus `json:"status,omitempty"`
-}
-
-// ApplicationStatus contains different NAIS status properties
-type ApplicationStatus struct {
-	SynchronizationTime     int64  `json:"synchronizationTime,omitempty"`
-	RolloutCompleteTime     int64  `json:"rolloutCompleteTime,omitempty"`
-	CorrelationID           string `json:"correlationID,omitempty"`
-	DeploymentRolloutStatus string `json:"deploymentRolloutStatus,omitempty"`
-	SynchronizationState    string `json:"synchronizationState,omitempty"`
-	SynchronizationHash     string `json:"synchronizationHash,omitempty"`
+	Status nais_io_v1.Status `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
@@ -325,30 +314,6 @@ func (in Application) SkipDeploymentMessage() bool {
 
 func (in Application) ClientID(cluster string) string {
 	return fmt.Sprintf("%s:%s:%s", cluster, in.ObjectMeta.Namespace, in.ObjectMeta.Name)
-}
-
-func (in Application) ToNaisApplication() *nais_io_v1alpha1.Application {
-
-	naisApp :=&nais_io_v1alpha1.Application{
-		ObjectMeta: in.ObjectMeta,
-		Spec: nais_io_v1alpha1.ApplicationSpec{
-			Replicas: in.Spec.Replicas,
-			Image:    in.Spec.Pod.Image,
-			Resources: &nais_io_v1.ResourceRequirements{
-				Limits: &nais_io_v1.ResourceSpec{
-					Cpu:    in.Spec.Pod.Resource.Limits.Cpu().String(),
-					Memory: in.Spec.Pod.Resource.Limits.Memory().String(),
-				},
-				Requests: &nais_io_v1.ResourceSpec{
-					Cpu:    in.Spec.Pod.Resource.Requests.Cpu().String(),
-					Memory: in.Spec.Pod.Resource.Requests.Memory().String(),
-				},
-			},
-		},
-	}
-
-	naisApp.ApplyDefaults()
-	return naisApp
 }
 
 // ApplyDefaults sets default values where they are missing from an Application spec.
