@@ -6,7 +6,6 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/google/uuid"
 	hash "github.com/mitchellh/hashstructure"
 	log "github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
@@ -39,7 +38,7 @@ func GetDefaultMountPath(name string) string {
 // Application defines a NAIS application.
 //
 // +genclient
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 // +kubebuilder:printcolumn:name="Team",type="string",JSONPath=".metadata.labels.team"
 // +kubebuilder:printcolumn:name="State",type="string",JSONPath=".status.synchronizationState"
@@ -49,7 +48,7 @@ type Application struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	Spec   ApplicationSpec   `json:"spec"`
-	Status ApplicationStatus `json:"status,omitempty"`
+	Status nais_io_v1.Status `json:"status,omitempty"`
 }
 
 // ApplicationSpec contains the NAIS manifest.
@@ -213,17 +212,7 @@ type ApplicationSpec struct {
 	WebProxy bool `json:"webproxy,omitempty"`
 }
 
-// ApplicationStatus contains different NAIS status properties
-type ApplicationStatus struct {
-	SynchronizationTime     int64  `json:"synchronizationTime,omitempty"`
-	RolloutCompleteTime     int64  `json:"rolloutCompleteTime,omitempty"`
-	CorrelationID           string `json:"correlationID,omitempty"`
-	DeploymentRolloutStatus string `json:"deploymentRolloutStatus,omitempty"`
-	SynchronizationState    string `json:"synchronizationState,omitempty"`
-	SynchronizationHash     string `json:"synchronizationHash,omitempty"`
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
 type ApplicationList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
@@ -299,27 +288,6 @@ func (in *Application) LogFields() log.Fields {
 		"application":     in.GetName(),
 		"correlation_id":  in.Status.CorrelationID,
 	}
-}
-
-// If the application was not deployed with a correlation ID annotation,
-// generate a random UUID and add it to annotations.
-func (in *Application) EnsureCorrelationID() error {
-	if in.Annotations == nil {
-		in.SetAnnotations(map[string]string{})
-	}
-
-	if len(in.Annotations[nais_io_v1.DeploymentCorrelationIDAnnotation]) != 0 {
-		return nil
-	}
-
-	id, err := uuid.NewRandom()
-	if err != nil {
-		return fmt.Errorf("generate deployment correlation ID: %s", err)
-	}
-
-	in.Annotations[nais_io_v1.DeploymentCorrelationIDAnnotation] = id.String()
-
-	return nil
 }
 
 func (in *Application) CorrelationID() string {
