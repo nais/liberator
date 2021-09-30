@@ -32,8 +32,8 @@ type Naisjob struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   NaisjobSpec   `json:"spec"`
-	Status NaisjobStatus `json:"status,omitempty"`
+	Spec   NaisjobSpec `json:"spec"`
+	Status Status      `json:"status,omitempty"`
 }
 
 // NaisjobSpec contains the NAIS manifest.
@@ -182,16 +182,6 @@ type NaisjobSpec struct {
 	// Java applications can start the JVM using parameters from the `$JAVA_PROXY_OPTIONS` environment variable.
 	// +nais:doc:Availability="on-premises"
 	WebProxy bool `json:"webproxy,omitempty"`
-}
-
-// NaisjobStatus contains different NAIS status properties
-type NaisjobStatus struct {
-	SynchronizationTime     int64  `json:"synchronizationTime,omitempty"`
-	RolloutCompleteTime     int64  `json:"rolloutCompleteTime,omitempty"`
-	CorrelationID           string `json:"correlationID,omitempty"`
-	DeploymentRolloutStatus string `json:"deploymentRolloutStatus,omitempty"`
-	SynchronizationState    string `json:"synchronizationState,omitempty"`
-	SynchronizationHash     string `json:"synchronizationHash,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

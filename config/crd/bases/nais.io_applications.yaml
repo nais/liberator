@@ -1217,7 +1217,7 @@ spec:
             - image
             type: object
           status:
-            description: ApplicationStatus contains different NAIS status properties
+            description: Status contains different NAIS status properties
             properties:
               correlationID:
                 type: string

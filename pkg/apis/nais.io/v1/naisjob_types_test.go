@@ -34,7 +34,7 @@ func minimalNaisjob() *nais_io_v1.Naisjob {
 		Spec: nais_io_v1.NaisjobSpec{
 			Schedule: "test * * * * :)",
 		},
-		Status: nais_io_v1.NaisjobStatus{
+		Status: nais_io_v1.Status{
 			SynchronizationTime:     0,
 			RolloutCompleteTime:     0,
 			CorrelationID:           "test",

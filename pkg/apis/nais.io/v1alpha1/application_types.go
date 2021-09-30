@@ -39,7 +39,7 @@ func GetDefaultMountPath(name string) string {
 // Application defines a NAIS application.
 //
 // +genclient
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 // +kubebuilder:printcolumn:name="Team",type="string",JSONPath=".metadata.labels.team"
 // +kubebuilder:printcolumn:name="State",type="string",JSONPath=".status.synchronizationState"
@@ -49,7 +49,7 @@ type Application struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
 	Spec   ApplicationSpec   `json:"spec"`
-	Status ApplicationStatus `json:"status,omitempty"`
+	Status nais_io_v1.Status `json:"status,omitempty"`
 }
 
 // ApplicationSpec contains the NAIS manifest.
@@ -213,17 +213,7 @@ type ApplicationSpec struct {
 	WebProxy bool `json:"webproxy,omitempty"`
 }
 
-// ApplicationStatus contains different NAIS status properties
-type ApplicationStatus struct {
-	SynchronizationTime     int64  `json:"synchronizationTime,omitempty"`
-	RolloutCompleteTime     int64  `json:"rolloutCompleteTime,omitempty"`
-	CorrelationID           string `json:"correlationID,omitempty"`
-	DeploymentRolloutStatus string `json:"deploymentRolloutStatus,omitempty"`
-	SynchronizationState    string `json:"synchronizationState,omitempty"`
-	SynchronizationHash     string `json:"synchronizationHash,omitempty"`
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
 type ApplicationList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

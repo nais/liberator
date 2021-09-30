@@ -1046,7 +1046,7 @@ spec:
             - image
             type: object
           status:
-            description: NaisjobStatus contains different NAIS status properties
+            description: Status contains different NAIS status properties
             properties:
               correlationID:
                 type: string
