@@ -1,4 +1,4 @@
-module github.com/skatteetaten-trial/liberator
+module github.com/nais/liberator
 
 go 1.17
 
