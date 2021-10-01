@@ -43,6 +43,13 @@ go mod edit -dropreplace github.com/nais/liberator
 go get -u github.com/nais/liberator@HEAD
 ```
 
+### Build for Skatteetaten
+Need to replace nais liberator with our own, use
+
+```
+go mod edit -replace github.com/nais/liberator=github.com/skatteetaten-trial/liberator@<hash>
+```
+
 ### Immutable parts of spec
 
 You can define fields as immutable using the field tag `nais:"immutable"`:
