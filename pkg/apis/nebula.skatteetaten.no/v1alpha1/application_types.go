@@ -195,7 +195,7 @@ func (in *Application) GetObjectKind() schema.ObjectKind {
 
 func (in Application) GetObjectReference() v1.ObjectReference {
 	return v1.ObjectReference{
-		APIVersion:      "application.nebula.skatteetaten.no/v1alpha1",
+		APIVersion:      "nebula.skatteetaten.no/v1alpha1",
 		UID:             in.UID,
 		Name:            in.Name,
 		Kind:            "Application",
@@ -206,7 +206,7 @@ func (in Application) GetObjectReference() v1.ObjectReference {
 
 func (in Application) GetOwnerReference() metav1.OwnerReference {
 	return metav1.OwnerReference{
-		APIVersion: "application.nebula.skatteetaten.no/v1alpha1",
+		APIVersion: "nebula.skatteetaten.no/v1alpha1",
 		Kind:       "Application",
 		Name:       in.Name,
 		UID:        in.UID,
