@@ -1,0 +1,28 @@
+apiVersion: application.nebula.skatteetaten.no/v1alpha1
+kind: Application
+metadata:
+  name: supernova
+spec:
+  imagePolicy:
+    semver: ">=0.0.0 <1.0.0"
+  replicas:
+    min: 1
+    max: 5
+    cpuThresholdPercentage: 50
+  azure:
+    postgresDatabase:
+      - name: db
+        server: nebula
+        users:
+          - name: read
+            role: azure_pg_admin
+  pod:
+    minAvailable: 1
+    image: ghcr.io/skatteetaten-trial/nebula/supernova:0.8.3
+    resources:
+      limits:
+        cpu: 500m
+        memory: 1Gi
+      requests:
+        cpu: 20m
+        memory: 512Mi
