@@ -8,16 +8,16 @@ require (
 	github.com/imdario/mergo v0.3.12
 	github.com/mitchellh/hashstructure v1.1.0
 	github.com/mitchellh/mapstructure v1.4.2
-	github.com/sirupsen/logrus v1.7.0
+	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.9.0
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/net v0.0.0-20210503060351-7fd8e65b6420 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
-	k8s.io/api v0.21.3
-	k8s.io/apiextensions-apiserver v0.21.3
-	k8s.io/apimachinery v0.21.3
-	k8s.io/client-go v0.21.3
+	k8s.io/api v0.21.5
+	k8s.io/apiextensions-apiserver v0.21.5
+	k8s.io/apimachinery v0.21.5
+	k8s.io/client-go v0.21.5
 	sigs.k8s.io/controller-runtime v0.9.5
 	sigs.k8s.io/controller-tools v0.6.2
 )
@@ -68,7 +68,7 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/ini.v1 v1.63.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	k8s.io/component-base v0.21.3 // indirect
+	k8s.io/component-base v0.21.5 // indirect
 	k8s.io/klog/v2 v2.8.0 // indirect
 	k8s.io/kube-openapi v0.0.0-20210305001622-591a79e4bda7 // indirect
 	k8s.io/utils v0.0.0-20210722164352-7f3ee0f31471 // indirect
