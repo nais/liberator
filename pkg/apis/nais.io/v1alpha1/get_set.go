@@ -1,6 +1,9 @@
 package nais_io_v1alpha1
 
-import nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
+import (
+	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
 
 // TODO: replace manual getters with generated code
 // TODO: candidates are either `go generate` or a switch to Protobuf
@@ -87,4 +90,8 @@ func (in *Application) GetPreStopHookPath() string {
 
 func (in *Application) GetResources() *nais_io_v1.ResourceRequirements {
 	return in.Spec.Resources
+}
+
+func (in *Application ) SetReadyCondition(condition metav1.ConditionStatus, reason string, message string) {
+	in.Status.SetReadyCondition(condition, reason, message)
 }
