@@ -19,6 +19,9 @@ type Status struct {
 }
 
 func (in *Status ) SetReadyCondition(condition metav1.ConditionStatus, reason string, message string) {
+	if in.Conditions == nil {
+		in.Conditions = &[]metav1.Condition{}
+	}
 	readyCondition := meta.FindStatusCondition(*in.Conditions, "READY")
 	if readyCondition == nil {
 		readyCondition = &metav1.Condition{
