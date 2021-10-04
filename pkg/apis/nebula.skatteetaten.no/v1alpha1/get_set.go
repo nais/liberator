@@ -123,7 +123,7 @@ func (in *Application) GetIngress() *IngressConfig{
 			"default": {
 				Enabled: true,
 				Port:    8080,
-				Gateway: "istio-gateway",
+				Gateway: "istio-ingressgateway",
 			},
 		},
 	}
