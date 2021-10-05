@@ -407,7 +407,8 @@ type CloudBigQueryDataset struct {
 
 type CloudStorageBucket struct {
 	// The name of the bucket
-	Name string `json:"name"`
+	// +nais:doc:Immutable=true
+	Name string `json:"name" nais:"immutable,key"`
 	// Allows deletion of bucket. Set to true if you want to delete the bucket.
 	CascadingDelete bool `json:"cascadingDelete,omitempty"`
 	// The number of days to hold objects in the bucket before it is allowed to delete them.
@@ -428,7 +429,7 @@ type CloudStorageBucket struct {
 	// +nais:doc:Link="https://cloud.google.com/storage/docs/uniform-bucket-level-access"
 	// +nais:doc:Immutable=true
 	// +nais:doc:Default="false"
-	UniformBucketLevelAccess bool `json:"uniformBucketLevelAccess,omitempty"`
+	UniformBucketLevelAccess bool `json:"uniformBucketLevelAccess,omitempty" nais:"immutable"`
 }
 
 type LifecycleCondition struct {
