@@ -184,6 +184,8 @@ spec:
                           type: string
                         port:
                           type: integer
+                        serviceport:
+                          type: integer
                       type: object
                     type: object
                 type: object

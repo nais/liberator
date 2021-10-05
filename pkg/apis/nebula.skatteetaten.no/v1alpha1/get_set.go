@@ -122,7 +122,8 @@ func (in *Application) GetIngress() *IngressConfig{
 		Public: map[string]PublicIngressConfig{
 			"default": {
 				Enabled: true,
-				Port:    80,
+				Port:    8080,
+				ServicePort: 80,
 				Gateway: "istio-ingressgateway",
 			},
 		},

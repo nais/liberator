@@ -111,6 +111,8 @@ type PublicIngressConfig struct {
 	// +optional
 	Port uint16 `json:"port,omitempty"`
 	// +optional
+	ServicePort uint16 `json:"serviceport,omitempty"`
+	// +optional
 	Gateway          string `json:"gateway,omitempty"`
 	HostPrefix       string `json:"hostPrefix,omitempty"`
 	OverrideHostname string `json:"overrideHostname,omitempty"`
