@@ -67,6 +67,8 @@ spec:
                   retentionPeriod:
                     type: integer
                 type: object
+              uniformBucketLevelAccess:
+                type: boolean
             required:
             - location
             type: object
