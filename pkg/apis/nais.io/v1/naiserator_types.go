@@ -417,6 +417,14 @@ type CloudStorageBucket struct {
 	// Conditions for the bucket to use when selecting objects to delete in cleanup.
 	// +nais:doc:Link="https://cloud.google.com/storage/docs/lifecycle"
 	LifecycleCondition *LifecycleCondition `json:"lifecycleCondition,omitempty"`
+	// Allows you to uniformly control access to your Cloud Storage resources.
+	// When you enable uniform bucket-level access on a bucket, Access Control Lists (ACLs) are disabled, and only bucket-level Identity
+	// and Access Management (IAM) permissions grant access to that bucket and the objects it contains.
+	// Uniform access control can not be reversed!
+	// +nais:doc:Link="https://cloud.google.com/storage/docs/uniform-bucket-level-access"
+	// +nais:doc:Immutable=true
+	// +nais:doc:Default="false"
+	UniformBucketLevelAccess bool `json:"uniformBucketLevelAccess,omitempty"`
 }
 
 type LifecycleCondition struct {
