@@ -421,6 +421,10 @@ type CloudStorageBucket struct {
 	// When you enable uniform bucket-level access on a bucket, Access Control Lists (ACLs) are disabled, and only bucket-level Identity
 	// and Access Management (IAM) permissions grant access to that bucket and the objects it contains.
 	// Uniform access control can not be reversed!
+	//
+	// Remember to delete the StorageBucketAccessControl resource if you enable this after the bucket has been created.
+	//
+	// `kubectl delete storagebucketaccesscontrols $bucketname`
 	// +nais:doc:Link="https://cloud.google.com/storage/docs/uniform-bucket-level-access"
 	// +nais:doc:Immutable=true
 	// +nais:doc:Default="false"
