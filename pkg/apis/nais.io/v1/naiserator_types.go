@@ -130,6 +130,13 @@ type IDPortenSidecar struct {
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#locales"
 	// +kubebuilder:validation:Enum=nb;nn;en;se
 	Locale string `json:"locale,omitempty"`
+	// Absolute path to redirect the user to on authentication errors for custom error handling.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#error-handling"
+	ErrorPath string `json:"errorPath,omitempty"`
+	// Automatically redirect the user to login for all proxied routes.
+	// +nais:doc:Default="false"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#auto-login"
+	AutoLogin bool `json:"autoLogin,omitempty"`
 }
 
 type GCP struct {

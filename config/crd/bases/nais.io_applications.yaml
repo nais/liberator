@@ -717,9 +717,17 @@ spec:
                       \n If the client is authenticated with IDPorten, the `Authorization`
                       header will be set to `Bearer <JWT>`."
                     properties:
+                      autoLogin:
+                        description: Automatically redirect the user to login for
+                          all proxied routes.
+                        type: boolean
                       enabled:
                         description: Enable the sidecar.
                         type: boolean
+                      errorPath:
+                        description: Absolute path to redirect the user to on authentication
+                          errors for custom error handling.
+                        type: string
                       level:
                         description: Default security level for all authentication
                           requests.
