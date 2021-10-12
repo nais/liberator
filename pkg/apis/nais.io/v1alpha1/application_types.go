@@ -35,6 +35,10 @@ func GetDefaultMountPath(name string) string {
 	return fmt.Sprintf("/var/run/configmaps/%s", name)
 }
 
+func GetDefaultPVCMountPath(name string) string {
+	return fmt.Sprintf("/var/run/pvc/%s", name)
+}
+
 // Application defines a NAIS application.
 //
 // +genclient

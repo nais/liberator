@@ -194,17 +194,21 @@ type ObjectFieldSelector struct {
 
 type FilesFrom struct {
 	// Name of the `ConfigMap` that contains files that should be mounted into the container.
-	// Required unless `secret` is set.
+	// Required unless `secret` or `persistentVolumeClaim` is set.
 	ConfigMap string `json:"configmap,omitempty"`
 	// Name of the `Secret` that contains files that should be mounted into the container.
-	// Required unless `configMap` is set.
+	// Required unless `configMap` or `persistentVolumeClaim` is set.
 	// If mounting multiple secrets, `mountPath` *MUST* be set to avoid collisions.
 	Secret string `json:"secret,omitempty"`
+	// Name of the `PersistentVolumeClaim` that should be mounted into the container.
+	// Required unless `configMap` or `secret` is set.
+	// This feature requires coordination with the NAIS team.
+	PersistentVolumeClaim string `json:"persistentVolumeClaim,omitempty"`
 	// Filesystem path inside the pod where files are mounted.
 	// The directory will be created if it does not exist. If the directory exists,
 	// any files in the directory will be made unaccessible.
 	//
-	// Defaults to `/var/run/configmaps/<NAME>` or `/var/run/secrets`, depending on which of them is specified.
+	// Defaults to `/var/run/configmaps/<NAME>`, `/var/run/secrets`, or `/var/run/pvc/<NAME>`, depending on which of them is specified.
 	MountPath string `json:"mountPath,omitempty"`
 }
 

@@ -376,20 +376,27 @@ spec:
                     configmap:
                       description: Name of the `ConfigMap` that contains files that
                         should be mounted into the container. Required unless `secret`
-                        is set.
+                        or `persistentVolumeClaim` is set.
                       type: string
                     mountPath:
                       description: "Filesystem path inside the pod where files are
                         mounted. The directory will be created if it does not exist.
                         If the directory exists, any files in the directory will be
-                        made unaccessible. \n Defaults to `/var/run/configmaps/<NAME>`
-                        or `/var/run/secrets`, depending on which of them is specified."
+                        made unaccessible. \n Defaults to `/var/run/configmaps/<NAME>`,
+                        `/var/run/secrets`, or `/var/run/pvc/<NAME>`, depending on
+                        which of them is specified."
+                      type: string
+                    persistentVolumeClaim:
+                      description: Name of the `PersistentVolumeClaim` that should
+                        be mounted into the container. Required unless `configMap`
+                        or `secret` is set. This feature requires coordination with
+                        the NAIS team.
                       type: string
                     secret:
                       description: Name of the `Secret` that contains files that should
                         be mounted into the container. Required unless `configMap`
-                        is set. If mounting multiple secrets, `mountPath` *MUST* be
-                        set to avoid collisions.
+                        or `persistentVolumeClaim` is set. If mounting multiple secrets,
+                        `mountPath` *MUST* be set to avoid collisions.
                       type: string
                   type: object
                 type: array
