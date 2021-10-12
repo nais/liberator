@@ -188,6 +188,10 @@ func ExampleApplicationForDocumentation() *Application {
 					Secret:    "my-secret-file",
 					MountPath: "/var/run/secrets",
 				},
+				{
+					PersistentVolumeClaim: "pvc-name",
+					MountPath:             "/var/run/pvc",
+				},
 			},
 			GCP: &nais_io_v1.GCP{
 				BigQueryDatasets: []nais_io_v1.CloudBigQueryDataset{
