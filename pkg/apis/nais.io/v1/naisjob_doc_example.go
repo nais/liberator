@@ -189,6 +189,10 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					Secret:    "my-secret-file",
 					MountPath: "/var/run/secrets",
 				},
+				{
+					PersistentVolumeClaim: "pvc-name",
+					MountPath:             "/var/run/pvc",
+				},
 			},
 			GCP: &GCP{
 				BigQueryDatasets: []CloudBigQueryDataset{
