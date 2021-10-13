@@ -60,9 +60,9 @@ type NaisjobSpec struct {
 	Command []string `json:"command,omitempty"`
 
 	// Specifies how to treat concurrent executions of a job that is created by this Naisjob-cron.
-	// [Kubernetes concurrency-policy documentation](https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#concurrency-policy).
 	// +kubebuilder:validation:Enum=Forbid;Replace;Allow
 	// +nais:doc:Default="Allow"
+	// +nais:doc:Link="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#concurrency-policy"
 	ConcurrencyPolicy v1beta1.ConcurrencyPolicy `json:"concurrencyPolicy,omitempty"`
 
 	// To get your own Elastic Search instance head over to the IaC-repo to provision each instance.
