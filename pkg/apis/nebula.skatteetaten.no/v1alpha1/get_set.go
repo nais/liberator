@@ -3,7 +3,6 @@ package v1alpha1
 import (
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // TODO: replace manual getters with generated code
@@ -13,8 +12,8 @@ func (in *Application) SetStatus(status *nais_io_v1.Status) {
 	in.Status = *status
 }
 
-func (in *Application ) SetReadyCondition(condition metav1.ConditionStatus, reason string, message string) {
-	in.Status.SetReadyCondition(condition, reason, message)
+func (in *Application ) SetStatusConditions() {
+	in.Status.SetStatusConditions()
 }
 
 func (in *Application) GetStatus() *nais_io_v1.Status {

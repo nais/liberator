@@ -18,25 +18,47 @@ type Status struct {
 	Conditions              *[]metav1.Condition `json:"conditions,omitempty"`
 }
 
-func (in *Status ) SetReadyCondition(condition metav1.ConditionStatus, reason string, message string) {
+func (in *Status ) SetStatusConditions() {
+
 	if in.Conditions == nil {
 		in.Conditions = &[]metav1.Condition{}
 	}
-	readyCondition := meta.FindStatusCondition(*in.Conditions, "READY")
-	if readyCondition == nil {
-		readyCondition = &metav1.Condition{
-			Type:               "Ready",
-			Status:             condition,
+
+	reconcilingConditionStatus := metav1.ConditionTrue
+	if in.SynchronizationState != EventRolloutComplete && in.SynchronizationState != EventFailedSynchronization {
+		reconcilingConditionStatus =metav1.ConditionFalse
+	}
+	readyConditionStatus := metav1.ConditionFalse
+	if in.SynchronizationState == EventRolloutComplete {
+		readyConditionStatus=metav1.ConditionTrue
+	}
+
+	stalledConditionStatus := metav1.ConditionFalse
+	if in.SynchronizationState == EventFailedSynchronization {
+		stalledConditionStatus=metav1.ConditionTrue
+	}
+
+	in.addStatusCondition("Ready", readyConditionStatus)
+	in.addStatusCondition("Stalled", stalledConditionStatus)
+	in.addStatusCondition("Reconciling", reconcilingConditionStatus)
+}
+
+
+func (in *Status) addStatusCondition(name string, conditionStatus metav1.ConditionStatus) {
+	condition := meta.FindStatusCondition(*in.Conditions, name)
+	if condition == nil {
+		condition = &metav1.Condition{
+			Type:               name,
+			Status:             conditionStatus,
 			LastTransitionTime: metav1.NewTime(time.Now()),
-			ObservedGeneration: 1,
-			Reason:             reason,
-			Message:            message,
+			Reason:             in.SynchronizationState,
+			Message:            in.DeploymentRolloutStatus,
 		}
 	}else {
-		readyCondition.Status = condition
-		readyCondition.ObservedGeneration += 1
-		readyCondition.Reason = reason
-		readyCondition.Message = message
+		condition.Status = conditionStatus
+		condition.Reason = in.SynchronizationState
+		condition.Message = in.DeploymentRolloutStatus
 	}
-	meta.SetStatusCondition(in.Conditions, *readyCondition)
+
+	meta.SetStatusCondition(in.Conditions, *condition)
 }
