@@ -263,6 +263,14 @@ spec:
                 items:
                   type: string
                 type: array
+              concurrencyPolicy:
+                description: Specifies how to treat concurrent executions of a job
+                  that is created by this Naisjob-cron.
+                enum:
+                - Forbid
+                - Replace
+                - Allow
+                type: string
               elastic:
                 description: To get your own Elastic Search instance head over to
                   the IaC-repo to provision each instance. See [navikt/aiven-iac](https://github.com/navikt/aiven-iac)

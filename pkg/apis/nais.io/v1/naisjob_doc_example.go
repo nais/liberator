@@ -152,6 +152,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				"--other-param",
 				"other-value",
 			},
+			ConcurrencyPolicy: "Allow",
 			Elastic: &Elastic{
 				Instance: "my-elastic-instance",
 				Access:   "readwrite",
