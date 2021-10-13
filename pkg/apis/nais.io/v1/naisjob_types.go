@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/nais/liberator/pkg/hash"
 	log "github.com/sirupsen/logrus"
+	"k8s.io/api/batch/v1beta1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -57,6 +58,12 @@ type NaisjobSpec struct {
 
 	// Override command when starting Docker image.
 	Command []string `json:"command,omitempty"`
+
+	// Specifies how to treat concurrent executions of a job that is created by this Naisjob-cron.
+	// +kubebuilder:validation:Enum=Forbid;Replace;Allow
+	// +nais:doc:Default="Allow"
+	// +nais:doc:Link="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#concurrency-policy"
+	ConcurrencyPolicy v1beta1.ConcurrencyPolicy `json:"concurrencyPolicy,omitempty"`
 
 	// To get your own Elastic Search instance head over to the IaC-repo to provision each instance.
 	// See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository
@@ -274,4 +281,16 @@ func (in *Naisjob) SkipDeploymentMessage() bool {
 
 func (in *Naisjob) ClientID(cluster string) string {
 	return fmt.Sprintf("%s:%s:%s", cluster, in.ObjectMeta.Namespace, in.ObjectMeta.Name)
+}
+
+func (in *Naisjob) ConcurrencyPolicy() v1beta1.ConcurrencyPolicy {
+	if in.Spec.ConcurrencyPolicy != "" {
+		if in.Spec.ConcurrencyPolicy == v1beta1.ForbidConcurrent {
+			return v1beta1.ForbidConcurrent
+		}
+		if in.Spec.ConcurrencyPolicy == v1beta1.ReplaceConcurrent {
+			return v1beta1.ReplaceConcurrent
+		}
+	}
+	return v1beta1.AllowConcurrent
 }
