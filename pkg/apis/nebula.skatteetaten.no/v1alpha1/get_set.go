@@ -35,9 +35,7 @@ func (in *Application) GetCleanup() *nais_io_v1.Cleanup {
 }
 
 func (in *Application) GetPrometheus() *nais_io_v1.PrometheusConfig {
-	return  &nais_io_v1.PrometheusConfig{
-		Path: "/metrics",
-	}
+	return in.Spec.Pod.Prometheus
 }
 
 func (in *Application) GetLogtransform() string {
@@ -60,23 +58,19 @@ func (in *Application) GetService() *nais_io_v1.Service {
 }
 
 func (in *Application) GetLiveness() *nais_io_v1.Probe {
-	return &nais_io_v1.Probe{
-		PeriodSeconds:    nais_io_v1alpha1.DefaultProbePeriodSeconds,
-		Timeout:          nais_io_v1alpha1.DefaultProbeTimeoutSeconds,
-		FailureThreshold: nais_io_v1alpha1.DefaultProbeFailureThreshold,
-	}
+	return in.Spec.Pod.Liveness
 }
 
 func (in *Application) GetReadiness() *nais_io_v1.Probe {
-	return nil
+	return in.Spec.Pod.Readiness
 }
 
 func (in *Application) GetStartup() *nais_io_v1.Probe {
-	return nil
+	return in.Spec.Pod.Startup
 }
 
 func (in *Application) GetEnv() nais_io_v1.EnvVars {
-	return nais_io_v1.EnvVars{}
+	return in.Spec.Pod.Env
 }
 
 func (in *Application) GetImage() string {
@@ -84,15 +78,15 @@ func (in *Application) GetImage() string {
 }
 
 func (in *Application) GetCommand() []string {
-	return []string{}
+	return in.Spec.Pod.Command
 }
 
 func (in *Application) GetFilesFrom() []nais_io_v1.FilesFrom {
-	return []nais_io_v1.FilesFrom{}
+	return in.Spec.Pod.FilesFrom
 }
 
 func (in *Application) GetEnvFrom() []nais_io_v1.EnvFrom {
-	return []nais_io_v1.EnvFrom{}
+	return in.Spec.Pod.EnvFrom
 }
 
 func (in *Application) GetPreStopHook() *nais_io_v1.PreStopHook {
@@ -104,16 +98,7 @@ func (in *Application) GetPreStopHookPath() string {
 }
 
 func (in *Application) GetResources() *nais_io_v1.ResourceRequirements {
-	return &nais_io_v1.ResourceRequirements{
-		Limits: &nais_io_v1.ResourceSpec{
-			Cpu:    in.Spec.Pod.Resource.Limits.Cpu().String(),
-			Memory: in.Spec.Pod.Resource.Limits.Memory().String(),
-		},
-		Requests: &nais_io_v1.ResourceSpec{
-			Cpu:    in.Spec.Pod.Resource.Requests.Cpu().String(),
-			Memory: in.Spec.Pod.Resource.Requests.Memory().String(),
-		},
-	}
+	return in.Spec.Pod.Resources
 }
 
 func (in *Application) GetIngress() *IngressConfig{

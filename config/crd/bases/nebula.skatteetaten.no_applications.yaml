@@ -191,36 +191,254 @@ spec:
                 type: object
               pod:
                 properties:
+                  command:
+                    items:
+                      type: string
+                    type: array
+                  env:
+                    description: Custom environment variables injected into your container.
+                      Specify either `value` or `valueFrom`, but not both.
+                    items:
+                      properties:
+                        name:
+                          description: Environment variable name. May only contain
+                            letters, digits, and the underscore `_` character.
+                          type: string
+                        value:
+                          description: Environment variable value. Numbers and boolean
+                            values must be quoted. Required unless `valueFrom` is
+                            specified.
+                          type: string
+                        valueFrom:
+                          description: Dynamically set environment variables based
+                            on fields found in the Pod spec.
+                          properties:
+                            fieldRef:
+                              properties:
+                                fieldPath:
+                                  description: Field value from the `Pod` spec that
+                                    should be copied into the environment variable.
+                                  enum:
+                                  - ""
+                                  - metadata.name
+                                  - metadata.namespace
+                                  - metadata.labels
+                                  - metadata.annotations
+                                  - spec.nodeName
+                                  - spec.serviceAccountName
+                                  - status.hostIP
+                                  - status.podIP
+                                  type: string
+                              required:
+                              - fieldPath
+                              type: object
+                          required:
+                          - fieldRef
+                          type: object
+                      required:
+                      - name
+                      type: object
+                    type: array
+                  envFrom:
+                    description: "EnvFrom exposes all variables in the ConfigMap or
+                      Secret resources as environment variables. One of `configMap`
+                      or `secret` is required. \n Environment variables will take
+                      the form `KEY=VALUE`, where `key` is the ConfigMap or Secret
+                      key. You can specify as many keys as you like in a single ConfigMap
+                      or Secret. \n The ConfigMap and Secret resources must live in
+                      the same Kubernetes namespace as the Application resource."
+                    items:
+                      properties:
+                        configmap:
+                          description: Name of the `ConfigMap` where environment variables
+                            are specified. Required unless `secret` is set.
+                          type: string
+                        secret:
+                          description: Name of the `Secret` where environment variables
+                            are specified. Required unless `configMap` is set.
+                          type: string
+                      type: object
+                    type: array
+                  filesFrom:
+                    description: "List of ConfigMap or Secret resources that will
+                      have their contents mounted into the containers as files. Either
+                      `configMap` or `secret` is required. \n Files will take the
+                      path `<mountPath>/<key>`, where `key` is the ConfigMap or Secret
+                      key. You can specify as many keys as you like in a single ConfigMap
+                      or Secret, and they will all be mounted to the same directory.
+                      \n The ConfigMap and Secret resources must live in the same
+                      Kubernetes namespace as the Application resource."
+                    items:
+                      properties:
+                        configmap:
+                          description: Name of the `ConfigMap` that contains files
+                            that should be mounted into the container. Required unless
+                            `secret` is set.
+                          type: string
+                        mountPath:
+                          description: "Filesystem path inside the pod where files
+                            are mounted. The directory will be created if it does
+                            not exist. If the directory exists, any files in the directory
+                            will be made unaccessible. \n Defaults to `/var/run/configmaps/<NAME>`
+                            or `/var/run/secrets`, depending on which of them is specified."
+                          type: string
+                        secret:
+                          description: Name of the `Secret` that contains files that
+                            should be mounted into the container. Required unless
+                            `configMap` is set. If mounting multiple secrets, `mountPath`
+                            *MUST* be set to avoid collisions.
+                          type: string
+                      type: object
+                    type: array
                   image:
                     type: string
+                  liveness:
+                    description: Many applications running for long periods of time
+                      eventually transition to broken states, and cannot recover except
+                      by being restarted. Kubernetes provides liveness probes to detect
+                      and remedy such situations. Read more about this over at the
+                      [Kubernetes probes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
+                    properties:
+                      failureThreshold:
+                        description: When a Pod starts, and the probe fails, Kubernetes
+                          will try _failureThreshold_ times before giving up. Giving
+                          up in case of a startup probe means restarting the Pod.
+                        type: integer
+                      initialDelay:
+                        description: Number of seconds after the container has started
+                          before startup probes are initiated.
+                        type: integer
+                      path:
+                        description: HTTP endpoint path that signals 200 OK if the
+                          application has started successfully.
+                        type: string
+                      periodSeconds:
+                        description: How often (in seconds) to perform the probe.
+                        type: integer
+                      port:
+                        description: Port for the startup probe.
+                        type: integer
+                      timeout:
+                        description: Number of seconds after which the probe times
+                          out.
+                        type: integer
+                    required:
+                    - path
+                    type: object
                   minAvailable:
                     format: int32
                     type: integer
+                  prometheus:
+                    description: Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/observability/metrics/).
+                      Use this configuration to override the default values.
+                    properties:
+                      enabled:
+                        type: boolean
+                      path:
+                        type: string
+                      port:
+                        type: string
+                    type: object
+                  readiness:
+                    description: Sometimes, applications are temporarily unable to
+                      serve traffic. For example, an application might need to load
+                      large data or configuration files during startup, or depend
+                      on external services after startup. In such cases, you don't
+                      want to kill the application, but you don’t want to send it
+                      requests either. Kubernetes provides readiness probes to detect
+                      and mitigate these situations. A pod with containers reporting
+                      that they are not ready does not receive traffic through Kubernetes
+                      Services. Read more about this over at the [Kubernetes readiness
+                      documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
+                    properties:
+                      failureThreshold:
+                        description: When a Pod starts, and the probe fails, Kubernetes
+                          will try _failureThreshold_ times before giving up. Giving
+                          up in case of a startup probe means restarting the Pod.
+                        type: integer
+                      initialDelay:
+                        description: Number of seconds after the container has started
+                          before startup probes are initiated.
+                        type: integer
+                      path:
+                        description: HTTP endpoint path that signals 200 OK if the
+                          application has started successfully.
+                        type: string
+                      periodSeconds:
+                        description: How often (in seconds) to perform the probe.
+                        type: integer
+                      port:
+                        description: Port for the startup probe.
+                        type: integer
+                      timeout:
+                        description: Number of seconds after which the probe times
+                          out.
+                        type: integer
+                    required:
+                    - path
+                    type: object
                   resources:
-                    description: 'TODO: defaults'
+                    description: When Containers have [resource requests](http://kubernetes.io/docs/user-guide/compute-resources/)
+                      specified, the Kubernetes scheduler can make better decisions
+                      about which nodes to place pods on.
                     properties:
                       limits:
-                        additionalProperties:
-                          anyOf:
-                          - type: integer
-                          - type: string
-                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                          x-kubernetes-int-or-string: true
-                        description: 'Limits describes the maximum amount of compute
-                          resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                        description: Limit defines the maximum amount of resources
+                          a container can use before getting evicted.
+                        properties:
+                          cpu:
+                            pattern: ^\d+m?$
+                            type: string
+                          memory:
+                            pattern: ^\d+[KMG]i$
+                            type: string
                         type: object
                       requests:
-                        additionalProperties:
-                          anyOf:
-                          - type: integer
-                          - type: string
-                          pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                          x-kubernetes-int-or-string: true
-                        description: 'Requests describes the minimum amount of compute
-                          resources required. If Requests is omitted for a container,
-                          it defaults to Limits if that is explicitly specified, otherwise
-                          to an implementation-defined value. More info: https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/'
+                        description: Request defines the amount of resources a container
+                          is allocated on startup.
+                        properties:
+                          cpu:
+                            pattern: ^\d+m?$
+                            type: string
+                          memory:
+                            pattern: ^\d+[KMG]i$
+                            type: string
                         type: object
+                    type: object
+                  startup:
+                    description: Kubernetes uses startup probes to know when a container
+                      application has started. If such a probe is configured, it disables
+                      liveness and readiness checks until it succeeds, making sure
+                      those probes don't interfere with the application startup. This
+                      can be used to adopt liveness checks on slow starting containers,
+                      avoiding them getting killed by Kubernetes before they are up
+                      and running.
+                    properties:
+                      failureThreshold:
+                        description: When a Pod starts, and the probe fails, Kubernetes
+                          will try _failureThreshold_ times before giving up. Giving
+                          up in case of a startup probe means restarting the Pod.
+                        type: integer
+                      initialDelay:
+                        description: Number of seconds after the container has started
+                          before startup probes are initiated.
+                        type: integer
+                      path:
+                        description: HTTP endpoint path that signals 200 OK if the
+                          application has started successfully.
+                        type: string
+                      periodSeconds:
+                        description: How often (in seconds) to perform the probe.
+                        type: integer
+                      port:
+                        description: Port for the startup probe.
+                        type: integer
+                      timeout:
+                        description: Number of seconds after which the probe times
+                          out.
+                        type: integer
+                    required:
+                    - path
                     type: object
                 required:
                 - image

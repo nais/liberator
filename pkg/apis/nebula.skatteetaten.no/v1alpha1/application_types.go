@@ -26,6 +26,7 @@ import (
 	"github.com/imdario/mergo"
 	hash "github.com/mitchellh/hashstructure"
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
+	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	"github.com/nais/liberator/pkg/intutil"
 	log "github.com/sirupsen/logrus"
 	v1 "k8s.io/api/core/v1"
@@ -39,7 +40,6 @@ import (
 func init() {
 	SchemeBuilder.Register(&Application{}, &ApplicationList{})
 }
-
 
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -55,7 +55,7 @@ type Application struct {
 	Status nais_io_v1.Status `json:"status,omitempty"`
 }
 
-//+kubebuilder:object:root=true
+// +kubebuilder:object:root=true
 
 // ApplicationList contains a list of Application
 type ApplicationList struct {
@@ -100,8 +100,8 @@ type EgressConfig struct {
 }
 
 type PortConfig struct {
-	Name string `json:"name,omitempty"`
-	Port uint16 `json:"port"`
+	Name     string `json:"name,omitempty"`
+	Port     uint16 `json:"port"`
 	Protocol string `json:"protocol,omitempty"`
 }
 
@@ -162,7 +162,6 @@ type PostgreDatabaseConfig struct {
 	Users  []*PostgreDatabaseUser `json:"users"`
 }
 
-
 type PostgreDatabaseUser struct {
 	Name string `json:"name"`
 	Role string `json:"role"`
@@ -171,12 +170,62 @@ type PostgreDatabaseUser struct {
 type PodConfig struct {
 	Image string `json:"image"`
 
-	//TODO: defaults
-	// +optional
-	Resource v1.ResourceRequirements `json:"resources"`
+	Command []string `json:"command,omitempty"`
+
+	// Custom environment variables injected into your container.
+	// Specify either `value` or `valueFrom`, but not both.
+	Env nais_io_v1.EnvVars `json:"env,omitempty"`
+
+	// EnvFrom exposes all variables in the ConfigMap or Secret resources as environment variables.
+	// One of `configMap` or `secret` is required.
+	//
+	// Environment variables will take the form `KEY=VALUE`, where `key` is the ConfigMap or Secret key.
+	// You can specify as many keys as you like in a single ConfigMap or Secret.
+	//
+	// The ConfigMap and Secret resources must live in the same Kubernetes namespace as the Application resource.
+	// +nais:doc:Availability="team namespaces"
+	EnvFrom []nais_io_v1.EnvFrom `json:"envFrom,omitempty"`
+
+	// List of ConfigMap or Secret resources that will have their contents mounted into the containers as files.
+	// Either `configMap` or `secret` is required.
+	//
+	// Files will take the path `<mountPath>/<key>`, where `key` is the ConfigMap or Secret key.
+	// You can specify as many keys as you like in a single ConfigMap or Secret, and they will all
+	// be mounted to the same directory.
+	//
+	// The ConfigMap and Secret resources must live in the same Kubernetes namespace as the Application resource.
+	// +nais:doc:Availability="team namespaces"
+	FilesFrom []nais_io_v1.FilesFrom `json:"filesFrom,omitempty"`
+
+	// Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/observability/metrics/).
+	// Use this configuration to override the default values.
+	Prometheus *nais_io_v1.PrometheusConfig `json:"prometheus,omitempty"`
+
+	// Sometimes, applications are temporarily unable to serve traffic. For example, an application might need
+	// to load large data or configuration files during startup, or depend on external services after startup.
+	// In such cases, you don't want to kill the application, but you don’t want to send it requests either.
+	// Kubernetes provides readiness probes to detect and mitigate these situations. A pod with containers
+	// reporting that they are not ready does not receive traffic through Kubernetes Services.
+	// Read more about this over at the [Kubernetes readiness documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
+	Readiness *nais_io_v1.Probe `json:"readiness,omitempty"`
+
+	// Many applications running for long periods of time eventually transition to broken states,
+	// and cannot recover except by being restarted. Kubernetes provides liveness probes to detect
+	// and remedy such situations. Read more about this over at the
+	// [Kubernetes probes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
+	Liveness *nais_io_v1.Probe `json:"liveness,omitempty"`
+
+	// Kubernetes uses startup probes to know when a container application has started. If such a probe is configured,
+	// it disables liveness and readiness checks until it succeeds, making sure those probes don't interfere with the
+	// application startup. This can be used to adopt liveness checks on slow starting containers, avoiding them getting
+	// killed by Kubernetes before they are up and running.
+	Startup *nais_io_v1.Probe `json:"startup,omitempty"`
+
+	// When Containers have [resource requests](http://kubernetes.io/docs/user-guide/compute-resources/) specified,
+	// the Kubernetes scheduler can make better decisions about which nodes to place pods on.
+	Resources *nais_io_v1.ResourceRequirements `json:"resources,omitempty"`
 
 	MinAvailable int32 `json:"minAvailable"`
-
 }
 
 type ImagePolicyConfig struct {
@@ -189,7 +238,6 @@ type ImagePolicyConfig struct {
 	// +optional
 	Semver string `json:"semver,omitempty"`
 }
-
 
 func (in *Application) GetObjectKind() schema.ObjectKind {
 	return in
@@ -349,6 +397,26 @@ func (app *Application) replicasIsZero() bool {
 func getAppDefaults() *Application {
 	return &Application{
 		Spec: ApplicationSpec{
+			Pod: PodConfig{
+				Prometheus: &nais_io_v1.PrometheusConfig{
+					Path: "/metrics",
+				},
+				Liveness: &nais_io_v1.Probe{
+					PeriodSeconds:    nais_io_v1alpha1.DefaultProbePeriodSeconds,
+					Timeout:          nais_io_v1alpha1.DefaultProbeTimeoutSeconds,
+					FailureThreshold: nais_io_v1alpha1.DefaultProbeFailureThreshold,
+				},
+				Resources: &nais_io_v1.ResourceRequirements{
+					Limits: &nais_io_v1.ResourceSpec{
+						Cpu:    "500m",
+						Memory: "512Mi",
+					},
+					Requests: &nais_io_v1.ResourceSpec{
+						Cpu:    "200m",
+						Memory: "256Mi",
+					},
+				},
+			},
 			Replicas: &nais_io_v1.Replicas{
 				Min:                    intutil.Intp(2),
 				Max:                    intutil.Intp(4),
