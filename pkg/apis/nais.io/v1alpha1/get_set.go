@@ -5,7 +5,7 @@ import nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 // TODO: replace manual getters with generated code
 // TODO: candidates are either `go generate` or a switch to Protobuf
 
-func (in *Application ) SetStatusConditions() {
+func (in *Application) SetStatusConditions() {
 	in.Status.SetStatusConditions()
 }
 

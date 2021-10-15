@@ -12,10 +12,9 @@ func (in *Naisjob) SetStatus(status *Status) {
 	in.Status = *status
 }
 
-func (in *Naisjob ) SetStatusConditions() {
+func (in *Naisjob) SetStatusConditions() {
 	in.Status.SetStatusConditions()
 }
-
 
 func (in *Naisjob) GetConcurrencyPolicy() string {
 	switch in.Spec.ConcurrencyPolicy {
