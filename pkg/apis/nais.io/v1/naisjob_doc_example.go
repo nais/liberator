@@ -122,7 +122,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				},
 			},
 			ActiveDeadlineSeconds: int64p(60),
-			Azure: &Azure{
+			Azure: &AzureNaisJob{
 				Application: &AzureApplication{
 					Enabled:       true,
 					AllowAllUsers: (*AzureAdAllowAllUsers)(boolp(true)),
