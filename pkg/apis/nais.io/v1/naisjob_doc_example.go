@@ -152,6 +152,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				"--other-param",
 				"other-value",
 			},
+			ConcurrencyPolicy: "Allow",
 			Elastic: &Elastic{
 				Instance: "my-elastic-instance",
 				Access:   "readwrite",
@@ -188,6 +189,10 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					Secret:    "my-secret-file",
 					MountPath: "/var/run/secrets",
 				},
+				{
+					PersistentVolumeClaim: "pvc-name",
+					MountPath:             "/var/run/pvc",
+				},
 			},
 			GCP: &GCP{
 				BigQueryDatasets: []CloudBigQueryDataset{
@@ -214,6 +219,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 							NumNewerVersions: 2,
 							WithState:        "ARCHIVED",
 						},
+						UniformBucketLevelAccess: true,
 					},
 				},
 				SqlInstances: []CloudSqlInstance{

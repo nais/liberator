@@ -188,6 +188,10 @@ func ExampleApplicationForDocumentation() *Application {
 					Secret:    "my-secret-file",
 					MountPath: "/var/run/secrets",
 				},
+				{
+					PersistentVolumeClaim: "pvc-name",
+					MountPath:             "/var/run/pvc",
+				},
 			},
 			GCP: &nais_io_v1.GCP{
 				BigQueryDatasets: []nais_io_v1.CloudBigQueryDataset{
@@ -214,6 +218,7 @@ func ExampleApplicationForDocumentation() *Application {
 							NumNewerVersions: 2,
 							WithState:        "ARCHIVED",
 						},
+						UniformBucketLevelAccess: true,
 					},
 				},
 				SqlInstances: []nais_io_v1.CloudSqlInstance{
@@ -276,9 +281,11 @@ func ExampleApplicationForDocumentation() *Application {
 				RedirectURI:     "https://myapplication.nav.no/oauth2/callback",
 				SessionLifetime: intp(7200),
 				Sidecar: &nais_io_v1.IDPortenSidecar{
-					Enabled: true,
-					Level:   "Level4",
-					Locale:  "nb",
+					AutoLogin: true,
+					Enabled:   true,
+					ErrorPath: "/error",
+					Level:     "Level4",
+					Locale:    "nb",
 				},
 			},
 			Influx: &nais_io_v1.Influx{

@@ -58,6 +58,12 @@ type NaisjobSpec struct {
 	// Override command when starting Docker image.
 	Command []string `json:"command,omitempty"`
 
+	// Specifies how to treat concurrent executions of a job that is created by this Naisjob-cron.
+	// +kubebuilder:validation:Enum=Forbid;Replace;Allow
+	// +nais:doc:Default="Allow"
+	// +nais:doc:Link="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#concurrency-policy"
+	ConcurrencyPolicy string `json:"concurrencyPolicy,omitempty"`
+
 	// To get your own Elastic Search instance head over to the IaC-repo to provision each instance.
 	// See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository
 	Elastic *Elastic `json:"elastic,omitempty"`

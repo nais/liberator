@@ -7,6 +7,15 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
+const (
+	EventSynchronized          = "Synchronized"
+	EventRolloutComplete       = "RolloutComplete"
+	EventFailedPrepare         = "FailedPrepare"
+	EventFailedSynchronization = "FailedSynchronization"
+	EventFailedStatusUpdate    = "FailedStatusUpdate"
+	EventRetrying              = "Retrying"
+)
+
 // Status contains different NAIS status properties
 type Status struct {
 	SynchronizationTime     int64               `json:"synchronizationTime,omitempty"`
@@ -24,9 +33,9 @@ func (in *Status) SetStatusConditions() {
 		in.Conditions = &[]metav1.Condition{}
 	}
 
-	reconcilingConditionStatus := metav1.ConditionTrue
+	reconcilingConditionStatus := metav1.ConditionFalse
 	if in.SynchronizationState != EventRolloutComplete && in.SynchronizationState != EventFailedSynchronization {
-		reconcilingConditionStatus = metav1.ConditionFalse
+		reconcilingConditionStatus = metav1.ConditionTrue
 	}
 	readyConditionStatus := metav1.ConditionFalse
 	if in.SynchronizationState == EventRolloutComplete {

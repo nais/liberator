@@ -376,20 +376,27 @@ spec:
                     configmap:
                       description: Name of the `ConfigMap` that contains files that
                         should be mounted into the container. Required unless `secret`
-                        is set.
+                        or `persistentVolumeClaim` is set.
                       type: string
                     mountPath:
                       description: "Filesystem path inside the pod where files are
                         mounted. The directory will be created if it does not exist.
                         If the directory exists, any files in the directory will be
-                        made unaccessible. \n Defaults to `/var/run/configmaps/<NAME>`
-                        or `/var/run/secrets`, depending on which of them is specified."
+                        made unaccessible. \n Defaults to `/var/run/configmaps/<NAME>`,
+                        `/var/run/secrets`, or `/var/run/pvc/<NAME>`, depending on
+                        which of them is specified."
+                      type: string
+                    persistentVolumeClaim:
+                      description: Name of the `PersistentVolumeClaim` that should
+                        be mounted into the container. Required unless `configMap`
+                        or `secret` is set. This feature requires coordination with
+                        the NAIS team.
                       type: string
                     secret:
                       description: Name of the `Secret` that contains files that should
                         be mounted into the container. Required unless `configMap`
-                        is set. If mounting multiple secrets, `mountPath` *MUST* be
-                        set to avoid collisions.
+                        or `persistentVolumeClaim` is set. If mounting multiple secrets,
+                        `mountPath` *MUST* be set to avoid collisions.
                       type: string
                   type: object
                 type: array
@@ -475,6 +482,16 @@ spec:
                           maximum: 36500
                           minimum: 1
                           type: integer
+                        uniformBucketLevelAccess:
+                          description: "Allows you to uniformly control access to
+                            your Cloud Storage resources. When you enable uniform
+                            bucket-level access on a bucket, Access Control Lists
+                            (ACLs) are disabled, and only bucket-level Identity and
+                            Access Management (IAM) permissions grant access to that
+                            bucket and the objects it contains. \n Uniform access
+                            control can not be reversed after 90 days! This is controlled
+                            by Google."
+                          type: boolean
                       required:
                       - name
                       type: object
@@ -707,9 +724,17 @@ spec:
                       \n If the client is authenticated with IDPorten, the `Authorization`
                       header will be set to `Bearer <JWT>`."
                     properties:
+                      autoLogin:
+                        description: Automatically redirect the user to login for
+                          all proxied routes.
+                        type: boolean
                       enabled:
                         description: Enable the sidecar.
                         type: boolean
+                      errorPath:
+                        description: Absolute path to redirect the user to on authentication
+                          errors for custom error handling.
+                        type: string
                       level:
                         description: Default security level for all authentication
                           requests.

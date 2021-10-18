@@ -130,6 +130,13 @@ type IDPortenSidecar struct {
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#locales"
 	// +kubebuilder:validation:Enum=nb;nn;en;se
 	Locale string `json:"locale,omitempty"`
+	// Absolute path to redirect the user to on authentication errors for custom error handling.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#error-handling"
+	ErrorPath string `json:"errorPath,omitempty"`
+	// Automatically redirect the user to login for all proxied routes.
+	// +nais:doc:Default="false"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#auto-login"
+	AutoLogin bool `json:"autoLogin,omitempty"`
 }
 
 type GCP struct {
@@ -187,17 +194,21 @@ type ObjectFieldSelector struct {
 
 type FilesFrom struct {
 	// Name of the `ConfigMap` that contains files that should be mounted into the container.
-	// Required unless `secret` is set.
+	// Required unless `secret` or `persistentVolumeClaim` is set.
 	ConfigMap string `json:"configmap,omitempty"`
 	// Name of the `Secret` that contains files that should be mounted into the container.
-	// Required unless `configMap` is set.
+	// Required unless `configMap` or `persistentVolumeClaim` is set.
 	// If mounting multiple secrets, `mountPath` *MUST* be set to avoid collisions.
 	Secret string `json:"secret,omitempty"`
+	// Name of the `PersistentVolumeClaim` that should be mounted into the container.
+	// Required unless `configMap` or `secret` is set.
+	// This feature requires coordination with the NAIS team.
+	PersistentVolumeClaim string `json:"persistentVolumeClaim,omitempty"`
 	// Filesystem path inside the pod where files are mounted.
 	// The directory will be created if it does not exist. If the directory exists,
 	// any files in the directory will be made unaccessible.
 	//
-	// Defaults to `/var/run/configmaps/<NAME>` or `/var/run/secrets`, depending on which of them is specified.
+	// Defaults to `/var/run/configmaps/<NAME>`, `/var/run/secrets`, or `/var/run/pvc/<NAME>`, depending on which of them is specified.
 	MountPath string `json:"mountPath,omitempty"`
 }
 
@@ -407,7 +418,7 @@ type CloudBigQueryDataset struct {
 
 type CloudStorageBucket struct {
 	// The name of the bucket
-	Name string `json:"name"`
+	Name string `json:"name" nais:"immutable,key"`
 	// Allows deletion of bucket. Set to true if you want to delete the bucket.
 	CascadingDelete bool `json:"cascadingDelete,omitempty"`
 	// The number of days to hold objects in the bucket before it is allowed to delete them.
@@ -417,6 +428,14 @@ type CloudStorageBucket struct {
 	// Conditions for the bucket to use when selecting objects to delete in cleanup.
 	// +nais:doc:Link="https://cloud.google.com/storage/docs/lifecycle"
 	LifecycleCondition *LifecycleCondition `json:"lifecycleCondition,omitempty"`
+	// Allows you to uniformly control access to your Cloud Storage resources.
+	// When you enable uniform bucket-level access on a bucket, Access Control Lists (ACLs) are disabled, and only bucket-level Identity
+	// and Access Management (IAM) permissions grant access to that bucket and the objects it contains.
+	//
+	// Uniform access control can not be reversed after 90 days! This is controlled by Google.
+	// +nais:doc:Link="https://cloud.google.com/storage/docs/uniform-bucket-level-access"
+	// +nais:doc:Default="false"
+	UniformBucketLevelAccess bool `json:"uniformBucketLevelAccess,omitempty"`
 }
 
 type LifecycleCondition struct {

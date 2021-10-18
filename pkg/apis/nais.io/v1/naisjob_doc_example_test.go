@@ -27,6 +27,7 @@ var ignoredApplicationFields = []string{
 	`.ObjectMeta.SelfLink`,
 	`.ObjectMeta.UID`,
 	`.Status`,
+	`.Status.Conditions`,
 	`.Status.CorrelationID`,
 	`.Status.DeploymentRolloutStatus`,
 	`.Status.RolloutCompleteTime`,
