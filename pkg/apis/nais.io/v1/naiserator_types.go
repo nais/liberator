@@ -16,6 +16,19 @@ type Azure struct {
 	// Configures an Azure AD client for this application.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/"
 	Application *AzureApplication `json:"application"`
+	// Sidecar configures a sidecar that intercepts every HTTP request, and performs the OIDC flow if necessary.
+	// All requests to ingress + `/oauth2` will be processed only by the sidecar, whereas all other requests
+	// will be proxied to the application.
+	//
+	// If the client is authenticated with Azure AD, the `Authorization` header will be set to `Bearer <JWT>`.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/sidecar/"
+	Sidecar *AzureSidecar `json:"sidecar,omitempty"`
+}
+
+type AzureNaisJob struct {
+	// Configures an Azure AD client for this application.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/"
+	Application *AzureApplication `json:"application"`
 }
 
 type AzureApplication struct {
@@ -34,6 +47,18 @@ type AzureApplication struct {
 	Claims                *AzureAdClaims                `json:"claims,omitempty"`
 	SinglePageApplication *AzureAdSinglePageApplication `json:"singlePageApplication,omitempty"`
 	AllowAllUsers         *AzureAdAllowAllUsers         `json:"allowAllUsers,omitempty"`
+}
+
+type AzureSidecar struct {
+	// Enable the sidecar.
+	Enabled bool `json:"enabled"`
+	// Absolute path to redirect the user to on authentication errors for custom error handling.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/sidecar#error-handling"
+	ErrorPath string `json:"errorPath,omitempty"`
+	// Automatically redirect the user to login for all proxied routes.
+	// +nais:doc:Default="false"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/sidecar#auto-login"
+	AutoLogin bool `json:"autoLogin,omitempty"`
 }
 
 type Elastic struct {
@@ -111,8 +136,6 @@ type IDPorten struct {
 	// will be proxied to the application.
 	//
 	// If the client is authenticated with IDPorten, the `Authorization` header will be set to `Bearer <JWT>`.
-	//
-	// +nais:doc:Experimental=true
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar/"
 	Sidecar *IDPortenSidecar `json:"sidecar,omitempty"`
 }

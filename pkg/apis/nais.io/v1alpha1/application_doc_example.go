@@ -140,6 +140,11 @@ func ExampleApplicationForDocumentation() *Application {
 					SinglePageApplication: (*nais_io_v1.AzureAdSinglePageApplication)(boolp(true)),
 					Tenant:                "nav.no",
 				},
+				Sidecar: &nais_io_v1.AzureSidecar{
+					Enabled:   true,
+					ErrorPath: "/error",
+					AutoLogin: true,
+				},
 			},
 			Cleanup: &nais_io_v1.Cleanup{
 				Enabled:     true,
