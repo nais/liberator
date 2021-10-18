@@ -94,7 +94,3 @@ func (in *Application) GetPreStopHookPath() string {
 func (in *Application) GetResources() *nais_io_v1.ResourceRequirements {
 	return in.Spec.Resources
 }
-
-func (in *Application ) SetStatusConditions(){
-	in.Status.SetStatusConditions()
-}
