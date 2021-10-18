@@ -8,8 +8,6 @@ import (
 
 // Machine readable event "Reason" fields, used for determining synchronization state.
 const (
-	EventSynchronized       = "Synchronized"
-	EventFailedStatusUpdate = "FailedStatusUpdate"
 	EventAddedFinalizer     = "AddedFinalizer"
 	EventDeletedFinalizer   = "DeletedFinalizer"
 	EventCreatedInAzure     = "CreatedInAzure"
@@ -18,7 +16,6 @@ const (
 	EventDeletedInAzure     = "DeletedInAzure"
 	EventNotInTeamNamespace = "NotInTeamNamespace"
 	EventSkipped            = "Skipped"
-	EventRetrying           = "Retrying"
 )
 
 // +kubebuilder:object:root=true

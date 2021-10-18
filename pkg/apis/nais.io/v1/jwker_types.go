@@ -4,12 +4,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-const (
-	EventRolloutComplete       = "RolloutComplete"
-	EventFailedPrepare         = "FailedPrepare"
-	EventFailedSynchronization = "FailedSynchronization"
-)
-
 func init() {
 	SchemeBuilder.Register(
 		&Jwker{},
