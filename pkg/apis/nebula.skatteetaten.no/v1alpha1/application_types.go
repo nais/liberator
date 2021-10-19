@@ -154,6 +154,15 @@ type AzureConfig struct {
 	ResourceGroup string `json:"resourceGroup"`
 
 	PostgreDatabases []*PostgreDatabaseConfig `json:"postgresDatabase,omitempty"`
+	StorageAccount map[string]*StorageAccountConfig `json:"storageAccount,omitempty"`
+}
+
+
+type StorageAccountConfig struct {
+	// +optional
+	Enabled bool `json:"enabled,omitempty"`
+
+	Name   string                 `json:"name"`
 }
 
 type PostgreDatabaseConfig struct {

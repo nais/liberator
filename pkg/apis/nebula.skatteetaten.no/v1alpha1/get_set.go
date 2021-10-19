@@ -129,3 +129,7 @@ func (in *Application) GetAzureResourceGroup() string {
 func (in *Application) GetPostgresDatabases() []*PostgreDatabaseConfig {
 	return in.Spec.Azure.PostgreDatabases
 }
+
+func (in *Application) GetStorageAccounts() map[string]*StorageAccountConfig {
+	return in.Spec.Azure.StorageAccount
+}
