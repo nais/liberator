@@ -133,3 +133,7 @@ func (in *Application) GetPostgresDatabases() []*PostgreDatabaseConfig {
 func (in *Application) GetStorageAccounts() map[string]*StorageAccountConfig {
 	return in.Spec.Azure.StorageAccount
 }
+
+func (in *Application) GetCosmosDb() map[string]*CosmosDBConfig {
+	return in.Spec.Azure.CosmosDB
+}

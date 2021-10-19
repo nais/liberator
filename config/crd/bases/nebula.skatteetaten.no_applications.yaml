@@ -47,6 +47,21 @@ spec:
             properties:
               azure:
                 properties:
+                  cosmosDb:
+                    additionalProperties:
+                      properties:
+                        enabled:
+                          type: boolean
+                        mongoDBVersion:
+                          description: For now if you set monoDbVersion you will get
+                            mongo, else you will get GlocalDb with sql
+                          type: string
+                        name:
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    type: object
                   postgresDatabase:
                     items:
                       properties:

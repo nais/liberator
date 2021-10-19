@@ -155,8 +155,19 @@ type AzureConfig struct {
 
 	PostgreDatabases []*PostgreDatabaseConfig `json:"postgresDatabase,omitempty"`
 	StorageAccount map[string]*StorageAccountConfig `json:"storageAccount,omitempty"`
+	CosmosDB map[string]*CosmosDBConfig `json:"cosmosDb,omitempty"`
 }
 
+type CosmosDBConfig struct {
+	// +optional
+	Enabled bool `json:"enabled,omitempty"`
+
+	Name   string                 `json:"name"`
+
+	//For now if you set monoDbVersion you will get mongo, else you will get GlocalDb with sql
+	MongoDBVersion string `json:"mongoDBVersion,omitempty"`
+
+}
 
 type StorageAccountConfig struct {
 	// +optional
