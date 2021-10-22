@@ -5,11 +5,12 @@ import (
 	"strconv"
 
 	"github.com/google/uuid"
-	"github.com/nais/liberator/pkg/hash"
 	log "github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
+
+	"github.com/nais/liberator/pkg/hash"
 )
 
 func init() {
@@ -50,7 +51,7 @@ type NaisjobSpec struct {
 	ActiveDeadlineSeconds *int64 `json:"activeDeadlineSeconds,omitempty"`
 
 	// Provisions and configures Azure resources.
-	Azure *Azure `json:"azure,omitempty"`
+	Azure *AzureNaisJob `json:"azure,omitempty"`
 
 	// Specify the number of retries before considering a Naisjob as failed
 	BackoffLimit int32 `json:"backoffLimit,omitempty"`

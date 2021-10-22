@@ -22,7 +22,7 @@ func (job *Naisjob) ApplyDefaults() error {
 func getNaisjobDefaults() *Naisjob {
 	return &Naisjob{
 		Spec: NaisjobSpec{
-			Azure: &Azure{
+			Azure: &AzureNaisJob{
 				Application: &AzureApplication{
 					Enabled: false,
 				},

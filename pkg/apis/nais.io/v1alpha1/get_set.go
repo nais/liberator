@@ -92,3 +92,15 @@ func (in *Application) GetPreStopHookPath() string {
 func (in *Application) GetResources() *nais_io_v1.ResourceRequirements {
 	return in.Spec.Resources
 }
+
+func (in *Application) GetAccessPolicy() *nais_io_v1.AccessPolicy {
+	return in.Spec.AccessPolicy
+}
+
+func (in *Application) GetAzure() nais_io_v1.AzureInterface {
+	return in.Spec.Azure
+}
+
+func (in *Application) GetIngress() []nais_io_v1.Ingress {
+	return in.Spec.Ingresses
+}
