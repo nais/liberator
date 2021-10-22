@@ -51,7 +51,7 @@ func TestTopicACLs_Usernames(t *testing.T) {
 			Team:        "team",
 		},
 		{
-			Username:    "team.app2-4943258",
+			Username:    "team.app2-04943258",
 			Application: "app2",
 			Team:        "team",
 		},

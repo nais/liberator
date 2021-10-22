@@ -240,6 +240,28 @@ spec:
                     required:
                     - enabled
                     type: object
+                  sidecar:
+                    description: "Sidecar configures a sidecar that intercepts every
+                      HTTP request, and performs the OIDC flow if necessary. All requests
+                      to ingress + `/oauth2` will be processed only by the sidecar,
+                      whereas all other requests will be proxied to the application.
+                      \n If the client is authenticated with Azure AD, the `Authorization`
+                      header will be set to `Bearer <JWT>`."
+                    properties:
+                      autoLogin:
+                        description: Automatically redirect the user to login for
+                          all proxied routes.
+                        type: boolean
+                      enabled:
+                        description: Enable the sidecar.
+                        type: boolean
+                      errorPath:
+                        description: Absolute path to redirect the user to on authentication
+                          errors for custom error handling.
+                        type: string
+                    required:
+                    - enabled
+                    type: object
                 required:
                 - application
                 type: object
@@ -568,7 +590,7 @@ spec:
                                   properties:
                                     name:
                                       description: User name.
-                                      pattern: ^[_a-zA-Z][_a-zA-Z0-9]+$
+                                      pattern: ^[_a-zA-Z][-_a-zA-Z0-9]+$
                                       type: string
                                   required:
                                   - name

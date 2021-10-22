@@ -22,7 +22,7 @@ func ShortName(basename string, maxlen int) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	hashStr := fmt.Sprintf("%x", hasher.Sum32())
+	hashStr := fmt.Sprintf("%08x", hasher.Sum32())
 
 	return formatName(basename, hashStr, maxlen), nil
 }
