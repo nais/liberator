@@ -102,23 +102,54 @@ func (in *Application) GetResources() *nais_io_v1.ResourceRequirements {
 }
 
 func (in *Application) GetIngress() *IngressConfig{
-	return 	&IngressConfig{
-		Public: map[string]PublicIngressConfig{
-			"default": {
-				Enabled: true,
-				Port:    8080,
-				ServicePort: 80,
-				Gateway: "istio-ingressgateway",
-			},
-		},
+	publicIngress := map[string]PublicIngressConfig{}
+	for key, item := range in.Spec.Ingress.Public {
+		if item.Disabled {
+			continue
+		}
+		publicIngress[key]=item
+	}
+
+	items:= map[string]InternalIngressConfig{}
+	for key, item := range in.Spec.Ingress.Internal {
+		if item.Disabled {
+			continue
+		}
+		items[key]=item
+	}
+	return &IngressConfig{
+		Public: publicIngress,
+		Internal: items,
 	}
 }
 
 func (in *Application) GetEgress() *EgressConfig{
-	return in.Spec.Egress
+
+	externalEgress := map[string]ExternalEgressConfig{}
+	for key, item := range in.Spec.Egress.External {
+		if item.Disabled {
+			continue
+		}
+		externalEgress[key]=item
+	}
+
+	items:= map[string]InternalEgressConfig{}
+	for key, item := range in.Spec.Egress.Internal {
+		if item.Disabled {
+			continue
+		}
+		items[key]=item
+	}
+	return &EgressConfig{
+		External: externalEgress,
+		Internal: items,
+	}
 }
 
 func (in *Application) GetImagePolicy() *ImagePolicyConfig {
+	if in.Spec.ImagePolicy.Disabled {
+		return nil
+	}
 	return in.Spec.ImagePolicy
 }
 
@@ -126,14 +157,42 @@ func (in *Application) GetAzureResourceGroup() string {
 	return in.Spec.Azure.ResourceGroup
 }
 
-func (in *Application) GetPostgresDatabases() []*PostgreDatabaseConfig {
-	return in.Spec.Azure.PostgreDatabases
+func (in *Application) GetPostgresDatabases() map[string]*PostgreDatabaseConfig {
+	dbs:= map[string]*PostgreDatabaseConfig{}
+	for key, db := range in.Spec.Azure.PostgreDatabases {
+		if db.Disabled {
+			continue
+		}
+		users:=map[string]*PostgreDatabaseUser{}
+		for uk, user := range db.Users {
+			if user.Disabled {
+				continue
+			}
+			users[uk]=user
+		}
+		dbs[key]=db
+	}
+	return dbs
 }
 
 func (in *Application) GetStorageAccounts() map[string]*StorageAccountConfig {
-	return in.Spec.Azure.StorageAccount
+	items:= map[string]*StorageAccountConfig{}
+	for key, item := range in.Spec.Azure.StorageAccount {
+		if item.Disabled {
+			continue
+		}
+		items[key]=item
+	}
+	return items
 }
 
 func (in *Application) GetCosmosDb() map[string]*CosmosDBConfig {
-	return in.Spec.Azure.CosmosDB
+	items:= map[string]*CosmosDBConfig{}
+	for key, item := range in.Spec.Azure.CosmosDB {
+		if item.Disabled {
+			continue
+		}
+		items[key]=item
+	}
+	return items
 }

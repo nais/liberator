@@ -50,7 +50,7 @@ spec:
                   cosmosDb:
                     additionalProperties:
                       properties:
-                        enabled:
+                        disabled:
                           type: boolean
                         mongoDBVersion:
                           description: For now if you set monoDbVersion you will get
@@ -63,15 +63,19 @@ spec:
                       type: object
                     type: object
                   postgresDatabase:
-                    items:
+                    additionalProperties:
                       properties:
+                        disabled:
+                          type: boolean
                         name:
                           type: string
                         server:
                           type: string
                         users:
-                          items:
+                          additionalProperties:
                             properties:
+                              disabled:
+                                type: boolean
                               name:
                                 type: string
                               role:
@@ -80,19 +84,19 @@ spec:
                             - name
                             - role
                             type: object
-                          type: array
+                          type: object
                       required:
                       - name
                       - server
                       - users
                       type: object
-                    type: array
+                    type: object
                   resourceGroup:
                     type: string
                   storageAccount:
                     additionalProperties:
                       properties:
-                        enabled:
+                        disabled:
                           type: boolean
                         name:
                           type: string
@@ -108,6 +112,8 @@ spec:
                   external:
                     additionalProperties:
                       properties:
+                        disabled:
+                          type: boolean
                         host:
                           type: string
                         ports:
@@ -132,7 +138,7 @@ spec:
                       properties:
                         application:
                           type: string
-                        enabled:
+                        disabled:
                           type: boolean
                         namespace:
                           type: string
@@ -158,7 +164,7 @@ spec:
                 properties:
                   branch:
                     type: string
-                  enabled:
+                  disabled:
                     type: boolean
                   semver:
                     type: string
@@ -170,7 +176,7 @@ spec:
                       properties:
                         application:
                           type: string
-                        enabled:
+                        disabled:
                           type: boolean
                         methods:
                           items:
@@ -200,7 +206,7 @@ spec:
                   public:
                     additionalProperties:
                       properties:
-                        enabled:
+                        disabled:
                           type: boolean
                         gateway:
                           type: string

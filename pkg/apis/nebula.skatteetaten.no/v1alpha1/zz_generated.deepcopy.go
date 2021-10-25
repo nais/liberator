@@ -115,13 +115,17 @@ func (in *AzureConfig) DeepCopyInto(out *AzureConfig) {
 	*out = *in
 	if in.PostgreDatabases != nil {
 		in, out := &in.PostgreDatabases, &out.PostgreDatabases
-		*out = make([]*PostgreDatabaseConfig, len(*in))
-		for i := range *in {
-			if (*in)[i] != nil {
-				in, out := &(*in)[i], &(*out)[i]
+		*out = make(map[string]*PostgreDatabaseConfig, len(*in))
+		for key, val := range *in {
+			var outVal *PostgreDatabaseConfig
+			if val == nil {
+				(*out)[key] = nil
+			} else {
+				in, out := &val, &outVal
 				*out = new(PostgreDatabaseConfig)
 				(*in).DeepCopyInto(*out)
 			}
+			(*out)[key] = outVal
 		}
 	}
 	if in.StorageAccount != nil {
@@ -406,13 +410,17 @@ func (in *PostgreDatabaseConfig) DeepCopyInto(out *PostgreDatabaseConfig) {
 	*out = *in
 	if in.Users != nil {
 		in, out := &in.Users, &out.Users
-		*out = make([]*PostgreDatabaseUser, len(*in))
-		for i := range *in {
-			if (*in)[i] != nil {
-				in, out := &(*in)[i], &(*out)[i]
+		*out = make(map[string]*PostgreDatabaseUser, len(*in))
+		for key, val := range *in {
+			var outVal *PostgreDatabaseUser
+			if val == nil {
+				(*out)[key] = nil
+			} else {
+				in, out := &val, &outVal
 				*out = new(PostgreDatabaseUser)
 				**out = **in
 			}
+			(*out)[key] = outVal
 		}
 	}
 }

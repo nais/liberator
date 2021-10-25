@@ -107,7 +107,7 @@ type PortConfig struct {
 
 type PublicIngressConfig struct {
 	// +optional
-	Enabled bool `json:"enabled"`
+	Disabled bool `json:"disabled,omitempty"`
 	// +optional
 	Port uint16 `json:"port,omitempty"`
 	// +optional
@@ -120,7 +120,7 @@ type PublicIngressConfig struct {
 
 type InternalIngressConfig struct {
 	// +optional
-	Enabled bool `json:"enabled,omitempty"`
+	Disabled bool `json:"disabled,omitempty"`
 	// +optional
 	Application string `json:"application,omitempty"`
 	// +optional
@@ -134,6 +134,9 @@ type InternalIngressConfig struct {
 }
 
 type ExternalEgressConfig struct {
+	// +optional
+	Disabled bool `json:"disabled,omitempty"`
+
 	Host string `json:"host"`
 	// +optional
 	Ports []PortConfig `json:"ports,omitempty"`
@@ -141,7 +144,7 @@ type ExternalEgressConfig struct {
 
 type InternalEgressConfig struct {
 	// +optional
-	Enabled bool `json:"enabled,omitempty"`
+	Disabled bool `json:"disabled,omitempty"`
 	// +optional
 	Application string `json:"application,omitempty"`
 	// +optional
@@ -153,14 +156,14 @@ type InternalEgressConfig struct {
 type AzureConfig struct {
 	ResourceGroup string `json:"resourceGroup"`
 
-	PostgreDatabases []*PostgreDatabaseConfig `json:"postgresDatabase,omitempty"`
-	StorageAccount map[string]*StorageAccountConfig `json:"storageAccount,omitempty"`
+	PostgreDatabases map[string]*PostgreDatabaseConfig `json:"postgresDatabase,omitempty"`
+	StorageAccount   map[string]*StorageAccountConfig  `json:"storageAccount,omitempty"`
 	CosmosDB map[string]*CosmosDBConfig `json:"cosmosDb,omitempty"`
 }
 
 type CosmosDBConfig struct {
 	// +optional
-	Enabled bool `json:"enabled,omitempty"`
+	Disabled bool `json:"disabled,omitempty"`
 
 	Name   string                 `json:"name"`
 
@@ -171,18 +174,24 @@ type CosmosDBConfig struct {
 
 type StorageAccountConfig struct {
 	// +optional
-	Enabled bool `json:"enabled,omitempty"`
+	Disabled bool `json:"disabled,omitempty"`
 
-	Name   string                 `json:"name"`
+	Name string `json:"name"`
 }
 
 type PostgreDatabaseConfig struct {
-	Name   string                 `json:"name"`
-	Server string                 `json:"server"`
-	Users  []*PostgreDatabaseUser `json:"users"`
+	// +optional
+	Disabled bool `json:"disabled,omitempty"`
+
+	Name   string                          `json:"name"`
+	Server string                          `json:"server"`
+	Users  map[string]*PostgreDatabaseUser `json:"users"`
 }
 
 type PostgreDatabaseUser struct {
+	// +optional
+	Disabled bool `json:"disabled,omitempty"`
+
 	Name string `json:"name"`
 	Role string `json:"role"`
 }
@@ -250,7 +259,7 @@ type PodConfig struct {
 
 type ImagePolicyConfig struct {
 	// +optional
-	Enabled bool `json:"enabled"`
+	Disabled bool `json:"disabled,omitempty"`
 
 	// +optional
 	Branch string `json:"branch,omitempty"`
@@ -417,6 +426,15 @@ func (app *Application) replicasIsZero() bool {
 func getAppDefaults() *Application {
 	return &Application{
 		Spec: ApplicationSpec{
+			Ingress:&IngressConfig {
+				Public: map[string]PublicIngressConfig{
+					"default": {
+						Port:    8080,
+						ServicePort: 80,
+						Gateway: "istio-ingressgateway",
+					},
+				},
+			},
 			Pod: PodConfig{
 				Prometheus: &nais_io_v1.PrometheusConfig{
 					Path: "/metrics",
