@@ -125,6 +125,9 @@ func (in *Application) GetIngress() *IngressConfig{
 
 func (in *Application) GetEgress() *EgressConfig{
 
+	if in.Spec.Egress == nil {
+		return &EgressConfig{}
+	}
 	externalEgress := map[string]ExternalEgressConfig{}
 	for key, item := range in.Spec.Egress.External {
 		if item.Disabled {
@@ -147,7 +150,7 @@ func (in *Application) GetEgress() *EgressConfig{
 }
 
 func (in *Application) GetImagePolicy() *ImagePolicyConfig {
-	if in.Spec.ImagePolicy.Disabled {
+	if in.Spec.ImagePolicy == nil || in.Spec.ImagePolicy.Disabled {
 		return nil
 	}
 	return in.Spec.ImagePolicy
