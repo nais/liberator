@@ -378,6 +378,9 @@ type Replicas struct {
 	Max *int `json:"max,omitempty"`
 	// Amount of CPU usage before the autoscaler kicks in.
 	CpuThresholdPercentage int `json:"cpuThresholdPercentage,omitempty"`
+	// Disable autoscaling
+	// +nais:doc:Default="false"
+	DisableAutoScaling bool `json:"disableAutoScaling,omitempty"`
 }
 
 type ResourceSpec struct {

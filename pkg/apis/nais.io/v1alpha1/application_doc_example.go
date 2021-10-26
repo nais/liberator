@@ -1,11 +1,9 @@
 package nais_io_v1alpha1
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-
-	"github.com/nais/liberator/pkg/intutil"
-
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
+	"github.com/nais/liberator/pkg/intutil"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func ExampleApplicationForDocumentation() *Application {
@@ -367,6 +365,7 @@ func ExampleApplicationForDocumentation() *Application {
 				Min:                    intutil.Intp(2),
 				Max:                    intutil.Intp(4),
 				CpuThresholdPercentage: 50,
+				DisableAutoScaling: true,
 			},
 			Resources: &nais_io_v1.ResourceRequirements{
 				Limits: &nais_io_v1.ResourceSpec{

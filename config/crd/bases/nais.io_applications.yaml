@@ -1072,6 +1072,9 @@ spec:
                   cpuThresholdPercentage:
                     description: Amount of CPU usage before the autoscaler kicks in.
                     type: integer
+                  disableAutoScaling:
+                    description: Autoscaling on/off
+                    type: boolean
                   max:
                     description: The pod autoscaler will increase replicas when required
                       up to the maximum.
