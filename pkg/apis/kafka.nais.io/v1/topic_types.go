@@ -125,28 +125,6 @@ func (in Topic) RemoveDataWhenDeleted() bool {
 	return b && err == nil
 }
 
-func (in *Topic) AppendFinalizer() {
-	if in.Finalizers == nil {
-		in.Finalizers = make([]string, 0)
-	}
-	for _, v := range in.Finalizers {
-		if v == Finalizer {
-			return
-		}
-	}
-	in.Finalizers = append(in.Finalizers, Finalizer)
-}
-
-func (in *Topic) RemoveFinalizer() {
-	finalizers := make([]string, 0, len(in.Finalizers))
-	for _, v := range in.Finalizers {
-		if v != Finalizer {
-			finalizers = append(finalizers, v)
-		}
-	}
-	in.Finalizers = finalizers
-}
-
 func (in Topic) FullName() string {
 	return in.Namespace + "." + in.Name
 }

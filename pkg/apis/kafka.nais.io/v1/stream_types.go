@@ -1,6 +1,11 @@
 package kafka_nais_io_v1
 
-import metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+import (
+	"fmt"
+
+	"github.com/nais/liberator/pkg/hash"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+)
 
 func init() {
 	SchemeBuilder.Register(
@@ -23,6 +28,21 @@ type Stream struct {
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 	Spec              StreamSpec    `json:"spec"`
 	Status            *StreamStatus `json:"status,omitempty"`
+}
+
+func (in *Stream) TopicPrefix() string {
+	return fmt.Sprintf("%s.%s_stream_", in.Namespace, in.Name)
+}
+
+func (in *Stream) Hash() (string, error) {
+	return hash.Hash(in.Spec)
+}
+
+func (in *Stream) NeedsSynchronization(hash string) bool {
+	if in.Status == nil {
+		return true
+	}
+	return in.Status.SynchronizationHash != hash
 }
 
 type StreamStatus struct {
