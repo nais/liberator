@@ -34,6 +34,18 @@ func (in *Stream) TopicPrefix() string {
 	return fmt.Sprintf("%s.%s_stream_", in.Namespace, in.Name)
 }
 
+func (in *Stream) TopicWildcard() string {
+	return fmt.Sprintf("%s*", in.TopicPrefix())
+}
+
+func (in *Stream) ACL() TopicACL {
+	return TopicACL{
+		Access:      "admin",
+		Application: in.GetName(),
+		Team:        in.GetNamespace(),
+	}
+}
+
 func (in *Stream) Hash() (string, error) {
 	return hash.Hash(in.Spec)
 }
