@@ -31,6 +31,8 @@ type Stream struct {
 }
 
 func (in *Stream) TopicPrefix() string {
+	// `_` is not a valid character in namespace or name, so it's an excellent separator.
+	// We keep the convention from Topics of using <team>.<app> for compatability, but use _ for the next separator.
 	return fmt.Sprintf("%s.%s_stream_", in.Namespace, in.Name)
 }
 
