@@ -333,7 +333,7 @@ type Kafka struct {
 	Pool    string `json:"pool"`
 
 	// Allow this app to use kafka streams
-	// +nais:doc:Link="https://doc.nais.io/persistence/kafka/application/#streams"
+	// +nais:doc:Link="https://doc.nais.io/persistence/kafka/application/#using-kafka-streams-with-internal-topics"
 	// +nais:doc:Default="false"
 	Streams bool   `json:"streams,omitempty"`
 }
