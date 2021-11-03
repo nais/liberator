@@ -329,9 +329,13 @@ type TokenX struct {
 
 type Kafka struct {
 	// Configures your application to access an Aiven Kafka cluster.
-	// +nais:doc:Link="https://doc.nais.io/persistence/kafka/"
 	// +kubebuilder:validation:Enum=nav-dev;nav-prod;nav-infrastructure
-	Pool string `json:"pool"`
+	Pool    string `json:"pool"`
+
+	// Allow this app to use kafka streams
+	// +nais:doc:Link="https://doc.nais.io/persistence/kafka/application/#streams"
+	// +nais:doc:Default="false"
+	Streams bool   `json:"streams,omitempty"`
 }
 
 type CloudIAMResource struct {

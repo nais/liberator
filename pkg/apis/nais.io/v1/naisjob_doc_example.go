@@ -275,6 +275,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			Image: "navikt/testapp:69.0.0",
 			Kafka: &Kafka{
 				Pool: "nav-dev",
+				Streams: true,
 			},
 			Liveness: &Probe{
 				FailureThreshold: 10,

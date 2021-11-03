@@ -805,7 +805,7 @@ spec:
                   type: string
                 type: array
               kafka:
-                description: Enable Aiven Kafka for your application.
+                description: Set up Aiven Kafka for your application.
                 properties:
                   pool:
                     description: Configures your application to access an Aiven Kafka
@@ -815,6 +815,9 @@ spec:
                     - nav-prod
                     - nav-infrastructure
                     type: string
+                  streams:
+                    description: Allow this app to use kafka streams
+                    type: boolean
                 required:
                 - pool
                 type: object
@@ -1073,7 +1076,7 @@ spec:
                     description: Amount of CPU usage before the autoscaler kicks in.
                     type: integer
                   disableAutoScaling:
-                    description: Autoscaling on/off
+                    description: Disable autoscaling
                     type: boolean
                   max:
                     description: The pod autoscaler will increase replicas when required

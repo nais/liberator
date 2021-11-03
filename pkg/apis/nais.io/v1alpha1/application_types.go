@@ -121,7 +121,8 @@ type ApplicationSpec struct {
 	// +nais:doc:Availability="GCP"
 	Influx *nais_io_v1.Influx `json:"influx,omitempty"`
 
-	// Enable Aiven Kafka for your application.
+	// Set up Aiven Kafka for your application.
+	// +nais:doc:Link="https://doc.nais.io/persistence/kafka/"
 	Kafka *nais_io_v1.Kafka `json:"kafka,omitempty"`
 
 	// If true, an HTTP endpoint will be available at `$ELECTOR_PATH` that returns the current leader.

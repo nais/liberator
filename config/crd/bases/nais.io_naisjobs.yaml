@@ -683,6 +683,9 @@ spec:
                     - nav-prod
                     - nav-infrastructure
                     type: string
+                  streams:
+                    description: Allow this app to use kafka streams
+                    type: boolean
                 required:
                 - pool
                 type: object

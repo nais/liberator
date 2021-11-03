@@ -1,9 +1,10 @@
 package nais_io_v1alpha1
 
 import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/nais/liberator/pkg/intutil"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func ExampleApplicationForDocumentation() *Application {
@@ -300,6 +301,7 @@ func ExampleApplicationForDocumentation() *Application {
 			},
 			Kafka: &nais_io_v1.Kafka{
 				Pool: "nav-dev",
+				Streams: true,
 			},
 			LeaderElection: true,
 			Liveness: &nais_io_v1.Probe{
