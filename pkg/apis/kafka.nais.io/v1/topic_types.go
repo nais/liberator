@@ -6,7 +6,6 @@ import (
 
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 
-	"github.com/nais/liberator/pkg/namegen"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -15,9 +14,6 @@ const (
 	EventFailedPrepare         = "FailedPrepare"
 	EventFailedSynchronization = "FailedSynchronization"
 
-	MaxServiceUserNameLength = 40
-
-	Finalizer            = "kafkarator.kafka.nais.io"
 	RemoveDataAnnotation = "kafka.nais.io/removeDataWhenResourceIsDeleted"
 )
 
@@ -129,38 +125,8 @@ func (in Topic) FullName() string {
 	return in.Namespace + "." + in.Name
 }
 
-func (in TopicACL) Username() string {
-	username := in.Team + "." + in.Application
-	username, err := namegen.ShortName(username, MaxServiceUserNameLength)
-	if err != nil {
-		panic(err)
-	}
-	return username
-}
-
 func (in TopicACL) ACLname() string {
-	// TODO: Use new max length when Aivenator takes over creation of service users
-	return fmt.Sprintf("%s*", aiven_nais_io_v1.ServiceUserPrefix(in.Application, in.Team, MaxServiceUserNameLength))
-}
-
-func (in TopicACL) User() User {
-	return User{
-		Username:    in.Username(),
-		Application: in.Application,
-		Team:        in.Team,
-	}
-}
-
-func (in TopicACLs) Users() []User {
-	users := make(map[User]interface{})
-	result := make([]User, 0, len(in))
-	for _, acl := range in {
-		users[acl.User()] = new(interface{})
-	}
-	for k := range users {
-		result = append(result, k)
-	}
-	return result
+	return fmt.Sprintf("%s*", aiven_nais_io_v1.ServiceUserPrefix(in.Application, in.Team, aiven_nais_io_v1.MaxServiceUserNameLength))
 }
 
 func (in *Topic) NeedsSynchronization(hash string) bool {
