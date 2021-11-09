@@ -140,7 +140,6 @@ type ExternalEgressConfig struct {
 	Host string `json:"host"`
 	// +optional
 	Ports []PortConfig `json:"ports,omitempty"`
-
 }
 
 type InternalEgressConfig struct {
@@ -424,9 +423,7 @@ func (app *Application) replicasIsZero() bool {
 	return *app.Spec.Replicas.Min == 0 && *app.Spec.Replicas.Max == 0
 }
 
-
 func getAppDefaults() *Application {
-
 	return &Application{
 		Spec: ApplicationSpec{
 			Ingress:&IngressConfig {
