@@ -156,6 +156,10 @@ func (in *Application) GetImagePolicy() *ImagePolicyConfig {
 	return in.Spec.ImagePolicy
 }
 
+func (in *Application) GetAzure() *AzureConfig {
+	return in.Spec.Azure
+}
+
 func (in *Application) GetAzureResourceGroup() string {
 	return in.Spec.Azure.ResourceGroup
 }
