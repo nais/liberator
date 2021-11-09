@@ -107,6 +107,14 @@ func (in *Application) GetIngress() *IngressConfig{
 		if item.Disabled {
 			continue
 		}
+		//TODO: it is hard to get kubebuilder default values applied in test so we do it here.
+		if item.Port==0 {
+			item.Port=8080
+		}
+
+		if item.ServicePort==0 {
+			item.ServicePort=80
+		}
 		publicIngress[key]=item
 	}
 
