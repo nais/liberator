@@ -112,16 +112,8 @@ spec:
                   external:
                     additionalProperties:
                       properties:
-                        cidr:
-                          description: set a cidr to allow traffic to it
-                          type: string
                         disabled:
                           type: boolean
-                        exceptIp:
-                          description: A list of ips to exlude if cidr is set
-                          items:
-                            type: string
-                          type: array
                         host:
                           type: string
                         ports:

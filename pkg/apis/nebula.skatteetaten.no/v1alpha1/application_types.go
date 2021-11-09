@@ -141,13 +141,6 @@ type ExternalEgressConfig struct {
 	// +optional
 	Ports []PortConfig `json:"ports,omitempty"`
 
-	//set a cidr to allow traffic to it
-	// +optional
-	Cidr string `json:"cidr,omitempty"`
-
-	//A list of ips to exlude if cidr is set
-	// +optional
-	ExceptIP []string `json:"exceptIp,omitempty"`
 }
 
 type InternalEgressConfig struct {
