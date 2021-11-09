@@ -500,6 +500,11 @@ func getAppDefaults(config *Application) *Application {
 	if config.Spec.Azure != nil ||len(config.GetEgress().External) > 0 {
 		defaults.Spec.Egress.External["10.209"] = ExternalEgressConfig{
 			Cidr: "10.209.0.0/16",
+			Ports:[]PortConfig{{
+				Name:     "TCP",
+				Port:     443,
+				Protocol: "TCP",
+			}},
 		}
 		defaults.Spec.Egress.External["internal"] = ExternalEgressConfig{
 			Cidr: "0.0.0.0/0",
