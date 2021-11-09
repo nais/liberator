@@ -407,7 +407,7 @@ func (in Application) ClientID(cluster string) string {
 func (app *Application) ApplyDefaults() error {
 	replicasIsZero := app.replicasDefined() && app.replicasIsZero()
 
-	err := mergo.Merge(app, getAppDefaults(app))
+	err := mergo.Merge(app, getAppDefaults())
 	if err != nil {
 		return err
 	}
@@ -431,35 +431,10 @@ func (app *Application) replicasIsZero() bool {
 	return *app.Spec.Replicas.Min == 0 && *app.Spec.Replicas.Max == 0
 }
 
-/*
 
-hvis extern egress fra før eller azure har noe som helst satt så gjør dette
-np.Spec.Egress = append(np.Spec.Egress, networkingv1.NetworkPolicyEgressRule{
-				To: []networkingv1.NetworkPolicyPeer{{
-					IPBlock: &networkingv1.IPBlock{
-						CIDR: "10.209.0.0/16",
-					},
-				}},
-				Ports: []networkingv1.NetworkPolicyPort{generateNetworkPolicyPort("TCP", 443)},
-			})
+func getAppDefaults() *Application {
 
-	return networkingv1.NetworkPolicyEgressRule{
-		To: []networkingv1.NetworkPolicyPeer{{
-			IPBlock: &networkingv1.IPBlock{
-				CIDR: "0.0.0.0/0",
-				Except: []string{
-					"10.0.0.0/8",
-					"172.16.0.0/12",
-					"192.168.0.0/16",
-				},
-			},
-		}},
-	}
-
- */
-func getAppDefaults(config *Application) *Application {
-
-	defaults := &Application{
+	return &Application{
 		Spec: ApplicationSpec{
 			Ingress:&IngressConfig {
 				Public: map[string]PublicIngressConfig{
@@ -497,30 +472,4 @@ func getAppDefaults(config *Application) *Application {
 			},
 		},
 	}
-	if config.Spec.Azure != nil ||len(config.GetEgress().External) > 0 {
-		if defaults.Spec.Egress == nil {
-			defaults.Spec.Egress = &EgressConfig{
-				External: map[string]ExternalEgressConfig{},
-			}
-		}
-		defaults.Spec.Egress.External["10.209"] = ExternalEgressConfig{
-			Cidr: "10.209.0.0/16",
-			Ports:[]PortConfig{{
-				Name:     "TCP",
-				Port:     443,
-				Protocol: "TCP",
-			}},
-		}
-		defaults.Spec.Egress.External["internal"] = ExternalEgressConfig{
-			Cidr: "0.0.0.0/0",
-			ExceptIP: []string{
-				"10.0.0.0/8",
-				"172.16.0.0/12",
-				"192.168.0.0/16",
-			},
-		}
-	}
-
-
-	return defaults
 }
