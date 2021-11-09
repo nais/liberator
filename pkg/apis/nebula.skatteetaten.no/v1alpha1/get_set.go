@@ -115,6 +115,10 @@ func (in *Application) GetIngress() *IngressConfig{
 		if item.ServicePort==0 {
 			item.ServicePort=80
 		}
+
+		if item.Gateway=="" {
+			item.Gateway="istio-ingressgateway"
+		}
 		publicIngress[key]=item
 	}
 
