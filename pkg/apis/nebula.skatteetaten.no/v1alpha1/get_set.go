@@ -35,7 +35,14 @@ func (in *Application) GetCleanup() *nais_io_v1.Cleanup {
 }
 
 func (in *Application) GetPrometheus() *nais_io_v1.PrometheusConfig {
-	return in.Spec.Pod.Prometheus
+	if in.Spec.Pod.Prometheus.Disabled {
+		return nil
+	}
+
+	return &nais_io_v1.PrometheusConfig{
+		Port:    in.Spec.Pod.Prometheus.Port,
+		Path:    in.Spec.Pod.Prometheus.Path,
+	}
 }
 
 func (in *Application) GetLogtransform() string {

@@ -232,7 +232,7 @@ type PodConfig struct {
 
 	// Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/observability/metrics/).
 	// Use this configuration to override the default values.
-	Prometheus *nais_io_v1.PrometheusConfig `json:"prometheus,omitempty"`
+	Prometheus *PrometheusConfig `json:"prometheus,omitempty"`
 
 	// Sometimes, applications are temporarily unable to serve traffic. For example, an application might need
 	// to load large data or configuration files during startup, or depend on external services after startup.
@@ -259,6 +259,22 @@ type PodConfig struct {
 	Resources *nais_io_v1.ResourceRequirements `json:"resources,omitempty"`
 
 	MinAvailable int32 `json:"minAvailable"`
+}
+
+type PrometheusConfig struct {
+
+	//Set this to true to disable
+	// +optional
+	Disabled bool `json:"disabled,omitempty"`
+
+	//Set the port you want to expose metrics on. Default is '8080'
+	// +kubebuilder:default:=8080
+	Port    string `json:"port,omitempty"`
+
+	//Set the path metrics are exposed on. Default is '/metrics'
+	// +kubebuilder:default:=/metricss
+	Path    string `json:"path,omitempty"`
+
 }
 
 type ImagePolicyConfig struct {
@@ -440,8 +456,9 @@ func getAppDefaults() *Application {
 				},
 			},
 			Pod: PodConfig{
-				Prometheus: &nais_io_v1.PrometheusConfig{
+				Prometheus: &PrometheusConfig{
 					Path: "/metrics",
+					Port: "8080",
 				},
 				Liveness: &nais_io_v1.Probe{
 					PeriodSeconds:    nais_io_v1alpha1.DefaultProbePeriodSeconds,

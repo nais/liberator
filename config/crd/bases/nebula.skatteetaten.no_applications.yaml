@@ -375,11 +375,18 @@ spec:
                     description: Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/observability/metrics/).
                       Use this configuration to override the default values.
                     properties:
-                      enabled:
+                      disabled:
+                        description: Set this to true to disable
                         type: boolean
                       path:
+                        default: /metricss
+                        description: Set the path metrics are exposed on. Default
+                          is '/metrics'
                         type: string
                       port:
+                        default: 8080
+                        description: Set the port you want to expose metrics on. Default
+                          is '8080'
                         type: string
                     type: object
                   readiness:
