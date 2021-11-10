@@ -268,11 +268,11 @@ type PrometheusConfig struct {
 	Disabled bool `json:"disabled,omitempty"`
 
 	//Set the port you want to expose metrics on. Default is '8080'
-	// +kubebuilder:default:=8080
+	// +kubebuilder:default:="8080"
 	Port    string `json:"port,omitempty"`
 
 	//Set the path metrics are exposed on. Default is '/metrics'
-	// +kubebuilder:default:=/metricss
+	// +kubebuilder:default:="/metrics"
 	Path    string `json:"path,omitempty"`
 
 }
