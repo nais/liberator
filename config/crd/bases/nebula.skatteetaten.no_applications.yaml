@@ -45,6 +45,10 @@ spec:
           spec:
             description: ApplicationSpec defines the desired state of Application
             properties:
+              auroraApplication:
+                description: Set this flag if the application is build onPrem, this
+                  will add the default volume mounts an AuroraApplication requires
+                type: boolean
               azure:
                 properties:
                   cosmosDb:

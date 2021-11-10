@@ -87,6 +87,10 @@ type ApplicationSpec struct {
 	Egress *EgressConfig `json:"egress,omitempty"`
 
 	UnsecureDebugDisableAllAccessPolicies bool `json:"unsecuredebugdisableallaccesspolicies,omitempty"`
+
+	//Set this flag if the application is build onPrem, this will add the default volume mounts an AuroraApplication requires
+	// +optional
+	AuroraApplication bool `json:"auroraApplication,omitempty"`
 }
 
 type IngressConfig struct {

@@ -101,6 +101,10 @@ func (in *Application) GetResources() *nais_io_v1.ResourceRequirements {
 	return in.Spec.Pod.Resources
 }
 
+func (in *Application) IsAuroraApplication() bool {
+	return in.Spec.AuroraApplication == true
+}
+
 func (in *Application) GetIngress() *IngressConfig{
 	publicIngress := map[string]PublicIngressConfig{}
 	for key, item := range in.Spec.Ingress.Public {
