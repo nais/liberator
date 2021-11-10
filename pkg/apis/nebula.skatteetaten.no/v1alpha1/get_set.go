@@ -35,11 +35,8 @@ func (in *Application) GetCleanup() *nais_io_v1.Cleanup {
 }
 
 func (in *Application) GetPrometheus() *nais_io_v1.PrometheusConfig {
-	if in.Spec.Pod.Prometheus.Disabled {
-		return nil
-	}
-
 	return &nais_io_v1.PrometheusConfig{
+		Enabled: !in.Spec.Pod.Prometheus.Disabled,
 		Port:    in.Spec.Pod.Prometheus.Port,
 		Path:    in.Spec.Pod.Prometheus.Path,
 	}
