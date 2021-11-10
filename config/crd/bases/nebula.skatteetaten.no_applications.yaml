@@ -50,21 +50,31 @@ spec:
                   will add the default volume mounts an AuroraApplication requires
                 type: boolean
               azure:
+                description: Integrations this application has with Azure
                 properties:
                   cosmosDb:
                     additionalProperties:
                       properties:
                         disabled:
+                          description: Set this to true to disable
                           type: boolean
                         mongoDBVersion:
-                          description: For now if you set monoDbVersion you will get
-                            mongo, else you will get GlocalDb with sql
+                          description: The version of MongoDB you want in your CosmodDB
+                            api.
                           type: string
                         name:
+                          description: The name of the cosmosdb. This is the logical
+                            name in the config, the actual name in azure is generated
+                            from this. The credentials for this CosmosDB will be as
+                            follows If you only have one entry and it has mongodb
+                            specified it will get  - SPRING_DATA_MONGODB_URI  - SPRING_DATA_MONGODB_NAME
+                            If you have more entries they will get env var - COSMOSDB_<NAME>_URI
+                            - COSMOSDB_<NAME>_NAME
                           type: string
                       required:
                       - name
                       type: object
+                    description: CosmodDB databases in azure
                     type: object
                   postgresDatabase:
                     additionalProperties:
@@ -72,62 +82,99 @@ spec:
                         disabled:
                           type: boolean
                         name:
+                          description: 'The name of the database. This is the logical
+                            name in the config, the actual name in azure is generated
+                            from this. Only the first user of the first database exposes
+                            env vars for connection information automatically. If
+                            you want to use more you will have to mount the secret
+                            yourself. The env variables follow the SPRING_DATA_JDBC
+                            pattern so the following env vars are set in your POD:
+                            - SPRING_DATASOURCE_URL - SPRING_DATASOURCE_USERNAME -
+                            SPRING_DATASOURCE_PASSWORD'
                           type: string
                         server:
+                          description: The name of the server. For this to work there
+                            needs to be a postgresqlserver provisioned in the namespace
+                            with the name pgs-<namespace>-<server> Here namespace
+                            is the name of the namespace this resource is in and server
+                            is this name
                           type: string
                         users:
                           additionalProperties:
                             properties:
                               disabled:
+                                description: Set this to true to disable
                                 type: boolean
                               name:
+                                description: The name of the user
                                 type: string
                               role:
+                                description: The role this user has in the database.
+                                  Right now only "azure_pg_admin" is supported
                                 type: string
                             required:
                             - name
                             - role
                             type: object
+                          description: All the users that are in this postgres database
                           type: object
                       required:
                       - name
                       - server
                       - users
                       type: object
+                    description: PostgresDatabases in azure using
                     type: object
                   resourceGroup:
+                    description: The resource group in azure to provision resources
+                      to. This field is required.
                     type: string
                   storageAccount:
                     additionalProperties:
                       properties:
                         disabled:
+                          description: Set this to true to disable
                           type: boolean
                         name:
+                          description: The name of the storageaccount. This is the
+                            logical name in the config, the actual name in azure is
+                            generated from this. The credentials for this StorageAccount
+                            will be available under  AZURE_STORAGE_<NAME>_CONNECTIONSTRING
+                            in your pod
                           type: string
                       required:
                       - name
                       type: object
+                    description: Storageaccounts in azure
                     type: object
                 required:
                 - resourceGroup
                 type: object
               egress:
+                description: Configure zero-trust for outgoing traffic
                 properties:
                   external:
                     additionalProperties:
                       properties:
                         disabled:
+                          description: Set this to true to disable
                           type: boolean
                         host:
+                          description: The hostname to allow traffic to
                           type: string
                         ports:
+                          description: The ports to allow traffic to, the default
+                            is HTTPS on port 443
                           items:
                             properties:
                               name:
+                                description: Name of the port
                                 type: string
                               port:
+                                description: The port number
                                 type: integer
                               protocol:
+                                description: The protocol of the port
                                 type: string
                             required:
                             - port
@@ -136,98 +183,144 @@ spec:
                       required:
                       - host
                       type: object
+                    description: Zero-trust outgoing configuration for traffic going
+                      out of the mesh
                     type: object
                   internal:
                     additionalProperties:
                       properties:
                         application:
+                          description: The internal application to allow traffic to
                           type: string
                         disabled:
+                          description: Set this to true to disable
                           type: boolean
                         namespace:
+                          description: The internal namespace to allow traffic to
                           type: string
                         ports:
+                          description: Ports to allow traffic to
                           items:
                             properties:
                               name:
+                                description: Name of the port
                                 type: string
                               port:
+                                description: The port number
                                 type: integer
                               protocol:
+                                description: The protocol of the port
                                 type: string
                             required:
                             - port
                             type: object
                           type: array
                       type: object
+                    description: Zero-trust outgoing configuration for traffic inside
+                      the mesh
                     type: object
                 type: object
               imagePolicy:
-                description: Foo is an example field of Application. Edit application_types.go
-                  to remove/update
+                description: If relevant specify an ImagePolicy that will track a
+                  given branch and semver range into a stream of releases you can subscribe
+                  to
                 properties:
                   branch:
+                    description: Specify either Branch or Semver, not both The branch
+                      you want to create this imagePolicy for. This will create a
+                      stream of images that can be listened to
                     type: string
                   disabled:
+                    description: Set this to true to disable
                     type: boolean
                   semver:
+                    description: Specify either Branch or Semver, not both The semver
+                      expression to create imagePolicy for. This will create a stream
+                      of images that can be listened to see [flux documentation](https://fluxcd.io/docs/guides/image-update/)
+                      for examples
                     type: string
                 type: object
               ingress:
+                description: Configure zero-trust for incoming traffic
                 properties:
                   internal:
                     additionalProperties:
                       properties:
                         application:
+                          description: The application to limit traffic from
                           type: string
                         disabled:
+                          description: Set this to true to disable this ingress rule
                           type: boolean
                         methods:
+                          description: The HTTP verbs that are allowed
                           items:
                             type: string
                           type: array
                         namespace:
+                          description: The namespace to limit traffic from
                           type: string
                         paths:
+                          description: The paths that are affected by this rule
                           items:
                             type: string
                           type: array
                         ports:
+                          description: The ports that are allowed to be called
                           items:
                             properties:
                               name:
+                                description: Name of the port
                                 type: string
                               port:
+                                description: The port number
                                 type: integer
                               protocol:
+                                description: The protocol of the port
                                 type: string
                             required:
                             - port
                             type: object
                           type: array
                       type: object
+                    description: Zero-trust incoming configuration for traffic coming
+                      from inside of the mesh
                     type: object
                   public:
                     additionalProperties:
                       properties:
                         disabled:
+                          description: Set this to true to disable this ingress rule
                           type: boolean
                         gateway:
+                          description: The ingress gateway to use. the default value
+                            is 'istio-ingressgateway'
                           type: string
                         hostPrefix:
+                          description: A prefix to use for the host part
                           type: string
                         overrideHostname:
+                          description: Fully qualified host that can be set to override
+                            host generation
                           type: string
                         port:
+                          description: The port to use, the default value if not specified
+                            is '8080'
                           type: integer
                         serviceport:
+                          description: The port in the service to point to, the default
+                            value if not specified is '80'
                           type: integer
                       type: object
+                    description: Zero-trust incoming configuration for traffic coming
+                      from outside of the mesh
                     type: object
                 type: object
               pod:
+                description: How the application pod of this application should run
                 properties:
                   command:
+                    description: The commands to send if any
                     items:
                       type: string
                     type: array
@@ -334,6 +427,7 @@ spec:
                       type: object
                     type: array
                   image:
+                    description: The image to run for this pod
                     type: string
                   liveness:
                     description: Many applications running for long periods of time
@@ -369,6 +463,7 @@ spec:
                     - path
                     type: object
                   minAvailable:
+                    description: Minimum available pods for PodDisruptionBudget
                     format: int32
                     type: integer
                   prometheus:
@@ -495,6 +590,8 @@ spec:
                 - minAvailable
                 type: object
               replicas:
+                description: The number of replicas to start with and maxReplicas
+                  to scale to using HPA
                 properties:
                   cpuThresholdPercentage:
                     description: Amount of CPU usage before the autoscaler kicks in.
@@ -508,6 +605,7 @@ spec:
                     type: integer
                 type: object
               unsecuredebugdisableallaccesspolicies:
+                description: Flag to disable all zero-trust configuration to debug
                 type: boolean
             required:
             - pod

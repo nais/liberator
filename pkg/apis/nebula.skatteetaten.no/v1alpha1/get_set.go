@@ -135,6 +135,11 @@ func (in *Application) GetIngress() *IngressConfig{
 		if item.Disabled {
 			continue
 		}
+
+		if item.Namespace =="" {
+			item.Namespace=in.Namespace
+		}
+
 		items[key]=item
 	}
 	return &IngressConfig{
@@ -153,6 +158,14 @@ func (in *Application) GetEgress() *EgressConfig{
 		if item.Disabled {
 			continue
 		}
+
+		if len(item.Ports) == 0 {
+			item.Ports=[]PortConfig{{
+				Port:   443,
+				Protocol: "HTTPS",
+				Name:     "https",
+			}}
+		}
 		externalEgress[key]=item
 	}
 
@@ -160,6 +173,9 @@ func (in *Application) GetEgress() *EgressConfig{
 	for key, item := range in.Spec.Egress.Internal {
 		if item.Disabled {
 			continue
+		}
+		if item.Namespace =="" {
+			item.Namespace=in.Namespace
 		}
 		items[key]=item
 	}

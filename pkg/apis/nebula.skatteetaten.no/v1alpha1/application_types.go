@@ -69,23 +69,30 @@ type ApplicationSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of Application. Edit application_types.go to remove/update
+	// If relelvent specify an ImagePolicy that will track a given branch og semver range into a stream of releases you can subscribe to
 	// +optional
 	ImagePolicy *ImagePolicyConfig `json:"imagePolicy,omitempty"`
 
+	//The number of replicas to start with and maxReplicas to scale to using HPA
 	// +optional
 	Replicas *nais_io_v1.Replicas `json:"replicas"`
 
+	//How the application pod of this application should run
 	Pod PodConfig `json:"pod"`
 
+
+	//Integratons this application has with Azure
 	Azure *AzureConfig `json:"azure,omitempty"`
 
+	//Configure zero-trust for incomming traficc
 	// +optional
 	Ingress *IngressConfig `json:"ingress,omitempty"`
 
+	//Configure zero-trust for outgoing trafix
 	// +optional
 	Egress *EgressConfig `json:"egress,omitempty"`
 
+	//Flag to disable all zero-trust configuration to debug
 	UnsecureDebugDisableAllAccessPolicies bool `json:"unsecuredebugdisableallaccesspolicies,omitempty"`
 
 	//Set this flag if the application is build onPrem, this will add the default volume mounts an AuroraApplication requires
@@ -94,92 +101,159 @@ type ApplicationSpec struct {
 }
 
 type IngressConfig struct {
+	//Zero-trust incomming configuration for traffic comming from outside of the mesh
 	Public   map[string]PublicIngressConfig   `json:"public,omitempty"`
+
+	//Zero-trust incomming configuration for traffic comming from inside of the mesh
 	Internal map[string]InternalIngressConfig `json:"internal,omitempty"`
 }
 
 type EgressConfig struct {
+
+	//Zero-trust outgoing configuration for traffic going out of the mesh
 	External map[string]ExternalEgressConfig `json:"external,omitempty"`
+
+	//Zero-trust outgoing configuration for traffic insde the mesh
 	Internal map[string]InternalEgressConfig `json:"internal,omitempty"`
 }
 
 type PortConfig struct {
+	//Name of the port
 	Name     string `json:"name,omitempty"`
+	//The port number
 	Port     uint16 `json:"port"`
+	//The protocol of the port
 	Protocol string `json:"protocol,omitempty"`
 }
 
 type PublicIngressConfig struct {
+
+	//Set this to true to disable this ingress rule
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
+
+	//The port to use, the default value if not specified is '8080'
 	// +optional
 	Port uint16 `json:"port,omitempty"`
+
+	//The port in the service to point to, the default value if not specified is '80'
 	// +optional
 	ServicePort uint16 `json:"serviceport,omitempty"`
+
+	//The ingress gateway to use. the default value is 'istio-ingressgateway'
 	// +optional
 	Gateway          string `json:"gateway,omitempty"`
+
+	//A prefix to use for the host part
 	HostPrefix       string `json:"hostPrefix,omitempty"`
+
+	//Fully qualified host that can be set to override host generation
 	OverrideHostname string `json:"overrideHostname,omitempty"`
 }
 
 type InternalIngressConfig struct {
+
+	//Set this to true to disable this ingress rule
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
+
+	//The application to limit traffic from
 	// +optional
 	Application string `json:"application,omitempty"`
+
+	//The namespace to limit traffic from
 	// +optional
 	Namespace string `json:"namespace,omitempty"`
+
+	//The ports that are allowed to be called
 	// +optional
 	Ports []PortConfig `json:"ports,omitempty"`
+
+	//The HTTP verbs that are allowed
 	// +optional
 	Methods []string `json:"methods,omitempty"`
+
+	//The paths that are affected by this rule
 	// +optional
 	Paths []string `json:"paths,omitempty"`
 }
 
 type ExternalEgressConfig struct {
+
+	//Set this to true to disable
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
+	//The hostname to allow traffic to
 	Host string `json:"host"`
+
+	//The ports to allow traffic to, the default is HTTPS on port 443
 	// +optional
 	Ports []PortConfig `json:"ports,omitempty"`
 }
 
 type InternalEgressConfig struct {
+
+	//Set this to true to disable
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
-	// +optional
+
+	//The internal application to allow traffic to
+	//+optional
 	Application string `json:"application,omitempty"`
+
+	//The internal namespace to allow traffic to
 	// +optional
 	Namespace string `json:"namespace,omitempty"`
+
+	//Ports to alloww traffic to
 	// +optional
 	Ports []PortConfig `json:"ports,omitempty"`
 }
 
 type AzureConfig struct {
+
+	//The resource group in azure to provision resources to. This field is required.
 	ResourceGroup string `json:"resourceGroup"`
 
+	//PostgresDatabases in azure using
 	PostgreDatabases map[string]*PostgreDatabaseConfig `json:"postgresDatabase,omitempty"`
+
+	//Storageaccounts in azure
 	StorageAccount   map[string]*StorageAccountConfig  `json:"storageAccount,omitempty"`
+
+	//CosmodDB databases in azure
 	CosmosDB map[string]*CosmosDBConfig `json:"cosmosDb,omitempty"`
 }
 
 type CosmosDBConfig struct {
+	//Set this to true to disable
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
+	//The name of the cosmosdb. This is the logical name in the config, the actual name in azure is generated from this.
+	//The credentials for this CosmosDB will be as follows
+	// If you only have one entry and it has mongodb specified it will get
+	//  - SPRING_DATA_MONGODB_URI
+	//  - SPRING_DATA_MONGODB_NAME
+	// If you have more entries they will get env var
+	// - COSMOSDB_<NAME>_URI
+	// - COSMOSDB_<NAME>_NAME
 	Name   string                 `json:"name"`
 
-	//For now if you set monoDbVersion you will get mongo, else you will get GlocalDb with sql
+	//The version of MongoDB you want in your CosmodDB api.
 	MongoDBVersion string `json:"mongoDBVersion,omitempty"`
 
 }
 
 type StorageAccountConfig struct {
+
+	//Set this to true to disable
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
+	//The name of the storageaccount. This is the logical name in the config, the actual name in azure is generated from this.
+	//The credentials for this StorageAccount will be available under  AZURE_STORAGE_<NAME>_CONNECTIONSTRING in your pod
 	Name string `json:"name"`
 }
 
@@ -187,22 +261,42 @@ type PostgreDatabaseConfig struct {
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
+	//The name of the database. This is the logical name in the config, the actual name in azure is generated from this.
+	//Only the first user of the first database exposes env vars for connection information automatically. If you want to use more you will have to mount the secret yourself.
+	//The env variables follow the SPRING_DATA_JDBC pattern so the following env vars are set in your POD:
+	// - SPRING_DATASOURCE_URL
+	// - SPRING_DATASOURCE_USERNAME
+	// - SPRING_DATASOURCE_PASSWORD
 	Name   string                          `json:"name"`
+
+	//The name of the server. For this to work there needs to be a postgresqlserver provisioned in the namespace
+	//with the name pgs-<namespace>-<server>
+	//Here namespace is the name of the namespace this resource is in and server is this name
 	Server string                          `json:"server"`
+
+	//All the users that are in this postgres database
 	Users  map[string]*PostgreDatabaseUser `json:"users"`
 }
 
 type PostgreDatabaseUser struct {
+
+	//Set this to true to disable
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
+	//The name of the user
 	Name string `json:"name"`
+
+	//The role this user has in the database. Right now only "azure_pg_admin" is supported
 	Role string `json:"role"`
 }
 
 type PodConfig struct {
+
+	//The image to run for this pod
 	Image string `json:"image"`
 
+	//The commands to send if any
 	Command []string `json:"command,omitempty"`
 
 	// Custom environment variables injected into your container.
@@ -258,6 +352,7 @@ type PodConfig struct {
 	// the Kubernetes scheduler can make better decisions about which nodes to place pods on.
 	Resources *nais_io_v1.ResourceRequirements `json:"resources,omitempty"`
 
+	//Minimum available pods for PodDisruptionBudget
 	MinAvailable int32 `json:"minAvailable"`
 }
 
@@ -278,12 +373,19 @@ type PrometheusConfig struct {
 }
 
 type ImagePolicyConfig struct {
+
+	//Set this to true to disable
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
+	//Specify either Branch or Semver, not both
+	//The branch you want to create this imagePolicy for. This will create a stream of images that can be listened to
 	// +optional
 	Branch string `json:"branch,omitempty"`
 
+	//Specify either Branch or Semver, not both
+	//The semver expression to create imagePolicy for. This will create a stream of images that can be listened to
+	// see [flux documentation](https://fluxcd.io/docs/guides/image-update/) for examples
 	// +optional
 	Semver string `json:"semver,omitempty"`
 }
