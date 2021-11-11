@@ -217,12 +217,34 @@ type AzureConfig struct {
 	ResourceGroup string `json:"resourceGroup"`
 
 	//PostgresDatabases in azure using
+	//If a single database/user is configured it will be marked as primary by default
+	//The primary user will get env vars populated with the SPRING_DATASORUCE prefix.
+	//Alle users will get env vars populated with a prefix of SPRING_DATASOURCE_<USER>
+	//The variables populated are
+	// - <PREFIX>_URL
+	// - <PREFIX>_USERNAME
+	// - <PREFIX>_PASSWORD
+	// The prefix can be overwritten if needed by setting overridePrefix
 	PostgreDatabases map[string]*PostgreDatabaseConfig `json:"postgresDatabase,omitempty"`
 
 	//Storageaccounts in azure
+	//If a single storageaccount is configured it will be marked as primary by default
+	//The primary storageaccount with have the prefix AZURE_STORAGE
+	//All storageaccounts will have prefix AZURE_STORAGE_<NAME>
+	//The env variables populated are
+	// - <PREFIX>_CONNECTIONSTRING
+	// The prefix can be overwritten if needed by setting overridePrefix
 	StorageAccount   map[string]*StorageAccountConfig  `json:"storageAccount,omitempty"`
 
+
 	//CosmodDB databases in azure
+	//If a single cosmosdb is configured it will be marked as primary by default
+	//The primary cosmosdb with have the prefix SPRING_DATA_MONGODB if it has mongodb or COSMOSDB if not
+	//All cosmosDb will have prefix SPRING_DATA_MONGODB_<NAME> if mongodb or COSMODDB_<NAME> if not
+	//The env variables populated are:
+	// - <PREFIX>_URI
+	// - <PREFIX>_DATABASE
+	// The prefix can be overwritten if needed by setting overridePrefix
 	CosmosDB map[string]*CosmosDBConfig `json:"cosmosDb,omitempty"`
 }
 
@@ -231,19 +253,18 @@ type CosmosDBConfig struct {
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
-	//The name of the cosmosdb. This is the logical name in the config, the actual name in azure is generated from this.
-	//The credentials for this CosmosDB will be as follows
-	// If you only have one entry and it has mongodb specified it will get
-	//  - SPRING_DATA_MONGODB_URI
-	//  - SPRING_DATA_MONGODB_NAME
-	// If you have more entries they will get env var
-	// - COSMOSDB_<NAME>_URI
-	// - COSMOSDB_<NAME>_NAME
+
 	Name   string                 `json:"name"`
+
+	// If you specify multiple resources mark this as the primary one.
+	//+optional
+	Primary bool `json:"primary,omitempty"`
 
 	//The version of MongoDB you want in your CosmodDB api.
 	MongoDBVersion string `json:"mongoDBVersion,omitempty"`
 
+	//Override the generated prefix
+	Prefix string `json:"overridePrefix,omitempty"`
 }
 
 type StorageAccountConfig struct {
@@ -252,8 +273,14 @@ type StorageAccountConfig struct {
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
+	// If you specify multiple resources mark this as the primary one.
+	//+optional
+	Primary bool `json:"primary,omitempty"`
+
+	//Override the generated prefix
+	Prefix string `json:"overridePrefix,omitempty"`
+
 	//The name of the storageaccount. This is the logical name in the config, the actual name in azure is generated from this.
-	//The credentials for this StorageAccount will be available under  AZURE_STORAGE_<NAME>_CONNECTIONSTRING in your pod
 	Name string `json:"name"`
 }
 
@@ -262,11 +289,6 @@ type PostgreDatabaseConfig struct {
 	Disabled bool `json:"disabled,omitempty"`
 
 	//The name of the database. This is the logical name in the config, the actual name in azure is generated from this.
-	//Only the first user of the first database exposes env vars for connection information automatically. If you want to use more you will have to mount the secret yourself.
-	//The env variables follow the SPRING_DATA_JDBC pattern so the following env vars are set in your POD:
-	// - SPRING_DATASOURCE_URL
-	// - SPRING_DATASOURCE_USERNAME
-	// - SPRING_DATASOURCE_PASSWORD
 	Name   string                          `json:"name"`
 
 	//The name of the server. For this to work there needs to be a postgresqlserver provisioned in the namespace
@@ -289,6 +311,13 @@ type PostgreDatabaseUser struct {
 
 	//The role this user has in the database. Right now only "azure_pg_admin" is supported
 	Role string `json:"role"`
+
+	// If you specify multiple resources mark this as the primary one.
+	//+optional
+	Primary bool `json:"primary,omitempty"`
+
+	//Override the generated prefix
+	Prefix string `json:"overridePrefix,omitempty"`
 }
 
 type PodConfig struct {

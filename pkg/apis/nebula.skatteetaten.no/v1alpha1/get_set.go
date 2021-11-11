@@ -202,6 +202,10 @@ func (in *Application) GetAzureResourceGroup() string {
 
 func (in *Application) GetPostgresDatabases() map[string]*PostgreDatabaseConfig {
 	dbs:= map[string]*PostgreDatabaseConfig{}
+
+
+	//TODO: how do we validate that the config is correct here, if you have multiple with primary it will fail
+	//Is this where we would need to use a validation hook?
 	for key, db := range in.Spec.Azure.PostgreDatabases {
 		if db.Disabled {
 			continue
@@ -211,9 +215,24 @@ func (in *Application) GetPostgresDatabases() map[string]*PostgreDatabaseConfig 
 			if user.Disabled {
 				continue
 			}
+
+			if user.Prefix == "" {
+				user.Prefix="SPRING_DATASOURCE"
+			}
 			users[uk]=user
 		}
 		dbs[key]=db
+	}
+
+	//if we only have a single database and a single user mark it as primary by default
+	if len(dbs) == 1 {
+		for key, db := range dbs {
+			if len(db.Users) == 1 {
+				for user, _ := range db.Users {
+					dbs[key].Users[user].Primary=true
+				}
+			}
+		}
 	}
 	return dbs
 }
@@ -224,8 +243,20 @@ func (in *Application) GetStorageAccounts() map[string]*StorageAccountConfig {
 		if item.Disabled {
 			continue
 		}
+
+		if item.Prefix == "" {
+			item.Prefix="AZURE_STORAGE"
+		}
 		items[key]=item
 	}
+
+	//if single item set it as primary
+	if len(items) == 1 {
+		for key, _ := range items {
+			items[key].Primary=true
+		}
+	}
+
 	return items
 }
 
@@ -235,7 +266,22 @@ func (in *Application) GetCosmosDb() map[string]*CosmosDBConfig {
 		if item.Disabled {
 			continue
 		}
+
+		if item.Prefix == "" {
+			if item.MongoDBVersion != "" {
+				item.Prefix="SPRING_DATA_MONGODB"
+			} else {
+				item.Prefix="COSMOSDB"
+			}
+		}
 		items[key]=item
+	}
+
+	//if single item set it as primary
+	if len(items) == 1 {
+		for key, _ := range items {
+			items[key].Primary=true
+		}
 	}
 	return items
 }

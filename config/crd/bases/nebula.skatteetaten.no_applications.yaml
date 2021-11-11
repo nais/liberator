@@ -50,7 +50,7 @@ spec:
                   will add the default volume mounts an AuroraApplication requires
                 type: boolean
               azure:
-                description: Integrations this application has with Azure
+                description: Integratons this application has with Azure
                 properties:
                   cosmosDb:
                     additionalProperties:
@@ -63,18 +63,24 @@ spec:
                             api.
                           type: string
                         name:
-                          description: The name of the cosmosdb. This is the logical
-                            name in the config, the actual name in azure is generated
-                            from this. The credentials for this CosmosDB will be as
-                            follows If you only have one entry and it has mongodb
-                            specified it will get  - SPRING_DATA_MONGODB_URI  - SPRING_DATA_MONGODB_NAME
-                            If you have more entries they will get env var - COSMOSDB_<NAME>_URI
-                            - COSMOSDB_<NAME>_NAME
                           type: string
+                        overridePrefix:
+                          description: Override the generated prefix
+                          type: string
+                        primary:
+                          description: If you specify multiple resources mark this
+                            as the primary one.
+                          type: boolean
                       required:
                       - name
                       type: object
-                    description: CosmodDB databases in azure
+                    description: 'CosmodDB databases in azure If a single cosmosdb
+                      is configured it will be marked as primary by default The primary
+                      cosmosdb with have the prefix SPRING_DATA_MONGODB if it has
+                      mongodb or COSMOSDB if not All cosmosDb will have prefix SPRING_DATA_MONGODB_<NAME>
+                      if mongodb or COSMODDB_<NAME> if not The env variables populated
+                      are: - <PREFIX>_URI - <PREFIX>_DATABASE The prefix can be overwritten
+                      if needed by setting overridePrefix'
                     type: object
                   postgresDatabase:
                     additionalProperties:
@@ -82,15 +88,9 @@ spec:
                         disabled:
                           type: boolean
                         name:
-                          description: 'The name of the database. This is the logical
+                          description: The name of the database. This is the logical
                             name in the config, the actual name in azure is generated
-                            from this. Only the first user of the first database exposes
-                            env vars for connection information automatically. If
-                            you want to use more you will have to mount the secret
-                            yourself. The env variables follow the SPRING_DATA_JDBC
-                            pattern so the following env vars are set in your POD:
-                            - SPRING_DATASOURCE_URL - SPRING_DATASOURCE_USERNAME -
-                            SPRING_DATASOURCE_PASSWORD'
+                            from this.
                           type: string
                         server:
                           description: The name of the server. For this to work there
@@ -108,6 +108,13 @@ spec:
                               name:
                                 description: The name of the user
                                 type: string
+                              overridePrefix:
+                                description: Override the generated prefix
+                                type: string
+                              primary:
+                                description: If you specify multiple resources mark
+                                  this as the primary one.
+                                type: boolean
                               role:
                                 description: The role this user has in the database.
                                   Right now only "azure_pg_admin" is supported
@@ -123,7 +130,13 @@ spec:
                       - server
                       - users
                       type: object
-                    description: PostgresDatabases in azure using
+                    description: PostgresDatabases in azure using If a single database/user
+                      is configured it will be marked as primary by default The primary
+                      user will get env vars populated with the SPRING_DATASORUCE
+                      prefix. Alle users will get env vars populated with a prefix
+                      of SPRING_DATASOURCE_<USER> The variables populated are - <PREFIX>_URL
+                      - <PREFIX>_USERNAME - <PREFIX>_PASSWORD The prefix can be overwritten
+                      if needed by setting overridePrefix
                     type: object
                   resourceGroup:
                     description: The resource group in azure to provision resources
@@ -138,20 +151,30 @@ spec:
                         name:
                           description: The name of the storageaccount. This is the
                             logical name in the config, the actual name in azure is
-                            generated from this. The credentials for this StorageAccount
-                            will be available under  AZURE_STORAGE_<NAME>_CONNECTIONSTRING
-                            in your pod
+                            generated from this.
                           type: string
+                        overridePrefix:
+                          description: Override the generated prefix
+                          type: string
+                        primary:
+                          description: If you specify multiple resources mark this
+                            as the primary one.
+                          type: boolean
                       required:
                       - name
                       type: object
-                    description: Storageaccounts in azure
+                    description: Storageaccounts in azure If a single storageaccount
+                      is configured it will be marked as primary by default The primary
+                      storageaccount with have the prefix AZURE_STORAGE All storageaccounts
+                      will have prefix AZURE_STORAGE_<NAME> The env variables populated
+                      are - <PREFIX>_CONNECTIONSTRING The prefix can be overwritten
+                      if needed by setting overridePrefix
                     type: object
                 required:
                 - resourceGroup
                 type: object
               egress:
-                description: Configure zero-trust for outgoing traffic
+                description: Configure zero-trust for outgoing trafix
                 properties:
                   external:
                     additionalProperties:
@@ -199,7 +222,7 @@ spec:
                           description: The internal namespace to allow traffic to
                           type: string
                         ports:
-                          description: Ports to allow traffic to
+                          description: Ports to alloww traffic to
                           items:
                             properties:
                               name:
@@ -216,13 +239,13 @@ spec:
                             type: object
                           type: array
                       type: object
-                    description: Zero-trust outgoing configuration for traffic inside
+                    description: Zero-trust outgoing configuration for traffic insde
                       the mesh
                     type: object
                 type: object
               imagePolicy:
-                description: If relevant specify an ImagePolicy that will track a
-                  given branch and semver range into a stream of releases you can subscribe
+                description: If relelvent specify an ImagePolicy that will track a
+                  given branch og semver range into a stream of releases you can subscribe
                   to
                 properties:
                   branch:
@@ -241,7 +264,7 @@ spec:
                     type: string
                 type: object
               ingress:
-                description: Configure zero-trust for incoming traffic
+                description: Configure zero-trust for incomming traficc
                 properties:
                   internal:
                     additionalProperties:
@@ -283,7 +306,7 @@ spec:
                             type: object
                           type: array
                       type: object
-                    description: Zero-trust incoming configuration for traffic coming
+                    description: Zero-trust incomming configuration for traffic comming
                       from inside of the mesh
                     type: object
                   public:
@@ -312,7 +335,7 @@ spec:
                             value if not specified is '80'
                           type: integer
                       type: object
-                    description: Zero-trust incoming configuration for traffic coming
+                    description: Zero-trust incomming configuration for traffic comming
                       from outside of the mesh
                     type: object
                 type: object
