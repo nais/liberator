@@ -47,8 +47,13 @@ type HTTPRouteDestination struct {
 }
 
 type HTTPRoute struct {
-	Match []HTTPMatchRequest     `json:"match,omitempty"`
-	Route []HTTPRouteDestination `json:"route"`
+	Match   []HTTPMatchRequest     `json:"match,omitempty"`
+	Route   []HTTPRouteDestination `json:"route"`
+	Rewrite *HTTPRewrite           `json:"rewrite,omitempty"`
+}
+
+type HTTPRewrite struct {
+	Uri string `json:"uri,omitempty"`
 }
 
 // +kubebuilder:object:root=true
