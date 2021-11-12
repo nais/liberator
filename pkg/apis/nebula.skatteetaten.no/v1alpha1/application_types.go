@@ -253,7 +253,7 @@ type CosmosDBConfig struct {
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
-
+	//the name of the cosmosdb
 	Name   string                 `json:"name"`
 
 	// If you specify multiple resources mark this as the primary one.
@@ -323,7 +323,14 @@ type PostgreDatabaseUser struct {
 type PodConfig struct {
 
 	//The image to run for this pod
-	Image string `json:"image"`
+	ImageName string `json:"imageName"`
+
+	//The tag of the image to run
+	//In order to follow a stream of releases use a imagePolicy comment like the following
+
+	// ` tag: 0.8.3 # {"$imagepolicy": "example:supernova-0.x:tag"}`
+	// where the `0.x` part is the spec.imagePolicy.policySuffix stream you want to follow
+	Tag string `json:"tag"`
 
 	//The commands to send if any
 	Command []string `json:"command,omitempty"`
@@ -381,8 +388,9 @@ type PodConfig struct {
 	// the Kubernetes scheduler can make better decisions about which nodes to place pods on.
 	Resources *nais_io_v1.ResourceRequirements `json:"resources,omitempty"`
 
-	//Minimum available pods for PodDisruptionBudget
-	MinAvailable int32 `json:"minAvailable"`
+	// +kubebuilder:default:=1
+	//Minimum available pods for PodDisruptionBudget, default is 1
+	MinAvailable int32 `json:"minAvailable, omitempty"`
 }
 
 type PrometheusConfig struct {
@@ -417,6 +425,8 @@ type ImagePolicyConfig struct {
 	// see [flux documentation](https://fluxcd.io/docs/guides/image-update/) for examples
 	// +optional
 	Semver string `json:"semver,omitempty"`
+
+	NameSuffix string `json:"nameSuffix"`
 }
 
 func (in *Application) GetObjectKind() schema.ObjectKind {
@@ -606,6 +616,7 @@ func getAppDefaults() *Application {
 						Memory: "256Mi",
 					},
 				},
+				MinAvailable: 1,
 			},
 			Replicas: &nais_io_v1.Replicas{
 				Min:                    intutil.Intp(2),

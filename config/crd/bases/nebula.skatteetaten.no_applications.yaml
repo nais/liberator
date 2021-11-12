@@ -63,6 +63,7 @@ spec:
                             api.
                           type: string
                         name:
+                          description: the name of the cosmosdb
                           type: string
                         overridePrefix:
                           description: Override the generated prefix
@@ -256,12 +257,16 @@ spec:
                   disabled:
                     description: Set this to true to disable
                     type: boolean
+                  nameSuffix:
+                    type: string
                   semver:
                     description: Specify either Branch or Semver, not both The semver
                       expression to create imagePolicy for. This will create a stream
                       of images that can be listened to see [flux documentation](https://fluxcd.io/docs/guides/image-update/)
                       for examples
                     type: string
+                required:
+                - nameSuffix
                 type: object
               ingress:
                 description: Configure zero-trust for incomming traficc
@@ -449,7 +454,7 @@ spec:
                           type: string
                       type: object
                     type: array
-                  image:
+                  imageName:
                     description: The image to run for this pod
                     type: string
                   liveness:
@@ -486,7 +491,9 @@ spec:
                     - path
                     type: object
                   minAvailable:
-                    description: Minimum available pods for PodDisruptionBudget
+                    default: 1
+                    description: Minimum available pods for PodDisruptionBudget, default
+                      is 1
                     format: int32
                     type: integer
                   prometheus:
@@ -608,9 +615,15 @@ spec:
                     required:
                     - path
                     type: object
+                  tag:
+                    description: '` tag: 0.8.3 # {"$imagepolicy": "example:supernova-0.x:tag"}`
+                      where the `0.x` part is the spec.imagePolicy.policySuffix stream
+                      you want to follow'
+                    type: string
                 required:
-                - image
+                - imageName
                 - minAvailable
+                - tag
                 type: object
               replicas:
                 description: The number of replicas to start with and maxReplicas

@@ -1,6 +1,8 @@
 package v1alpha1
 
 import (
+	"fmt"
+
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 )
@@ -78,7 +80,11 @@ func (in *Application) GetEnv() nais_io_v1.EnvVars {
 }
 
 func (in *Application) GetImage() string {
-	return in.Spec.Pod.Image
+	return fmt.Sprintf("%s:%s", in.Spec.Pod.ImageName, in.Spec.Pod.Tag)
+}
+
+func (in *Application) GetImageName() string {
+	return in.Spec.Pod.ImageName
 }
 
 func (in *Application) GetCommand() []string {
