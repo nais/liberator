@@ -622,7 +622,6 @@ spec:
                     type: string
                 required:
                 - imageName
-                - minAvailable
                 - tag
                 type: object
               replicas:

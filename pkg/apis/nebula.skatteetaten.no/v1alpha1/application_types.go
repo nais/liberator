@@ -390,7 +390,7 @@ type PodConfig struct {
 
 	// +kubebuilder:default:=1
 	//Minimum available pods for PodDisruptionBudget, default is 1
-	MinAvailable int32 `json:"minAvailable, omitempty"`
+	MinAvailable int32 `json:"minAvailable,omitempty"`
 }
 
 type PrometheusConfig struct {
