@@ -975,7 +975,7 @@ spec:
                 type: object
               port:
                 description: The port number which is exposed by the container and
-                  should receive traffic.
+                  should receive traffic. Note that ports under 1024 are unavailable.
                 type: integer
               preStopHook:
                 description: PreStopHook is called immediately before a container

@@ -149,6 +149,7 @@ type ApplicationSpec struct {
 	Maskinporten *nais_io_v1.Maskinporten `json:"maskinporten,omitempty"`
 
 	// The port number which is exposed by the container and should receive traffic.
+	// Note that ports under 1024 are unavailable.
 	Port int `json:"port,omitempty"`
 
 	// PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
