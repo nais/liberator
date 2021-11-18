@@ -79,8 +79,6 @@ type Rule struct {
 	// Alert level for Slack messages.
 	// +kubebuilder:validation:Pattern="^$|good|warning|danger|#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})"
 	Severity string `json:"severity,omitempty"`
-	// Not in use
-	Priority string `json:"priority,omitempty"`
 }
 
 type InhibitRules struct {

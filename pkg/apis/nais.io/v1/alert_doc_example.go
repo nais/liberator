@@ -55,7 +55,6 @@ func ExampleAlertForDocumentation() *Alert {
 					Documentation: "https://doc.nais.io/observability/alerts/",
 					SLA:           "Mellom 8 og 16",
 					Severity:      "danger",
-					Priority:      "0",
 				},
 			},
 			InhibitRules: []InhibitRules{
