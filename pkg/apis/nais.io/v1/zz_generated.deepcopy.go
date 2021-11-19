@@ -1301,7 +1301,7 @@ func (in *InhibitRules) DeepCopyInto(out *InhibitRules) {
 	}
 	if in.Labels != nil {
 		in, out := &in.Labels, &out.Labels
-		*out = make([]string, len(*in))
+		*out = make([]LabelName, len(*in))
 		copy(*out, *in)
 	}
 }
@@ -1932,7 +1932,7 @@ func (in *Route) DeepCopyInto(out *Route) {
 	*out = *in
 	if in.GroupBy != nil {
 		in, out := &in.GroupBy, &out.GroupBy
-		*out = make([]string, len(*in))
+		*out = make([]LabelName, len(*in))
 		copy(*out, *in)
 	}
 }

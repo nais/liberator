@@ -25,7 +25,10 @@ func ExampleAlertForDocumentation() *Alert {
 				GroupWait:      "30s",
 				GroupInterval:  "5m",
 				RepeatInterval: "3h",
-				GroupBy:        []string{"<label_name>"},
+				GroupBy: []LabelName{
+					"label",
+					"name",
+				},
 			},
 			Receivers: Receivers{
 				Slack: Slack{
@@ -71,9 +74,9 @@ func ExampleAlertForDocumentation() *Alert {
 					SourcesRegex: map[string]string{
 						"key": "value(.)?",
 					},
-					Labels: []string{
+					Labels: []LabelName{
 						"label",
-						"lebal",
+						"name",
 					},
 				},
 			},
