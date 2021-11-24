@@ -5,6 +5,7 @@ import (
 
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	bigquery_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/bigquery.cnrm.cloud.google.com/v1beta1"
+	google_nais_io_v1 "github.com/nais/liberator/pkg/apis/google.nais.io/v1"
 	iam_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/iam.cnrm.cloud.google.com/v1beta1"
 	kafka_nais_io_v1 "github.com/nais/liberator/pkg/apis/kafka.nais.io/v1"
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
@@ -42,6 +43,7 @@ func All() (*runtime.Scheme, error) {
 		clientgoscheme.AddToScheme,
 		aiven_nais_io_v1.AddToScheme,
 		kafka_nais_io_v1.AddToScheme,
+		google_nais_io_v1.AddToScheme,
 	)
 }
 
