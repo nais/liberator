@@ -94,13 +94,9 @@ func (in *BigQueryDatasetStatus) DeepCopyInto(out *BigQueryDatasetStatus) {
 	*out = *in
 	if in.Conditions != nil {
 		in, out := &in.Conditions, &out.Conditions
-		*out = new([]v1.Condition)
-		if **in != nil {
-			in, out := *in, *out
-			*out = make([]v1.Condition, len(*in))
-			for i := range *in {
-				(*in)[i].DeepCopyInto(&(*out)[i])
-			}
+		*out = make([]v1.Condition, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
 }

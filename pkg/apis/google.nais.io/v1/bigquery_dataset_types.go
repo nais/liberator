@@ -31,8 +31,8 @@ type BigQueryDatasetSpec struct {
 
 // BigQueryDatasetStatus defines the observed state of BigQueryDataset
 type BigQueryDatasetStatus struct {
-	SynchronizationHash string              `json:"synchronizationHash,omitempty"`
-	Conditions          *[]metav1.Condition `json:"conditions,omitempty"`
+	SynchronizationHash string             `json:"synchronizationHash,omitempty"`
+	Conditions          []metav1.Condition `json:"conditions,omitempty"`
 }
 
 //+kubebuilder:object:root=true
