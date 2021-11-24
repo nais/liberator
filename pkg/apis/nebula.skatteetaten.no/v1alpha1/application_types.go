@@ -214,6 +214,7 @@ type InternalEgressConfig struct {
 type AzureConfig struct {
 
 	//The resource group in azure to provision resources to. This field is required.
+	//This is the logical name of the resource group and will be prefixed with a namepace to make it global
 	ResourceGroup string `json:"resourceGroup"`
 
 	//PostgresDatabases in azure using
