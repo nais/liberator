@@ -32,6 +32,8 @@ type BigQueryDatasetSpec struct {
 // BigQueryDatasetStatus defines the observed state of BigQueryDataset
 type BigQueryDatasetStatus struct {
 	SynchronizationHash string             `json:"synchronizationHash,omitempty"`
+	CreationTime        int                `json:"creationTime,omitempty"`
+	LastModifiedTime    int                `json:"lastModifiedTime,omitempty"`
 	Conditions          []metav1.Condition `json:"conditions,omitempty"`
 }
 

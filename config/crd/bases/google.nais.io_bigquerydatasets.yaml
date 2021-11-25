@@ -143,6 +143,10 @@ spec:
                   - type
                   type: object
                 type: array
+              creationTime:
+                type: integer
+              lastModifiedTime:
+                type: integer
               synchronizationHash:
                 type: string
             type: object
