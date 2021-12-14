@@ -525,9 +525,11 @@ type CloudSqlInstance struct {
 	// The name of the instance, if omitted the application name will be used.
 	Name string `json:"name,omitempty"`
 	// Server tier, i.e. how much CPU and memory allocated.
-	// Available tiers can be retrieved on the command line
-	// by running `gcloud sql tiers list`.
+	// Available tiers are `db-f1-micro`, `db-g1-small` and custom `db-custom-CPU-RAM`.
+	// Custom memory must be mulitple of 256 MB and at least 3.75 GB (e.g. `db-custom-1-3840` for 1 cpu, 3840 MB ram)
+	// Also check out [sizing your database](../persistence/postgres.md/#sizing-your-database).
 	// +kubebuilder:validation:Pattern="db-.+"
+	// +nais:doc:Default="db-f1-micro"
 	Tier string `json:"tier,omitempty"`
 	// Disk type to use for storage in the database.
 	// +kubebuilder:validation:Enum=SSD;HDD
