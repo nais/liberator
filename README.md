@@ -47,7 +47,7 @@ go get -u github.com/nais/liberator@HEAD
 Need to replace nais liberator with our own, use
 
 ```
-go mod edit -replace github.com/nais/liberator=github.com/skatteetaten-trial/liberator@<hash>
+go mod edit -replace github.com/nais/liberator=github.com/skatteetaten-it/liberator@<hash>
 ```
 
 ### Immutable parts of spec

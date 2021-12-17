@@ -18,7 +18,7 @@ spec:
             role: azure_pg_admin
   pod:
     minAvailable: 1
-    image: ghcr.io/skatteetaten-trial/nebula/supernova:0.8.3
+    image: ghcr.io/skatteetaten-it/nebula/supernova:0.8.3
     resources:
       limits:
         cpu: 500m
