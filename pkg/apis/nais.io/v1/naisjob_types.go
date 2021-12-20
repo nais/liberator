@@ -59,6 +59,11 @@ type NaisjobSpec struct {
 	// Override command when starting Docker image.
 	Command []string `json:"command,omitempty"`
 
+	// A Job tracks the successful completions. When a specified number of successful completions is reached, the task (ie, Job) is complete.
+	// +nais:doc:Default="1"
+	// +nais:doc:Link="https://kubernetes.io/docs/concepts/workloads/controllers/job/#job-patterns"
+	Completions int32 `json:"completions,omitempty"`
+
 	// Specifies how to treat concurrent executions of a job that is created by this Naisjob-cron.
 	// +kubebuilder:validation:Enum=Forbid;Replace;Allow
 	// +nais:doc:Default="Allow"
@@ -129,6 +134,12 @@ type NaisjobSpec struct {
 	// Configures a Maskinporten client for this Naisjob.
 	// See [Maskinporten](https://doc.nais.io/security/auth/maskinporten/) for more details.
 	Maskinporten *Maskinporten `json:"maskinporten,omitempty"`
+
+	// For running pods in parallel.
+	// If it is specified as 0, then the Job is effectively paused until it is increased.
+	// +nais:doc:Default="1"
+	// +nais:doc:Link="https://kubernetes.io/docs/concepts/workloads/controllers/job/#controlling-parallelism"
+	Parallelism int32 `json:"parallelism,omitempty"`
 
 	// PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
 	// The handler is not called if the container crashes or exits by itself.
