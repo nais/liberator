@@ -7,7 +7,9 @@ import (
 // Application spec default values
 const (
 	DefaultBackoffLimit               = 6
+	DefaultCompletions                = 1
 	DefaultFailedJobsHistoryLimit     = 1
+	DefaultParallelism                = 1
 	DefaultProbePeriodSeconds         = 10
 	DefaultProbeTimeoutSeconds        = 1
 	DefaultProbeFailureThreshold      = 3
@@ -28,12 +30,14 @@ func getNaisjobDefaults() *Naisjob {
 				},
 			},
 			BackoffLimit:           DefaultBackoffLimit,
+			Completions:            DefaultCompletions,
 			FailedJobsHistoryLimit: DefaultFailedJobsHistoryLimit,
 			Liveness: &Probe{
 				PeriodSeconds:    DefaultProbePeriodSeconds,
 				Timeout:          DefaultProbeTimeoutSeconds,
 				FailureThreshold: DefaultProbeFailureThreshold,
 			},
+			Parallelism: DefaultParallelism,
 			Resources: &ResourceRequirements{
 				Limits: &ResourceSpec{
 					Cpu:    "500m",
