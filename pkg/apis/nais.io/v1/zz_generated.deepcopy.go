@@ -1680,6 +1680,11 @@ func (in *NaisjobSpec) DeepCopyInto(out *NaisjobSpec) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
+	if in.Completions != nil {
+		in, out := &in.Completions, &out.Completions
+		*out = new(int32)
+		**out = **in
+	}
 	if in.Elastic != nil {
 		in, out := &in.Elastic, &out.Elastic
 		*out = new(Elastic)
@@ -1726,6 +1731,11 @@ func (in *NaisjobSpec) DeepCopyInto(out *NaisjobSpec) {
 		in, out := &in.Maskinporten, &out.Maskinporten
 		*out = new(Maskinporten)
 		(*in).DeepCopyInto(*out)
+	}
+	if in.Parallelism != nil {
+		in, out := &in.Parallelism, &out.Parallelism
+		*out = new(int32)
+		**out = **in
 	}
 	if in.PreStopHook != nil {
 		in, out := &in.PreStopHook, &out.PreStopHook
