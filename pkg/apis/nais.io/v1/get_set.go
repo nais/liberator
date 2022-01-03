@@ -47,6 +47,46 @@ func (in *Naisjob) GetIngress() []Ingress {
 	return nil
 }
 
+func (in *Naisjob) GetGCP() *GCP {
+	return in.Spec.GCP
+}
+
+func (in *Naisjob) GetWebProxy() bool {
+	return in.Spec.WebProxy
+}
+
+func (in *Naisjob) GetSkipCABundle() bool {
+	return in.Spec.SkipCaBundle
+}
+
+func (in *Naisjob) GetSecureLogs() *SecureLogs {
+	return in.Spec.SecureLogs
+}
+
+func (in *Naisjob) GetMaskinporten() *Maskinporten {
+	return in.Spec.Maskinporten
+}
+
+func (in *Naisjob) GetInflux() *Influx {
+	return in.Spec.Influx
+}
+
+func (in *Naisjob) GetKafka() *Kafka {
+	return in.Spec.Kafka
+}
+
+func (in *Naisjob) GetElastic() *Elastic {
+	return in.Spec.Elastic
+}
+
+func (in *Naisjob) GetVault() *Vault {
+	return in.Spec.Vault
+}
+
+func (in *Naisjob) GetLeaderElection() bool {
+	return false
+}
+
 func (in *Azure) GetApplication() *AzureApplication {
 	return in.Application
 }
