@@ -116,3 +116,15 @@ func (in *Application) GetIDPorten() *nais_io_v1.IDPorten {
 func (in *Application) GetGCP() *nais_io_v1.GCP {
 	return in.Spec.GCP
 }
+
+func (in *Application) GetWebProxy() bool {
+	return in.Spec.WebProxy
+}
+
+func (in *Application) GetSkipCABundle() bool {
+	return in.Spec.SkipCaBundle
+}
+
+func (in *Application) GetSecureLogs() *nais_io_v1.SecureLogs {
+	return in.Spec.SecureLogs
+}
