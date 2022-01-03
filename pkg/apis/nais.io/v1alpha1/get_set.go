@@ -104,3 +104,15 @@ func (in *Application) GetAzure() nais_io_v1.AzureInterface {
 func (in *Application) GetIngress() []nais_io_v1.Ingress {
 	return in.Spec.Ingresses
 }
+
+func (in *Application) GetLeaderElection() bool {
+	return in.Spec.LeaderElection
+}
+
+func (in *Application) GetIDPorten() *nais_io_v1.IDPorten {
+	return in.Spec.IDPorten
+}
+
+func (in *Application) GetGCP() *nais_io_v1.GCP {
+	return in.Spec.GCP
+}
