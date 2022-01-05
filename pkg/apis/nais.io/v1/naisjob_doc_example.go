@@ -313,6 +313,10 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					},
 				},
 			},
+			OpenSearch: &OpenSearch{
+				Instance: "my-open-search-instance",
+				Access:   "readwrite",
+			},
 			Parallelism: int32p(1),
 			PreStopHook: &PreStopHook{
 				Exec: &ExecAction{

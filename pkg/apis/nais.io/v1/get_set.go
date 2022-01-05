@@ -79,6 +79,10 @@ func (in *Naisjob) GetElastic() *Elastic {
 	return in.Spec.Elastic
 }
 
+func (in *Naisjob) GetOpenSearch() *OpenSearch {
+	return in.Spec.OpenSearch
+}
+
 func (in *Naisjob) GetVault() *Vault {
 	return in.Spec.Vault
 }

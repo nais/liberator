@@ -135,6 +135,10 @@ type NaisjobSpec struct {
 	// See [Maskinporten](https://doc.nais.io/security/auth/maskinporten/) for more details.
 	Maskinporten *Maskinporten `json:"maskinporten,omitempty"`
 
+	// To get your own OpenSearch instance head over to the IaC-repo to provision each instance.
+	// See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+	OpenSearch *OpenSearch `json:"openSearch,omitempty"`
+
 	// For running pods in parallel.
 	// If it is specified as 0, then the Job is effectively paused until it is increased.
 	// +nais:doc:Default="1"
