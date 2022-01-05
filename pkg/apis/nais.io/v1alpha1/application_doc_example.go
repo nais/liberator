@@ -300,7 +300,7 @@ func ExampleApplicationForDocumentation() *Application {
 				"https://myapplication.nav.no",
 			},
 			Kafka: &nais_io_v1.Kafka{
-				Pool: "nav-dev",
+				Pool:    "nav-dev",
 				Streams: true,
 			},
 			LeaderElection: true,
@@ -339,6 +339,10 @@ func ExampleApplicationForDocumentation() *Application {
 					},
 				},
 			},
+			OpenSearch: &nais_io_v1.OpenSearch{
+				Instance: "my-open-search-instance",
+				Access:   "readwrite",
+			},
 			Port: 8080,
 			PreStopHook: &nais_io_v1.PreStopHook{
 				Exec: &nais_io_v1.ExecAction{
@@ -367,7 +371,7 @@ func ExampleApplicationForDocumentation() *Application {
 				Min:                    intutil.Intp(2),
 				Max:                    intutil.Intp(4),
 				CpuThresholdPercentage: 50,
-				DisableAutoScaling: true,
+				DisableAutoScaling:     true,
 			},
 			Resources: &nais_io_v1.ResourceRequirements{
 				Limits: &nais_io_v1.ResourceSpec{

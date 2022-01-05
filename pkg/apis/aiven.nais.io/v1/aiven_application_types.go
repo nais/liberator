@@ -49,6 +49,14 @@ type ElasticSpec struct {
 	Access string `json:"access,omitempty"`
 }
 
+type OpenSearchSpec struct {
+	// Use the `instance_name` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+	Instance string `json:"instance,omitempty"`
+	// Access level for opensearch user
+	// +kubebuilder:validation:Enum=read;write;readwrite;admin
+	Access string `json:"access,omitempty"`
+}
+
 type AivenApplicationSpec struct {
 	// SecretName is the name of the secret containing Aiven credentials
 	SecretName string `json:"secretName"`
@@ -63,6 +71,8 @@ type AivenApplicationSpec struct {
 	Kafka *KafkaSpec `json:"kafka,omitempty"`
 	// Elastic is a section configuring the Elastic credentials to provision
 	Elastic *ElasticSpec `json:"elastic,omitempty"`
+	// OpenSearch is a section configuring the Elastic credentials to provision
+	OpenSearch *OpenSearchSpec `json:"openSearch,omitempty"`
 }
 
 type KafkaSpec struct {

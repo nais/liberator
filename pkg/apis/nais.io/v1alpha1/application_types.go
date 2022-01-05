@@ -148,6 +148,10 @@ type ApplicationSpec struct {
 	// See [Maskinporten](https://doc.nais.io/security/auth/maskinporten/) for more details.
 	Maskinporten *nais_io_v1.Maskinporten `json:"maskinporten,omitempty"`
 
+	// To get your own OpenSearch instance head over to the IaC-repo to provision each instance.
+	// See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+	OpenSearch *nais_io_v1.OpenSearch `json:"openSearch,omitempty"`
+
 	// The port number which is exposed by the container and should receive traffic.
 	// Note that ports under 1024 are unavailable.
 	Port int `json:"port,omitempty"`

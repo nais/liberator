@@ -70,6 +70,15 @@ type Elastic struct {
 	Access string `json:"access,omitempty"`
 }
 
+type OpenSearch struct {
+	// Configure your application to access your OpenSearch instance.
+	// Use the `instance_name` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+	Instance string `json:"instance"`
+	// Access level for OpenSearch user
+	// +kubebuilder:validation:Enum=read;write;readwrite;admin
+	Access string `json:"access,omitempty"`
+}
+
 type Influx struct {
 	// Provisions an InfluxDB instance and configures your application to access it.
 	// Use the prefix: `influx-` + `team` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
