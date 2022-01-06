@@ -265,6 +265,10 @@ type IDPortenClientSpec struct {
 	// You will not be able to add a scope to your client that conflicts with the client's IntegrationType.
 	// For example, you can not add a scope that is limited to the IntegrationType `krr` of integrationType `idporten`, and vice versa.
 	//
+	// Default for IntegrationType `krr` = ("krr:global/kontaktinformasjon.read", "krr:global/digitalpost.read")
+	// Default for IntegrationType `idporten` = ("openid", "profile")
+	// IntegrationType `api_klient` have no Default, checkout Digdir documentation.
+	//
 	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html?h=api_klient#scopes"
 	Scopes []string `json:"scopes,omitempty"`
 	// SessionLifetime is the maximum session lifetime in seconds for a logged in end-user for this client.

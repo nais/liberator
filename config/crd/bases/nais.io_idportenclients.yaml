@@ -92,11 +92,14 @@ spec:
                 pattern: ^https:\/\/.+$
                 type: string
               scopes:
-                description: Register different oauth2 Scopes on your client. You
+                description: "Register different oauth2 Scopes on your client. You
                   will not be able to add a scope to your client that conflicts with
                   the client's IntegrationType. For example, you can not add a scope
                   that is limited to the IntegrationType `krr` of integrationType
-                  `idporten`, and vice versa.
+                  `idporten`, and vice versa. \n Default for IntegrationType `krr`
+                  = (\"krr:global/kontaktinformasjon.read\", \"krr:global/digitalpost.read\")
+                  Default for IntegrationType `idporten` = (\"openid\", \"profile\")
+                  IntegrationType `api_klient` have no Default, checkout Digdir documentation."
                 items:
                   type: string
                 type: array
