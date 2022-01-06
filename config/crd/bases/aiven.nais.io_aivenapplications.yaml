@@ -85,6 +85,23 @@ spec:
                 required:
                 - pool
                 type: object
+              openSearch:
+                description: OpenSearch is a section configuring the Elastic credentials
+                  to provision
+                properties:
+                  access:
+                    description: Access level for opensearch user
+                    enum:
+                    - read
+                    - write
+                    - readwrite
+                    - admin
+                    type: string
+                  instance:
+                    description: Use the `instance_name` that you specified in the
+                      [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+                    type: string
+                type: object
               protected:
                 description: A Protected secret will not be deleted by the janitor
                   even when not in use
