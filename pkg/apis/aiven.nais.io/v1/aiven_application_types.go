@@ -71,7 +71,7 @@ type AivenApplicationSpec struct {
 	Kafka *KafkaSpec `json:"kafka,omitempty"`
 	// Elastic is a section configuring the Elastic credentials to provision
 	Elastic *ElasticSpec `json:"elastic,omitempty"`
-	// OpenSearch is a section configuring the Elastic credentials to provision
+	// OpenSearch is a section configuring the OpenSearch credentials to provision
 	OpenSearch *OpenSearchSpec `json:"openSearch,omitempty"`
 }
 

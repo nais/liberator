@@ -86,7 +86,7 @@ spec:
                 - pool
                 type: object
               openSearch:
-                description: OpenSearch is a section configuring the Elastic credentials
+                description: OpenSearch is a section configuring the OpenSearch credentials
                   to provision
                 properties:
                   access:
