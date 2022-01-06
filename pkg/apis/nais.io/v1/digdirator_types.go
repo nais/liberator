@@ -237,6 +237,17 @@ type IDPortenClientList struct {
 type IDPortenClientSpec struct {
 	// ClientURI is the URL to the client to be used at DigDir when displaying a 'back' button or on errors
 	ClientURI IDPortenURI `json:"clientURI,omitempty"`
+	// IntegrationType is used to make sensible choices for your client.
+	// Which type of integration you choose will provide guidance on which scopes you can use with the client.
+	// A client can only have one integration type.
+	//
+	// NB! It is not possible to change the integration type after creation.
+	//
+	// +nais:doc:Immutable=true
+	// +nais:doc:Default=idporten
+	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html?h=api_klient"
+	// +kubebuilder:validation:Enum=krr;idporten;api_klient
+	IntegrationType string `json:"IntegrationType,omitempty" nais:"immutable"`
 	// RedirectURI is the redirect URI to be registered at DigDir
 	RedirectURI IDPortenURI `json:"redirectURI"`
 	// SecretName is the name of the resulting Secret resource to be created
