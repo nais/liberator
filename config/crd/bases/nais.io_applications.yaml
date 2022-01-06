@@ -975,6 +975,27 @@ spec:
                 required:
                 - enabled
                 type: object
+              openSearch:
+                description: To get your own OpenSearch instance head over to the
+                  IaC-repo to provision each instance. See [navikt/aiven-iac](https://github.com/navikt/aiven-iac)
+                  repository.
+                properties:
+                  access:
+                    description: Access level for OpenSearch user
+                    enum:
+                    - read
+                    - write
+                    - readwrite
+                    - admin
+                    type: string
+                  instance:
+                    description: Configure your application to access your OpenSearch
+                      instance. Use the `instance_name` that you specified in the
+                      [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+                    type: string
+                required:
+                - instance
+                type: object
               port:
                 description: The port number which is exposed by the container and
                   should receive traffic. Note that ports under 1024 are unavailable.

@@ -91,6 +91,15 @@ spec:
                 description: RedirectURI is the redirect URI to be registered at DigDir
                 pattern: ^https:\/\/.+$
                 type: string
+              scopes:
+                description: Register different oauth2 Scopes on your client. You
+                  will not be able to add a scope to your client that conflicts with
+                  the client's IntegrationType. For example, you can not add a scope
+                  that is limited to the IntegrationType `krr` of integrationType
+                  `idporten`, and vice versa.
+                items:
+                  type: string
+                type: array
               secretName:
                 description: SecretName is the name of the resulting Secret resource
                   to be created

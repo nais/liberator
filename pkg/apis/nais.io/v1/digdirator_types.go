@@ -235,6 +235,10 @@ type IDPortenClientList struct {
 
 // IDPortenClientSpec defines the desired state of IDPortenClient
 type IDPortenClientSpec struct {
+	// AccessTokenLifetime is the maximum lifetime in seconds for the returned access_token from ID-porten.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=3600
+	AccessTokenLifetime *int `json:"accessTokenLifetime,omitempty"`
 	// ClientURI is the URL to the client to be used at DigDir when displaying a 'back' button or on errors
 	ClientURI IDPortenURI `json:"clientURI,omitempty"`
 	// IntegrationType is used to make sensible choices for your client.
@@ -245,25 +249,28 @@ type IDPortenClientSpec struct {
 	//
 	// +nais:doc:Immutable=true
 	// +nais:doc:Default=idporten
-	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html?h=api_klient"
+	// +nais:doc:Link="https://docs.digdir.no/oidc_protocol_scope.html#scope-limitations"
+	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html"
 	// +kubebuilder:validation:Enum=krr;idporten;api_klient
 	IntegrationType string `json:"IntegrationType,omitempty" nais:"immutable"`
-	// RedirectURI is the redirect URI to be registered at DigDir
-	RedirectURI IDPortenURI `json:"redirectURI"`
-	// SecretName is the name of the resulting Secret resource to be created
-	SecretName string `json:"secretName"`
 	// FrontchannelLogoutURI is the URL that ID-porten sends a requests to whenever a logout is triggered by another application using the same session
 	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI,omitempty"`
 	// PostLogoutRedirectURI is a list of valid URIs that ID-porten may redirect to after logout
 	PostLogoutRedirectURIs []IDPortenURI `json:"postLogoutRedirectURIs,omitempty"`
+	// RedirectURI is the redirect URI to be registered at DigDir
+	RedirectURI IDPortenURI `json:"redirectURI"`
+	// SecretName is the name of the resulting Secret resource to be created
+	SecretName string `json:"secretName"`
+	// Register different oauth2 Scopes on your client.
+	// You will not be able to add a scope to your client that conflicts with the client's IntegrationType.
+	// For example, you can not add a scope that is limited to the IntegrationType `krr` of integrationType `idporten`, and vice versa.
+	//
+	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html?h=api_klient#scopes"
+	Scopes []string `json:"scopes,omitempty"`
 	// SessionLifetime is the maximum session lifetime in seconds for a logged in end-user for this client.
 	// +kubebuilder:validation:Minimum=3600
 	// +kubebuilder:validation:Maximum=7200
 	SessionLifetime *int `json:"sessionLifetime,omitempty"`
-	// AccessTokenLifetime is the maximum lifetime in seconds for the returned access_token from ID-porten.
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=3600
-	AccessTokenLifetime *int `json:"accessTokenLifetime,omitempty"`
 }
 
 // +kubebuilder:validation:Pattern=`^https:\/\/.+$`
