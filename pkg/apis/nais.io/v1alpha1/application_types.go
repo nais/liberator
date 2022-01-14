@@ -235,7 +235,7 @@ func (in *Application) GetObjectKind() schema.ObjectKind {
 
 func (in *Application) GetObjectReference() corev1.ObjectReference {
 	return corev1.ObjectReference{
-		APIVersion:      "v1alpha1",
+		APIVersion:      "nais.io/v1alpha1",
 		UID:             in.UID,
 		Name:            in.Name,
 		Kind:            "Application",
@@ -246,7 +246,7 @@ func (in *Application) GetObjectReference() corev1.ObjectReference {
 
 func (in *Application) GetOwnerReference() metav1.OwnerReference {
 	return metav1.OwnerReference{
-		APIVersion: "v1alpha1",
+		APIVersion: "nais.io/v1alpha1",
 		Kind:       "Application",
 		Name:       in.Name,
 		UID:        in.UID,

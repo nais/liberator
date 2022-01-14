@@ -219,7 +219,7 @@ func (in *Naisjob) GetObjectKind() schema.ObjectKind {
 
 func (in *Naisjob) GetObjectReference() corev1.ObjectReference {
 	return corev1.ObjectReference{
-		APIVersion:      "v1alpha1",
+		APIVersion:      "nais.io/v1",
 		UID:             in.UID,
 		Name:            in.Name,
 		Kind:            "Naisjob",
@@ -230,7 +230,7 @@ func (in *Naisjob) GetObjectReference() corev1.ObjectReference {
 
 func (in *Naisjob) GetOwnerReference() metav1.OwnerReference {
 	return metav1.OwnerReference{
-		APIVersion: "v1",
+		APIVersion: "nais.io/v1",
 		Kind:       "Naisjob",
 		Name:       in.Name,
 		UID:        in.UID,
