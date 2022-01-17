@@ -2,10 +2,11 @@ package kafka_nais_io_v1
 
 import (
 	"fmt"
+	"hash/crc32"
 	"strconv"
+	"strings"
 
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
-
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -15,6 +16,9 @@ const (
 	EventFailedSynchronization = "FailedSynchronization"
 
 	RemoveDataAnnotation = "kafka.nais.io/removeDataWhenResourceIsDeleted"
+
+	TeamNameLength = 20
+	AppNameLength  = 30
 )
 
 func init() {
@@ -134,4 +138,52 @@ func (in *Topic) NeedsSynchronization(hash string) bool {
 		return true
 	}
 	return in.Status.SynchronizationHash != hash
+}
+
+// New naming convention for ACLs
+func AclName(acl *TopicACL, suffix string) (string, error) {
+	hash, err := hashedName(acl)
+	if err != nil {
+		return "", fmt.Errorf("unable to hash team and application names: %w", err)
+	}
+	return fmt.Sprintf("%s_%s_%s_%s", shortTeamName(acl.Team), shortAppName(acl), hash, suffix), nil
+}
+
+func hashedName(acl *TopicACL) (string, error) {
+	hasher := crc32.NewIEEE()
+	basename := fmt.Sprintf("%s%s", acl.Team, acl.Application)
+	_, err := hasher.Write([]byte(basename))
+	if err != nil {
+		return "", err
+	}
+	hashStr := fmt.Sprintf("%08x", hasher.Sum32())
+	return hashStr, nil
+}
+
+func shortAppName(acl *TopicACL) string {
+	teamName := acl.Team
+	appName := acl.Application
+	if strings.HasPrefix(appName, teamName) {
+		appName = appName[len(teamName):]
+	}
+	for appName[0] == '-' {
+		appName = appName[1:]
+	}
+	if len(appName) > AppNameLength {
+		appName = appName[:AppNameLength]
+	}
+	return appName
+}
+
+func shortTeamName(team string) string {
+	if strings.HasPrefix(team, "team") {
+		team = team[4:]
+	}
+	for team[0] == '-' {
+		team = team[1:]
+	}
+	if len(team) > TeamNameLength {
+		team = team[:TeamNameLength]
+	}
+	return team
 }
