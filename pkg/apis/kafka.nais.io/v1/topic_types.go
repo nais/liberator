@@ -129,8 +129,15 @@ func (in Topic) FullName() string {
 	return in.Namespace + "." + in.Name
 }
 
+// TODO: Remove when no longer in use by Kafkarator
 func (in TopicACL) ACLname() string {
 	return fmt.Sprintf("%s*", aiven_nais_io_v1.ServiceUserPrefix(in.Application, in.Team, aiven_nais_io_v1.MaxServiceUserNameLength))
+}
+
+// Generate name to use for ServiceUser.
+// Suffix should be "*" in ACLs, or a counter (generation) % 100 for actual usernames.
+func (in TopicACL) ServiceUserNameWithSuffix(suffix string) (string, error) {
+	return ServiceUserNameWithSuffix(in.Team, in.Application, suffix)
 }
 
 func (in *Topic) NeedsSynchronization(hash string) bool {
@@ -140,18 +147,17 @@ func (in *Topic) NeedsSynchronization(hash string) bool {
 	return in.Status.SynchronizationHash != hash
 }
 
-// New naming convention for ACLs
-func AclName(acl *TopicACL, suffix string) (string, error) {
-	hash, err := hashedName(acl)
+func ServiceUserNameWithSuffix(teamName, appName, suffix string) (string, error) {
+	hash, err := hashedName(teamName, appName)
 	if err != nil {
 		return "", fmt.Errorf("unable to hash team and application names: %w", err)
 	}
-	return fmt.Sprintf("%s_%s_%s_%s", shortTeamName(acl.Team), shortAppName(acl), hash, suffix), nil
+	return fmt.Sprintf("%s_%s_%s_%s", shortTeamName(teamName), shortAppName(teamName, appName), hash, suffix), nil
 }
 
-func hashedName(acl *TopicACL) (string, error) {
+func hashedName(teamName, appName string) (string, error) {
 	hasher := crc32.NewIEEE()
-	basename := fmt.Sprintf("%s%s", acl.Team, acl.Application)
+	basename := fmt.Sprintf("%s%s", teamName, appName)
 	_, err := hasher.Write([]byte(basename))
 	if err != nil {
 		return "", err
@@ -160,30 +166,26 @@ func hashedName(acl *TopicACL) (string, error) {
 	return hashStr, nil
 }
 
-func shortAppName(acl *TopicACL) string {
-	teamName := acl.Team
-	appName := acl.Application
-	if strings.HasPrefix(appName, teamName) {
-		appName = appName[len(teamName):]
-	}
-	for appName[0] == '-' {
-		appName = appName[1:]
-	}
-	if len(appName) > AppNameLength {
-		appName = appName[:AppNameLength]
-	}
-	return appName
+func shortTeamName(team string) string {
+	return shorten(team, "team", TeamNameLength)
 }
 
-func shortTeamName(team string) string {
-	if strings.HasPrefix(team, "team") {
-		team = team[4:]
+func shortAppName(teamName, appName string) string {
+	return shorten(appName, teamName, AppNameLength)
+}
+
+func shorten(input, prefix string, maxlen int) string {
+	if strings.HasPrefix(input, prefix) {
+		input = input[len(prefix):]
 	}
-	for team[0] == '-' {
-		team = team[1:]
+	for input[0] == '-' {
+		input = input[1:]
 	}
-	if len(team) > TeamNameLength {
-		team = team[:TeamNameLength]
+	if len(input) > maxlen {
+		input = input[:maxlen]
 	}
-	return team
+	for input[len(input)-1] == '-' {
+		input = input[:len(input)-1]
+	}
+	return input
 }
