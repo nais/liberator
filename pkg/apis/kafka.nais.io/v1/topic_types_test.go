@@ -65,6 +65,18 @@ func TestAclNameFromTopicAcl(t *testing.T) {
 			},
 			want: "myteam_*_*_00",
 		},
+		{
+			name: "wildcards and patterns",
+			args: args{
+				acl: &TopicACL{
+					Access:      "read",
+					Application: "*-aivia",
+					Team:        "*",
+				},
+				suffix: "99",
+			},
+			want: "*_*-aivia_*_99",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -150,6 +162,22 @@ func Test_shortAppName(t *testing.T) {
 			},
 			want: "*",
 		},
+		{
+			name: "short names",
+			args: args{
+				team:        "myteam",
+				application: "myteam",
+			},
+			want: "myteam",
+		},
+		{
+			name: "long names that match",
+			args: args{
+				team:        "an-unusually-long-name-that-needs-to-be-shorter",
+				application: "an-unusually-long-name-that-needs-to-be-shorter",
+			},
+			want: "an-unusually-long-name-that-ne",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -201,6 +229,11 @@ func Test_shortTeamName(t *testing.T) {
 			name: "wildcard",
 			args: args{"*"},
 			want: "*",
+		},
+		{
+			name: "short name",
+			args: args{"team"},
+			want: "team",
 		},
 	}
 	for _, tt := range tests {

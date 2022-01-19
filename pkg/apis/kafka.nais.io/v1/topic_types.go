@@ -178,20 +178,24 @@ func shortAppName(teamName, appName string) string {
 }
 
 func shorten(input, prefix string, maxlen int) string {
-	if input == "*" {
+	if strings.Contains(input, "*") && len(input) <= maxlen {
 		return input
 	}
-	if strings.HasPrefix(input, prefix) {
+	if strings.HasPrefix(input, prefix) && input != prefix {
 		input = input[len(prefix):]
 	}
-	for input[0] == '-' {
-		input = input[1:]
+	if len(input) > 0 {
+		for input[0] == '-' {
+			input = input[1:]
+		}
 	}
 	if len(input) > maxlen {
 		input = input[:maxlen]
 	}
-	for input[len(input)-1] == '-' {
-		input = input[:len(input)-1]
+	if len(input) > 1 {
+		for input[len(input)-1] == '-' {
+			input = input[:len(input)-1]
+		}
 	}
 	return input
 }
