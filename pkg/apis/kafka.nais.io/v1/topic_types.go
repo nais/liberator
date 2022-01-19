@@ -156,6 +156,9 @@ func ServiceUserNameWithSuffix(teamName, appName, suffix string) (string, error)
 }
 
 func hashedName(teamName, appName string) (string, error) {
+	if strings.Contains(teamName, "*") || strings.Contains(appName, "*") {
+		return "*", nil
+	}
 	hasher := crc32.NewIEEE()
 	basename := fmt.Sprintf("%s%s", teamName, appName)
 	_, err := hasher.Write([]byte(basename))
@@ -175,6 +178,9 @@ func shortAppName(teamName, appName string) string {
 }
 
 func shorten(input, prefix string, maxlen int) string {
+	if input == "*" {
+		return input
+	}
 	if strings.HasPrefix(input, prefix) {
 		input = input[len(prefix):]
 	}

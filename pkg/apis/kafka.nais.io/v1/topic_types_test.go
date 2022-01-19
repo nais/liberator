@@ -41,6 +41,30 @@ func TestAclNameFromTopicAcl(t *testing.T) {
 			},
 			want: "superlong-team-name_a-very-long-application-name-t_aef7fe79_99",
 		},
+		{
+			name: "wildcards",
+			args: args{
+				acl: &TopicACL{
+					Access:      "write",
+					Application: "*",
+					Team:        "*",
+				},
+				suffix: "00",
+			},
+			want: "*_*_*_00",
+		},
+		{
+			name: "wildcard app",
+			args: args{
+				acl: &TopicACL{
+					Access:      "write",
+					Application: "*",
+					Team:        "myteam",
+				},
+				suffix: "00",
+			},
+			want: "myteam_*_*_00",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -110,6 +134,22 @@ func Test_shortAppName(t *testing.T) {
 			},
 			want: "a-long-application-name-which",
 		},
+		{
+			name: "wildcard appname",
+			args: args{
+				team:        "myteam",
+				application: "*",
+			},
+			want: "*",
+		},
+		{
+			name: "wildcard team and app",
+			args: args{
+				team:        "*",
+				application: "*",
+			},
+			want: "*",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -156,6 +196,11 @@ func Test_shortTeamName(t *testing.T) {
 			name: "avoid separator at end",
 			args: args{"team-superlong-team-name-actually-very-long"},
 			want: "superlong-team-name",
+		},
+		{
+			name: "wildcard",
+			args: args{"*"},
+			want: "*",
 		},
 	}
 	for _, tt := range tests {
