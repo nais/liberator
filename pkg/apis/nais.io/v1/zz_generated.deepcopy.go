@@ -795,6 +795,11 @@ func (in *CloudSqlInstance) DeepCopyInto(out *CloudSqlInstance) {
 		*out = new(int)
 		**out = **in
 	}
+	if in.RetainedBackups != nil {
+		in, out := &in.RetainedBackups, &out.RetainedBackups
+		*out = new(int)
+		**out = **in
+	}
 	if in.Maintenance != nil {
 		in, out := &in.Maintenance, &out.Maintenance
 		*out = new(Maintenance)
