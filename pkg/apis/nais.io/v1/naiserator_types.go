@@ -567,6 +567,9 @@ type CloudSqlInstance struct {
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=23
 	AutoBackupHour *int `json:"autoBackupHour,omitempty"`
+	// Number of daily backups to retain. Defaults to 7 backups.
+	// +kubebuilder:validation:Minimum=0
+	RetainedBackups *int `json:"retainedBackups,omitempty"`
 	// Desired maintenance window for database updates.
 	Maintenance *Maintenance `json:"maintenance,omitempty"`
 	// List of databases that should be created on this Postgres server.

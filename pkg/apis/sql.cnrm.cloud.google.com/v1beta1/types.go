@@ -53,9 +53,14 @@ type SQLInstanceInsightsConfiguration struct {
 }
 
 type SQLInstanceBackupConfiguration struct {
-	Enabled                    bool   `json:"enabled"`
-	StartTime                  string `json:"startTime"`
-	PointInTimeRecoveryEnabled bool   `json:"pointInTimeRecoveryEnabled"`
+	Enabled                    bool                               `json:"enabled"`
+	StartTime                  string                             `json:"startTime"`
+	PointInTimeRecoveryEnabled bool                               `json:"pointInTimeRecoveryEnabled"`
+	BackupRetentionSettings    *SQLInstanceBackupRetentionSetting `json:"backupRetentionSettings,omitempty"`
+}
+
+type SQLInstanceBackupRetentionSetting struct {
+	RetainedBackups int `json:"retainedBackups"`
 }
 
 type SQLInstanceIpConfiguration struct {
@@ -79,6 +84,7 @@ type SQLInstanceList struct {
 type InstanceRef struct {
 	Name string `json:"name"`
 }
+
 type SQLDatabaseSpec struct {
 	ResourceID  string      `json:"resourceID,omitempty"`
 	InstanceRef InstanceRef `json:"instanceRef"`
