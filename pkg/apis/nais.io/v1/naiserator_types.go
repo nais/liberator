@@ -526,7 +526,7 @@ type CloudSqlDatabaseUser struct {
 	Name string `json:"name"`
 }
 
-type CloudSqlDatabaseFlag struct {
+type CloudSqlFlag struct {
 	// Name of the flag.
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
@@ -583,7 +583,7 @@ type CloudSqlInstance struct {
 	Insights *InsightsConfiguration `json:"insights,omitempty"`
 	// Set flags to control the behavior of the instance.
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/flags#list-flags-postgres"
-	DatabaseFlags []CloudSqlDatabaseFlag `json:"databaseFlags,omitempty"`
+	Flags []CloudSqlFlag `json:"flags,omitempty"`
 }
 
 type InsightsConfiguration struct {

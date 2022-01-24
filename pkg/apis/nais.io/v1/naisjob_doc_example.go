@@ -237,7 +237,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 							Day:  1,
 							Hour: intp(4),
 						},
-						DatabaseFlags: []CloudSqlDatabaseFlag{
+						Flags: []CloudSqlFlag{
 							{
 								Name:  "max_connections",
 								Value: "50",
