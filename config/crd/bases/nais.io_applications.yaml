@@ -570,6 +570,21 @@ spec:
                         collation:
                           description: Sort order for `ORDER BY ...` clauses.
                           type: string
+                        databaseFlags:
+                          description: Set flags to control the behavior of the instance.
+                          items:
+                            properties:
+                              name:
+                                description: Name of the flag.
+                                type: string
+                              value:
+                                description: Value of the flag.
+                                type: string
+                            required:
+                            - name
+                            - value
+                            type: object
+                          type: array
                         databases:
                           description: List of databases that should be created on
                             this Postgres server.
