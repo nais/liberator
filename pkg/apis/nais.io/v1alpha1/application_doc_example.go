@@ -239,6 +239,12 @@ func ExampleApplicationForDocumentation() *Application {
 							Day:  1,
 							Hour: intp(4),
 						},
+						Flags: []nais_io_v1.CloudSqlFlag{
+							{
+								Name:  "max_connections",
+								Value: "50",
+							},
+						},
 						Databases: []nais_io_v1.CloudSqlDatabase{
 							{
 								Name:         "mydatabase",

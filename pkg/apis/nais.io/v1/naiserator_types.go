@@ -526,6 +526,15 @@ type CloudSqlDatabaseUser struct {
 	Name string `json:"name"`
 }
 
+type CloudSqlFlag struct {
+	// Name of the flag.
+	// +kubebuilder:validation:Required
+	Name string `json:"name"`
+	// Value of the flag.
+	// +kubebuilder:validation:Required
+	Value string `json:"value"`
+}
+
 type CloudSqlInstance struct {
 	// PostgreSQL version.
 	// +kubebuilder:validation:Enum=POSTGRES_11;POSTGRES_12
@@ -572,6 +581,9 @@ type CloudSqlInstance struct {
 	PointInTimeRecovery bool `json:"pointInTimeRecovery,omitempty"`
 	// Configures query insights which are now default for new sql instances.
 	Insights *InsightsConfiguration `json:"insights,omitempty"`
+	// Set flags to control the behavior of the instance.
+	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/flags#list-flags-postgres"
+	Flags []CloudSqlFlag `json:"flags,omitempty"`
 }
 
 type InsightsConfiguration struct {

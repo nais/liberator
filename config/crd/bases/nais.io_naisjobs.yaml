@@ -598,6 +598,21 @@ spec:
                           - SSD
                           - HDD
                           type: string
+                        flags:
+                          description: Set flags to control the behavior of the instance.
+                          items:
+                            properties:
+                              name:
+                                description: Name of the flag.
+                                type: string
+                              value:
+                                description: Value of the flag.
+                                type: string
+                            required:
+                            - name
+                            - value
+                            type: object
+                          type: array
                         highAvailability:
                           description: When set to true this will set up standby database
                             for failover.
