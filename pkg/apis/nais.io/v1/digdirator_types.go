@@ -244,6 +244,10 @@ type IDPortenClientSpec struct {
 	// IntegrationType is used to make sensible choices for your client.
 	// Which type of integration you choose will provide guidance on which scopes you can use with the client.
 	// A client can only have one integration type.
+	// Default for IntegrationType `idporten` = ("openid", "profile")
+	// IntegrationType `api_klient` have no Default, checkout Digdir documentation.
+	//
+	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html?h=api_klient#scopes"
 	IntegrationType string `json:"integrationType,omitempty" nais:"immutable"`
 	// FrontchannelLogoutURI is the URL that ID-porten sends a requests to whenever a logout is triggered by another application using the same session
 	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI,omitempty"`

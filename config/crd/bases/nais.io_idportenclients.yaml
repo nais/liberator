@@ -73,7 +73,9 @@ spec:
                 description: IntegrationType is used to make sensible choices for
                   your client. Which type of integration you choose will provide guidance
                   on which scopes you can use with the client. A client can only have
-                  one integration type.
+                  one integration type. Default for IntegrationType `idporten` = ("openid",
+                  "profile") IntegrationType `api_klient` have no Default, checkout
+                  Digdir documentation.
                 type: string
               postLogoutRedirectURIs:
                 description: PostLogoutRedirectURI is a list of valid URIs that ID-porten
