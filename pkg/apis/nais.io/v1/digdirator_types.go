@@ -244,15 +244,11 @@ type IDPortenClientSpec struct {
 	// IntegrationType is used to make sensible choices for your client.
 	// Which type of integration you choose will provide guidance on which scopes you can use with the client.
 	// A client can only have one integration type.
+	// Default for IntegrationType `idporten` = ("openid", "profile")
+	// IntegrationType `api_klient` have no Default, checkout Digdir documentation.
 	//
-	// NB! It is not possible to change the integration type after creation.
-	//
-	// +nais:doc:Immutable=true
-	// +nais:doc:Default=idporten
-	// +nais:doc:Link="https://docs.digdir.no/oidc_protocol_scope.html#scope-limitations"
-	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html"
-	// +kubebuilder:validation:Enum=krr;idporten;api_klient
-	IntegrationType string `json:"IntegrationType,omitempty" nais:"immutable"`
+	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html?h=api_klient#scopes"
+	IntegrationType string `json:"integrationType,omitempty" nais:"immutable"`
 	// FrontchannelLogoutURI is the URL that ID-porten sends a requests to whenever a logout is triggered by another application using the same session
 	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI,omitempty"`
 	// PostLogoutRedirectURI is a list of valid URIs that ID-porten may redirect to after logout
@@ -263,13 +259,7 @@ type IDPortenClientSpec struct {
 	SecretName string `json:"secretName"`
 	// Register different oauth2 Scopes on your client.
 	// You will not be able to add a scope to your client that conflicts with the client's IntegrationType.
-	// For example, you can not add a scope that is limited to the IntegrationType `krr` of integrationType `idporten`, and vice versa.
-	//
-	// Default for IntegrationType `krr` = ("krr:global/kontaktinformasjon.read", "krr:global/digitalpost.read")
-	// Default for IntegrationType `idporten` = ("openid", "profile")
-	// IntegrationType `api_klient` have no Default, checkout Digdir documentation.
-	//
-	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html?h=api_klient#scopes"
+	// For example, you can not add a scope that is limited to the IntegrationType `krr` of IntegrationType `idporten`, and vice versa.
 	Scopes []string `json:"scopes,omitempty"`
 	// SessionLifetime is the maximum session lifetime in seconds for a logged in end-user for this client.
 	// +kubebuilder:validation:Minimum=3600

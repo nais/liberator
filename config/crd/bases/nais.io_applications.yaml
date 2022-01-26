@@ -728,6 +728,17 @@ spec:
                     description: Prefer using `frontchannelLogoutPath`.
                     pattern: ^https:\/\/.+$
                     type: string
+                  integrationType:
+                    description: "IntegrationType is used to make sensible choices
+                      for your client. Which type of integration you choose will provide
+                      guidance on which scopes you can use with the client. A client
+                      can only have one integration type. \n NB! It is not possible
+                      to change the integration type after creation."
+                    enum:
+                    - krr
+                    - idporten
+                    - api_klient
+                    type: string
                   postLogoutRedirectURIs:
                     description: PostLogoutRedirectURIs are valid URIs that ID-porten
                       will allow redirecting the end-user to after a single logout
@@ -745,6 +756,19 @@ spec:
                     description: Use `redirectPath` instead.
                     pattern: ^https:\/\/.+$
                     type: string
+                  scopes:
+                    description: "Register different oauth2 Scopes on your client.
+                      You will not be able to add a scope to your client that conflicts
+                      with the client's IntegrationType. For example, you can not
+                      add a scope that is limited to the IntegrationType `krr` of
+                      IntegrationType `idporten`, and vice versa. \n Default for IntegrationType
+                      `krr` = (\"krr:global/kontaktinformasjon.read\", \"krr:global/digitalpost.read\")
+                      Default for IntegrationType `idporten` = (\"openid\", \"profile\")
+                      IntegrationType `api_klient` have no Default, checkout Digdir
+                      documentation."
+                    items:
+                      type: string
+                    type: array
                   sessionLifetime:
                     description: "SessionLifetime is the maximum lifetime in seconds
                       for any given user's session in your application. The timeout

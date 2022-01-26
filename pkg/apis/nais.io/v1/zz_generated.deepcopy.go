@@ -1147,6 +1147,11 @@ func (in *IDPorten) DeepCopyInto(out *IDPorten) {
 		*out = make([]IDPortenURI, len(*in))
 		copy(*out, *in)
 	}
+	if in.Scopes != nil {
+		in, out := &in.Scopes, &out.Scopes
+		*out = make([]string, len(*in))
+		copy(*out, *in)
+	}
 	if in.SessionLifetime != nil {
 		in, out := &in.SessionLifetime, &out.SessionLifetime
 		*out = new(int)
