@@ -662,7 +662,8 @@ spec:
                         retainedBackups:
                           description: Number of daily backups to retain. Defaults
                             to 7 backups.
-                          minimum: 0
+                          maximum: 365
+                          minimum: 1
                           type: integer
                         tier:
                           description: Server tier, i.e. how much CPU and memory allocated.
