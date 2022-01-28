@@ -588,6 +588,12 @@ type CloudSqlInstance struct {
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=23
 	AutoBackupHour *int `json:"autoBackupHour,omitempty"`
+	// Number of daily backups to retain. Defaults to 7 backups.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=365
+	// +nais:doc:Default="7"
+	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/backup-recovery/backups"
+	RetainedBackups *int `json:"retainedBackups,omitempty"`
 	// Desired maintenance window for database updates.
 	Maintenance *Maintenance `json:"maintenance,omitempty"`
 	// List of databases that should be created on this Postgres server.

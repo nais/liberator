@@ -235,6 +235,7 @@ func ExampleApplicationForDocumentation() *Application {
 						DiskSize:         30,
 						DiskAutoresize:   true,
 						AutoBackupHour:   intp(1),
+						RetainedBackups:  intp(14),
 						Maintenance: &nais_io_v1.Maintenance{
 							Day:  1,
 							Hour: intp(4),

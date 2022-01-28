@@ -677,6 +677,12 @@ spec:
                           description: Enables point-in-time recovery for sql instances
                             using write-ahead logs.
                           type: boolean
+                        retainedBackups:
+                          description: Number of daily backups to retain. Defaults
+                            to 7 backups.
+                          maximum: 365
+                          minimum: 1
+                          type: integer
                         tier:
                           description: Server tier, i.e. how much CPU and memory allocated.
                             Available tiers are `db-f1-micro`, `db-g1-small` and custom
