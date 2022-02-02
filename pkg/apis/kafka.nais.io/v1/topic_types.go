@@ -105,6 +105,8 @@ type TopicACL struct {
 	// Defaults to `readwrite`.
 	// +kubebuilder:validation:Enum=read;write;readwrite
 	Access string `json:"access"`
+	// The cluster the Application runs in
+	Cluster string
 	// The name of the specified application
 	Application string `json:"application"`
 	// The team of the specified application
@@ -137,7 +139,7 @@ func (in TopicACL) ACLname() string {
 // Generate name to use for ServiceUser.
 // Suffix should be "*" in ACLs, or a counter (generation) % 100 for actual usernames.
 func (in TopicACL) ServiceUserNameWithSuffix(suffix string) (string, error) {
-	return ServiceUserNameWithSuffix(in.Team, in.Application, suffix)
+	return ServiceUserNameWithSuffix(in.Cluster, in.Team, in.Application, suffix)
 }
 
 func (in *Topic) NeedsSynchronization(hash string) bool {
@@ -147,20 +149,20 @@ func (in *Topic) NeedsSynchronization(hash string) bool {
 	return in.Status.SynchronizationHash != hash
 }
 
-func ServiceUserNameWithSuffix(teamName, appName, suffix string) (string, error) {
-	hash, err := hashedName(teamName, appName)
+func ServiceUserNameWithSuffix(clusterName, teamName, appName, suffix string) (string, error) {
+	hash, err := hashedName(clusterName, teamName, appName)
 	if err != nil {
 		return "", fmt.Errorf("unable to hash team and application names: %w", err)
 	}
 	return fmt.Sprintf("%s_%s_%s_%s", shortTeamName(teamName), shortAppName(teamName, appName), hash, suffix), nil
 }
 
-func hashedName(teamName, appName string) (string, error) {
-	if strings.Contains(teamName, "*") || strings.Contains(appName, "*") {
+func hashedName(clusterName, teamName, appName string) (string, error) {
+	if strings.Contains(clusterName, "*") || strings.Contains(teamName, "*") || strings.Contains(appName, "*") {
 		return "*", nil
 	}
 	hasher := crc32.NewIEEE()
-	basename := fmt.Sprintf("%s%s", teamName, appName)
+	basename := fmt.Sprintf("%s%s%s", clusterName, teamName, appName)
 	_, err := hasher.Write([]byte(basename))
 	if err != nil {
 		return "", err
