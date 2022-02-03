@@ -3,9 +3,8 @@ package nais_io_v1alpha1
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
-	"github.com/nais/liberator/pkg/intutil"
-
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
+	"github.com/nais/liberator/pkg/intutil"
 )
 
 func ExampleApplicationForDocumentation() *Application {
@@ -236,9 +235,16 @@ func ExampleApplicationForDocumentation() *Application {
 						DiskSize:         30,
 						DiskAutoresize:   true,
 						AutoBackupHour:   intp(1),
+						RetainedBackups:  intp(14),
 						Maintenance: &nais_io_v1.Maintenance{
 							Day:  1,
 							Hour: intp(4),
+						},
+						Flags: []nais_io_v1.CloudSqlFlag{
+							{
+								Name:  "max_connections",
+								Value: "50",
+							},
 						},
 						Databases: []nais_io_v1.CloudSqlDatabase{
 							{
@@ -279,11 +285,13 @@ func ExampleApplicationForDocumentation() *Application {
 				Enabled:                true,
 				FrontchannelLogoutPath: "/oauth2/logout",
 				FrontchannelLogoutURI:  "https://myapplication.nav.no/oauth2/logout",
+				IntegrationType:        "idporten",
 				PostLogoutRedirectURIs: []nais_io_v1.IDPortenURI{
 					"https://www.nav.no",
 				},
 				RedirectPath:    "/oauth2/callback",
 				RedirectURI:     "https://myapplication.nav.no/oauth2/callback",
+				Scopes:          []string{"openid", "profile"},
 				SessionLifetime: intp(7200),
 				Sidecar: &nais_io_v1.IDPortenSidecar{
 					AutoLogin: true,
@@ -301,7 +309,8 @@ func ExampleApplicationForDocumentation() *Application {
 				"https://myapplication.nav.no",
 			},
 			Kafka: &nais_io_v1.Kafka{
-				Pool: "nav-dev",
+				Pool:    "nav-dev",
+				Streams: true,
 			},
 			LeaderElection: true,
 			Liveness: &nais_io_v1.Probe{
@@ -339,6 +348,10 @@ func ExampleApplicationForDocumentation() *Application {
 					},
 				},
 			},
+			OpenSearch: &nais_io_v1.OpenSearch{
+				Instance: "my-open-search-instance",
+				Access:   "readwrite",
+			},
 			Port: 8080,
 			PreStopHook: &nais_io_v1.PreStopHook{
 				Exec: &nais_io_v1.ExecAction{
@@ -367,6 +380,7 @@ func ExampleApplicationForDocumentation() *Application {
 				Min:                    intutil.Intp(2),
 				Max:                    intutil.Intp(4),
 				CpuThresholdPercentage: 50,
+				DisableAutoScaling:     true,
 			},
 			Resources: &nais_io_v1.ResourceRequirements{
 				Limits: &nais_io_v1.ResourceSpec{

@@ -46,6 +46,13 @@ spec:
                     type: string
                   backupConfiguration:
                     properties:
+                      backupRetentionSettings:
+                        properties:
+                          retainedBackups:
+                            type: integer
+                        required:
+                        - retainedBackups
+                        type: object
                       enabled:
                         type: boolean
                       pointInTimeRecoveryEnabled:

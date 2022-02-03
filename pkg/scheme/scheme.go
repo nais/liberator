@@ -8,6 +8,7 @@ import (
 	azure_microsoft_com_v1alpha2 "github.com/nais/liberator/pkg/apis/azure.microsoft.com/v1alpha2"
 	azure_microsoft_com_v1beta1 "github.com/nais/liberator/pkg/apis/azure.microsoft.com/v1beta1"
 	bigquery_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/bigquery.cnrm.cloud.google.com/v1beta1"
+	google_nais_io_v1 "github.com/nais/liberator/pkg/apis/google.nais.io/v1"
 	fluxcd_io_image_reflector_v1beta1 "github.com/nais/liberator/pkg/apis/fluxcd.io/image-reflector/v1beta1"
 	iam_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/iam.cnrm.cloud.google.com/v1beta1"
 	kafka_nais_io_v1 "github.com/nais/liberator/pkg/apis/kafka.nais.io/v1"
@@ -51,6 +52,7 @@ func All() (*runtime.Scheme, error) {
 		clientgoscheme.AddToScheme,
 		aiven_nais_io_v1.AddToScheme,
 		kafka_nais_io_v1.AddToScheme,
+		google_nais_io_v1.AddToScheme,
 		azure_microsoft_com_v1alpha1.AddToScheme,
 		azure_microsoft_com_v1alpha2.AddToScheme,
 		azure_microsoft_com_v1beta1.AddToScheme,

@@ -141,7 +141,9 @@ spec:
                     type: object
                   resourceGroup:
                     description: The resource group in azure to provision resources
-                      to. This field is required.
+                      to. This field is required. This is the logical name of the
+                      resource group and will be prefixed with a namepace to make
+                      it global
                     type: string
                   storageAccount:
                     additionalProperties:
@@ -631,6 +633,9 @@ spec:
                   cpuThresholdPercentage:
                     description: Amount of CPU usage before the autoscaler kicks in.
                     type: integer
+                  disableAutoScaling:
+                    description: Disable autoscaling
+                    type: boolean
                   max:
                     description: The pod autoscaler will increase replicas when required
                       up to the maximum.

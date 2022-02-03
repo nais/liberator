@@ -263,6 +263,12 @@ spec:
                 items:
                   type: string
                 type: array
+              completions:
+                description: A Job tracks the successful completions. When a specified
+                  number of successful completions is reached, the task (ie, Job)
+                  is complete.
+                format: int32
+                type: integer
               concurrencyPolicy:
                 description: Specifies how to treat concurrent executions of a job
                   that is created by this Naisjob-cron.
@@ -592,6 +598,21 @@ spec:
                           - SSD
                           - HDD
                           type: string
+                        flags:
+                          description: Set flags to control the behavior of the instance.
+                          items:
+                            properties:
+                              name:
+                                description: Name of the flag.
+                                type: string
+                              value:
+                                description: Value of the flag.
+                                type: string
+                            required:
+                            - name
+                            - value
+                            type: object
+                          type: array
                         highAvailability:
                           description: When set to true this will set up standby database
                             for failover.
@@ -638,10 +659,18 @@ spec:
                           description: Enables point-in-time recovery for sql instances
                             using write-ahead logs.
                           type: boolean
+                        retainedBackups:
+                          description: Number of daily backups to retain. Defaults
+                            to 7 backups.
+                          maximum: 365
+                          minimum: 1
+                          type: integer
                         tier:
                           description: Server tier, i.e. how much CPU and memory allocated.
-                            Available tiers can be retrieved on the command line by
-                            running `gcloud sql tiers list`.
+                            Available tiers are `db-f1-micro`, `db-g1-small` and custom
+                            `db-custom-CPU-RAM`. Custom memory must be mulitple of
+                            256 MB and at least 3.75 GB (e.g. `db-custom-1-3840` for
+                            1 cpu, 3840 MB ram) Also check out [sizing your database](../../persistence/postgres/#sizing-your-database).
                           pattern: db-.+
                           type: string
                         type:
@@ -683,6 +712,9 @@ spec:
                     - nav-prod
                     - nav-infrastructure
                     type: string
+                  streams:
+                    description: Allow this app to use kafka streams
+                    type: boolean
                 required:
                 - pool
                 type: object
@@ -834,6 +866,32 @@ spec:
                 required:
                 - enabled
                 type: object
+              openSearch:
+                description: To get your own OpenSearch instance head over to the
+                  IaC-repo to provision each instance. See [navikt/aiven-iac](https://github.com/navikt/aiven-iac)
+                  repository.
+                properties:
+                  access:
+                    description: Access level for OpenSearch user
+                    enum:
+                    - read
+                    - write
+                    - readwrite
+                    - admin
+                    type: string
+                  instance:
+                    description: Configure your application to access your OpenSearch
+                      instance. Use the `instance_name` that you specified in the
+                      [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+                    type: string
+                required:
+                - instance
+                type: object
+              parallelism:
+                description: For running pods in parallel. If it is specified as 0,
+                  then the Job is effectively paused until it is increased.
+                format: int32
+                type: integer
               preStopHook:
                 description: PreStopHook is called immediately before a container
                   is terminated due to an API request or management event such as

@@ -2,9 +2,8 @@ package nais_io_v1alpha1
 
 import (
 	"github.com/imdario/mergo"
-	"github.com/nais/liberator/pkg/intutil"
-
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
+	"github.com/nais/liberator/pkg/intutil"
 )
 
 // Application spec default values
@@ -22,7 +21,6 @@ const (
 // ApplyDefaults sets default values where they are missing from an Application spec.
 func (app *Application) ApplyDefaults() error {
 	replicasIsZero := app.replicasDefined() && app.replicasIsZero()
-
 	err := mergo.Merge(app, getAppDefaults())
 	if err != nil {
 		return err
@@ -59,6 +57,7 @@ func getAppDefaults() *Application {
 				Min:                    intutil.Intp(2),
 				Max:                    intutil.Intp(4),
 				CpuThresholdPercentage: 50,
+				DisableAutoScaling: false,
 			},
 			Liveness: &nais_io_v1.Probe{
 				PeriodSeconds:    DefaultProbePeriodSeconds,

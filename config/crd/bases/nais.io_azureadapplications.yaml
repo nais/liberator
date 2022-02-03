@@ -161,6 +161,10 @@ spec:
                 description: SecretName is the name of the resulting Secret resource
                   to be created
                 type: string
+              secretProtected:
+                description: SecretProtected protects the secret's credentials from
+                  being revoked by the janitor even when not in use.
+                type: boolean
               singlePageApplication:
                 description: SinglePageApplication denotes whether or not this Azure
                   AD application should be registered as a single-page-application.

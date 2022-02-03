@@ -106,3 +106,55 @@ func (in *Application) GetAzure() nais_io_v1.AzureInterface {
 func (in *Application) GetIngress() []nais_io_v1.Ingress {
 	return in.Spec.Ingresses
 }
+
+func (in *Application) GetLeaderElection() bool {
+	return in.Spec.LeaderElection
+}
+
+func (in *Application) GetIDPorten() *nais_io_v1.IDPorten {
+	return in.Spec.IDPorten
+}
+
+func (in *Application) GetGCP() *nais_io_v1.GCP {
+	return in.Spec.GCP
+}
+
+func (in *Application) GetWebProxy() bool {
+	return in.Spec.WebProxy
+}
+
+func (in *Application) GetSkipCABundle() bool {
+	return in.Spec.SkipCaBundle
+}
+
+func (in *Application) GetSecureLogs() *nais_io_v1.SecureLogs {
+	return in.Spec.SecureLogs
+}
+
+func (in *Application) GetMaskinporten() *nais_io_v1.Maskinporten {
+	return in.Spec.Maskinporten
+}
+
+func (in *Application) GetTokenX() *nais_io_v1.TokenX {
+	return in.Spec.TokenX
+}
+
+func (in *Application) GetInflux() *nais_io_v1.Influx {
+	return in.Spec.Influx
+}
+
+func (in *Application) GetKafka() *nais_io_v1.Kafka {
+	return in.Spec.Kafka
+}
+
+func (in *Application) GetElastic() *nais_io_v1.Elastic {
+	return in.Spec.Elastic
+}
+
+func (in *Application) GetOpenSearch() *nais_io_v1.OpenSearch {
+	return in.Spec.OpenSearch
+}
+
+func (in *Application) GetVault() *nais_io_v1.Vault {
+	return in.Spec.Vault
+}

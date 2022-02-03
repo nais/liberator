@@ -152,6 +152,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				"--other-param",
 				"other-value",
 			},
+			Completions:       int32p(1),
 			ConcurrencyPolicy: "Allow",
 			Elastic: &Elastic{
 				Instance: "my-elastic-instance",
@@ -232,9 +233,16 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 						DiskSize:         30,
 						DiskAutoresize:   true,
 						AutoBackupHour:   intp(1),
+						RetainedBackups:  intp(14),
 						Maintenance: &Maintenance{
 							Day:  1,
 							Hour: intp(4),
+						},
+						Flags: []CloudSqlFlag{
+							{
+								Name:  "max_connections",
+								Value: "50",
+							},
 						},
 						Databases: []CloudSqlDatabase{
 							{
@@ -274,7 +282,8 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			},
 			Image: "navikt/testapp:69.0.0",
 			Kafka: &Kafka{
-				Pool: "nav-dev",
+				Pool:    "nav-dev",
+				Streams: true,
 			},
 			Liveness: &Probe{
 				FailureThreshold: 10,
@@ -311,6 +320,11 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					},
 				},
 			},
+			OpenSearch: &OpenSearch{
+				Instance: "my-open-search-instance",
+				Access:   "readwrite",
+			},
+			Parallelism: int32p(1),
 			PreStopHook: &PreStopHook{
 				Exec: &ExecAction{
 					Command: []string{"./my", "--shell", "script"},
