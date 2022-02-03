@@ -616,6 +616,21 @@ spec:
                           - SSD
                           - HDD
                           type: string
+                        flags:
+                          description: Set flags to control the behavior of the instance.
+                          items:
+                            properties:
+                              name:
+                                description: Name of the flag.
+                                type: string
+                              value:
+                                description: Value of the flag.
+                                type: string
+                            required:
+                            - name
+                            - value
+                            type: object
+                          type: array
                         highAvailability:
                           description: When set to true this will set up standby database
                             for failover.
@@ -662,10 +677,18 @@ spec:
                           description: Enables point-in-time recovery for sql instances
                             using write-ahead logs.
                           type: boolean
+                        retainedBackups:
+                          description: Number of daily backups to retain. Defaults
+                            to 7 backups.
+                          maximum: 365
+                          minimum: 1
+                          type: integer
                         tier:
                           description: Server tier, i.e. how much CPU and memory allocated.
-                            Available tiers can be retrieved on the command line by
-                            running `gcloud sql tiers list`.
+                            Available tiers are `db-f1-micro`, `db-g1-small` and custom
+                            `db-custom-CPU-RAM`. Custom memory must be mulitple of
+                            256 MB and at least 3.75 GB (e.g. `db-custom-1-3840` for
+                            1 cpu, 3840 MB ram) Also check out [sizing your database](../../persistence/postgres/#sizing-your-database).
                           pattern: db-.+
                           type: string
                         type:
@@ -711,6 +734,17 @@ spec:
                     description: Prefer using `frontchannelLogoutPath`.
                     pattern: ^https:\/\/.+$
                     type: string
+                  integrationType:
+                    description: "IntegrationType is used to make sensible choices
+                      for your client. Which type of integration you choose will provide
+                      guidance on which scopes you can use with the client. A client
+                      can only have one integration type. \n NB! It is not possible
+                      to change the integration type after creation."
+                    enum:
+                    - krr
+                    - idporten
+                    - api_klient
+                    type: string
                   postLogoutRedirectURIs:
                     description: PostLogoutRedirectURIs are valid URIs that ID-porten
                       will allow redirecting the end-user to after a single logout
@@ -728,6 +762,19 @@ spec:
                     description: Use `redirectPath` instead.
                     pattern: ^https:\/\/.+$
                     type: string
+                  scopes:
+                    description: "Register different oauth2 Scopes on your client.
+                      You will not be able to add a scope to your client that conflicts
+                      with the client's IntegrationType. For example, you can not
+                      add a scope that is limited to the IntegrationType `krr` of
+                      IntegrationType `idporten`, and vice versa. \n Default for IntegrationType
+                      `krr` = (\"krr:global/kontaktinformasjon.read\", \"krr:global/digitalpost.read\")
+                      Default for IntegrationType `idporten` = (\"openid\", \"profile\")
+                      IntegrationType `api_klient` have no Default, checkout Digdir
+                      documentation."
+                    items:
+                      type: string
+                    type: array
                   sessionLifetime:
                     description: "SessionLifetime is the maximum lifetime in seconds
                       for any given user's session in your application. The timeout
@@ -805,7 +852,7 @@ spec:
                   type: string
                 type: array
               kafka:
-                description: Enable Aiven Kafka for your application.
+                description: Set up Aiven Kafka for your application.
                 properties:
                   pool:
                     description: Configures your application to access an Aiven Kafka
@@ -815,6 +862,9 @@ spec:
                     - nav-prod
                     - nav-infrastructure
                     type: string
+                  streams:
+                    description: Allow this app to use kafka streams
+                    type: boolean
                 required:
                 - pool
                 type: object
@@ -970,9 +1020,30 @@ spec:
                 required:
                 - enabled
                 type: object
+              openSearch:
+                description: To get your own OpenSearch instance head over to the
+                  IaC-repo to provision each instance. See [navikt/aiven-iac](https://github.com/navikt/aiven-iac)
+                  repository.
+                properties:
+                  access:
+                    description: Access level for OpenSearch user
+                    enum:
+                    - read
+                    - write
+                    - readwrite
+                    - admin
+                    type: string
+                  instance:
+                    description: Configure your application to access your OpenSearch
+                      instance. Use the `instance_name` that you specified in the
+                      [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+                    type: string
+                required:
+                - instance
+                type: object
               port:
                 description: The port number which is exposed by the container and
-                  should receive traffic.
+                  should receive traffic. Note that ports under 1024 are unavailable.
                 type: integer
               preStopHook:
                 description: PreStopHook is called immediately before a container
@@ -1072,6 +1143,9 @@ spec:
                   cpuThresholdPercentage:
                     description: Amount of CPU usage before the autoscaler kicks in.
                     type: integer
+                  disableAutoScaling:
+                    description: Disable autoscaling
+                    type: boolean
                   max:
                     description: The pod autoscaler will increase replicas when required
                       up to the maximum.

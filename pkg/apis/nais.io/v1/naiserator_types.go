@@ -70,6 +70,15 @@ type Elastic struct {
 	Access string `json:"access,omitempty"`
 }
 
+type OpenSearch struct {
+	// Configure your application to access your OpenSearch instance.
+	// Use the `instance_name` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+	Instance string `json:"instance"`
+	// Access level for OpenSearch user
+	// +kubebuilder:validation:Enum=read;write;readwrite;admin
+	Access string `json:"access,omitempty"`
+}
+
 type Influx struct {
 	// Provisions an InfluxDB instance and configures your application to access it.
 	// Use the prefix: `influx-` + `team` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
@@ -105,6 +114,18 @@ type IDPorten struct {
 	// +nais:doc:Deprecated=true
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
 	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI,omitempty"`
+	// IntegrationType is used to make sensible choices for your client.
+	// Which type of integration you choose will provide guidance on which scopes you can use with the client.
+	// A client can only have one integration type.
+	//
+	// NB! It is not possible to change the integration type after creation.
+	//
+	// +nais:doc:Immutable=true
+	// +nais:doc:Default=idporten
+	// +nais:doc:Link="https://docs.digdir.no/oidc_protocol_scope.html#scope-limitations"
+	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html"
+	// +kubebuilder:validation:Enum=krr;idporten;api_klient
+	IntegrationType string `json:"integrationType,omitempty" nais:"immutable"`
 	// PostLogoutRedirectURIs are valid URIs that ID-porten will allow redirecting the end-user to after a single logout
 	// has been initiated and performed by the application.
 	//
@@ -120,6 +141,16 @@ type IDPorten struct {
 	//
 	// +nais:doc:Deprecated=true
 	RedirectURI IDPortenURI `json:"redirectURI,omitempty"`
+	// Register different oauth2 Scopes on your client.
+	// You will not be able to add a scope to your client that conflicts with the client's IntegrationType.
+	// For example, you can not add a scope that is limited to the IntegrationType `krr` of IntegrationType `idporten`, and vice versa.
+	//
+	// Default for IntegrationType `krr` = ("krr:global/kontaktinformasjon.read", "krr:global/digitalpost.read")
+	// Default for IntegrationType `idporten` = ("openid", "profile")
+	// IntegrationType `api_klient` have no Default, checkout Digdir documentation.
+	//
+	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html?h=api_klient#scopes"
+	Scopes []string `json:"scopes,omitempty"`
 	// SessionLifetime is the maximum lifetime in seconds for any given user's session in your application.
 	// The timeout starts whenever the user is redirected from the `authorization_endpoint` at ID-porten.
 	//
@@ -130,7 +161,6 @@ type IDPorten struct {
 	// +kubebuilder:validation:Minimum=3600
 	// +kubebuilder:validation:Maximum=7200
 	SessionLifetime *int `json:"sessionLifetime,omitempty"`
-
 	// Sidecar configures a sidecar that intercepts every HTTP request, and performs the OIDC flow if necessary.
 	// All requests to ingress + `/oauth2` will be processed only by the sidecar, whereas all other requests
 	// will be proxied to the application.
@@ -329,9 +359,14 @@ type TokenX struct {
 
 type Kafka struct {
 	// Configures your application to access an Aiven Kafka cluster.
-	// +nais:doc:Link="https://doc.nais.io/persistence/kafka/"
 	// +kubebuilder:validation:Enum=nav-dev;nav-prod;nav-infrastructure
 	Pool string `json:"pool"`
+
+	// Allow this app to use kafka streams
+	// +nais:doc:Link="https://doc.nais.io/persistence/kafka/application/#using-kafka-streams-with-internal-topics"
+	// +nais:doc:Availability=GCP
+	// +nais:doc:Default="false"
+	Streams bool `json:"streams,omitempty"`
 }
 
 type CloudIAMResource struct {
@@ -378,6 +413,9 @@ type Replicas struct {
 	Max *int `json:"max,omitempty"`
 	// Amount of CPU usage before the autoscaler kicks in.
 	CpuThresholdPercentage int `json:"cpuThresholdPercentage,omitempty"`
+	// Disable autoscaling
+	// +nais:doc:Default="false"
+	DisableAutoScaling bool `json:"disableAutoScaling,omitempty"`
 }
 
 type ResourceSpec struct {
@@ -509,6 +547,15 @@ type CloudSqlDatabaseUser struct {
 	Name string `json:"name"`
 }
 
+type CloudSqlFlag struct {
+	// Name of the flag.
+	// +kubebuilder:validation:Required
+	Name string `json:"name"`
+	// Value of the flag.
+	// +kubebuilder:validation:Required
+	Value string `json:"value"`
+}
+
 type CloudSqlInstance struct {
 	// PostgreSQL version.
 	// +kubebuilder:validation:Enum=POSTGRES_11;POSTGRES_12
@@ -517,9 +564,11 @@ type CloudSqlInstance struct {
 	// The name of the instance, if omitted the application name will be used.
 	Name string `json:"name,omitempty"`
 	// Server tier, i.e. how much CPU and memory allocated.
-	// Available tiers can be retrieved on the command line
-	// by running `gcloud sql tiers list`.
+	// Available tiers are `db-f1-micro`, `db-g1-small` and custom `db-custom-CPU-RAM`.
+	// Custom memory must be mulitple of 256 MB and at least 3.75 GB (e.g. `db-custom-1-3840` for 1 cpu, 3840 MB ram)
+	// Also check out [sizing your database](../../persistence/postgres/#sizing-your-database).
 	// +kubebuilder:validation:Pattern="db-.+"
+	// +nais:doc:Default="db-f1-micro"
 	Tier string `json:"tier,omitempty"`
 	// Disk type to use for storage in the database.
 	// +kubebuilder:validation:Enum=SSD;HDD
@@ -539,6 +588,12 @@ type CloudSqlInstance struct {
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=23
 	AutoBackupHour *int `json:"autoBackupHour,omitempty"`
+	// Number of daily backups to retain. Defaults to 7 backups.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=365
+	// +nais:doc:Default="7"
+	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/backup-recovery/backups"
+	RetainedBackups *int `json:"retainedBackups,omitempty"`
 	// Desired maintenance window for database updates.
 	Maintenance *Maintenance `json:"maintenance,omitempty"`
 	// List of databases that should be created on this Postgres server.
@@ -553,6 +608,9 @@ type CloudSqlInstance struct {
 	PointInTimeRecovery bool `json:"pointInTimeRecovery,omitempty"`
 	// Configures query insights which are now default for new sql instances.
 	Insights *InsightsConfiguration `json:"insights,omitempty"`
+	// Set flags to control the behavior of the instance.
+	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/flags#list-flags-postgres"
+	Flags []CloudSqlFlag `json:"flags,omitempty"`
 }
 
 type InsightsConfiguration struct {

@@ -25,7 +25,10 @@ func ExampleAlertForDocumentation() *Alert {
 				GroupWait:      "30s",
 				GroupInterval:  "5m",
 				RepeatInterval: "3h",
-				GroupBy:        []string{"<label_name>"},
+				GroupBy: []LabelName{
+					"label",
+					"name",
+				},
 			},
 			Receivers: Receivers{
 				Slack: Slack{
@@ -55,7 +58,6 @@ func ExampleAlertForDocumentation() *Alert {
 					Documentation: "https://doc.nais.io/observability/alerts/",
 					SLA:           "Mellom 8 og 16",
 					Severity:      "danger",
-					Priority:      "0",
 				},
 			},
 			InhibitRules: []InhibitRules{
@@ -72,9 +74,9 @@ func ExampleAlertForDocumentation() *Alert {
 					SourcesRegex: map[string]string{
 						"key": "value(.)?",
 					},
-					Labels: []string{
+					Labels: []LabelName{
 						"label",
-						"lebal",
+						"name",
 					},
 				},
 			},

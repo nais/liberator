@@ -2,11 +2,11 @@ package kafka_nais_io_v1
 
 import (
 	"fmt"
+	"hash/crc32"
 	"strconv"
+	"strings"
 
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
-
-	"github.com/nais/liberator/pkg/namegen"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -15,10 +15,10 @@ const (
 	EventFailedPrepare         = "FailedPrepare"
 	EventFailedSynchronization = "FailedSynchronization"
 
-	MaxServiceUserNameLength = 40
-
-	Finalizer            = "kafkarator.kafka.nais.io"
 	RemoveDataAnnotation = "kafka.nais.io/removeDataWhenResourceIsDeleted"
+
+	TeamNameLength = 20
+	AppNameLength  = 30
 )
 
 func init() {
@@ -125,64 +125,19 @@ func (in Topic) RemoveDataWhenDeleted() bool {
 	return b && err == nil
 }
 
-func (in *Topic) AppendFinalizer() {
-	if in.Finalizers == nil {
-		in.Finalizers = make([]string, 0)
-	}
-	for _, v := range in.Finalizers {
-		if v == Finalizer {
-			return
-		}
-	}
-	in.Finalizers = append(in.Finalizers, Finalizer)
-}
-
-func (in *Topic) RemoveFinalizer() {
-	finalizers := make([]string, 0, len(in.Finalizers))
-	for _, v := range in.Finalizers {
-		if v != Finalizer {
-			finalizers = append(finalizers, v)
-		}
-	}
-	in.Finalizers = finalizers
-}
-
 func (in Topic) FullName() string {
 	return in.Namespace + "." + in.Name
 }
 
-func (in TopicACL) Username() string {
-	username := in.Team + "." + in.Application
-	username, err := namegen.ShortName(username, MaxServiceUserNameLength)
-	if err != nil {
-		panic(err)
-	}
-	return username
-}
-
+// TODO: Remove when no longer in use by Kafkarator
 func (in TopicACL) ACLname() string {
-	// TODO: Use new max length when Aivenator takes over creation of service users
-	return fmt.Sprintf("%s*", aiven_nais_io_v1.ServiceUserPrefix(in.Application, in.Team, MaxServiceUserNameLength))
+	return fmt.Sprintf("%s*", aiven_nais_io_v1.ServiceUserPrefix(in.Application, in.Team, aiven_nais_io_v1.MaxServiceUserNameLength))
 }
 
-func (in TopicACL) User() User {
-	return User{
-		Username:    in.Username(),
-		Application: in.Application,
-		Team:        in.Team,
-	}
-}
-
-func (in TopicACLs) Users() []User {
-	users := make(map[User]interface{})
-	result := make([]User, 0, len(in))
-	for _, acl := range in {
-		users[acl.User()] = new(interface{})
-	}
-	for k := range users {
-		result = append(result, k)
-	}
-	return result
+// Generate name to use for ServiceUser.
+// Suffix should be "*" in ACLs, or a counter (generation) % 100 for actual usernames.
+func (in TopicACL) ServiceUserNameWithSuffix(suffix string) (string, error) {
+	return ServiceUserNameWithSuffix(in.Team, in.Application, suffix)
 }
 
 func (in *Topic) NeedsSynchronization(hash string) bool {
@@ -190,4 +145,57 @@ func (in *Topic) NeedsSynchronization(hash string) bool {
 		return true
 	}
 	return in.Status.SynchronizationHash != hash
+}
+
+func ServiceUserNameWithSuffix(teamName, appName, suffix string) (string, error) {
+	hash, err := hashedName(teamName, appName)
+	if err != nil {
+		return "", fmt.Errorf("unable to hash team and application names: %w", err)
+	}
+	return fmt.Sprintf("%s_%s_%s_%s", shortTeamName(teamName), shortAppName(teamName, appName), hash, suffix), nil
+}
+
+func hashedName(teamName, appName string) (string, error) {
+	if strings.Contains(teamName, "*") || strings.Contains(appName, "*") {
+		return "*", nil
+	}
+	hasher := crc32.NewIEEE()
+	basename := fmt.Sprintf("%s%s", teamName, appName)
+	_, err := hasher.Write([]byte(basename))
+	if err != nil {
+		return "", err
+	}
+	hashStr := fmt.Sprintf("%08x", hasher.Sum32())
+	return hashStr, nil
+}
+
+func shortTeamName(team string) string {
+	return shorten(team, "team", TeamNameLength)
+}
+
+func shortAppName(teamName, appName string) string {
+	return shorten(appName, teamName, AppNameLength)
+}
+
+func shorten(input, prefix string, maxlen int) string {
+	if strings.Contains(input, "*") && len(input) <= maxlen {
+		return input
+	}
+	if strings.HasPrefix(input, prefix) && input != prefix {
+		input = input[len(prefix):]
+	}
+	if len(input) > 0 {
+		for input[0] == '-' {
+			input = input[1:]
+		}
+	}
+	if len(input) > maxlen {
+		input = input[:maxlen]
+	}
+	if len(input) > 1 {
+		for input[len(input)-1] == '-' {
+			input = input[:len(input)-1]
+		}
+	}
+	return input
 }

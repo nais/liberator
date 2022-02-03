@@ -121,7 +121,8 @@ type ApplicationSpec struct {
 	// +nais:doc:Availability="GCP"
 	Influx *nais_io_v1.Influx `json:"influx,omitempty"`
 
-	// Enable Aiven Kafka for your application.
+	// Set up Aiven Kafka for your application.
+	// +nais:doc:Link="https://doc.nais.io/persistence/kafka/"
 	Kafka *nais_io_v1.Kafka `json:"kafka,omitempty"`
 
 	// If true, an HTTP endpoint will be available at `$ELECTOR_PATH` that returns the current leader.
@@ -147,7 +148,12 @@ type ApplicationSpec struct {
 	// See [Maskinporten](https://doc.nais.io/security/auth/maskinporten/) for more details.
 	Maskinporten *nais_io_v1.Maskinporten `json:"maskinporten,omitempty"`
 
+	// To get your own OpenSearch instance head over to the IaC-repo to provision each instance.
+	// See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+	OpenSearch *nais_io_v1.OpenSearch `json:"openSearch,omitempty"`
+
 	// The port number which is exposed by the container and should receive traffic.
+	// Note that ports under 1024 are unavailable.
 	Port int `json:"port,omitempty"`
 
 	// PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
@@ -229,7 +235,7 @@ func (in *Application) GetObjectKind() schema.ObjectKind {
 
 func (in *Application) GetObjectReference() corev1.ObjectReference {
 	return corev1.ObjectReference{
-		APIVersion:      "v1alpha1",
+		APIVersion:      "nais.io/v1alpha1",
 		UID:             in.UID,
 		Name:            in.Name,
 		Kind:            "Application",
@@ -240,7 +246,7 @@ func (in *Application) GetObjectReference() corev1.ObjectReference {
 
 func (in *Application) GetOwnerReference() metav1.OwnerReference {
 	return metav1.OwnerReference{
-		APIVersion: "v1alpha1",
+		APIVersion: "nais.io/v1alpha1",
 		Kind:       "Application",
 		Name:       in.Name,
 		UID:        in.UID,

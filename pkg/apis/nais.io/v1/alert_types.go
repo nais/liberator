@@ -26,6 +26,7 @@ type Slack struct {
 	// Text to prepend every Slack message with severity `danger`.
 	PrependText string `json:"prependText,omitempty"`
 	// Whether or not to notify about resolved alerts.
+	// +nais:doc:Default="true"
 	SendResolved *bool `json:"send_resolved,omitempty"`
 	// Set your bot's user name.
 	Username string `json:"username,omitempty"`
@@ -38,12 +39,14 @@ type Slack struct {
 type Email struct {
 	To string `json:"to"`
 	// Whether or not to notify about resolved alerts.
+	// +nais:doc:Default="false"
 	SendResolved bool `json:"send_resolved,omitempty"`
 }
 
 type SMS struct {
 	Recipients string `json:"recipients"`
 	// Whether or not to notify about resolved alerts.
+	// +nais:doc:Default="true"
 	SendResolved *bool `json:"send_resolved,omitempty"`
 }
 
@@ -63,6 +66,7 @@ type Rule struct {
 	// Simple description of the triggered alert.
 	Description string `json:"description,omitempty"`
 	// Prometheus expression that triggers an alert.
+	// Explore expressions in the [Prometheus](https://docs.nais.io/observability/alerts/#writing-the-expr)-interface
 	// +kubebuilder:validation:Required
 	Expr string `json:"expr"`
 	// Duration before the alert should trigger.
@@ -74,13 +78,12 @@ type Rule struct {
 	Action string `json:"action"`
 	// URL for documentation for this alert.
 	Documentation string `json:"documentation,omitempty"`
-	// Time before the alert should be resolved.
+	// Time before a human should resolve the alert.
 	SLA string `json:"sla,omitempty"`
 	// Alert level for Slack messages.
+	// +nais:doc:Default="danger"
 	// +kubebuilder:validation:Pattern="^$|good|warning|danger|#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})"
 	Severity string `json:"severity,omitempty"`
-	// Not in use
-	Priority string `json:"priority,omitempty"`
 }
 
 type InhibitRules struct {
@@ -91,37 +94,35 @@ type InhibitRules struct {
 	// These are key/value pairs, where the value can be a regex.
 	TargetsRegex map[string]string `json:"targetsRegex,omitempty"`
 	// Matchers for which one or more alerts have to exist for the inhibition to take effect.
+	// These are key/value pairs.
 	Sources map[string]string `json:"sources,omitempty"`
 	// Regex matchers for which one or more alerts have to exist for the inhibition to take effect.
-	// These are key/value pairs.
+	// These are key/value pairs, where the value can be a regex.
 	SourcesRegex map[string]string `json:"sourcesRegex,omitempty"`
 	// Labels that must have an equal value in the source and target alert for the inhibition to take effect.
-	// These are key/value pairs, where the value can be a regex.
-	Labels []string `json:"labels,omitempty"`
+	Labels []LabelName `json:"labels,omitempty"`
 }
 
 type Route struct {
 	// How long to initially wait to send a notification for a group of alerts.
-	// Allows to wait for an inhibiting alert to arrive or collect more initial alerts for the same group. (Usually ~0s to few minutes.)
-	// +kubebuilder:validation:Pattern="([0-9]+(ms|[smhdwy]))?"
+	// Allows to wait for an inhibiting alert to arrive or collect more initial alerts for the same group.
+	// +nais:doc:Default="10s"
+	// +kubebuilder:validation:Pattern="((([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?|0)"
 	GroupWait string `json:"groupWait,omitempty"`
-	// How long to wait before sending a notification about new alerts that are added to a group of alerts for which an initial notification has already been sent. (Usually ~5m or more.)
-	// +kubebuilder:validation:Pattern="([0-9]+(ms|[smhdwy]))?"
+	// How long to wait before sending a notification about new alerts that are added to a group of alerts for which an initial notification has already been sent.
+	// +nais:doc:Default="5m"
+	// +kubebuilder:validation:Pattern="((([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?|0)"
 	GroupInterval string `json:"groupInterval,omitempty"`
-	// How long to wait before sending a notification again if it has already been sent successfully for an alert. (Usually ~3h or more).
-	// +kubebuilder:validation:Pattern="([0-9]+(ms|[smhdwy]))?"
+	// How long to wait before sending a notification again if it has already been sent successfully for an alert.
+	// +nais:doc:Default="1h"
+	// +kubebuilder:validation:Pattern="((([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?|0)"
 	RepeatInterval string `json:"repeatInterval,omitempty"`
-	// The labels by which incoming alerts are grouped together. For example,
-	// multiple alerts coming in for cluster=A and alertname=LatencyHigh would
-	// be batched into a single group.
-	//
-	// To aggregate by all possible labels use '...' as the sole label name.
-	// This effectively disables aggregation entirely, passing through all
-	// alerts as-is. This is unlikely to be what you want, unless you have
-	// a very low alert volume or your upstream notification system performs
-	// its own grouping. Example: group_by: [...]
-	GroupBy []string `json:"group_by,omitempty"`
+	// The labels by which incoming alerts are grouped together.
+	GroupBy []LabelName `json:"group_by,omitempty"`
 }
+
+// +kubebuilder:validation:Pattern="[a-zA-Z_][a-zA-Z0-9_]*"
+type LabelName string
 
 type AlertSpec struct {
 	Route Route `json:"route,omitempty"`
@@ -131,7 +132,10 @@ type AlertSpec struct {
 	Receivers Receivers `json:"receivers,omitempty"`
 	// +kubebuilder:validation:Required
 	Alerts []Rule `json:"alerts,omitempty"`
-	// A list of inhibit rules. Read more about it at [prometheus.io/docs](https://prometheus.io/docs/alerting/latest/configuration/#inhibit_rule).
+	// A list of inhibit rules.
+	// An inhibition rule mutes an alert (target) matching a set of matchers when an alert (source) exists that matches another set of matchers.
+	// Both target and source alerts must have the same label values for the label names in the labels list.
+	// +nais:doc:Link="https://prometheus.io/docs/alerting/latest/configuration/#inhibit_rule"
 	InhibitRules []InhibitRules `json:"inhibitRules,omitempty"`
 }
 

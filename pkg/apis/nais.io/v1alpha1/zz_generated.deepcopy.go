@@ -149,6 +149,11 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = new(v1.Maskinporten)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.OpenSearch != nil {
+		in, out := &in.OpenSearch, &out.OpenSearch
+		*out = new(v1.OpenSearch)
+		**out = **in
+	}
 	if in.PreStopHook != nil {
 		in, out := &in.PreStopHook, &out.PreStopHook
 		*out = new(v1.PreStopHook)

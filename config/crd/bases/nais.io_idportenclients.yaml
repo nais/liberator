@@ -52,6 +52,17 @@ spec:
           spec:
             description: IDPortenClientSpec defines the desired state of IDPortenClient
             properties:
+              IntegrationType:
+                description: "IntegrationType is used to make sensible choices for
+                  your client. Which type of integration you choose will provide guidance
+                  on which scopes you can use with the client. A client can only have
+                  one integration type. \n NB! It is not possible to change the integration
+                  type after creation."
+                enum:
+                - krr
+                - idporten
+                - api_klient
+                type: string
               accessTokenLifetime:
                 description: AccessTokenLifetime is the maximum lifetime in seconds
                   for the returned access_token from ID-porten.
@@ -80,6 +91,18 @@ spec:
                 description: RedirectURI is the redirect URI to be registered at DigDir
                 pattern: ^https:\/\/.+$
                 type: string
+              scopes:
+                description: "Register different oauth2 Scopes on your client. You
+                  will not be able to add a scope to your client that conflicts with
+                  the client's IntegrationType. For example, you can not add a scope
+                  that is limited to the IntegrationType `krr` of integrationType
+                  `idporten`, and vice versa. \n Default for IntegrationType `krr`
+                  = (\"krr:global/kontaktinformasjon.read\", \"krr:global/digitalpost.read\")
+                  Default for IntegrationType `idporten` = (\"openid\", \"profile\")
+                  IntegrationType `api_klient` have no Default, checkout Digdir documentation."
+                items:
+                  type: string
+                type: array
               secretName:
                 description: SecretName is the name of the resulting Secret resource
                   to be created
