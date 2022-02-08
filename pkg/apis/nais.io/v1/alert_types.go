@@ -50,6 +50,19 @@ type SMS struct {
 	SendResolved *bool `json:"send_resolved,omitempty"`
 }
 
+type Webhook struct {
+	// The endpoint to send HTTP POST requests to.
+	URL string `json:"url"`
+	// The maximum number of alerts to include in a single webhook message. Alerts
+	// above this threshold are truncated. When leaving this at its default value of
+	// 0, all alerts are included.
+	// +nais:doc:Default="0"
+	MaxAlerts int `json:"max_alerts"`
+	// Whether or not to notify about resolved alerts.
+	// +nais:doc:Default="true"
+	SendResolved *bool `json:"send_resolved,omitempty"`
+}
+
 type Receivers struct {
 	// Slack notifications are sent via Slack webhooks.
 	Slack Slack `json:"slack,omitempty"`
@@ -57,6 +70,8 @@ type Receivers struct {
 	Email Email `json:"email,omitempty"`
 	// Alerts via SMS
 	SMS SMS `json:"sms,omitempty"`
+	// Alerts via custom web application
+	Webhook Webhook `json:"webhook,omitempty"`
 }
 
 type Rule struct {
