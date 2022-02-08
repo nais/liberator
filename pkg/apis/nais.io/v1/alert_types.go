@@ -50,6 +50,19 @@ type SMS struct {
 	SendResolved *bool `json:"send_resolved,omitempty"`
 }
 
+type TLSConfig struct {
+	// Disable validation of the server certificate.
+	// +nais:doc:Default="false"
+	InsecureSkipVerify bool `json:"insecure_skip_verify,omitempty"`
+}
+
+type HttpConfig struct {
+	// Optional proxy URL.
+	ProxyUrl string `json:"proxy_url,omitempty"`
+	// Configures the TLS settings.
+	TLSConfig TLSConfig `json:"tls_config,omitempty"`
+}
+
 type Webhook struct {
 	// The endpoint to send HTTP POST requests to.
 	URL string `json:"url"`
@@ -61,6 +74,8 @@ type Webhook struct {
 	// Whether or not to notify about resolved alerts.
 	// +nais:doc:Default="true"
 	SendResolved *bool `json:"send_resolved,omitempty"`
+	// A http_config allows configuring the HTTP client that the receiver uses to communicate with HTTP-based API services.
+	HttpConfig HttpConfig `json:"http_config,omitempty"`
 }
 
 type Receivers struct {

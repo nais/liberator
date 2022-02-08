@@ -174,6 +174,22 @@ spec:
                   webhook:
                     description: Alerts via custom web application
                     properties:
+                      http_config:
+                        description: A http_config allows configuring the HTTP client
+                          that the receiver uses to communicate with HTTP-based API
+                          services.
+                        properties:
+                          proxy_url:
+                            description: Optional proxy URL.
+                            type: string
+                          tls_config:
+                            description: Configures the TLS settings.
+                            properties:
+                              insecure_skip_verify:
+                                description: Disable validation of the server certificate.
+                                type: boolean
+                            type: object
+                        type: object
                       max_alerts:
                         description: The maximum number of alerts to include in a
                           single webhook message. Alerts above this threshold are

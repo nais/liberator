@@ -51,6 +51,12 @@ func ExampleAlertForDocumentation() *Alert {
 					URL:          "https://the.feature.now",
 					MaxAlerts:    0,
 					SendResolved: boolp(true),
+					HttpConfig: HttpConfig{
+						ProxyUrl: "webproxy.nav",
+						TLSConfig: TLSConfig{
+							InsecureSkipVerify: true,
+						},
+					},
 				},
 			},
 			Alerts: []Rule{
