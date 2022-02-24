@@ -678,6 +678,8 @@ spec:
                           enum:
                           - POSTGRES_11
                           - POSTGRES_12
+                          - POSTGRES_13
+                          - POSTGRES_14
                           type: string
                       required:
                       - type
