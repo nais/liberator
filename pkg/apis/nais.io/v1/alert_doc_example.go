@@ -47,6 +47,17 @@ func ExampleAlertForDocumentation() *Alert {
 					Recipients:   "12345678",
 					SendResolved: boolp(false),
 				},
+				Webhook: Webhook{
+					URL:          "https://the.feature.now",
+					MaxAlerts:    0,
+					SendResolved: boolp(true),
+					HttpConfig: HttpConfig{
+						ProxyUrl: "webproxy.nav",
+						TLSConfig: TLSConfig{
+							InsecureSkipVerify: true,
+						},
+					},
+				},
 			},
 			Alerts: []Rule{
 				{
