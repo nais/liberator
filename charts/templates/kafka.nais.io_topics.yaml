@@ -1,0 +1,157 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.2
+  creationTimestamp: null
+  name: topics.kafka.nais.io
+spec:
+  group: kafka.nais.io
+  names:
+    kind: Topic
+    listKind: TopicList
+    plural: topics
+    singular: topic
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    - jsonPath: .status.synchronizationState
+      name: State
+      type: string
+    - jsonPath: .status.fullyQualifiedName
+      name: Fully Qualified Name
+      type: string
+    - jsonPath: .status.credentialsExpiryTime
+      name: Credentials expiry time
+      type: string
+    name: v1
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TopicSpec is a specification of the desired behavior of the
+              topic.
+            properties:
+              acl:
+                items:
+                  description: TopicACL describes the access granted for the topic.
+                  properties:
+                    access:
+                      description: Access type granted for a application. Defaults
+                        to `readwrite`.
+                      enum:
+                      - read
+                      - write
+                      - readwrite
+                      type: string
+                    application:
+                      description: The name of the specified application
+                      type: string
+                    team:
+                      description: The team of the specified application
+                      type: string
+                  required:
+                  - access
+                  - application
+                  - team
+                  type: object
+                type: array
+              config:
+                properties:
+                  cleanupPolicy:
+                    description: CleanupPolicy is either "delete" or "compact" or
+                      both. This designates the retention policy to use on old log
+                      segments. Defaults to `delete`.
+                    enum:
+                    - delete
+                    - compact
+                    - compact,delete
+                    type: string
+                  minimumInSyncReplicas:
+                    description: When a producer sets acks to "all" (or "-1"), `min.insync.replicas`
+                      specifies the minimum number of replicas that must acknowledge
+                      a write for the write to be considered successful. Defaults
+                      to `1`.
+                    maximum: 7
+                    minimum: 1
+                    type: integer
+                  partitions:
+                    description: The default number of log partitions per topic. Defaults
+                      to `1`.
+                    maximum: 1000000
+                    minimum: 1
+                    type: integer
+                  replication:
+                    description: The default replication factor for created topics.
+                      Defaults to `3`.
+                    minimum: 1
+                    type: integer
+                  retentionBytes:
+                    description: Configuration controls the maximum size a partition
+                      can grow to before we will discard old log segments to free
+                      up space if we are using the "delete" retention policy. By default
+                      there is no size limit only a time limit. Since this limit is
+                      enforced at the partition level, multiply it by the number of
+                      partitions to compute the topic retention in bytes. Defaults
+                      to `-1`.
+                    type: integer
+                  retentionHours:
+                    description: The number of hours to keep a log file before deleting
+                      it. Defaults to `72`.
+                    maximum: 2562047788015
+                    type: integer
+                type: object
+              pool:
+                type: string
+            required:
+            - acl
+            - pool
+            type: object
+          status:
+            properties:
+              credentialsExpiryTime:
+                type: string
+              errors:
+                items:
+                  type: string
+                type: array
+              fullyQualifiedName:
+                type: string
+              message:
+                type: string
+              synchronizationHash:
+                type: string
+              synchronizationState:
+                type: string
+              synchronizationTime:
+                type: string
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

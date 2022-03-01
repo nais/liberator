@@ -1,0 +1,260 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.2
+  creationTimestamp: null
+  name: alerts.nais.io
+spec:
+  group: nais.io
+  names:
+    kind: Alert
+    listKind: AlertList
+    plural: alerts
+    singular: alert
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.receivers.slack.channel
+      name: Slack channel
+      type: string
+    name: v1
+    schema:
+      openAPIV3Schema:
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              alerts:
+                items:
+                  properties:
+                    action:
+                      description: What human actions are needed to resolve or investigate
+                        this alert.
+                      type: string
+                    alert:
+                      description: The name of the alert.
+                      type: string
+                    description:
+                      description: Simple description of the triggered alert.
+                      type: string
+                    documentation:
+                      description: URL for documentation for this alert.
+                      type: string
+                    expr:
+                      description: Prometheus expression that triggers an alert. Explore
+                        expressions in the [Prometheus](https://docs.nais.io/observability/alerts/#writing-the-expr)-interface
+                      type: string
+                    for:
+                      description: Duration before the alert should trigger.
+                      pattern: ^\d+[smhdwy]$
+                      type: string
+                    severity:
+                      description: Alert level for Slack messages.
+                      pattern: ^$|good|warning|danger|#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})
+                      type: string
+                    sla:
+                      description: Time before a human should resolve the alert.
+                      type: string
+                  required:
+                  - action
+                  - alert
+                  - expr
+                  - for
+                  type: object
+                type: array
+              inhibitRules:
+                description: A list of inhibit rules. An inhibition rule mutes an
+                  alert (target) matching a set of matchers when an alert (source)
+                  exists that matches another set of matchers. Both target and source
+                  alerts must have the same label values for the label names in the
+                  labels list.
+                items:
+                  properties:
+                    labels:
+                      description: Labels that must have an equal value in the source
+                        and target alert for the inhibition to take effect.
+                      items:
+                        pattern: '[a-zA-Z_][a-zA-Z0-9_]*'
+                        type: string
+                      type: array
+                    sources:
+                      additionalProperties:
+                        type: string
+                      description: Matchers for which one or more alerts have to exist
+                        for the inhibition to take effect. These are key/value pairs.
+                      type: object
+                    sourcesRegex:
+                      additionalProperties:
+                        type: string
+                      description: Regex matchers for which one or more alerts have
+                        to exist for the inhibition to take effect. These are key/value
+                        pairs, where the value can be a regex.
+                      type: object
+                    targets:
+                      additionalProperties:
+                        type: string
+                      description: Matchers that have to be fulfilled in the alerts
+                        to be muted. These are key/value pairs.
+                      type: object
+                    targetsRegex:
+                      additionalProperties:
+                        type: string
+                      description: Regex matchers that have to be fulfilled in the
+                        alerts to be muted. These are key/value pairs, where the value
+                        can be a regex.
+                      type: object
+                  type: object
+                type: array
+              receivers:
+                description: 'A list of notification recievers. You can use one or
+                  more of: e-mail, slack, sms. There needs to be at least one receiver.'
+                properties:
+                  email:
+                    description: Alerts via e-mails
+                    properties:
+                      send_resolved:
+                        description: Whether or not to notify about resolved alerts.
+                        type: boolean
+                      to:
+                        type: string
+                    required:
+                    - to
+                    type: object
+                  slack:
+                    description: Slack notifications are sent via Slack webhooks.
+                    properties:
+                      channel:
+                        description: The channel or user to send notifications to.
+                          Can be specified with and without `#`.
+                        type: string
+                      icon_emoji:
+                        description: Emoji to use as the icon for this message
+                        type: string
+                      icon_url:
+                        description: URL to an image to use as the icon for this message
+                        type: string
+                      prependText:
+                        description: Text to prepend every Slack message with severity
+                          `danger`.
+                        type: string
+                      send_resolved:
+                        description: Whether or not to notify about resolved alerts.
+                        type: boolean
+                      username:
+                        description: Set your bot's user name.
+                        type: string
+                    required:
+                    - channel
+                    type: object
+                  sms:
+                    description: Alerts via SMS
+                    properties:
+                      recipients:
+                        type: string
+                      send_resolved:
+                        description: Whether or not to notify about resolved alerts.
+                        type: boolean
+                    required:
+                    - recipients
+                    type: object
+                  webhook:
+                    description: Alerts via custom web application
+                    properties:
+                      http_config:
+                        description: A http_config allows configuring the HTTP client
+                          that the receiver uses to communicate with HTTP-based API
+                          services.
+                        properties:
+                          proxy_url:
+                            description: Optional proxy URL.
+                            type: string
+                          tls_config:
+                            description: Configures the TLS settings.
+                            properties:
+                              insecure_skip_verify:
+                                description: Disable validation of the server certificate.
+                                type: boolean
+                            type: object
+                        type: object
+                      max_alerts:
+                        description: The maximum number of alerts to include in a
+                          single webhook message. Alerts above this threshold are
+                          truncated. When leaving this at its default value of 0,
+                          all alerts are included.
+                        type: integer
+                      send_resolved:
+                        description: Whether or not to notify about resolved alerts.
+                        type: boolean
+                      url:
+                        description: The endpoint to send HTTP POST requests to.
+                        type: string
+                    required:
+                    - max_alerts
+                    - url
+                    type: object
+                type: object
+              route:
+                properties:
+                  group_by:
+                    description: The labels by which incoming alerts are grouped together.
+                    items:
+                      pattern: '[a-zA-Z_][a-zA-Z0-9_]*'
+                      type: string
+                    type: array
+                  groupInterval:
+                    description: How long to wait before sending a notification about
+                      new alerts that are added to a group of alerts for which an
+                      initial notification has already been sent.
+                    pattern: ((([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?|0)
+                    type: string
+                  groupWait:
+                    description: How long to initially wait to send a notification
+                      for a group of alerts. Allows to wait for an inhibiting alert
+                      to arrive or collect more initial alerts for the same group.
+                    pattern: ((([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?|0)
+                    type: string
+                  repeatInterval:
+                    description: How long to wait before sending a notification again
+                      if it has already been sent successfully for an alert.
+                    pattern: ((([0-9]+)y)?(([0-9]+)w)?(([0-9]+)d)?(([0-9]+)h)?(([0-9]+)m)?(([0-9]+)s)?(([0-9]+)ms)?|0)
+                    type: string
+                type: object
+            type: object
+          status:
+            description: AlertStatus defines the observed state of Alerterator
+            properties:
+              synchronizationHash:
+                type: string
+              synchronizationState:
+                type: string
+              synchronizationTime:
+                format: int64
+                type: integer
+            type: object
+        required:
+        - spec
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
