@@ -353,16 +353,16 @@ spec:
                     additionalProperties:
                       properties:
                         enabled:
-                          description: Is this configuration active? Defaults to "true".
-                            This is currently a string, as I have some trouble deserializing
-                            missing entry as true (and not false)
+                          description: Is this configuration active? Defaults to true.
                           type: boolean
                         filePattern:
                           description: File pattern which identifies file to watch
                           type: string
                         sourceType:
                           description: We have number of predefined source types,
-                            see fluentbit-splunk-injector doc for details
+                            see fluentbit-splunk-injector doc for details. Taxerator
+                            will blindly make the config, but it might not be valid
+                            in fluentbit-sidecar-injector
                           type: string
                         splunkIndex:
                           description: Which splunk index are you logging to
