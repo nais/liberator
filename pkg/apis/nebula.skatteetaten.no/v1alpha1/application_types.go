@@ -73,176 +73,195 @@ type ApplicationSpec struct {
 	// +optional
 	ImagePolicy *ImagePolicyConfig `json:"imagePolicy,omitempty"`
 
-	//The number of replicas to start with and maxReplicas to scale to using HPA
+	// The number of replicas to start with and maxReplicas to scale to using HPA
 	// +optional
 	Replicas *nais_io_v1.Replicas `json:"replicas"`
 
-	//How the application pod of this application should run
+	// How the application pod of this application should run
 	Pod PodConfig `json:"pod"`
 
+	// Configure logging
+	// +optional
+	Logging *LogConfig `json:"logging,omitempty"`
 
-	//Integratons this application has with Azure
+	// Integratons this application has with Azure
 	Azure *AzureConfig `json:"azure,omitempty"`
 
-	//Configure zero-trust for incomming traficc
+	// Configure zero-trust for incomming traficc
 	// +optional
 	Ingress *IngressConfig `json:"ingress,omitempty"`
 
-	//Configure zero-trust for outgoing trafix
+	// Configure zero-trust for outgoing trafix
 	// +optional
 	Egress *EgressConfig `json:"egress,omitempty"`
 
-	//Flag to disable all zero-trust configuration to debug
+	// Flag to disable all zero-trust configuration to debug
 	UnsecureDebugDisableAllAccessPolicies bool `json:"unsecuredebugdisableallaccesspolicies,omitempty"`
 
-	//Set this flag if the application is build onPrem, this will add the default volume mounts an AuroraApplication requires
+	// Set this flag if the application is build onPrem, this will add the default volume mounts an AuroraApplication requires
 	// +optional
 	AuroraApplication bool `json:"auroraApplication,omitempty"`
 }
 
-type IngressConfig struct {
-	//Zero-trust incomming configuration for traffic comming from outside of the mesh
-	Public   map[string]PublicIngressConfig   `json:"public,omitempty"`
+type SplunkLoggingConfig struct {
+	// Which splunk index are you logging to
+	SplunkIndex string `json:"splunkIndex,omitempty"`
+	// Is this configuration active? Defaults to true.
+	Enabled *bool `json:"enabled,omitempty"`
+	// File pattern which identifies file to watch
+	FilePattern string `json:"filePattern,omitempty"`
+	// We have number of predefined source types, see fluentbit-splunk-injector doc for details. Taxerator
+	// will blindly make the config, but it might not be valid in fluentbit-sidecar-injector
+	SourceType string `json:"sourceType,omitempty"`
+}
 
-	//Zero-trust incomming configuration for traffic comming from inside of the mesh
+type LogConfig struct {
+	// Define logging to splunk
+	Splunk map[string]*SplunkLoggingConfig `json:"splunk,omitempty"`
+}
+
+type IngressConfig struct {
+	// Zero-trust incomming configuration for traffic comming from outside of the mesh
+	Public map[string]PublicIngressConfig `json:"public,omitempty"`
+
+	// Zero-trust incomming configuration for traffic comming from inside of the mesh
 	Internal map[string]InternalIngressConfig `json:"internal,omitempty"`
 }
 
 type EgressConfig struct {
 
-	//Zero-trust outgoing configuration for traffic going out of the mesh
+	// Zero-trust outgoing configuration for traffic going out of the mesh
 	External map[string]ExternalEgressConfig `json:"external,omitempty"`
 
-	//Zero-trust outgoing configuration for traffic insde the mesh
+	// Zero-trust outgoing configuration for traffic insde the mesh
 	Internal map[string]InternalEgressConfig `json:"internal,omitempty"`
 }
 
 type PortConfig struct {
-	//Name of the port
-	Name     string `json:"name,omitempty"`
-	//The port number
-	Port     uint16 `json:"port"`
-	//The protocol of the port
+	// Name of the port
+	Name string `json:"name,omitempty"`
+	// The port number
+	Port uint16 `json:"port"`
+	// The protocol of the port
 	Protocol string `json:"protocol,omitempty"`
 }
 
 type PublicIngressConfig struct {
 
-	//Set this to true to disable this ingress rule
+	// Set this to true to disable this ingress rule
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
-	//The port to use, the default value if not specified is '8080'
+	// The port to use, the default value if not specified is '8080'
 	// +optional
 	Port uint16 `json:"port,omitempty"`
 
-	//The port in the service to point to, the default value if not specified is '80'
+	// The port in the service to point to, the default value if not specified is '80'
 	// +optional
 	ServicePort uint16 `json:"serviceport,omitempty"`
 
-	//The ingress gateway to use. the default value is 'istio-ingressgateway'
+	// The ingress gateway to use. the default value is 'istio-ingressgateway'
 	// +optional
-	Gateway          string `json:"gateway,omitempty"`
+	Gateway string `json:"gateway,omitempty"`
 
-	//A prefix to use for the host part
-	HostPrefix       string `json:"hostPrefix,omitempty"`
+	// A prefix to use for the host part
+	HostPrefix string `json:"hostPrefix,omitempty"`
 
-	//Fully qualified host that can be set to override host generation
+	// Fully qualified host that can be set to override host generation
 	OverrideHostname string `json:"overrideHostname,omitempty"`
 }
 
 type InternalIngressConfig struct {
 
-	//Set this to true to disable this ingress rule
+	// Set this to true to disable this ingress rule
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
-	//The application to limit traffic from
+	// The application to limit traffic from
 	// +optional
 	Application string `json:"application,omitempty"`
 
-	//The namespace to limit traffic from
+	// The namespace to limit traffic from
 	// +optional
 	Namespace string `json:"namespace,omitempty"`
 
-	//The ports that are allowed to be called
+	// The ports that are allowed to be called
 	// +optional
 	Ports []PortConfig `json:"ports,omitempty"`
 
-	//The HTTP verbs that are allowed
+	// The HTTP verbs that are allowed
 	// +optional
 	Methods []string `json:"methods,omitempty"`
 
-	//The paths that are affected by this rule
+	// The paths that are affected by this rule
 	// +optional
 	Paths []string `json:"paths,omitempty"`
 }
 
 type ExternalEgressConfig struct {
 
-	//Set this to true to disable
+	// Set this to true to disable
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
-	//The hostname to allow traffic to
+	// The hostname to allow traffic to
 	Host string `json:"host"`
 
-	//The ports to allow traffic to, the default is HTTPS on port 443
+	// The ports to allow traffic to, the default is HTTPS on port 443
 	// +optional
 	Ports []PortConfig `json:"ports,omitempty"`
 }
 
 type InternalEgressConfig struct {
 
-	//Set this to true to disable
+	// Set this to true to disable
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
-	//The internal application to allow traffic to
-	//+optional
+	// The internal application to allow traffic to
+	// +optional
 	Application string `json:"application,omitempty"`
 
-	//The internal namespace to allow traffic to
+	// The internal namespace to allow traffic to
 	// +optional
 	Namespace string `json:"namespace,omitempty"`
 
-	//Ports to alloww traffic to
+	// Ports to alloww traffic to
 	// +optional
 	Ports []PortConfig `json:"ports,omitempty"`
 }
 
 type AzureConfig struct {
 
-	//The resource group in azure to provision resources to. This field is required.
-	//This is the logical name of the resource group and will be prefixed with a namepace to make it global
+	// The resource group in azure to provision resources to. This field is required.
+	// This is the logical name of the resource group and will be prefixed with a namepace to make it global
 	ResourceGroup string `json:"resourceGroup"`
 
-	//PostgresDatabases in azure using
-	//If a single database/user is configured it will be marked as primary by default
-	//The primary user will get env vars populated with the SPRING_DATASORUCE prefix.
-	//Alle users will get env vars populated with a prefix of SPRING_DATASOURCE_<USER>
-	//The variables populated are
+	// PostgresDatabases in azure using
+	// If a single database/user is configured it will be marked as primary by default
+	// The primary user will get env vars populated with the SPRING_DATASORUCE prefix.
+	// Alle users will get env vars populated with a prefix of SPRING_DATASOURCE_<USER>
+	// The variables populated are
 	// - <PREFIX>_URL
 	// - <PREFIX>_USERNAME
 	// - <PREFIX>_PASSWORD
 	// The prefix can be overwritten if needed by setting overridePrefix
 	PostgreDatabases map[string]*PostgreDatabaseConfig `json:"postgresDatabase,omitempty"`
 
-	//Storageaccounts in azure
-	//If a single storageaccount is configured it will be marked as primary by default
-	//The primary storageaccount with have the prefix AZURE_STORAGE
-	//All storageaccounts will have prefix AZURE_STORAGE_<NAME>
-	//The env variables populated are
+	// Storageaccounts in azure
+	// If a single storageaccount is configured it will be marked as primary by default
+	// The primary storageaccount with have the prefix AZURE_STORAGE
+	// All storageaccounts will have prefix AZURE_STORAGE_<NAME>
+	// The env variables populated are
 	// - <PREFIX>_CONNECTIONSTRING
 	// The prefix can be overwritten if needed by setting overridePrefix
-	StorageAccount   map[string]*StorageAccountConfig  `json:"storageAccount,omitempty"`
+	StorageAccount map[string]*StorageAccountConfig `json:"storageAccount,omitempty"`
 
-
-	//CosmodDB databases in azure
-	//If a single cosmosdb is configured it will be marked as primary by default
-	//The primary cosmosdb with have the prefix SPRING_DATA_MONGODB if it has mongodb or COSMOSDB if not
-	//All cosmosDb will have prefix SPRING_DATA_MONGODB_<NAME> if mongodb or COSMODDB_<NAME> if not
-	//The env variables populated are:
+	// CosmodDB databases in azure
+	// If a single cosmosdb is configured it will be marked as primary by default
+	// The primary cosmosdb with have the prefix SPRING_DATA_MONGODB if it has mongodb or COSMOSDB if not
+	// All cosmosDb will have prefix SPRING_DATA_MONGODB_<NAME> if mongodb or COSMODDB_<NAME> if not
+	// The env variables populated are:
 	// - <PREFIX>_URI
 	// - <PREFIX>_DATABASE
 	// The prefix can be overwritten if needed by setting overridePrefix
@@ -250,38 +269,38 @@ type AzureConfig struct {
 }
 
 type CosmosDBConfig struct {
-	//Set this to true to disable
+	// Set this to true to disable
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
-	//the name of the cosmosdb
-	Name   string                 `json:"name"`
+	// the name of the cosmosdb
+	Name string `json:"name"`
 
 	// If you specify multiple resources mark this as the primary one.
-	//+optional
+	// +optional
 	Primary bool `json:"primary,omitempty"`
 
-	//The version of MongoDB you want in your CosmodDB api.
+	// The version of MongoDB you want in your CosmodDB api.
 	MongoDBVersion string `json:"mongoDBVersion,omitempty"`
 
-	//Override the generated prefix
+	// Override the generated prefix
 	Prefix string `json:"overridePrefix,omitempty"`
 }
 
 type StorageAccountConfig struct {
 
-	//Set this to true to disable
+	// Set this to true to disable
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
 	// If you specify multiple resources mark this as the primary one.
-	//+optional
+	// +optional
 	Primary bool `json:"primary,omitempty"`
 
-	//Override the generated prefix
+	// Override the generated prefix
 	Prefix string `json:"overridePrefix,omitempty"`
 
-	//The name of the storageaccount. This is the logical name in the config, the actual name in azure is generated from this.
+	// The name of the storageaccount. This is the logical name in the config, the actual name in azure is generated from this.
 	Name string `json:"name"`
 }
 
@@ -289,51 +308,51 @@ type PostgreDatabaseConfig struct {
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
-	//The name of the database. This is the logical name in the config, the actual name in azure is generated from this.
-	Name   string                          `json:"name"`
+	// The name of the database. This is the logical name in the config, the actual name in azure is generated from this.
+	Name string `json:"name"`
 
-	//The name of the server. For this to work there needs to be a postgresqlserver provisioned in the namespace
-	//with the name pgs-<namespace>-<server>
-	//Here namespace is the name of the namespace this resource is in and server is this name
-	Server string                          `json:"server"`
+	// The name of the server. For this to work there needs to be a postgresqlserver provisioned in the namespace
+	// with the name pgs-<namespace>-<server>
+	// Here namespace is the name of the namespace this resource is in and server is this name
+	Server string `json:"server"`
 
-	//All the users that are in this postgres database
-	Users  map[string]*PostgreDatabaseUser `json:"users"`
+	// All the users that are in this postgres database
+	Users map[string]*PostgreDatabaseUser `json:"users"`
 }
 
 type PostgreDatabaseUser struct {
 
-	//Set this to true to disable
+	// Set this to true to disable
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
-	//The name of the user
+	// The name of the user
 	Name string `json:"name"`
 
-	//The role this user has in the database. Right now only "azure_pg_admin" is supported
+	// The role this user has in the database. Right now only "azure_pg_admin" is supported
 	Role string `json:"role"`
 
 	// If you specify multiple resources mark this as the primary one.
-	//+optional
+	// +optional
 	Primary bool `json:"primary,omitempty"`
 
-	//Override the generated prefix
+	// Override the generated prefix
 	Prefix string `json:"overridePrefix,omitempty"`
 }
 
 type PodConfig struct {
 
-	//The image to run for this pod
+	// The image to run for this pod
 	ImageName string `json:"imageName"`
 
-	//The tag of the image to run
-	//In order to follow a stream of releases use a imagePolicy comment like the following
+	// The tag of the image to run
+	// In order to follow a stream of releases use a imagePolicy comment like the following
 
 	// ` tag: 0.8.3 # {"$imagepolicy": "example:supernova-0.x:tag"}`
 	// where the `0.x` part is the spec.imagePolicy.policySuffix stream you want to follow
 	Tag string `json:"tag"`
 
-	//The commands to send if any
+	// The commands to send if any
 	Command []string `json:"command,omitempty"`
 
 	// Custom environment variables injected into your container.
@@ -390,39 +409,38 @@ type PodConfig struct {
 	Resources *nais_io_v1.ResourceRequirements `json:"resources,omitempty"`
 
 	// +kubebuilder:default:=1
-	//Minimum available pods for PodDisruptionBudget, default is 1
+	// Minimum available pods for PodDisruptionBudget, default is 1
 	MinAvailable int32 `json:"minAvailable,omitempty"`
 }
 
 type PrometheusConfig struct {
 
-	//Set this to true to disable
+	// Set this to true to disable
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
-	//Set the port you want to expose metrics on. Default is '8080'
+	// Set the port you want to expose metrics on. Default is '8080'
 	// +kubebuilder:default:="8080"
-	Port    string `json:"port,omitempty"`
+	Port string `json:"port,omitempty"`
 
-	//Set the path metrics are exposed on. Default is '/metrics'
+	// Set the path metrics are exposed on. Default is '/metrics'
 	// +kubebuilder:default:="/metrics"
-	Path    string `json:"path,omitempty"`
-
+	Path string `json:"path,omitempty"`
 }
 
 type ImagePolicyConfig struct {
 
-	//Set this to true to disable
+	// Set this to true to disable
 	// +optional
 	Disabled bool `json:"disabled,omitempty"`
 
-	//Specify either Branch or Semver, not both
-	//The branch you want to create this imagePolicy for. This will create a stream of images that can be listened to
+	// Specify either Branch or Semver, not both
+	// The branch you want to create this imagePolicy for. This will create a stream of images that can be listened to
 	// +optional
 	Branch string `json:"branch,omitempty"`
 
-	//Specify either Branch or Semver, not both
-	//The semver expression to create imagePolicy for. This will create a stream of images that can be listened to
+	// Specify either Branch or Semver, not both
+	// The semver expression to create imagePolicy for. This will create a stream of images that can be listened to
 	// see [flux documentation](https://fluxcd.io/docs/guides/image-update/) for examples
 	// +optional
 	Semver string `json:"semver,omitempty"`
@@ -472,7 +490,7 @@ func (in Application) Hash() (string, error) {
 	}
 
 	// Exempt labels starting with 'nais.io/' from hash generation.
-	// This is neccessary to avoid app re-sync because of automated NAIS processes.
+	// This is necessary to avoid app re-sync because of automated NAIS processes.
 	for k, v := range in.Labels {
 		if !strings.HasPrefix(k, "nais.io/") {
 			if relevantValues.Labels == nil {
@@ -571,6 +589,13 @@ func (app *Application) ApplyDefaults() error {
 		app.Spec.Replicas.Max = intutil.Intp(0)
 	}
 
+	if app.Spec.Logging != nil {
+		for _, splunk := range app.Spec.Logging.Splunk {
+			if splunk.Enabled == nil || *splunk.Enabled {
+				splunk.Enabled = &[]bool{true}[0]
+			}
+		}
+	}
 	return nil
 }
 
@@ -588,12 +613,12 @@ func (app *Application) replicasIsZero() bool {
 func getAppDefaults() *Application {
 	return &Application{
 		Spec: ApplicationSpec{
-			Ingress:&IngressConfig {
+			Ingress: &IngressConfig{
 				Public: map[string]PublicIngressConfig{
 					"default": {
-						Port:    8080,
+						Port:        8080,
 						ServicePort: 80,
-						Gateway: "istio-ingressgateway",
+						Gateway:     "istio-ingressgateway",
 					},
 				},
 			},
