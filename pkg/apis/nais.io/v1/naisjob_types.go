@@ -297,3 +297,10 @@ func (in *Naisjob) SkipDeploymentMessage() bool {
 func (in *Naisjob) ClientID(cluster string) string {
 	return fmt.Sprintf("%s:%s:%s", cluster, in.ObjectMeta.Namespace, in.ObjectMeta.Name)
 }
+
+func (in *Naisjob) MonitorRollout() bool {
+	// a Naisjob without a schedule desires monitoring
+	// until it has completed, so that a successful rollout
+	// can be used as feedback in pipelines
+	return in.Spec.Schedule == ""
+}

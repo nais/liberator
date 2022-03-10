@@ -326,3 +326,7 @@ func (in *Application) SkipDeploymentMessage() bool {
 func (in *Application) ClientID(cluster string) string {
 	return fmt.Sprintf("%s:%s:%s", cluster, in.ObjectMeta.Namespace, in.ObjectMeta.Name)
 }
+
+func (in *Application) MonitorRollout() bool {
+	return true
+}
