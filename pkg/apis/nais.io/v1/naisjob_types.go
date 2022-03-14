@@ -298,9 +298,10 @@ func (in *Naisjob) ClientID(cluster string) string {
 	return fmt.Sprintf("%s:%s:%s", cluster, in.ObjectMeta.Namespace, in.ObjectMeta.Name)
 }
 
+
+// MonitorRollout returns true if it's a Naisjob without a schedule.
+// This enables monitoring until it the job has completed, so that a successful
+// rollout can be used as feedback in pipelines
 func (in *Naisjob) MonitorRollout() bool {
-	// a Naisjob without a schedule desires monitoring
-	// until it has completed, so that a successful rollout
-	// can be used as feedback in pipelines
 	return in.Spec.Schedule == ""
 }
