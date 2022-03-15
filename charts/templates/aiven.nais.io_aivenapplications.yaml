@@ -52,23 +52,6 @@ spec:
             type: object
           spec:
             properties:
-              elastic:
-                description: Elastic is a section configuring the Elastic credentials
-                  to provision
-                properties:
-                  access:
-                    description: Access level for elastic user
-                    enum:
-                    - read
-                    - write
-                    - readwrite
-                    - admin
-                    type: string
-                  instance:
-                    description: Use the `instance_name` that you specified in the
-                      [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
-                    type: string
-                type: object
               expiresAt:
                 description: A timestamp that indicates time-to-expire-date for personal
                   secrets. Format RFC3339 = "2006-01-02T15:04:05Z07:00"

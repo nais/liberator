@@ -75,10 +75,6 @@ func (in *Naisjob) GetKafka() *Kafka {
 	return in.Spec.Kafka
 }
 
-func (in *Naisjob) GetElastic() *Elastic {
-	return in.Spec.Elastic
-}
-
 func (in *Naisjob) GetOpenSearch() *OpenSearch {
 	return in.Spec.OpenSearch
 }
