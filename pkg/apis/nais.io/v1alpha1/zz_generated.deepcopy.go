@@ -92,11 +92,6 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = make([]string, len(*in))
 		copy(*out, *in)
 	}
-	if in.Elastic != nil {
-		in, out := &in.Elastic, &out.Elastic
-		*out = new(v1.Elastic)
-		**out = **in
-	}
 	if in.Env != nil {
 		in, out := &in.Env, &out.Env
 		*out = make(v1.EnvVars, len(*in))

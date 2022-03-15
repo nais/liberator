@@ -61,15 +61,6 @@ type AzureSidecar struct {
 	AutoLogin bool `json:"autoLogin,omitempty"`
 }
 
-type Elastic struct {
-	// Provisions an Elasticsearch instance and configures your application so it can access it.
-	// Use the `instance_name` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
-	Instance string `json:"instance"`
-	// Access level for elastic user
-	// +kubebuilder:validation:Enum=read;write;readwrite;admin
-	Access string `json:"access,omitempty"`
-}
-
 type OpenSearch struct {
 	// Configure your application to access your OpenSearch instance.
 	// Use the `instance_name` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.

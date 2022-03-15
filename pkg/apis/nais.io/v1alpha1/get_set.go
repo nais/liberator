@@ -145,10 +145,6 @@ func (in *Application) GetKafka() *nais_io_v1.Kafka {
 	return in.Spec.Kafka
 }
 
-func (in *Application) GetElastic() *nais_io_v1.Elastic {
-	return in.Spec.Elastic
-}
-
 func (in *Application) GetOpenSearch() *nais_io_v1.OpenSearch {
 	return in.Spec.OpenSearch
 }

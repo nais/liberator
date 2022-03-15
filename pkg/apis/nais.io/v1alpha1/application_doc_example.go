@@ -157,10 +157,6 @@ func ExampleApplicationForDocumentation() *Application {
 				"--other-param",
 				"other-value",
 			},
-			Elastic: &nais_io_v1.Elastic{
-				Instance: "my-elastic-instance",
-				Access:   "readwrite",
-			},
 			Env: []nais_io_v1.EnvVar{
 				{
 					Name:  "MY_CUSTOM_VAR",
