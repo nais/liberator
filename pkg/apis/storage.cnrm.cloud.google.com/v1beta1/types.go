@@ -24,6 +24,7 @@ type StorageBucketSpec struct {
 	ResourceID               string           `json:"resourceID,omitempty"`
 	Location                 string           `json:"location"`
 	UniformBucketLevelAccess bool             `json:"uniformBucketLevelAccess,omitempty"`
+	PublicAccessPrevention   string           `json:"publicAccessPrevention,omitempty"`
 	RetentionPolicy          *RetentionPolicy `json:"retentionPolicy,omitempty"`
 	LifecycleRules           []LifecycleRules `json:"lifecycleRule,omitempty"`
 }

@@ -497,6 +497,11 @@ type CloudStorageBucket struct {
 	// +nais:doc:Link="https://cloud.google.com/storage/docs/uniform-bucket-level-access"
 	// +nais:doc:Default="false"
 	UniformBucketLevelAccess bool `json:"uniformBucketLevelAccess,omitempty"`
+	// Allows you to restrict public access to your buckets.
+	// When you enforce public access prevention on a bucket it is not possible to make the data in said bucket public through IAM policies or ACLs.
+	// +nais:doc:Link="https://cloud.google.com/storage/docs/public-access-prevention"
+	// +nais:doc:Default="false"
+	PublicAccessPrevention bool `json:"publicAccessPrevention,omitempty"`
 }
 
 type LifecycleCondition struct {

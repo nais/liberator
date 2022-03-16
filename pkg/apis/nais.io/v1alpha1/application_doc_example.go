@@ -223,6 +223,7 @@ func ExampleApplicationForDocumentation() *Application {
 							WithState:        "ARCHIVED",
 						},
 						UniformBucketLevelAccess: true,
+						PublicAccessPrevention:   false,
 					},
 				},
 				SqlInstances: []nais_io_v1.CloudSqlInstance{
