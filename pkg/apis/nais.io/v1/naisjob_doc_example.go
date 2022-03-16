@@ -125,7 +125,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			Azure: &AzureNaisJob{
 				Application: &AzureApplication{
 					Enabled:       true,
-					AllowAllUsers: (*AzureAdAllowAllUsers)(boolp(true)),
+					AllowAllUsers: boolp(true),
 					Claims: &AzureAdClaims{
 						Extra: []AzureAdExtraClaim{
 							"NAVident",
@@ -140,7 +140,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					ReplyURLs: []string{
 						"https://myapplication.nav.no/oauth2/callback",
 					},
-					SinglePageApplication: (*AzureAdSinglePageApplication)(boolp(true)),
+					SinglePageApplication: boolp(true),
 					Tenant:                "nav.no",
 				},
 			},

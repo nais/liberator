@@ -412,7 +412,7 @@ func (in *AzureAdApplicationSpec) DeepCopyInto(out *AzureAdApplicationSpec) {
 	*out = *in
 	if in.AllowAllUsers != nil {
 		in, out := &in.AllowAllUsers, &out.AllowAllUsers
-		*out = new(AzureAdAllowAllUsers)
+		*out = new(bool)
 		**out = **in
 	}
 	if in.Claims != nil {
@@ -434,7 +434,7 @@ func (in *AzureAdApplicationSpec) DeepCopyInto(out *AzureAdApplicationSpec) {
 	}
 	if in.SinglePageApplication != nil {
 		in, out := &in.SinglePageApplication, &out.SinglePageApplication
-		*out = new(AzureAdSinglePageApplication)
+		*out = new(bool)
 		**out = **in
 	}
 }
@@ -616,12 +616,12 @@ func (in *AzureApplication) DeepCopyInto(out *AzureApplication) {
 	}
 	if in.SinglePageApplication != nil {
 		in, out := &in.SinglePageApplication, &out.SinglePageApplication
-		*out = new(AzureAdSinglePageApplication)
+		*out = new(bool)
 		**out = **in
 	}
 	if in.AllowAllUsers != nil {
 		in, out := &in.AllowAllUsers, &out.AllowAllUsers
-		*out = new(AzureAdAllowAllUsers)
+		*out = new(bool)
 		**out = **in
 	}
 }

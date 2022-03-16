@@ -50,8 +50,10 @@ type AzureAdApplicationList struct {
 
 // AzureAdApplicationSpec defines the desired state of AzureAdApplication
 type AzureAdApplicationSpec struct {
-	AllowAllUsers *AzureAdAllowAllUsers `json:"allowAllUsers,omitempty"`
-	Claims        *AzureAdClaims        `json:"claims,omitempty"`
+	// AllowAllUsers denotes whether or not all users within the tenant should be allowed to access this AzureAdApplication.
+	// If undefined will default to `true` when Spec.Claims.Groups is undefined, and `false` if Spec.Claims.Groups is defined.
+	AllowAllUsers *bool          `json:"allowAllUsers,omitempty"`
+	Claims        *AzureAdClaims `json:"claims,omitempty"`
 	// LogoutUrl is the URL where Azure AD sends a request to have the application clear the user's session data.
 	// This is required if single sign-out should work correctly. Must start with 'https'
 	LogoutUrl                 string                    `json:"logoutUrl,omitempty"`
@@ -62,8 +64,9 @@ type AzureAdApplicationSpec struct {
 	// SecretKeyPrefix is an optional user-defined prefix applied to the keys in the secret output, replacing the default prefix.
 	SecretKeyPrefix string `json:"secretKeyPrefix,omitempty"`
 	// SecretProtected protects the secret's credentials from being revoked by the janitor even when not in use.
-	SecretProtected       bool                          `json:"secretProtected,omitempty"`
-	SinglePageApplication *AzureAdSinglePageApplication `json:"singlePageApplication,omitempty"`
+	SecretProtected bool `json:"secretProtected,omitempty"`
+	// SinglePageApplication denotes whether or not this Azure AD application should be registered as a single-page-application for usage in client-side applications without access to secrets.
+	SinglePageApplication *bool `json:"singlePageApplication,omitempty"`
 	// Tenant is an optional alias for targeting a tenant matching an instance of Azurerator that targets said tenant.
 	// Can be omitted if only running a single instance or targeting the default tenant.
 	Tenant string `json:"tenant,omitempty"`
@@ -149,17 +152,6 @@ type AzureAdReplyUrl struct {
 	Url string `json:"url,omitempty"`
 }
 
-// SinglePageApplication denotes whether or not this Azure AD application should be registered as a single-page-application.
-// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#single-page-application"
-// +nais:doc:Default="false"
-type AzureAdSinglePageApplication bool
-
-// AllowAllUsers denotes whether or not all users within the tenant should be allowed to access this AzureAdApplication.
-// If undefined will default to `true` when Spec.Claims.Groups is undefined, and `false` if Spec,Claims.Groups is defined.
-// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#users"
-// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#groups"
-type AzureAdAllowAllUsers bool
-
 func (in *AzureAdApplication) GetObjectId() string {
 	return in.Status.ObjectId
 }
@@ -180,8 +172,8 @@ func (in *AzureAdApplication) Hash() (string, error) {
 		Tenant                    string
 		Claims                    *AzureAdClaims
 		SecretKeyPrefix           string
-		SinglePageApplication     *AzureAdSinglePageApplication `json:"singlePageApplication,omitempty"`
-		AllowAllUsers             *AzureAdAllowAllUsers         `json:"allowAllUsers,omitempty"`
+		SinglePageApplication     *bool `json:"singlePageApplication,omitempty"`
+		AllowAllUsers             *bool `json:"allowAllUsers,omitempty"`
 	}{
 		ReplyUrls:                 in.Spec.ReplyUrls,
 		PreAuthorizedApplications: in.Spec.PreAuthorizedApplications,

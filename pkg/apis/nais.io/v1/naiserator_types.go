@@ -43,10 +43,17 @@ type AzureApplication struct {
 	// If unspecified, will default to `trygdeetaten.no` for development clusters and `nav.no` for production clusters.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/concepts#tenants"
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
-	Tenant                string                        `json:"tenant,omitempty"`
-	Claims                *AzureAdClaims                `json:"claims,omitempty"`
-	SinglePageApplication *AzureAdSinglePageApplication `json:"singlePageApplication,omitempty"`
-	AllowAllUsers         *AzureAdAllowAllUsers         `json:"allowAllUsers,omitempty"`
+	Tenant string         `json:"tenant,omitempty"`
+	Claims *AzureAdClaims `json:"claims,omitempty"`
+	// SinglePageApplication denotes whether or not this Azure AD application should be registered as a single-page-application for usage in client-side applications without access to secrets.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#single-page-application"
+	// +nais:doc:Default="false"
+	SinglePageApplication *bool `json:"singlePageApplication,omitempty"`
+	// AllowAllUsers denotes whether or not all users within the tenant should be allowed to access this AzureAdApplication.
+	// If undefined will default to `true` when Spec.Claims.Groups is undefined, and `false` if Spec.Claims.Groups is defined.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#users"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#groups"
+	AllowAllUsers *bool `json:"allowAllUsers,omitempty"`
 }
 
 type AzureSidecar struct {

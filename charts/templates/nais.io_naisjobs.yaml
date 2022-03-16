@@ -193,7 +193,7 @@ spec:
                         description: AllowAllUsers denotes whether or not all users
                           within the tenant should be allowed to access this AzureAdApplication.
                           If undefined will default to `true` when Spec.Claims.Groups
-                          is undefined, and `false` if Spec,Claims.Groups is defined.
+                          is undefined, and `false` if Spec.Claims.Groups is defined.
                         type: boolean
                       claims:
                         description: Claims defines additional configuration of the
@@ -237,7 +237,9 @@ spec:
                         type: array
                       singlePageApplication:
                         description: SinglePageApplication denotes whether or not
-                          this Azure AD application should be registered as a single-page-application.
+                          this Azure AD application should be registered as a single-page-application
+                          for usage in client-side applications without access to
+                          secrets.
                         type: boolean
                       tenant:
                         description: "A Tenant represents an organization in Azure
