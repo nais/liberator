@@ -25,10 +25,6 @@ func (in *Application) GetReplicas() *nais_io_v1.Replicas {
 	return in.Spec.Replicas
 }
 
-func (in *Application) GetCleanup() *nais_io_v1.Cleanup {
-	return in.Spec.Cleanup
-}
-
 func (in *Application) GetPrometheus() *nais_io_v1.PrometheusConfig {
 	return in.Spec.Prometheus
 }

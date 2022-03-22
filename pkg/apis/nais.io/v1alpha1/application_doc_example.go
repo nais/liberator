@@ -145,11 +145,6 @@ func ExampleApplicationForDocumentation() *Application {
 					AutoLogin: true,
 				},
 			},
-			Cleanup: &nais_io_v1.Cleanup{
-				Enabled:     true,
-				Strategy:    []nais_io_v1.CleanupStrategy{"downscale"},
-				GracePeriod: "24h",
-			},
 			Command: []string{
 				"/app/myapplication",
 				"--param",
