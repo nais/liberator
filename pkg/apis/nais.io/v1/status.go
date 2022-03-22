@@ -14,7 +14,7 @@ const (
 	EventFailedSynchronization = "FailedSynchronization"
 	EventFailedStatusUpdate    = "FailedStatusUpdate"
 	EventRetrying              = "Retrying"
-	EventJobComplete           = "JobCompleted"
+	EventJobCompleted          = "JobCompleted"
 	EventJobFailed             = "JobFailed"
 )
 
@@ -37,12 +37,12 @@ func (in *Status) SetStatusConditions() {
 
 	reconcilingConditionStatus := metav1.ConditionFalse
 	if in.SynchronizationState != EventRolloutComplete && in.SynchronizationState != EventFailedSynchronization &&
-		in.SynchronizationState != EventJobComplete && in.SynchronizationState != EventJobFailed {
+		in.SynchronizationState != EventJobCompleted && in.SynchronizationState != EventJobFailed {
 		reconcilingConditionStatus = metav1.ConditionTrue
 	}
 
 	readyConditionStatus := metav1.ConditionFalse
-	if in.SynchronizationState == EventRolloutComplete || in.SynchronizationState == EventJobComplete {
+	if in.SynchronizationState == EventRolloutComplete || in.SynchronizationState == EventJobCompleted {
 		readyConditionStatus = metav1.ConditionTrue
 	}
 
