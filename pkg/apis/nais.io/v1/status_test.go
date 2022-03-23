@@ -34,7 +34,7 @@ func TestGenerateCorrectKStatus(t *testing.T) {
 		{v1.EventFailedStatusUpdate, []string{"Reconciling"}},
 		{v1.EventRetrying, []string{"Reconciling"}},
 		{v1.EventFailedPrepare, []string{"Reconciling"}},
-		{v1.EventJobComplete, []string{"Ready"}},
+		{v1.EventJobCompleted, []string{"Ready"}},
 		{v1.EventJobFailed, []string{"Stalled"}},
 	}
 
