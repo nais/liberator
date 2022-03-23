@@ -82,20 +82,10 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = new(v1.Azure)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.Cleanup != nil {
-		in, out := &in.Cleanup, &out.Cleanup
-		*out = new(v1.Cleanup)
-		(*in).DeepCopyInto(*out)
-	}
 	if in.Command != nil {
 		in, out := &in.Command, &out.Command
 		*out = make([]string, len(*in))
 		copy(*out, *in)
-	}
-	if in.Elastic != nil {
-		in, out := &in.Elastic, &out.Elastic
-		*out = new(v1.Elastic)
-		**out = **in
 	}
 	if in.Env != nil {
 		in, out := &in.Env, &out.Env

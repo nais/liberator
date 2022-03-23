@@ -70,10 +70,6 @@ type NaisjobSpec struct {
 	// +nais:doc:Link="https://kubernetes.io/docs/tasks/job/automated-tasks-with-cron-jobs/#concurrency-policy"
 	ConcurrencyPolicy string `json:"concurrencyPolicy,omitempty"`
 
-	// To get your own Elastic Search instance head over to the IaC-repo to provision each instance.
-	// See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository
-	Elastic *Elastic `json:"elastic,omitempty"`
-
 	// Custom environment variables injected into your container.
 	// Specify either `value` or `valueFrom`, but not both.
 	Env EnvVars `json:"env,omitempty"`
@@ -296,4 +292,11 @@ func (in *Naisjob) SkipDeploymentMessage() bool {
 
 func (in *Naisjob) ClientID(cluster string) string {
 	return fmt.Sprintf("%s:%s:%s", cluster, in.ObjectMeta.Namespace, in.ObjectMeta.Name)
+}
+
+// ShouldMonitorRollout returns true if it's a Naisjob without a schedule.
+// This enables monitoring until it the job has completed, so that a successful
+// rollout can be used as feedback in pipelines
+func (in *Naisjob) ShouldMonitorRollout() bool {
+	return in.Spec.Schedule == ""
 }

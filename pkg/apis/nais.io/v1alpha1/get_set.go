@@ -27,10 +27,6 @@ func (in *Application) GetReplicas() *nais_io_v1.Replicas {
 	return in.Spec.Replicas
 }
 
-func (in *Application) GetCleanup() *nais_io_v1.Cleanup {
-	return in.Spec.Cleanup
-}
-
 func (in *Application) GetPrometheus() *nais_io_v1.PrometheusConfig {
 	return in.Spec.Prometheus
 }
@@ -145,10 +141,6 @@ func (in *Application) GetInflux() *nais_io_v1.Influx {
 
 func (in *Application) GetKafka() *nais_io_v1.Kafka {
 	return in.Spec.Kafka
-}
-
-func (in *Application) GetElastic() *nais_io_v1.Elastic {
-	return in.Spec.Elastic
 }
 
 func (in *Application) GetOpenSearch() *nais_io_v1.OpenSearch {

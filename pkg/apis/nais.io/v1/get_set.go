@@ -47,6 +47,10 @@ func (in *Naisjob) GetIngress() []Ingress {
 	return nil
 }
 
+func (in *Naisjob) GetImage() string {
+	return in.Spec.Image
+}
+
 func (in *Naisjob) GetGCP() *GCP {
 	return in.Spec.GCP
 }
@@ -73,10 +77,6 @@ func (in *Naisjob) GetInflux() *Influx {
 
 func (in *Naisjob) GetKafka() *Kafka {
 	return in.Spec.Kafka
-}
-
-func (in *Naisjob) GetElastic() *Elastic {
-	return in.Spec.Elastic
 }
 
 func (in *Naisjob) GetOpenSearch() *OpenSearch {

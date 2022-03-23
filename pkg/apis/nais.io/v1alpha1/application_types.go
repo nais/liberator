@@ -67,16 +67,8 @@ type ApplicationSpec struct {
 	// Provisions and configures Azure resources.
 	Azure *nais_io_v1.Azure `json:"azure,omitempty"`
 
-	// Configuration for automatic cleanup of failing pods
-	Cleanup *nais_io_v1.Cleanup `json:"cleanup,omitempty"`
-
 	// Override command when starting Docker image.
 	Command []string `json:"command,omitempty"`
-
-	// To get your own Elastic Search instance head over to the IaC-repo to provision each instance.
-	// See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
-	Elastic *nais_io_v1.Elastic `json:"elastic,omitempty"`
-
 	// Custom environment variables injected into your container.
 	// Specify either `value` or `valueFrom`, but not both.
 	Env nais_io_v1.EnvVars `json:"env,omitempty"`
@@ -325,4 +317,8 @@ func (in *Application) SkipDeploymentMessage() bool {
 
 func (in *Application) ClientID(cluster string) string {
 	return fmt.Sprintf("%s:%s:%s", cluster, in.ObjectMeta.Namespace, in.ObjectMeta.Name)
+}
+
+func (in *Application) ShouldMonitorRollout() bool {
+	return true
 }

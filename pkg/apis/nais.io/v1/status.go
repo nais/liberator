@@ -14,6 +14,8 @@ const (
 	EventFailedSynchronization = "FailedSynchronization"
 	EventFailedStatusUpdate    = "FailedStatusUpdate"
 	EventRetrying              = "Retrying"
+	EventJobCompleted          = "JobCompleted"
+	EventJobFailed             = "JobFailed"
 )
 
 // Status contains different NAIS status properties
@@ -34,16 +36,18 @@ func (in *Status) SetStatusConditions() {
 	}
 
 	reconcilingConditionStatus := metav1.ConditionFalse
-	if in.SynchronizationState != EventRolloutComplete && in.SynchronizationState != EventFailedSynchronization {
+	if in.SynchronizationState != EventRolloutComplete && in.SynchronizationState != EventFailedSynchronization &&
+		in.SynchronizationState != EventJobCompleted && in.SynchronizationState != EventJobFailed {
 		reconcilingConditionStatus = metav1.ConditionTrue
 	}
+
 	readyConditionStatus := metav1.ConditionFalse
-	if in.SynchronizationState == EventRolloutComplete {
+	if in.SynchronizationState == EventRolloutComplete || in.SynchronizationState == EventJobCompleted {
 		readyConditionStatus = metav1.ConditionTrue
 	}
 
 	stalledConditionStatus := metav1.ConditionFalse
-	if in.SynchronizationState == EventFailedSynchronization {
+	if in.SynchronizationState == EventFailedSynchronization || in.SynchronizationState == EventJobFailed {
 		stalledConditionStatus = metav1.ConditionTrue
 	}
 

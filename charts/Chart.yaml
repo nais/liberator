@@ -1,0 +1,7 @@
+apiVersion: v2
+name: nais-crds
+description: Base NAIS crds
+
+type: application
+
+version: 0.1.0

@@ -154,10 +154,6 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			},
 			Completions:       int32p(1),
 			ConcurrencyPolicy: "Allow",
-			Elastic: &Elastic{
-				Instance: "my-elastic-instance",
-				Access:   "readwrite",
-			},
 			Env: []EnvVar{
 				{
 					Name:  "MY_CUSTOM_VAR",
