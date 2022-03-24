@@ -118,13 +118,15 @@ type SplunkLoggingConfig struct {
 type LogConfig struct {
 	// Define logging to splunk
 	Splunk map[string]*SplunkLoggingConfig `json:"splunk,omitempty"`
+	// Shall we add spring-boot logging config or not? Defaults to true.
+	ActivateDefaultSpringBootLogbackConfig *bool `json:"activateDefaultSpringBootLogbackConfig,omitempty"`
 }
 
 type IngressConfig struct {
 	// Zero-trust incomming configuration for traffic comming from outside of the mesh
 	Public map[string]PublicIngressConfig `json:"public,omitempty"`
 
-	// Zero-trust incomming configuration for traffic comming from inside of the mesh
+	// Zero-trust incomming configuration for traffic coming from inside of the mesh
 	Internal map[string]InternalIngressConfig `json:"internal,omitempty"`
 }
 
@@ -133,7 +135,7 @@ type EgressConfig struct {
 	// Zero-trust outgoing configuration for traffic going out of the mesh
 	External map[string]ExternalEgressConfig `json:"external,omitempty"`
 
-	// Zero-trust outgoing configuration for traffic insde the mesh
+	// Zero-trust outgoing configuration for traffic inside the mesh
 	Internal map[string]InternalEgressConfig `json:"internal,omitempty"`
 }
 

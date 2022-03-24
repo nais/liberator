@@ -242,7 +242,7 @@ spec:
                             type: object
                           type: array
                       type: object
-                    description: Zero-trust outgoing configuration for traffic insde
+                    description: Zero-trust outgoing configuration for traffic inside
                       the mesh
                     type: object
                 type: object
@@ -313,7 +313,7 @@ spec:
                             type: object
                           type: array
                       type: object
-                    description: Zero-trust incomming configuration for traffic comming
+                    description: Zero-trust incomming configuration for traffic coming
                       from inside of the mesh
                     type: object
                   public:
@@ -349,6 +349,10 @@ spec:
               logging:
                 description: Configure logging
                 properties:
+                  activateDefaultSpringBootLogbackConfig:
+                    description: Shall we add spring-boot logging config or not? Defaults
+                      to true.
+                    type: boolean
                   splunk:
                     additionalProperties:
                       properties:

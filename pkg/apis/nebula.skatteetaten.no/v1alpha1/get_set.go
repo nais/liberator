@@ -14,7 +14,7 @@ func (in *Application) SetStatus(status *nais_io_v1.Status) {
 	in.Status = *status
 }
 
-func (in *Application ) SetStatusConditions() {
+func (in *Application) SetStatusConditions() {
 	in.Status.SetStatusConditions()
 }
 
@@ -30,10 +30,6 @@ func (in *Application) GetStrategy() *nais_io_v1.Strategy {
 
 func (in *Application) GetReplicas() *nais_io_v1.Replicas {
 	return in.Spec.Replicas
-}
-
-func (in *Application) GetCleanup() *nais_io_v1.Cleanup {
-	return nil
 }
 
 func (in *Application) GetPrometheus() *nais_io_v1.PrometheusConfig {
@@ -115,46 +111,46 @@ func (in *Application) IsAuroraApplication() bool {
 	return in.Spec.AuroraApplication == true
 }
 
-func (in *Application) GetIngress() *IngressConfig{
+func (in *Application) GetIngress() *IngressConfig {
 	publicIngress := map[string]PublicIngressConfig{}
 	for key, item := range in.Spec.Ingress.Public {
 		if item.Disabled {
 			continue
 		}
-		//TODO: it is hard to get kubebuilder default values applied in test so we do it here.
-		if item.Port==0 {
-			item.Port=8080
+		// TODO: it is hard to get kubebuilder default values applied in test so we do it here.
+		if item.Port == 0 {
+			item.Port = 8080
 		}
 
-		if item.ServicePort==0 {
-			item.ServicePort=80
+		if item.ServicePort == 0 {
+			item.ServicePort = 80
 		}
 
-		if item.Gateway=="" {
-			item.Gateway="istio-ingressgateway"
+		if item.Gateway == "" {
+			item.Gateway = "istio-ingressgateway"
 		}
-		publicIngress[key]=item
+		publicIngress[key] = item
 	}
 
-	items:= map[string]InternalIngressConfig{}
+	items := map[string]InternalIngressConfig{}
 	for key, item := range in.Spec.Ingress.Internal {
 		if item.Disabled {
 			continue
 		}
 
-		if item.Namespace =="" {
-			item.Namespace=in.Namespace
+		if item.Namespace == "" {
+			item.Namespace = in.Namespace
 		}
 
-		items[key]=item
+		items[key] = item
 	}
 	return &IngressConfig{
-		Public: publicIngress,
+		Public:   publicIngress,
 		Internal: items,
 	}
 }
 
-func (in *Application) GetEgress() *EgressConfig{
+func (in *Application) GetEgress() *EgressConfig {
 
 	if in.Spec.Egress == nil {
 		return &EgressConfig{}
@@ -166,24 +162,24 @@ func (in *Application) GetEgress() *EgressConfig{
 		}
 
 		if len(item.Ports) == 0 {
-			item.Ports=[]PortConfig{{
-				Port:   443,
+			item.Ports = []PortConfig{{
+				Port:     443,
 				Protocol: "HTTPS",
 				Name:     "https",
 			}}
 		}
-		externalEgress[key]=item
+		externalEgress[key] = item
 	}
 
-	items:= map[string]InternalEgressConfig{}
+	items := map[string]InternalEgressConfig{}
 	for key, item := range in.Spec.Egress.Internal {
 		if item.Disabled {
 			continue
 		}
-		if item.Namespace =="" {
-			item.Namespace=in.Namespace
+		if item.Namespace == "" {
+			item.Namespace = in.Namespace
 		}
-		items[key]=item
+		items[key] = item
 	}
 	return &EgressConfig{
 		External: externalEgress,
@@ -207,35 +203,34 @@ func (in *Application) GetAzureResourceGroup() string {
 }
 
 func (in *Application) GetPostgresDatabases() map[string]*PostgreDatabaseConfig {
-	dbs:= map[string]*PostgreDatabaseConfig{}
+	dbs := map[string]*PostgreDatabaseConfig{}
 
-
-	//TODO: how do we validate that the config is correct here, if you have multiple with primary it will fail
-	//Is this where we would need to use a validation hook?
+	// TODO: how do we validate that the config is correct here, if you have multiple with primary it will fail
+	// Is this where we would need to use a validation hook?
 	for key, db := range in.Spec.Azure.PostgreDatabases {
 		if db.Disabled {
 			continue
 		}
-		users:=map[string]*PostgreDatabaseUser{}
+		users := map[string]*PostgreDatabaseUser{}
 		for uk, user := range db.Users {
 			if user.Disabled {
 				continue
 			}
 
 			if user.Prefix == "" {
-				user.Prefix="SPRING_DATASOURCE"
+				user.Prefix = "SPRING_DATASOURCE"
 			}
-			users[uk]=user
+			users[uk] = user
 		}
-		dbs[key]=db
+		dbs[key] = db
 	}
 
-	//if we only have a single database and a single user mark it as primary by default
+	// if we only have a single database and a single user mark it as primary by default
 	if len(dbs) == 1 {
 		for key, db := range dbs {
 			if len(db.Users) == 1 {
 				for user, _ := range db.Users {
-					dbs[key].Users[user].Primary=true
+					dbs[key].Users[user].Primary = true
 				}
 			}
 		}
@@ -244,22 +239,22 @@ func (in *Application) GetPostgresDatabases() map[string]*PostgreDatabaseConfig 
 }
 
 func (in *Application) GetStorageAccounts() map[string]*StorageAccountConfig {
-	items:= map[string]*StorageAccountConfig{}
+	items := map[string]*StorageAccountConfig{}
 	for key, item := range in.Spec.Azure.StorageAccount {
 		if item.Disabled {
 			continue
 		}
 
 		if item.Prefix == "" {
-			item.Prefix="AZURE_STORAGE"
+			item.Prefix = "AZURE_STORAGE"
 		}
-		items[key]=item
+		items[key] = item
 	}
 
-	//if single item set it as primary
+	// if single item set it as primary
 	if len(items) == 1 {
 		for key, _ := range items {
-			items[key].Primary=true
+			items[key].Primary = true
 		}
 	}
 
@@ -267,7 +262,7 @@ func (in *Application) GetStorageAccounts() map[string]*StorageAccountConfig {
 }
 
 func (in *Application) GetCosmosDb() map[string]*CosmosDBConfig {
-	items:= map[string]*CosmosDBConfig{}
+	items := map[string]*CosmosDBConfig{}
 	for key, item := range in.Spec.Azure.CosmosDB {
 		if item.Disabled {
 			continue
@@ -275,18 +270,18 @@ func (in *Application) GetCosmosDb() map[string]*CosmosDBConfig {
 
 		if item.Prefix == "" {
 			if item.MongoDBVersion != "" {
-				item.Prefix="SPRING_DATA_MONGODB"
+				item.Prefix = "SPRING_DATA_MONGODB"
 			} else {
-				item.Prefix="COSMOSDB"
+				item.Prefix = "COSMOSDB"
 			}
 		}
-		items[key]=item
+		items[key] = item
 	}
 
-	//if single item set it as primary
+	// if single item set it as primary
 	if len(items) == 1 {
 		for key, _ := range items {
-			items[key].Primary=true
+			items[key].Primary = true
 		}
 	}
 	return items
