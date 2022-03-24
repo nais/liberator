@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
+	"github.com/nais/liberator/pkg/events"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -28,14 +29,12 @@ func NewTestStatus(state string) *v1.Status {
 func TestGenerateCorrectKStatus(t *testing.T) {
 
 	testCases := []KStatusTests{
-		{v1.EventRolloutComplete, []string{"Ready"}},
-		{v1.EventFailedSynchronization, []string{"Stalled"}},
-		{v1.EventSynchronized, []string{"Reconciling"}},
-		{v1.EventFailedStatusUpdate, []string{"Reconciling"}},
-		{v1.EventRetrying, []string{"Reconciling"}},
-		{v1.EventFailedPrepare, []string{"Reconciling"}},
-		{v1.EventJobCompleted, []string{"Ready"}},
-		{v1.EventJobFailed, []string{"Stalled"}},
+		{events.RolloutComplete, []string{"Ready"}},
+		{events.FailedSynchronization, []string{"Stalled"}},
+		{events.Synchronized, []string{"Reconciling"}},
+		{events.FailedStatusUpdate, []string{"Reconciling"}},
+		{events.Retrying, []string{"Reconciling"}},
+		{events.FailedPrepare, []string{"Reconciling"}},
 	}
 
 	for _, test := range testCases {

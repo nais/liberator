@@ -3,19 +3,9 @@ package nais_io_v1
 import (
 	"time"
 
+	"github.com/nais/liberator/pkg/events"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-)
-
-const (
-	EventSynchronized          = "Synchronized"
-	EventRolloutComplete       = "RolloutComplete"
-	EventFailedPrepare         = "FailedPrepare"
-	EventFailedSynchronization = "FailedSynchronization"
-	EventFailedStatusUpdate    = "FailedStatusUpdate"
-	EventRetrying              = "Retrying"
-	EventJobCompleted          = "JobCompleted"
-	EventJobFailed             = "JobFailed"
 )
 
 // Status contains different NAIS status properties
@@ -36,18 +26,17 @@ func (in *Status) SetStatusConditions() {
 	}
 
 	reconcilingConditionStatus := metav1.ConditionFalse
-	if in.SynchronizationState != EventRolloutComplete && in.SynchronizationState != EventFailedSynchronization &&
-		in.SynchronizationState != EventJobCompleted && in.SynchronizationState != EventJobFailed {
+	if in.SynchronizationState != events.RolloutComplete && in.SynchronizationState != events.FailedSynchronization {
 		reconcilingConditionStatus = metav1.ConditionTrue
 	}
 
 	readyConditionStatus := metav1.ConditionFalse
-	if in.SynchronizationState == EventRolloutComplete || in.SynchronizationState == EventJobCompleted {
+	if in.SynchronizationState == events.RolloutComplete {
 		readyConditionStatus = metav1.ConditionTrue
 	}
 
 	stalledConditionStatus := metav1.ConditionFalse
-	if in.SynchronizationState == EventFailedSynchronization || in.SynchronizationState == EventJobFailed {
+	if in.SynchronizationState == events.FailedSynchronization {
 		stalledConditionStatus = metav1.ConditionTrue
 	}
 

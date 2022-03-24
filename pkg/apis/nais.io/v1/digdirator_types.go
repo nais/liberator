@@ -1,6 +1,7 @@
 package nais_io_v1
 
 import (
+	"github.com/nais/liberator/pkg/events"
 	"github.com/nais/liberator/pkg/hash"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -34,7 +35,7 @@ func (in *DigdiratorStatus) SetHash(hash string) {
 func (in *DigdiratorStatus) SetStateSynchronized() {
 	now := metav1.Now()
 	in.SynchronizationTime = &now
-	in.SynchronizationState = EventSynchronized
+	in.SynchronizationState = events.Synchronized
 }
 
 func (in *DigdiratorStatus) GetClientID() string {
