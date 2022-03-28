@@ -606,7 +606,7 @@ func (in *AzureApplication) DeepCopyInto(out *AzureApplication) {
 	*out = *in
 	if in.ReplyURLs != nil {
 		in, out := &in.ReplyURLs, &out.ReplyURLs
-		*out = make([]string, len(*in))
+		*out = make([]AzureAdReplyUrlString, len(*in))
 		copy(*out, *in)
 	}
 	if in.Claims != nil {

@@ -233,6 +233,7 @@ spec:
                           used when performing OpenID Connect flows for authenticating
                           end-users.
                         items:
+                          pattern: ^https?:\/\/.+$
                           type: string
                         type: array
                       singlePageApplication:

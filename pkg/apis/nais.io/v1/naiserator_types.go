@@ -37,7 +37,7 @@ type AzureApplication struct {
 	Enabled bool `json:"enabled"`
 	// ReplyURLs is a list of allowed redirect URLs used when performing OpenID Connect flows for authenticating end-users.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#reply-urls"
-	ReplyURLs []string `json:"replyURLs,omitempty"`
+	ReplyURLs []AzureAdReplyUrlString `json:"replyURLs,omitempty"`
 	// A Tenant represents an organization in Azure AD.
 	//
 	// If unspecified, will default to `trygdeetaten.no` for development clusters and `nav.no` for production clusters.
@@ -55,6 +55,9 @@ type AzureApplication struct {
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#groups"
 	AllowAllUsers *bool `json:"allowAllUsers,omitempty"`
 }
+
+// +kubebuilder:validation:Pattern=`^https?:\/\/.+$`
+type AzureAdReplyUrlString string
 
 type AzureSidecar struct {
 	// Enable the sidecar.
