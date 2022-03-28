@@ -150,6 +150,7 @@ spec:
                     after OIDC flows for this application
                   properties:
                     url:
+                      pattern: ^https?:\/\/.+$
                       type: string
                   type: object
                 type: array
