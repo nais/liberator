@@ -149,8 +149,7 @@ type AzureAdGroup struct {
 
 // AzureAdReplyUrl defines the valid reply URLs for callbacks after OIDC flows for this application
 type AzureAdReplyUrl struct {
-	// +kubebuilder:validation:Pattern=`^https?:\/\/.+$`
-	Url string `json:"url,omitempty"`
+	Url AzureAdReplyUrlString `json:"url,omitempty"`
 }
 
 func (in *AzureAdApplication) GetObjectId() string {
