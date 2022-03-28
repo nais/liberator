@@ -137,7 +137,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 							},
 						},
 					},
-					ReplyURLs: []string{
+					ReplyURLs: []AzureAdReplyUrlString{
 						"https://myapplication.nav.no/oauth2/callback",
 					},
 					SinglePageApplication: boolp(true),

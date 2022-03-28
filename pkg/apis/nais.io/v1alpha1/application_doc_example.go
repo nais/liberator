@@ -133,7 +133,7 @@ func ExampleApplicationForDocumentation() *Application {
 							},
 						},
 					},
-					ReplyURLs: []string{
+					ReplyURLs: []nais_io_v1.AzureAdReplyUrlString{
 						"https://myapplication.nav.no/oauth2/callback",
 					},
 					SinglePageApplication: boolp(true),
