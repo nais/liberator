@@ -143,6 +143,16 @@ func ExampleApplicationForDocumentation() *Application {
 					Enabled:   true,
 					ErrorPath: "/error",
 					AutoLogin: true,
+					Resources: &nais_io_v1.ResourceRequirements{
+						Limits: &nais_io_v1.ResourceSpec{
+							Cpu:    "250m",
+							Memory: "256Mi",
+						},
+						Requests: &nais_io_v1.ResourceSpec{
+							Cpu:    "20m",
+							Memory: "32Mi",
+						},
+					},
 				},
 			},
 			Command: []string{
@@ -290,6 +300,16 @@ func ExampleApplicationForDocumentation() *Application {
 					ErrorPath: "/error",
 					Level:     "Level4",
 					Locale:    "nb",
+					Resources: &nais_io_v1.ResourceRequirements{
+						Limits: &nais_io_v1.ResourceSpec{
+							Cpu:    "250m",
+							Memory: "256Mi",
+						},
+						Requests: &nais_io_v1.ResourceSpec{
+							Cpu:    "20m",
+							Memory: "32Mi",
+						},
+					},
 				},
 			},
 			Influx: &nais_io_v1.Influx{

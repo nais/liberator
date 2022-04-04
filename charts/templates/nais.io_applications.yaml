@@ -262,6 +262,32 @@ spec:
                         description: Absolute path to redirect the user to on authentication
                           errors for custom error handling.
                         type: string
+                      resources:
+                        description: Resource requirements for the sidecar container.
+                        properties:
+                          limits:
+                            description: Limit defines the maximum amount of resources
+                              a container can use before getting evicted.
+                            properties:
+                              cpu:
+                                pattern: ^\d+m?$
+                                type: string
+                              memory:
+                                pattern: ^\d+[KMG]i$
+                                type: string
+                            type: object
+                          requests:
+                            description: Request defines the amount of resources a
+                              container is allocated on startup.
+                            properties:
+                              cpu:
+                                pattern: ^\d+m?$
+                                type: string
+                              memory:
+                                pattern: ^\d+[KMG]i$
+                                type: string
+                            type: object
+                        type: object
                     required:
                     - enabled
                     type: object
@@ -774,6 +800,32 @@ spec:
                         - en
                         - se
                         type: string
+                      resources:
+                        description: Resource requirements for the sidecar container.
+                        properties:
+                          limits:
+                            description: Limit defines the maximum amount of resources
+                              a container can use before getting evicted.
+                            properties:
+                              cpu:
+                                pattern: ^\d+m?$
+                                type: string
+                              memory:
+                                pattern: ^\d+[KMG]i$
+                                type: string
+                            type: object
+                          requests:
+                            description: Request defines the amount of resources a
+                              container is allocated on startup.
+                            properties:
+                              cpu:
+                                pattern: ^\d+m?$
+                                type: string
+                              memory:
+                                pattern: ^\d+[KMG]i$
+                                type: string
+                            type: object
+                        type: object
                     required:
                     - enabled
                     type: object

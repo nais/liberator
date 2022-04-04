@@ -69,6 +69,9 @@ type AzureSidecar struct {
 	// +nais:doc:Default="false"
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/sidecar#auto-login"
 	AutoLogin bool `json:"autoLogin,omitempty"`
+	// Resource requirements for the sidecar container.
+	// +nais:doc:Link="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers"
+	Resources *ResourceRequirements `json:"resources,omitempty"`
 }
 
 type OpenSearch struct {
@@ -191,6 +194,9 @@ type IDPortenSidecar struct {
 	// +nais:doc:Default="false"
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#auto-login"
 	AutoLogin bool `json:"autoLogin,omitempty"`
+	// Resource requirements for the sidecar container.
+	// +nais:doc:Link="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers"
+	Resources *ResourceRequirements `json:"resources,omitempty"`
 }
 
 type GCP struct {
