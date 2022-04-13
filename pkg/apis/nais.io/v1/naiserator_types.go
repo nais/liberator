@@ -366,7 +366,7 @@ type TokenX struct {
 
 type Kafka struct {
 	// Configures your application to access an Aiven Kafka cluster.
-	// +kubebuilder:validation:Enum=nav-dev;nav-prod;nav-infrastructure
+	// +kubebuilder:validation:Enum=nav-dev;nav-prod;nav-infrastructure;nav-integration-test
 	Pool string `json:"pool"`
 
 	// Allow this app to use kafka streams
