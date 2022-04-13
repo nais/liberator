@@ -7,6 +7,7 @@ import (
 	"github.com/nais/liberator/pkg/strings"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func init() {
@@ -161,4 +162,11 @@ func (in *AivenApplicationStatus) GetConditionOfType(conditionType AivenApplicat
 
 func (in *AivenApplication) FormatExpiresAt() string {
 	return in.Spec.ExpiresAt.Format(time.RFC3339)
+}
+
+func (in *AivenApplication) SecretKey() client.ObjectKey {
+	return client.ObjectKey{
+		Namespace: in.GetNamespace(),
+		Name:      in.Spec.SecretName,
+	}
 }
