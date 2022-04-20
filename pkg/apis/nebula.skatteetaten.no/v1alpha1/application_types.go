@@ -84,10 +84,10 @@ type ApplicationSpec struct {
 	// +optional
 	Logging *LogConfig `json:"logging,omitempty"`
 
-	// Integratons this application has with Azure
+	// Integrations this application has with Azure
 	Azure *AzureConfig `json:"azure,omitempty"`
 
-	// Configure zero-trust for incomming traficc
+	// Configure zero-trust for incoming traficc
 	// +optional
 	Ingress *IngressConfig `json:"ingress,omitempty"`
 
@@ -120,13 +120,15 @@ type LogConfig struct {
 	Splunk map[string]*SplunkLoggingConfig `json:"splunk,omitempty"`
 	// Shall we add spring-boot logging config or not? Defaults to true.
 	ActivateDefaultSpringBootLogbackConfig *bool `json:"activateDefaultSpringBootLogbackConfig,omitempty"`
+	// LogDirectory indicates where the log volume shall exist and should be mounted. Defaults to /workspace/logs
+	LogDirectory string `json:"logDirectory,omitempty"`
 }
 
 type IngressConfig struct {
-	// Zero-trust incomming configuration for traffic comming from outside of the mesh
+	// Zero-trust incoming configuration for traffic coming from outside the mesh
 	Public map[string]PublicIngressConfig `json:"public,omitempty"`
 
-	// Zero-trust incomming configuration for traffic coming from inside of the mesh
+	// Zero-trust incoming configuration for traffic coming from inside the mesh
 	Internal map[string]InternalIngressConfig `json:"internal,omitempty"`
 }
 

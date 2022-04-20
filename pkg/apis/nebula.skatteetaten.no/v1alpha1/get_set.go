@@ -111,6 +111,17 @@ func (in *Application) IsAuroraApplication() bool {
 	return in.Spec.AuroraApplication == true
 }
 
+// GetLogDirectoryOr will find the configured log directory, or use the
+// indicated default log dir
+func (in *Application) GetLogDirectoryOr(defaultLogDir string) string {
+
+	if in.Spec.Logging == nil || in.Spec.Logging.LogDirectory == "" {
+		return defaultLogDir
+	} else {
+		return in.Spec.Logging.LogDirectory
+	}
+}
+
 func (in *Application) GetIngress() *IngressConfig {
 	publicIngress := map[string]PublicIngressConfig{}
 	for key, item := range in.Spec.Ingress.Public {

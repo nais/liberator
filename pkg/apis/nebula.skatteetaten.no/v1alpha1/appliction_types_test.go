@@ -45,4 +45,19 @@ func TestLoggingCRD(t *testing.T) {
 		assert.Equal(t, true, *splunk.Enabled, "Expecting unset enabled field to be set as true")
 	}
 	assert.NoError(t, err)
+	assert.Equal(t, "unittest", app.GetLogDirectoryOr("unittest"))
+}
+
+func TestLoggingCRDWithDirectory(t *testing.T) {
+	app := &v1alpha1.Application{
+		Spec: v1alpha1.ApplicationSpec{
+			Logging: &v1alpha1.LogConfig{
+				LogDirectory: "/somewhere/unittest",
+			},
+		},
+	}
+
+	err := app.ApplyDefaults()
+	assert.NoError(t, err)
+	assert.Equal(t, "/somewhere/unittest", app.GetLogDirectoryOr("unittest"))
 }

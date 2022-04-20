@@ -50,7 +50,7 @@ spec:
                   will add the default volume mounts an AuroraApplication requires
                 type: boolean
               azure:
-                description: Integratons this application has with Azure
+                description: Integrations this application has with Azure
                 properties:
                   cosmosDb:
                     additionalProperties:
@@ -271,7 +271,7 @@ spec:
                 - nameSuffix
                 type: object
               ingress:
-                description: Configure zero-trust for incomming traficc
+                description: Configure zero-trust for incoming traficc
                 properties:
                   internal:
                     additionalProperties:
@@ -313,8 +313,8 @@ spec:
                             type: object
                           type: array
                       type: object
-                    description: Zero-trust incomming configuration for traffic coming
-                      from inside of the mesh
+                    description: Zero-trust incoming configuration for traffic coming
+                      from inside the mesh
                     type: object
                   public:
                     additionalProperties:
@@ -342,8 +342,8 @@ spec:
                             value if not specified is '80'
                           type: integer
                       type: object
-                    description: Zero-trust incomming configuration for traffic comming
-                      from outside of the mesh
+                    description: Zero-trust incoming configuration for traffic coming
+                      from outside the mesh
                     type: object
                 type: object
               logging:
@@ -353,6 +353,10 @@ spec:
                     description: Shall we add spring-boot logging config or not? Defaults
                       to true.
                     type: boolean
+                  logDirectory:
+                    description: LogDirectory indicates where the log volume shall
+                      exist and should be mounted. Defaults to /workspace/logs
+                    type: string
                   splunk:
                     additionalProperties:
                       properties:
