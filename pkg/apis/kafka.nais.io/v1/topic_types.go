@@ -66,7 +66,7 @@ type Config struct {
 	Partitions *int `json:"partitions,omitempty"`
 	// The default replication factor for created topics.
 	// Defaults to `3`.
-	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Minimum=2
 	// +optional
 	Replication *int `json:"replication,omitempty"`
 	// Configuration controls the maximum size a partition can grow to before we will discard old log segments
