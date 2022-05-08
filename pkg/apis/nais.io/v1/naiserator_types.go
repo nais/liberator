@@ -401,6 +401,11 @@ type Maskinporten struct {
 	Scopes MaskinportenScope `json:"scopes,omitempty"`
 }
 
+type Salsa struct {
+	// If enabled, verify that the image is signed to secure artifact integrity
+	Enabled bool `json:"enabled,omitempty"`
+}
+
 type SecureLogs struct {
 	// Whether to enable a sidecar container for secure logging.
 	// If enabled, a volume is mounted in the pods where secure logs can be saved.

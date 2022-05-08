@@ -178,6 +178,9 @@ type ApplicationSpec struct {
 	// the Kubernetes scheduler can make better decisions about which nodes to place pods on.
 	Resources *nais_io_v1.ResourceRequirements `json:"resources,omitempty"`
 
+	// Enable Salsa to verify image signature to safeguard artifact integrity across nais platform
+	Salsa *nais_io_v1.Salsa `json:"salsa,omitempty"`
+
 	// Whether or not to enable a sidecar container for secure logging.
 	SecureLogs *nais_io_v1.SecureLogs `json:"secureLogs,omitempty"`
 

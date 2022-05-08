@@ -169,6 +169,11 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Salsa != nil {
+		in, out := &in.Salsa, &out.Salsa
+		*out = new(v1.Salsa)
+		**out = **in
+	}
 	if in.SecureLogs != nil {
 		in, out := &in.SecureLogs, &out.SecureLogs
 		*out = new(v1.SecureLogs)

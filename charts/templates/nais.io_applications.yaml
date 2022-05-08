@@ -1189,6 +1189,15 @@ spec:
                         type: string
                     type: object
                 type: object
+              salsa:
+                description: Enable Salsa to verify image signature to safeguard artifact
+                  integrity across nais platform
+                properties:
+                  enabled:
+                    description: If enabled, verify that the image is signed to secure
+                      artifact integrity
+                    type: boolean
+                type: object
               secureLogs:
                 description: Whether or not to enable a sidecar container for secure
                   logging.

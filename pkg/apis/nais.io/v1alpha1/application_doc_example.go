@@ -403,6 +403,9 @@ func ExampleApplicationForDocumentation() *Application {
 					Memory: "256Mi",
 				},
 			},
+			Salsa: &nais_io_v1.Salsa{
+				Enabled: true,
+			},
 			SecureLogs: &nais_io_v1.SecureLogs{
 				Enabled: true,
 			},

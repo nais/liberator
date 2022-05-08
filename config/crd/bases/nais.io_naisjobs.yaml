@@ -989,6 +989,15 @@ spec:
                 - OnFailure
                 - Never
                 type: string
+              salsa:
+                description: Enable Salsa to verify image signature to safeguard artifact
+                  integrity across nais platform
+                properties:
+                  enabled:
+                    description: If enabled, verify that the image is signed to secure
+                      artifact integrity
+                    type: boolean
+                type: object
               schedule:
                 description: The [Cron](https://en.wikipedia.org/wiki/Cron) schedule
                   for running the Naisjob. If not specified, the Naisjob will be run

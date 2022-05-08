@@ -165,6 +165,9 @@ type NaisjobSpec struct {
 	// the Kubernetes scheduler can make better decisions about which nodes to place pods on.
 	Resources *ResourceRequirements `json:"resources,omitempty"`
 
+	// Enable Salsa to verify image signature to safeguard artifact integrity across nais platform
+	Salsa *Salsa `json:"salsa,omitempty"`
+
 	// The [Cron](https://en.wikipedia.org/wiki/Cron) schedule for running the Naisjob.
 	// If not specified, the Naisjob will be run as a one-shot Job.
 	Schedule string `json:"schedule,omitempty"`

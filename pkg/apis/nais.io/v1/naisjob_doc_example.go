@@ -349,7 +349,10 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				},
 			},
 			RestartPolicy: "Never",
-			Schedule:      "*/15 0 0 0 0",
+			Salsa: &Salsa{
+				Enabled: true,
+			},
+			Schedule: "*/15 0 0 0 0",
 			SecureLogs: &SecureLogs{
 				Enabled: true,
 			},

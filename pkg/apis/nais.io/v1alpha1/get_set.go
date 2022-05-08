@@ -148,3 +148,7 @@ func (in *Application) GetOpenSearch() *nais_io_v1.OpenSearch {
 func (in *Application) GetVault() *nais_io_v1.Vault {
 	return in.Spec.Vault
 }
+
+func (in *Application) GetSalsa() *nais_io_v1.Salsa {
+	return in.Spec.Salsa
+}
