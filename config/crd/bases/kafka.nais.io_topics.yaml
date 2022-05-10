@@ -101,7 +101,7 @@ spec:
                   replication:
                     description: The default replication factor for created topics.
                       Defaults to `3`.
-                    minimum: 1
+                    minimum: 2
                     type: integer
                   retentionBytes:
                     description: Configuration controls the maximum size a partition
