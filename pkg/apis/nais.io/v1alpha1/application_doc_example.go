@@ -285,13 +285,11 @@ func ExampleApplicationForDocumentation() *Application {
 				ClientURI:              "https://www.nav.no",
 				Enabled:                true,
 				FrontchannelLogoutPath: "/oauth2/logout",
-				FrontchannelLogoutURI:  "https://myapplication.nav.no/oauth2/logout",
 				IntegrationType:        "idporten",
 				PostLogoutRedirectURIs: []nais_io_v1.IDPortenURI{
 					"https://www.nav.no",
 				},
 				RedirectPath:    "/oauth2/callback",
-				RedirectURI:     "https://myapplication.nav.no/oauth2/callback",
 				Scopes:          []string{"openid", "profile"},
 				SessionLifetime: intp(7200),
 				Sidecar: &nais_io_v1.IDPortenSidecar{

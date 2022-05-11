@@ -113,11 +113,6 @@ type IDPorten struct {
 	// +nais:doc:Default="/oauth2/logout"
 	// +kubebuilder:validation:Pattern=`^\/.*$`
 	FrontchannelLogoutPath string `json:"frontchannelLogoutPath,omitempty"`
-	// Prefer using `frontchannelLogoutPath`.
-	//
-	// +nais:doc:Deprecated=true
-	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
-	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI,omitempty"`
 	// IntegrationType is used to make sensible choices for your client.
 	// Which type of integration you choose will provide guidance on which scopes you can use with the client.
 	// A client can only have one integration type.
@@ -141,10 +136,6 @@ type IDPorten struct {
 	// +nais:doc:Default="/oauth2/callback"
 	// +kubebuilder:validation:Pattern=`^\/.*$`
 	RedirectPath string `json:"redirectPath,omitempty"`
-	// Use `redirectPath` instead.
-	//
-	// +nais:doc:Deprecated=true
-	RedirectURI IDPortenURI `json:"redirectURI,omitempty"`
 	// Register different oauth2 Scopes on your client.
 	// You will not be able to add a scope to your client that conflicts with the client's IntegrationType.
 	// For example, you can not add a scope that is limited to the IntegrationType `krr` of IntegrationType `idporten`, and vice versa.

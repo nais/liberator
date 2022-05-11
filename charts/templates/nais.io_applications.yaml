@@ -710,10 +710,6 @@ spec:
                       logout) process.
                     pattern: ^\/.*$
                     type: string
-                  frontchannelLogoutURI:
-                    description: Prefer using `frontchannelLogoutPath`.
-                    pattern: ^https:\/\/.+$
-                    type: string
                   integrationType:
                     description: "IntegrationType is used to make sensible choices
                       for your client. Which type of integration you choose will provide
@@ -737,10 +733,6 @@ spec:
                     description: RedirectPath is a valid path that ID-porten redirects
                       back to after a successful authorization request.
                     pattern: ^\/.*$
-                    type: string
-                  redirectURI:
-                    description: Use `redirectPath` instead.
-                    pattern: ^https:\/\/.+$
                     type: string
                   scopes:
                     description: "Register different oauth2 Scopes on your client.
