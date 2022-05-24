@@ -14,13 +14,13 @@ func init() {
 type NetworkPolicySpec struct {
 	EndpointSelector *metav1.LabelSelector `json:"endpointSelector,omitempty"`
 	Ingress          []Ingress             `json:"ingress,omitempty"`
-	Egress           *Egress               `json:"egress,omitempty"`
+	Egress           []Egress              `json:"egress,omitempty"`
 }
 
 type Ingress struct {
-	FromEntities  []string              `json:"fromEntities,omitempty"`
-	FromEndpoints *metav1.LabelSelector `json:"fromEndpoints,omitempty"`
-	ToPorts       []Ports               `json:"toPorts,omitempty"`
+	FromEntities  []string                `json:"fromEntities,omitempty"`
+	FromEndpoints []*metav1.LabelSelector `json:"fromEndpoints,omitempty"`
+	ToPorts       []Ports                 `json:"toPorts,omitempty"`
 }
 
 type Ports struct {

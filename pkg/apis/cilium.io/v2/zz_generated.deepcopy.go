@@ -100,8 +100,14 @@ func (in *Ingress) DeepCopyInto(out *Ingress) {
 	}
 	if in.FromEndpoints != nil {
 		in, out := &in.FromEndpoints, &out.FromEndpoints
-		*out = new(v1.LabelSelector)
-		(*in).DeepCopyInto(*out)
+		*out = make([]*v1.LabelSelector, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(v1.LabelSelector)
+				(*in).DeepCopyInto(*out)
+			}
+		}
 	}
 	if in.ToPorts != nil {
 		in, out := &in.ToPorts, &out.ToPorts
@@ -197,8 +203,10 @@ func (in *NetworkPolicySpec) DeepCopyInto(out *NetworkPolicySpec) {
 	}
 	if in.Egress != nil {
 		in, out := &in.Egress, &out.Egress
-		*out = new(Egress)
-		(*in).DeepCopyInto(*out)
+		*out = make([]Egress, len(*in))
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
 	}
 }
 
