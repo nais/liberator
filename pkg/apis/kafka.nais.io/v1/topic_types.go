@@ -75,7 +75,7 @@ type Config struct {
 	// Defaults to `-1`.
 	RetentionBytes *int `json:"retentionBytes,omitempty"`
 	// The number of hours to keep a log file before deleting it.
-	// Defaults to `72`.
+	// Defaults to `168` hours (1 week).
 	// +kubebuilder:validation:Maximum=2562047788015
 	RetentionHours *int `json:"retentionHours,omitempty"`
 }
