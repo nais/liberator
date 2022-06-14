@@ -132,9 +132,9 @@ type AzureAdClaims struct {
 	// Currently, the only supported values are `NAVident` and `azp_name`.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#extra"
 	Extra []AzureAdExtraClaim `json:"extra,omitempty"`
-	// Groups is a list of Azure AD group IDs to be emitted in the 'Groups' claim.
-	// This also restricts access to only contain users of the defined groups unless overridden by Spec.AllowAllUsers.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#groups"
+	// Groups is a list of Azure AD group IDs to be emitted in the `groups` claim in tokens issued by Azure AD.
+	// This also restricts access to only members of the defined groups unless overridden by `allowAllUsers`.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration/#groups"
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#users"
 	Groups []AzureAdGroup `json:"groups,omitempty"`
 }

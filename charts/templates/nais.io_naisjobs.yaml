@@ -211,9 +211,9 @@ spec:
                             type: array
                           groups:
                             description: Groups is a list of Azure AD group IDs to
-                              be emitted in the 'Groups' claim. This also restricts
-                              access to only contain users of the defined groups unless
-                              overridden by Spec.AllowAllUsers.
+                              be emitted in the `groups` claim in tokens issued by
+                              Azure AD. This also restricts access to only members
+                              of the defined groups unless overridden by `allowAllUsers`.
                             items:
                               properties:
                                 id:
