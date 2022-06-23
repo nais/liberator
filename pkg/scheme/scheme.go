@@ -22,6 +22,12 @@ import (
 // This function should be provided with a list of AddToScheme functions.
 func Scheme(schemes ...func(*runtime.Scheme) error) (*runtime.Scheme, error) {
 	scheme := runtime.NewScheme()
+	return AddSchemes(scheme, schemes...)
+}
+
+// Takes an existing runtime.Scheme object and adds a list of schemes to it.
+// This function should be provided with a list of AddToScheme functions.
+func AddSchemes(scheme *runtime.Scheme, schemes ...func(*runtime.Scheme) error) (*runtime.Scheme, error) {
 	for _, fn := range schemes {
 		err := fn(scheme)
 		if err != nil {
@@ -33,7 +39,13 @@ func Scheme(schemes ...func(*runtime.Scheme) error) (*runtime.Scheme, error) {
 
 // Return a scheme with all native Kubernetes types and all CRDs supported by liberator.
 func All() (*runtime.Scheme, error) {
-	return Scheme(
+	scheme := runtime.NewScheme()
+	return AddAll(scheme)
+}
+
+// Add all native Kubernetes types and all CRDs supported by liberator to given scheme.
+func AddAll(scheme *runtime.Scheme) (*runtime.Scheme, error) {
+	return AddSchemes(scheme,
 		nais_io_v1alpha1.AddToScheme,
 		nais_io_v1.AddToScheme,
 		iam_cnrm_cloud_google_com_v1beta1.AddToScheme,
