@@ -205,7 +205,7 @@ type GCP struct {
 	// +nais:doc:Availability=GCP
 	SqlInstances []CloudSqlInstance `json:"sqlInstances,omitempty"`
 	// List of _additional_ permissions that should be granted to your application for accessing external GCP resources that have not been provisioned through NAIS.
-	// +nais:doc:Link="https://cloud.google.com/config-connector/docs/reference/resource-docs/iam/iampolicymember#external_organization_level_policy_member"
+	// +nais:doc:Link="https://doc.nais.io/nais-application/permissions-in-gcp/"
 	// +nais:doc:Availability=GCP
 	Permissions []CloudIAMPermission `json:"permissions,omitempty"`
 }
