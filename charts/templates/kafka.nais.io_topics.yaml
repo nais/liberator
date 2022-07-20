@@ -114,7 +114,7 @@ spec:
                     type: integer
                   retentionHours:
                     description: The number of hours to keep a log file before deleting
-                      it. Defaults to `72`.
+                      it. Defaults to `168` hours (1 week).
                     maximum: 2562047788015
                     type: integer
                 type: object
