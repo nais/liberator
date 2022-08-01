@@ -7,7 +7,9 @@ import (
 	"strings"
 
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
+	"github.com/nais/liberator/pkg/intutil"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/utils/pointer"
 )
 
 const (
@@ -55,7 +57,7 @@ type Config struct {
 	CleanupPolicy *string `json:"cleanupPolicy,omitempty"`
 	// When a producer sets acks to "all" (or "-1"), `min.insync.replicas` specifies the minimum number of replicas
 	// that must acknowledge a write for the write to be considered successful.
-	// Defaults to `1`.
+	// Defaults to `2`.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=7
 	MinimumInSyncReplicas *int `json:"minimumInSyncReplicas,omitempty"`
@@ -145,6 +147,28 @@ func (in *Topic) NeedsSynchronization(hash string) bool {
 		return true
 	}
 	return in.Status.SynchronizationHash != hash
+}
+
+// Apply default values to Topic Config where the nil-value is not what we want
+func (cfg *Config) ApplyDefaults() {
+	if cfg.CleanupPolicy == nil {
+		cfg.CleanupPolicy = pointer.StringPtr("delete")
+	}
+	if cfg.MinimumInSyncReplicas == nil {
+		cfg.MinimumInSyncReplicas = intutil.Intp(2)
+	}
+	if cfg.Partitions == nil {
+		cfg.Partitions = intutil.Intp(1)
+	}
+	if cfg.Replication == nil {
+		cfg.Replication = intutil.Intp(3)
+	}
+	if cfg.RetentionBytes == nil {
+		cfg.RetentionBytes = intutil.Intp(-1)
+	}
+	if cfg.RetentionHours == nil {
+		cfg.RetentionHours = intutil.Intp(168)
+	}
 }
 
 func ServiceUserNameWithSuffix(teamName, appName, suffix string) (string, error) {
