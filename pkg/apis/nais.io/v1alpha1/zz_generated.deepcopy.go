@@ -194,6 +194,11 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = new(v1.TokenX)
 		**out = **in
 	}
+	if in.TerminationGracePeriodSeconds != nil {
+		in, out := &in.TerminationGracePeriodSeconds, &out.TerminationGracePeriodSeconds
+		*out = new(int64)
+		**out = **in
+	}
 	if in.Vault != nil {
 		in, out := &in.Vault, &out.Vault
 		*out = new(v1.Vault)

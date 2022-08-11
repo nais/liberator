@@ -1788,6 +1788,11 @@ func (in *NaisjobSpec) DeepCopyInto(out *NaisjobSpec) {
 		*out = new(Probe)
 		**out = **in
 	}
+	if in.TerminationGracePeriodSeconds != nil {
+		in, out := &in.TerminationGracePeriodSeconds, &out.TerminationGracePeriodSeconds
+		*out = new(int64)
+		**out = **in
+	}
 	if in.TTLSecondsAfterFinished != nil {
 		in, out := &in.TTLSecondsAfterFinished, &out.TTLSecondsAfterFinished
 		*out = new(int32)

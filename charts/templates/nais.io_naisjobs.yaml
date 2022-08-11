@@ -1048,6 +1048,16 @@ spec:
                 description: Specify how many completed Jobs should be kept.
                 format: int32
                 type: integer
+              terminationGracePeriodSeconds:
+                description: The grace period is the duration in seconds after the
+                  processes running in the pod are sent a termination signal and the
+                  time when the processes are forcibly halted with a kill signal.
+                  Set this value longer than the expected cleanup time for your process.
+                  For most jobs, the default is more than enough. Defaults to 30 seconds.
+                format: int64
+                maximum: 180
+                minimum: 0
+                type: integer
               ttlSecondsAfterFinished:
                 description: Specify the number of seconds to wait before removing
                   the Job after it has finished (either Completed or Failed). If the

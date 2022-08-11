@@ -1265,6 +1265,17 @@ spec:
                 required:
                 - type
                 type: object
+              terminationGracePeriodSeconds:
+                description: The grace period is the duration in seconds after the
+                  processes running in the pod are sent a termination signal and the
+                  time when the processes are forcibly halted with a kill signal.
+                  Set this value longer than the expected cleanup time for your process.
+                  For most applications, the default is more than enough. Defaults
+                  to 30 seconds.
+                format: int64
+                maximum: 180
+                minimum: 0
+                type: integer
               tokenx:
                 description: Provisions and configures a TokenX client for your application.
                 properties:
