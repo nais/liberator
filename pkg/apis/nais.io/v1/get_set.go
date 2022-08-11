@@ -103,6 +103,10 @@ func (in *Naisjob) GetPrometheus() *PrometheusConfig {
 	return nil
 }
 
+func (in *Naisjob) GetTerminationGracePeriodSeconds() *int64 {
+	return in.Spec.TerminationGracePeriodSeconds
+}
+
 func (in *Azure) GetApplication() *AzureApplication {
 	return in.Application
 }
