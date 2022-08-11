@@ -362,8 +362,9 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				Port:             8080,
 				Timeout:          1,
 			},
-			SuccessfulJobsHistoryLimit: 2,
-			TTLSecondsAfterFinished:    int32p(60),
+			SuccessfulJobsHistoryLimit:    2,
+			TerminationGracePeriodSeconds: int64p(60),
+			TTLSecondsAfterFinished:       int32p(60),
 			Vault: &Vault{
 				Enabled: true,
 				Sidecar: true,

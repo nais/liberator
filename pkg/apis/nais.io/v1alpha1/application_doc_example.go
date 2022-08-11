@@ -11,6 +11,9 @@ func ExampleApplicationForDocumentation() *Application {
 	intp := func(i int) *int {
 		return &i
 	}
+	int64p := func(i int64) *int64 {
+		return &i
+	}
 	boolp := func(b bool) *bool {
 		return &b
 	}
@@ -420,6 +423,7 @@ func ExampleApplicationForDocumentation() *Application {
 			Strategy: &nais_io_v1.Strategy{
 				Type: DeploymentStrategyRollingUpdate,
 			},
+			TerminationGracePeriodSeconds: int64p(60),
 			TokenX: &nais_io_v1.TokenX{
 				Enabled:                 true,
 				MountSecretsAsFilesOnly: true,
