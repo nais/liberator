@@ -91,6 +91,18 @@ func (in *Naisjob) GetLeaderElection() bool {
 	return false
 }
 
+func (in *Naisjob) GetLiveness() *Probe {
+	return in.Spec.Liveness
+}
+
+func (in *Naisjob) GetReadiness() *Probe {
+	return in.Spec.Readiness
+}
+
+func (in *Naisjob) GetPrometheus() *PrometheusConfig {
+	return nil
+}
+
 func (in *Azure) GetApplication() *AzureApplication {
 	return in.Application
 }
