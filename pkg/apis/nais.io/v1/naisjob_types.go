@@ -189,7 +189,7 @@ type NaisjobSpec struct {
 	// For most jobs, the default is more than enough. Defaults to 30 seconds.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=180
-	TerminationGracePeriodSeconds *int `json:"terminationGracePeriodSeconds,omitempty"`
+	TerminationGracePeriodSeconds *int64 `json:"terminationGracePeriodSeconds,omitempty"`
 
 	// Specify the number of seconds to wait before removing the Job after it has finished (either Completed or Failed).
 	// If the field is unset, this Job won't be cleaned up by the TTL controller after it finishes.

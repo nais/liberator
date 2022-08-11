@@ -206,7 +206,7 @@ type ApplicationSpec struct {
 	// For most applications, the default is more than enough. Defaults to 30 seconds.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=180
-	TerminationGracePeriodSeconds *int `json:"terminationGracePeriodSeconds,omitempty"`
+	TerminationGracePeriodSeconds *int64 `json:"terminationGracePeriodSeconds,omitempty"`
 
 	// Provides secrets management, identity-based access, and encrypting application data for auditing of secrets
 	// for applications, systems, and users.
