@@ -184,6 +184,13 @@ type NaisjobSpec struct {
 	// Specify how many completed Jobs should be kept.
 	SuccessfulJobsHistoryLimit int32 `json:"successfulJobsHistoryLimit,omitempty"`
 
+	// The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal.
+	// Set this value longer than the expected cleanup time for your process.
+	// For most jobs, the default is more than enough. Defaults to 30 seconds.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=180
+	TerminationGracePeriodSeconds *int `json:"terminationGracePeriodSeconds,omitempty"`
+
 	// Specify the number of seconds to wait before removing the Job after it has finished (either Completed or Failed).
 	// If the field is unset, this Job won't be cleaned up by the TTL controller after it finishes.
 	// +nais:doc:Availability="on-premises"

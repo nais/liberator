@@ -201,6 +201,13 @@ type ApplicationSpec struct {
 	// +nais:doc:Link="https://doc.nais.io/security/auth/tokenx/"
 	TokenX *nais_io_v1.TokenX `json:"tokenx,omitempty"`
 
+	// The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal.
+	// Set this value longer than the expected cleanup time for your process.
+	// For most applications, the default is more than enough. Defaults to 30 seconds.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=180
+	TerminationGracePeriodSeconds *int `json:"terminationGracePeriodSeconds,omitempty"`
+
 	// Provides secrets management, identity-based access, and encrypting application data for auditing of secrets
 	// for applications, systems, and users.
 	// +nais:doc:Link="https://github.com/navikt/vault-iac/tree/master/doc"
