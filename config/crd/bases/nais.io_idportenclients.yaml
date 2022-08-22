@@ -52,17 +52,6 @@ spec:
           spec:
             description: IDPortenClientSpec defines the desired state of IDPortenClient
             properties:
-              IntegrationType:
-                description: "IntegrationType is used to make sensible choices for
-                  your client. Which type of integration you choose will provide guidance
-                  on which scopes you can use with the client. A client can only have
-                  one integration type. \n NB! It is not possible to change the integration
-                  type after creation."
-                enum:
-                - krr
-                - idporten
-                - api_klient
-                type: string
               accessTokenLifetime:
                 description: AccessTokenLifetime is the maximum lifetime in seconds
                   for the returned access_token from ID-porten.
@@ -79,6 +68,17 @@ spec:
                   a requests to whenever a logout is triggered by another application
                   using the same session
                 pattern: ^https:\/\/.+$
+                type: string
+              integrationType:
+                description: "IntegrationType is used to make sensible choices for
+                  your client. Which type of integration you choose will provide guidance
+                  on which scopes you can use with the client. A client can only have
+                  one integration type. \n NB! It is not possible to change the integration
+                  type after creation."
+                enum:
+                - krr
+                - idporten
+                - api_klient
                 type: string
               postLogoutRedirectURIs:
                 description: PostLogoutRedirectURI is a list of valid URIs that ID-porten
