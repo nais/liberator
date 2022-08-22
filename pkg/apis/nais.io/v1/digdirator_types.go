@@ -253,7 +253,7 @@ type IDPortenClientSpec struct {
 	// +nais:doc:Link="https://docs.digdir.no/oidc_protocol_scope.html#scope-limitations"
 	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html"
 	// +kubebuilder:validation:Enum=krr;idporten;api_klient
-	IntegrationType string `json:"IntegrationType,omitempty" nais:"immutable"`
+	IntegrationType string `json:"integrationType,omitempty" nais:"immutable"`
 	// FrontchannelLogoutURI is the URL that ID-porten sends a requests to whenever a logout is triggered by another application using the same session
 	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI,omitempty"`
 	// PostLogoutRedirectURI is a list of valid URIs that ID-porten may redirect to after logout
