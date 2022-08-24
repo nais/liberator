@@ -58,7 +58,7 @@ doc:
 		;
 
 mocks:
-	cd pkg/ && mockery --inpackage --all --case snake
+	cd pkg/aiven/ && mockery --inpackage --all --case snake
 
 # find or download controller-gen
 # download controller-gen if necessary
