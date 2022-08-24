@@ -691,11 +691,6 @@ spec:
                   pool:
                     description: Configures your application to access an Aiven Kafka
                       cluster.
-                    enum:
-                    - nav-dev
-                    - nav-prod
-                    - nav-infrastructure
-                    - nav-integration-test
                     type: string
                   streams:
                     description: Allow this app to use kafka streams
