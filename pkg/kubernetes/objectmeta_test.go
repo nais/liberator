@@ -1,20 +1,22 @@
 package kubernetes_test
 
 import (
-	"github.com/nais/liberator/pkg/kubernetes"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"testing"
+
+	"github.com/nais/liberator/pkg/kubernetes"
 )
 
 func TestUniformResourceName(t *testing.T) {
+	clusterName := "test-cluster"
 	om := &metav1.ObjectMeta{
-		Name:        "test-app",
-		Namespace:   "test-namespace",
-		ClusterName: "test-cluster",
+		Name:      "test-app",
+		Namespace: "test-namespace",
 	}
 	expected := "test-cluster:test-namespace:test-app"
-	assert.Equal(t, expected, kubernetes.UniformResourceName(om))
+	assert.Equal(t, expected, kubernetes.UniformResourceName(om, clusterName))
 }
 
 func TestObjectMeta(t *testing.T) {

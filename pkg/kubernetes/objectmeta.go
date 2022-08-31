@@ -7,8 +7,8 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-func UniformResourceName(resource metav1.Object) string {
-	return fmt.Sprintf("%s:%s:%s", resource.GetClusterName(), resource.GetNamespace(), resource.GetName())
+func UniformResourceName(resource metav1.Object, clusterName string) string {
+	return fmt.Sprintf("%s:%s:%s", clusterName, resource.GetNamespace(), resource.GetName())
 }
 
 func ObjectMeta(name, namespace string, labels map[string]string) metav1.ObjectMeta {
@@ -18,8 +18,9 @@ func ObjectMeta(name, namespace string, labels map[string]string) metav1.ObjectM
 		Labels:    labels,
 	}
 }
-func UniformResourceScopeName(resource metav1.Object, product, subScope string) string {
-	return replace(fmt.Sprintf("%s:%s:%s.%s", resource.GetClusterName(), resource.GetNamespace(), resource.GetName(), ToScope(product, subScope)))
+
+func UniformResourceScopeName(resource metav1.Object, clusterName, product, subScope string) string {
+	return replace(fmt.Sprintf("%s:%s:%s.%s", clusterName, resource.GetNamespace(), resource.GetName(), ToScope(product, subScope)))
 }
 
 func replace(x string) string {
