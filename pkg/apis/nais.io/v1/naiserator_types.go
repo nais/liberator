@@ -577,10 +577,13 @@ type CloudSqlInstance struct {
 	// When set to true this will set up standby database for failover.
 	HighAvailability bool `json:"highAvailability,omitempty"`
 	// How much hard drive space to allocate for the SQL server, in gigabytes.
+	// This parameter is used when first provisioning a server.
+	// Disk size can be changed using this field _only when diskAutoresize is set to false_.
 	// +kubebuilder:validation:Minimum=10
 	DiskSize int `json:"diskSize,omitempty"`
 	// When set to true, GCP will automatically increase storage by XXX for the database when
-	// disk usage is above the high water mark.
+	// disk usage is above the high water mark. Setting this field to true also disables
+	// manual control over disk size, i.e. the `diskSize` parameter will be ignored.
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/instance-settings#threshold"
 	DiskAutoresize bool `json:"diskAutoresize,omitempty"`
 	// If specified, run automatic backups of the SQL database at the given hour.
