@@ -613,7 +613,11 @@ type CloudSqlInstance struct {
 	// Configures query insights which are now default for new sql instances.
 	Insights *InsightsConfiguration `json:"insights,omitempty"`
 	// Set flags to control the behavior of the instance.
+	// Be aware that NAIS _does not validate_ these flags, so take extra care
+	// to make sure the values match against the specification, otherwise your deployment
+	// will seemingly work OK, but the database flags will not function as expected.
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/flags#list-flags-postgres"
+	// +nais:doc:Experimental
 	Flags []CloudSqlFlag `json:"flags,omitempty"`
 }
 
