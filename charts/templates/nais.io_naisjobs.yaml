@@ -567,11 +567,15 @@ spec:
                         diskAutoresize:
                           description: When set to true, GCP will automatically increase
                             storage by XXX for the database when disk usage is above
-                            the high water mark.
+                            the high water mark. Setting this field to true also disables
+                            manual control over disk size, i.e. the `diskSize` parameter
+                            will be ignored.
                           type: boolean
                         diskSize:
                           description: How much hard drive space to allocate for the
-                            SQL server, in gigabytes.
+                            SQL server, in gigabytes. This parameter is used when
+                            first provisioning a server. Disk size can be changed
+                            using this field _only when diskAutoresize is set to false_.
                           minimum: 10
                           type: integer
                         diskType:
@@ -582,6 +586,10 @@ spec:
                           type: string
                         flags:
                           description: Set flags to control the behavior of the instance.
+                            Be aware that NAIS _does not validate_ these flags, so
+                            take extra care to make sure the values match against
+                            the specification, otherwise your deployment will seemingly
+                            work OK, but the database flags will not function as expected.
                           items:
                             properties:
                               name:
