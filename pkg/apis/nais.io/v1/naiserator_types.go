@@ -60,18 +60,7 @@ type AzureApplication struct {
 type AzureAdReplyUrlString string
 
 type AzureSidecar struct {
-	// Enable the sidecar.
-	Enabled bool `json:"enabled"`
-	// Absolute path to redirect the user to on authentication errors for custom error handling.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/sidecar#error-handling"
-	ErrorPath string `json:"errorPath,omitempty"`
-	// Automatically redirect the user to login for all proxied routes.
-	// +nais:doc:Default="false"
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/sidecar#auto-login"
-	AutoLogin bool `json:"autoLogin,omitempty"`
-	// Resource requirements for the sidecar container.
-	// +nais:doc:Link="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers"
-	Resources *ResourceRequirements `json:"resources,omitempty"`
+	Wonderwall `json:",inline"`
 }
 
 type OpenSearch struct {
@@ -166,8 +155,7 @@ type IDPorten struct {
 }
 
 type IDPortenSidecar struct {
-	// Enable the sidecar.
-	Enabled bool `json:"enabled"`
+	Wonderwall `json:",inline"`
 	// Default security level for all authentication requests.
 	// +nais:doc:Default="Level4"
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#security-levels"
@@ -178,16 +166,6 @@ type IDPortenSidecar struct {
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#locales"
 	// +kubebuilder:validation:Enum=nb;nn;en;se
 	Locale string `json:"locale,omitempty"`
-	// Absolute path to redirect the user to on authentication errors for custom error handling.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#error-handling"
-	ErrorPath string `json:"errorPath,omitempty"`
-	// Automatically redirect the user to login for all proxied routes.
-	// +nais:doc:Default="false"
-	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#auto-login"
-	AutoLogin bool `json:"autoLogin,omitempty"`
-	// Resource requirements for the sidecar container.
-	// +nais:doc:Link="https://kubernetes.io/docs/concepts/configuration/manage-resources-containers"
-	Resources *ResourceRequirements `json:"resources,omitempty"`
 }
 
 type GCP struct {
@@ -677,3 +655,24 @@ func (envVars EnvVars) ToKubernetes() []corev1.EnvVar {
 
 	return newEnvVars
 }
+
+type Wonderwall struct {
+	// Automatically redirect the user to login for all proxied GET requests.
+	// +nais:doc:Default="false"
+	// +nais:doc:Link="https://doc.nais.io/appendix/wonderwall/#12-autologin"
+	AutoLogin bool `json:"autoLogin,omitempty"`
+	// Comma separated list of absolute paths to ignore when auto-login is enabled.
+	// +nais:doc:Link="https://doc.nais.io/appendix/wonderwall/#12-autologin"
+	AutoLoginIgnorePaths []WonderwallIgnorePaths `json:"autoLoginIgnorePaths,omitempty"`
+	// Enable the sidecar.
+	Enabled bool `json:"enabled"`
+	// Absolute path to redirect the user to on authentication errors for custom error handling.
+	// +nais:doc:Link="https://doc.nais.io/appendix/wonderwall/#4-error-handling"
+	ErrorPath string `json:"errorPath,omitempty"`
+	// Resource requirements for the sidecar container.
+	// +nais:doc:Link="https://doc.nais.io/appendix/wonderwall/#5-resource-requirements"
+	Resources *ResourceRequirements `json:"resources,omitempty"`
+}
+
+// +kubebuilder:validation:Pattern=`^\/.*$`
+type WonderwallIgnorePaths string

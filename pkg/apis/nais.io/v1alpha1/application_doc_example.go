@@ -143,17 +143,23 @@ func ExampleApplicationForDocumentation() *Application {
 					Tenant:                "nav.no",
 				},
 				Sidecar: &nais_io_v1.AzureSidecar{
-					Enabled:   true,
-					ErrorPath: "/error",
-					AutoLogin: true,
-					Resources: &nais_io_v1.ResourceRequirements{
-						Limits: &nais_io_v1.ResourceSpec{
-							Cpu:    "250m",
-							Memory: "256Mi",
+					Wonderwall: nais_io_v1.Wonderwall{
+						AutoLogin: true,
+						AutoLoginIgnorePaths: []nais_io_v1.WonderwallIgnorePaths{
+							"/path",
+							"/internal/*",
 						},
-						Requests: &nais_io_v1.ResourceSpec{
-							Cpu:    "20m",
-							Memory: "32Mi",
+						Enabled:   true,
+						ErrorPath: "/error",
+						Resources: &nais_io_v1.ResourceRequirements{
+							Limits: &nais_io_v1.ResourceSpec{
+								Cpu:    "250m",
+								Memory: "256Mi",
+							},
+							Requests: &nais_io_v1.ResourceSpec{
+								Cpu:    "20m",
+								Memory: "32Mi",
+							},
 						},
 					},
 				},
@@ -296,21 +302,27 @@ func ExampleApplicationForDocumentation() *Application {
 				Scopes:          []string{"openid", "profile"},
 				SessionLifetime: intp(7200),
 				Sidecar: &nais_io_v1.IDPortenSidecar{
-					AutoLogin: true,
-					Enabled:   true,
-					ErrorPath: "/error",
-					Level:     "Level4",
-					Locale:    "nb",
-					Resources: &nais_io_v1.ResourceRequirements{
-						Limits: &nais_io_v1.ResourceSpec{
-							Cpu:    "250m",
-							Memory: "256Mi",
+					Wonderwall: nais_io_v1.Wonderwall{
+						AutoLogin: true,
+						AutoLoginIgnorePaths: []nais_io_v1.WonderwallIgnorePaths{
+							"/path",
+							"/internal/*",
 						},
-						Requests: &nais_io_v1.ResourceSpec{
-							Cpu:    "20m",
-							Memory: "32Mi",
+						Enabled:   true,
+						ErrorPath: "/error",
+						Resources: &nais_io_v1.ResourceRequirements{
+							Limits: &nais_io_v1.ResourceSpec{
+								Cpu:    "250m",
+								Memory: "256Mi",
+							},
+							Requests: &nais_io_v1.ResourceSpec{
+								Cpu:    "20m",
+								Memory: "32Mi",
+							},
 						},
 					},
+					Level:  "Level4",
+					Locale: "nb",
 				},
 			},
 			Influx: &nais_io_v1.Influx{

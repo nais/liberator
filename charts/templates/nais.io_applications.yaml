@@ -253,8 +253,15 @@ spec:
                     properties:
                       autoLogin:
                         description: Automatically redirect the user to login for
-                          all proxied routes.
+                          all proxied GET requests.
                         type: boolean
+                      autoLoginIgnorePaths:
+                        description: Comma separated list of absolute paths to ignore
+                          when auto-login is enabled.
+                        items:
+                          pattern: ^\/.*$
+                          type: string
+                        type: array
                       enabled:
                         description: Enable the sidecar.
                         type: boolean
@@ -768,8 +775,15 @@ spec:
                     properties:
                       autoLogin:
                         description: Automatically redirect the user to login for
-                          all proxied routes.
+                          all proxied GET requests.
                         type: boolean
+                      autoLoginIgnorePaths:
+                        description: Comma separated list of absolute paths to ignore
+                          when auto-login is enabled.
+                        items:
+                          pattern: ^\/.*$
+                          type: string
+                        type: array
                       enabled:
                         description: Enable the sidecar.
                         type: boolean
