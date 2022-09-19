@@ -7,7 +7,7 @@ jobs:
     name: Run tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: actions/setup-go@v2
         with:
           go-version: "1.17"
@@ -20,7 +20,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           path: liberator
       - uses: navikt/github-app-token-generator@v1
@@ -29,7 +29,7 @@ jobs:
           private-key: ${{ secrets.NAIS_APP_PRIVATE_KEY }}
           app-id: ${{ secrets.NAIS_APP_ID }}
           repo: nais/doc
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           repository: nais/doc
           token: ${{ steps.get-token.outputs.token }}
@@ -68,7 +68,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
         path: liberator
     - uses: navikt/github-app-token-generator@v1
@@ -78,7 +78,7 @@ jobs:
         app-id: ${{ secrets.NAIS_APP_ID }}
         repo: navikt/nais-yaml
     - name: Checkout nais-yaml
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         repository: navikt/nais-yaml
         token: ${{ steps.get-token.outputs.token }}
@@ -104,7 +104,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v3
     - uses: actions/setup-go@v2
       with:
         go-version: "1.17"
