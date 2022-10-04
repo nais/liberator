@@ -193,7 +193,6 @@ type NaisjobSpec struct {
 
 	// Specify the number of seconds to wait before removing the Job after it has finished (either Completed or Failed).
 	// If the field is unset, this Job won't be cleaned up by the TTL controller after it finishes.
-	// +nais:doc:Availability="on-premises"
 	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty"`
 
 	// Provides secrets management, identity-based access, and encrypting application data for auditing of secrets
