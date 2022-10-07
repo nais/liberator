@@ -166,7 +166,7 @@ type NaisjobSpec struct {
 	Resources *ResourceRequirements `json:"resources,omitempty"`
 
 	// The [Cron](https://en.wikipedia.org/wiki/Cron) schedule for running the Naisjob.
-	// If not specified, the Naisjob will be run as a one-shot Job.
+	// If not specified, the Naisjob will be run as a one-shot Job. The timezone for Naisjobs defaults to UTC.
 	Schedule string `json:"schedule,omitempty"`
 
 	// Whether or not to enable a sidecar container for secure logging.
