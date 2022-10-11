@@ -86,7 +86,9 @@ jobs:
     - name: Commit CRDs to nais-yaml
       run: |
         cd nais-yaml
-        cat ../liberator/config/crd/bases/*nais.io_*.yaml > templates/zz-generated-nais-crds.yaml
+        echo "{{- if .naiserator.enabled }}" > templates/zz-generated-nais-crds.yaml
+        cat ../liberator/config/crd/bases/*nais.io_*.yaml >> templates/zz-generated-nais-crds.yaml
+        echo "{{- end }}" >> templates/zz-generated-nais-crds.yaml
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
         git add .
