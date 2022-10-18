@@ -7,7 +7,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/imdario/mergo v0.3.13
 	github.com/mitchellh/hashstructure v1.1.0
-	github.com/mitchellh/mapstructure v1.4.2
+	github.com/mitchellh/mapstructure v1.5.0
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.9.0
