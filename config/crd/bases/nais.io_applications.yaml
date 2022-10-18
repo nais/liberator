@@ -505,7 +505,6 @@ spec:
                           type: boolean
                       required:
                       - name
-                      - publicAccessPrevention
                       type: object
                     type: array
                   permissions:

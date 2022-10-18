@@ -475,7 +475,7 @@ type CloudStorageBucket struct {
 	// Public access prevention allows you to prevent public access to your bucket.
 	// +nais:doc:Link="https://cloud.google.com/storage/docs/public-access-prevention"
 	// +nais:doc:Default="false"
-	PublicAccessPrevention bool `json:"publicAccessPrevention,omitEmpty"`
+	PublicAccessPrevention bool `json:"publicAccessPrevention,omitempty"`
 }
 
 type LifecycleCondition struct {
