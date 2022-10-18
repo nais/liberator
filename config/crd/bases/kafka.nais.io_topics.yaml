@@ -117,6 +117,14 @@ spec:
                       it. Defaults to `168` hours (1 week).
                     maximum: 2562047788015
                     type: integer
+                  segmentHours:
+                    description: The number of hours after which Kafka will force
+                      the log to roll even if the segment file isn't full to ensure
+                      that retention can delete or compact old data. Defaults to `168`
+                      hours (1 week).
+                    maximum: 8760
+                    minimum: 1
+                    type: integer
                 type: object
               pool:
                 type: string

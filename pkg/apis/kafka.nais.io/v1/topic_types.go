@@ -6,10 +6,11 @@ import (
 	"strconv"
 	"strings"
 
-	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
-	"github.com/nais/liberator/pkg/intutil"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/pointer"
+
+	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
+	"github.com/nais/liberator/pkg/intutil"
 )
 
 const (
@@ -80,6 +81,12 @@ type Config struct {
 	// Defaults to `168` hours (1 week).
 	// +kubebuilder:validation:Maximum=2562047788015
 	RetentionHours *int `json:"retentionHours,omitempty"`
+	// The number of hours after which Kafka will force the log to roll even if the segment file isn't full to ensure
+	// that retention can delete or compact old data.
+	// Defaults to `168` hours (1 week).
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=8760
+	SegmentHours *int `json:"segmentHours,omitempty"`
 }
 
 // TopicSpec is a specification of the desired behavior of the topic.
@@ -168,6 +175,9 @@ func (cfg *Config) ApplyDefaults() {
 	}
 	if cfg.RetentionHours == nil {
 		cfg.RetentionHours = intutil.Intp(168)
+	}
+	if cfg.SegmentHours == nil {
+		cfg.SegmentHours = intutil.Intp(168)
 	}
 }
 
