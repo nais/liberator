@@ -20,12 +20,21 @@ type StorageBucket struct {
 	Spec              StorageBucketSpec `json:"spec"`
 }
 
+type PublicAccessPrevention string
+
+const (
+	PublicAccessPreventionEnforced  PublicAccessPrevention = "enforced"
+	PublicAccessPreventionInherited PublicAccessPrevention = "inherited"
+)
+
 type StorageBucketSpec struct {
 	ResourceID               string           `json:"resourceID,omitempty"`
 	Location                 string           `json:"location"`
 	UniformBucketLevelAccess bool             `json:"uniformBucketLevelAccess,omitempty"`
 	RetentionPolicy          *RetentionPolicy `json:"retentionPolicy,omitempty"`
 	LifecycleRules           []LifecycleRules `json:"lifecycleRule,omitempty"`
+	// +kubebuilder:validation:Enum=inherited;enforced
+	PublicAccessPrevention PublicAccessPrevention `json:"publicAccessPrevention,omitempty"`
 }
 
 // +kubebuilder:object:root=true

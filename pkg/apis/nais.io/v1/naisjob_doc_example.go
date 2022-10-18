@@ -217,6 +217,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 							WithState:        "ARCHIVED",
 						},
 						UniformBucketLevelAccess: true,
+						PublicAccessPrevention:   true,
 					},
 				},
 				SqlInstances: []CloudSqlInstance{

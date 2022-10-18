@@ -60,6 +60,11 @@ spec:
                 type: array
               location:
                 type: string
+              publicAccessPrevention:
+                enum:
+                - inherited
+                - enforced
+                type: string
               resourceID:
                 type: string
               retentionPolicy:
