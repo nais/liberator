@@ -6,10 +6,11 @@ import (
 	"strconv"
 	"strings"
 
-	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
-	"github.com/nais/liberator/pkg/intutil"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/pointer"
+
+	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
+	"github.com/nais/liberator/pkg/intutil"
 )
 
 const (
@@ -80,6 +81,21 @@ type Config struct {
 	// Defaults to `168` hours (1 week).
 	// +kubebuilder:validation:Maximum=2562047788015
 	RetentionHours *int `json:"retentionHours,omitempty"`
+	// The number of hours after which Kafka will force the log to roll even if the segment file isn't full to ensure
+	// that retention can delete or compact old data.
+	// Defaults to `168` hours (1 week).
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=8760
+	SegmentHours *int `json:"segmentHours,omitempty"`
+	// The largest record batch size allowed by Kafka (after compression if compression is enabled).
+	// If this is increased and there are consumers older than 0.10.2, the consumers' fetch size must also be increased
+	// so that they can fetch record batches this large. In the latest message format version, records are always grouped
+	// into batches for efficiency. In previous message format versions, uncompressed records are not grouped into
+	// batches and this limit only applies to a single record in that case.
+	// Defaults to `1048588` bytes (1 MiB/mebibyte).
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=5242880
+	MaxMessageBytes *int `json:"maxMessageBytes,omitempty"`
 }
 
 // TopicSpec is a specification of the desired behavior of the topic.
@@ -168,6 +184,12 @@ func (cfg *Config) ApplyDefaults() {
 	}
 	if cfg.RetentionHours == nil {
 		cfg.RetentionHours = intutil.Intp(168)
+	}
+	if cfg.SegmentHours == nil {
+		cfg.SegmentHours = intutil.Intp(168)
+	}
+	if cfg.MaxMessageBytes == nil {
+		cfg.MaxMessageBytes = intutil.Intp(1048588)
 	}
 }
 

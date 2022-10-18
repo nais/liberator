@@ -84,6 +84,19 @@ spec:
                     - compact
                     - compact,delete
                     type: string
+                  maxMessageBytes:
+                    description: The largest record batch size allowed by Kafka (after
+                      compression if compression is enabled). If this is increased
+                      and there are consumers older than 0.10.2, the consumers' fetch
+                      size must also be increased so that they can fetch record batches
+                      this large. In the latest message format version, records are
+                      always grouped into batches for efficiency. In previous message
+                      format versions, uncompressed records are not grouped into batches
+                      and this limit only applies to a single record in that case.
+                      Defaults to `1048588` bytes (1 MiB/mebibyte).
+                    maximum: 5242880
+                    minimum: 1
+                    type: integer
                   minimumInSyncReplicas:
                     description: When a producer sets acks to "all" (or "-1"), `min.insync.replicas`
                       specifies the minimum number of replicas that must acknowledge
@@ -116,6 +129,14 @@ spec:
                     description: The number of hours to keep a log file before deleting
                       it. Defaults to `168` hours (1 week).
                     maximum: 2562047788015
+                    type: integer
+                  segmentHours:
+                    description: The number of hours after which Kafka will force
+                      the log to roll even if the segment file isn't full to ensure
+                      that retention can delete or compact old data. Defaults to `168`
+                      hours (1 week).
+                    maximum: 8760
+                    minimum: 1
                     type: integer
                 type: object
               pool:
