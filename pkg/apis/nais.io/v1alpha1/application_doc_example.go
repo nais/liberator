@@ -203,7 +203,7 @@ func ExampleApplicationForDocumentation() *Application {
 					MountPath: "/var/run/secrets",
 				},
 				{
-					EmptyDir:  nais_io_v1.EmptyDir{Medium: "memory"},
+					EmptyDir:  nais_io_v1.EmptyDir{Medium: "Memory"},
 					MountPath: "/var/cache",
 				},
 				{
