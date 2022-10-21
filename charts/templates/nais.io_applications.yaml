@@ -399,7 +399,8 @@ spec:
                         If the directory exists, any files in the directory will be
                         made unaccessible. \n Defaults to `/var/run/configmaps/<NAME>`,
                         `/var/run/secrets`, or `/var/run/pvc/<NAME>`, depending on
-                        which of them is specified."
+                        which of them is specified. For EmptyDir, MountPath must be
+                        set."
                       type: string
                     persistentVolumeClaim:
                       description: Name of the `PersistentVolumeClaim` that should
