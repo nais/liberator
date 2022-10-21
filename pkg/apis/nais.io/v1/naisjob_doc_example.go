@@ -187,6 +187,10 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					MountPath: "/var/run/secrets",
 				},
 				{
+					EmptyDir:  EmptyDir{Medium: "memory"},
+					MountPath: "/var/cache",
+				},
+				{
 					PersistentVolumeClaim: "pvc-name",
 					MountPath:             "/var/run/pvc",
 				},

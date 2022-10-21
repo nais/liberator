@@ -83,12 +83,16 @@ type ApplicationSpec struct {
 	// +nais:doc:Availability="team namespaces"
 	EnvFrom []nais_io_v1.EnvFrom `json:"envFrom,omitempty"`
 
-	// List of ConfigMap or Secret resources that will have their contents mounted into the containers as files.
-	// Either `configMap` or `secret` is required.
+	// List of ConfigMap, Secret, or EmptyDir resources that will have their contents mounted into the containers.
+	// Either `configMap`, `secret`, or `emptyDir` is required.
 	//
 	// Files will take the path `<mountPath>/<key>`, where `key` is the ConfigMap or Secret key.
 	// You can specify as many keys as you like in a single ConfigMap or Secret, and they will all
 	// be mounted to the same directory.
+	//
+	// If you reference an emptyDir you will just get an empty directory, backed
+	// by your requested memory or the disk on the node where your pod is
+	// running.
 	//
 	// The ConfigMap and Secret resources must live in the same Kubernetes namespace as the Application resource.
 	// +nais:doc:Availability="team namespaces"

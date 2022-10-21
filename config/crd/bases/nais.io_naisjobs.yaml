@@ -363,6 +363,12 @@ spec:
                         should be mounted into the container. Required unless `secret`
                         or `persistentVolumeClaim` is set.
                       type: string
+                    emptyDir:
+                      description: Specification of an empty directory
+                      properties:
+                        medium:
+                          type: string
+                      type: object
                     mountPath:
                       description: "Filesystem path inside the pod where files are
                         mounted. The directory will be created if it does not exist.

@@ -203,6 +203,10 @@ func ExampleApplicationForDocumentation() *Application {
 					MountPath: "/var/run/secrets",
 				},
 				{
+					EmptyDir:  nais_io_v1.EmptyDir{Medium: "memory"},
+					MountPath: "/var/cache",
+				},
+				{
 					PersistentVolumeClaim: "pvc-name",
 					MountPath:             "/var/run/pvc",
 				},

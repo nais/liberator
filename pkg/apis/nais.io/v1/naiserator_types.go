@@ -229,6 +229,8 @@ type FilesFrom struct {
 	// Required unless `configMap` or `persistentVolumeClaim` is set.
 	// If mounting multiple secrets, `mountPath` *MUST* be set to avoid collisions.
 	Secret string `json:"secret,omitempty"`
+	// Specification of an empty directory
+	EmptyDir EmptyDir `json:"emptyDir,omitempty"`
 	// Name of the `PersistentVolumeClaim` that should be mounted into the container.
 	// Required unless `configMap` or `secret` is set.
 	// This feature requires coordination with the NAIS team.
@@ -624,6 +626,18 @@ func (i *InsightsConfiguration) IsEnabled() bool {
 	}
 
 	return *i.Enabled
+}
+
+type MediumType string
+
+const (
+	MediumTypeMemory = "memory"
+	MediumTypeDisk   = "disk"
+)
+
+type EmptyDir struct {
+	// +kubebuilde:validation:Enum=memory;disk
+	Medium MediumType `json:"medium,omitempty"`
 }
 
 type Maintenance struct {
