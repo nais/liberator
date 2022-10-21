@@ -240,6 +240,7 @@ type FilesFrom struct {
 	// any files in the directory will be made unaccessible.
 	//
 	// Defaults to `/var/run/configmaps/<NAME>`, `/var/run/secrets`, or `/var/run/pvc/<NAME>`, depending on which of them is specified.
+	// For EmptyDir, MountPath must be set.
 	MountPath string `json:"mountPath,omitempty"`
 }
 
