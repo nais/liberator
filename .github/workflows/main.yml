@@ -112,7 +112,7 @@ jobs:
         go-version: "1.17"
     - name: Generate json-spec
       run: make doc && ./hack/build-json-spec.sh
-    - uses: actions-hub/gcloud@406.0.0
+    - uses: actions-hub/gcloud@409.0.0
       env:
         PROJECT_ID: nais-json-schema-2c91
         APPLICATION_CREDENTIALS: ${{ secrets.NAIS_JSON_SCHEMA_BUCKET_SA }}
