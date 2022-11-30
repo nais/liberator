@@ -49,8 +49,8 @@ type AzureApplication struct {
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#single-page-application"
 	// +nais:doc:Default="false"
 	SinglePageApplication *bool `json:"singlePageApplication,omitempty"`
-	// AllowAllUsers denotes whether or not all users within the tenant should be allowed to access this AzureAdApplication.
-	// If undefined will default to `true` when Spec.Claims.Groups is undefined, and `false` if Spec.Claims.Groups is defined.
+	// AllowAllUsers denotes whether all users within the tenant should be allowed to access this AzureAdApplication.
+	// +nais:doc:Default="false"
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#users"
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#groups"
 	AllowAllUsers *bool `json:"allowAllUsers,omitempty"`

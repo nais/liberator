@@ -50,8 +50,7 @@ type AzureAdApplicationList struct {
 
 // AzureAdApplicationSpec defines the desired state of AzureAdApplication
 type AzureAdApplicationSpec struct {
-	// AllowAllUsers denotes whether or not all users within the tenant should be allowed to access this AzureAdApplication.
-	// If undefined will default to `true` when Spec.Claims.Groups is undefined, and `false` if Spec.Claims.Groups is defined.
+	// AllowAllUsers denotes whether all users within the tenant should be allowed to access this AzureAdApplication. Defaults to false.
 	AllowAllUsers *bool          `json:"allowAllUsers,omitempty"`
 	Claims        *AzureAdClaims `json:"claims,omitempty"`
 	// LogoutUrl is the URL where Azure AD sends a request to have the application clear the user's session data.
@@ -133,7 +132,7 @@ type AzureAdClaims struct {
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#extra"
 	Extra []AzureAdExtraClaim `json:"extra,omitempty"`
 	// Groups is a list of Azure AD group IDs to be emitted in the `groups` claim in tokens issued by Azure AD.
-	// This also restricts access to only members of the defined groups unless overridden by `allowAllUsers`.
+	// This also assigns groups to the application for access control. Only direct members of the groups are granted access.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration/#groups"
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#users"
 	Groups []AzureAdGroup `json:"groups,omitempty"`
