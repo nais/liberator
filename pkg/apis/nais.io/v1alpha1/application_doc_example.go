@@ -99,10 +99,6 @@ func ExampleApplicationForDocumentation() *Application {
 							Namespace:   "q2",
 							Cluster:     "dev-gcp",
 						},
-						{
-							Application: "*",
-							Namespace:   "q3",
-						},
 					},
 					External: []nais_io_v1.AccessPolicyExternalRule{
 						{
