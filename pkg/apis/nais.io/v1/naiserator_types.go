@@ -230,7 +230,7 @@ type FilesFrom struct {
 	// If mounting multiple secrets, `mountPath` *MUST* be set to avoid collisions.
 	Secret string `json:"secret,omitempty"`
 	// Specification of an empty directory
-	EmptyDir EmptyDir `json:"emptyDir,omitempty"`
+	EmptyDir *EmptyDir `json:"emptyDir,omitempty"`
 	// Name of the `PersistentVolumeClaim` that should be mounted into the container.
 	// Required unless `configMap` or `secret` is set.
 	// This feature requires coordination with the NAIS team.
