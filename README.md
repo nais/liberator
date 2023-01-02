@@ -101,6 +101,6 @@ Check for compatibility here: https://github.com/kubernetes-sigs/controller-tool
 
 ### Code generation
 
-Make sure `controller-gen` is of a compatible version by modifying `Makefile` and running `make controller-gen`.
+Make sure `controller-gen` is of a compatible version by doing `go get sigs.k8s.io/controller-tools@VERSION`
  
 Run `make generate` to generate deep copy functions and CRD files.
