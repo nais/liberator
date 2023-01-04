@@ -187,7 +187,9 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					MountPath: "/var/run/secrets",
 				},
 				{
-					EmptyDir:  EmptyDir{Medium: "Memory"},
+					EmptyDir: &EmptyDir{
+						Medium: "Memory",
+					},
 					MountPath: "/var/cache",
 				},
 				{

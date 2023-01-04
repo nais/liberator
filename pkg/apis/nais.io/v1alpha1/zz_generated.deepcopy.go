@@ -102,7 +102,9 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 	if in.FilesFrom != nil {
 		in, out := &in.FilesFrom, &out.FilesFrom
 		*out = make([]v1.FilesFrom, len(*in))
-		copy(*out, *in)
+		for i := range *in {
+			(*in)[i].DeepCopyInto(&(*out)[i])
+		}
 	}
 	if in.GCP != nil {
 		in, out := &in.GCP, &out.GCP
