@@ -107,6 +107,10 @@ func (in *Naisjob) GetTerminationGracePeriodSeconds() *int64 {
 	return in.Spec.TerminationGracePeriodSeconds
 }
 
+func (in *Naisjob) GetIDPorten() *IDPorten {
+	return nil
+}
+
 func (in *Azure) GetApplication() *AzureApplication {
 	return in.Application
 }
