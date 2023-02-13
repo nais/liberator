@@ -2,9 +2,11 @@ package kafka_nais_io_v1
 
 import (
 	"testing"
+	"time"
 
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	"github.com/stretchr/testify/assert"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 func TestAclNameFromTopicAcl(t *testing.T) {
@@ -241,4 +243,37 @@ func Test_shortTeamName(t *testing.T) {
 			assert.Equalf(t, tt.want, shortTeamName(tt.args.team), "shortTeamName(%v)", tt.args.team)
 		})
 	}
+
+}
+
+func Test_aiven_sync_failed_long_time_ago(t *testing.T) {
+	now := time.Now()
+	aboveThreshold := now.Add(-AivenSyncFailureThreshold - time.Minute)
+	syncHash := "123"
+	topic := Topic{
+		TypeMeta:   metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{},
+		Spec:       TopicSpec{},
+		Status: &TopicStatus{
+			SynchronizationHash:    syncHash,
+			LatestAivenSyncFailure: aboveThreshold.Format(time.RFC3339),
+		},
+	}
+	assert.True(t, topic.NeedsSynchronization(syncHash))
+}
+
+func Test_aiven_sync_failed_recently(t *testing.T) {
+	now := time.Now()
+	belowThreshold := now.Add(-AivenSyncFailureThreshold + time.Minute)
+	syncHash := "123"
+	topic := Topic{
+		TypeMeta:   metav1.TypeMeta{},
+		ObjectMeta: metav1.ObjectMeta{},
+		Spec:       TopicSpec{},
+		Status: &TopicStatus{
+			SynchronizationHash:    syncHash,
+			LatestAivenSyncFailure: belowThreshold.Format(time.RFC3339),
+		},
+	}
+	assert.False(t, topic.NeedsSynchronization(syncHash))
 }
