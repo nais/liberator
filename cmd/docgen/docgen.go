@@ -53,10 +53,6 @@ var supportedResources = map[string]DocumentableResource{
 		Resource:      &nais_io_v1.Naisjob{},
 		ExampleGetter: func() interface{} { return nais_io_v1.ExampleNaisjobForDocumentation() },
 	},
-	"Alert": {
-		Resource:      &nais_io_v1.Alert{},
-		ExampleGetter: func() interface{} { return nais_io_v1.ExampleAlertForDocumentation() },
-	},
 }
 
 type Renderer func(w io.Writer, level int, jsonpath string, key string, parent, node apiext.JSONSchemaProps)

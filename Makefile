@@ -17,7 +17,6 @@ generate:
 doc:
 	mkdir -p doc/output/application
 	mkdir -p doc/output/naisjob
-	mkdir -p doc/output/alert
 	mkdir -p doc/output/openapi/nais
 	go run cmd/docgen/docgen.go \
 		--dir ./pkg/apis/... \
@@ -38,16 +37,6 @@ doc:
 		--openapi-output doc/output/openapi/nais \
 		--reference-template doc/templates/reference/naisjob.md \
 		--example-template doc/templates/example/naisjob.md \
-		;
-	go run cmd/docgen/docgen.go \
-		--dir ./pkg/apis/... \
-		--group nais.io \
-		--kind Alert \
-		--reference-output doc/output/alert/reference.md \
-		--example-output doc/output/alert/example.md \
-		--openapi-output doc/output/openapi/nais \
-		--reference-template doc/templates/reference/alert.md \
-		--example-template doc/templates/example/alert.md \
 		;
 
 mocks:
