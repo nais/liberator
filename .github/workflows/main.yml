@@ -48,6 +48,8 @@ jobs:
           cp -v ../liberator/doc/output/application/example.md docs/nais-application/example.md
           cp -v ../liberator/doc/output/naisjob/reference.md docs/naisjob/reference.md
           cp -v ../liberator/doc/output/naisjob/example.md docs/naisjob/example.md
+          cp -v ../liberator/doc/output/topic/reference.md docs/persistence/kafka/topic_reference.md
+          cp -v ../liberator/doc/output/topic/example.md docs/persistence/kafka/topic_example.md
 
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
