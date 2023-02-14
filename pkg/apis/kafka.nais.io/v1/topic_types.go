@@ -9,7 +9,6 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/pointer"
 
-	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	"github.com/nais/liberator/pkg/intutil"
 )
 
@@ -145,11 +144,6 @@ func (in Topic) RemoveDataWhenDeleted() bool {
 
 func (in Topic) FullName() string {
 	return in.Namespace + "." + in.Name
-}
-
-// TODO: Remove when no longer in use by Kafkarator
-func (in TopicACL) ACLname() string {
-	return fmt.Sprintf("%s*", aiven_nais_io_v1.ServiceUserPrefix(in.Application, in.Team, aiven_nais_io_v1.MaxServiceUserNameLength))
 }
 
 // Generate name to use for ServiceUser.

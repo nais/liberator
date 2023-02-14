@@ -3,7 +3,6 @@ package aiven_nais_io_v1
 import (
 	"time"
 
-	"github.com/nais/liberator/pkg/namegen"
 	"github.com/nais/liberator/pkg/strings"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -117,19 +116,6 @@ func (in *AivenApplication) GetOwnerReference() metav1.OwnerReference {
 		Name:       in.Name,
 		UID:        in.UID,
 	}
-}
-
-func (in *AivenApplication) ServiceUserPrefix() string {
-	return ServiceUserPrefix(in.GetName(), in.GetNamespace(), MaxServiceUserNameLength)
-}
-
-func ServiceUserPrefix(app, team string, maxlen int) string {
-	username := team + "." + app
-	maxlen = maxlen - namegen.SuffixLength
-	if len(username) > maxlen {
-		return username[:maxlen]
-	}
-	return username
 }
 
 func (in *AivenApplicationStatus) AddCondition(condition AivenApplicationCondition, dropTypes ...AivenApplicationConditionType) {
