@@ -16,6 +16,7 @@ import (
 
 	yaml2 "github.com/ghodss/yaml"
 	"github.com/imdario/mergo"
+	kafka_nais_io_v1 "github.com/nais/liberator/pkg/apis/kafka.nais.io/v1"
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	log "github.com/sirupsen/logrus"
@@ -52,6 +53,10 @@ var supportedResources = map[string]DocumentableResource{
 	"Naisjob": {
 		Resource:      &nais_io_v1.Naisjob{},
 		ExampleGetter: func() interface{} { return nais_io_v1.ExampleNaisjobForDocumentation() },
+	},
+	"Topic": {
+		Resource:      &kafka_nais_io_v1.Topic{},
+		ExampleGetter: func() interface{} { return kafka_nais_io_v1.ExampleTopicForDocumentation() },
 	},
 }
 

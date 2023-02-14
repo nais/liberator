@@ -17,6 +17,7 @@ generate:
 doc:
 	mkdir -p doc/output/application
 	mkdir -p doc/output/naisjob
+	mkdir -p doc/output/topic
 	mkdir -p doc/output/openapi/nais
 	go run cmd/docgen/docgen.go \
 		--dir ./pkg/apis/... \
@@ -37,6 +38,16 @@ doc:
 		--openapi-output doc/output/openapi/nais \
 		--reference-template doc/templates/reference/naisjob.md \
 		--example-template doc/templates/example/naisjob.md \
+		;
+	go run cmd/docgen/docgen.go \
+		--dir ./pkg/apis/... \
+		--group kafka.nais.io \
+		--kind Topic \
+		--reference-output doc/output/topic/reference.md \
+		--example-output doc/output/topic/example.md \
+		--openapi-output doc/output/openapi/nais \
+		--reference-template doc/templates/reference/topic.md \
+		--example-template doc/templates/example/topic.md \
 		;
 
 mocks:
