@@ -3,9 +3,10 @@ package nais_io_v1_test
 import (
 	"testing"
 
-	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
+	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 )
 
 func TestMaskinportenClient_CalculateHash(t *testing.T) {
@@ -17,7 +18,7 @@ func TestMaskinportenClient_CalculateHash(t *testing.T) {
 func TestIDPortenClient_Hash(t *testing.T) {
 	actual, err := minimalIDPortenClient().Hash()
 	assert.NoError(t, err)
-	assert.Equal(t, "8b5ebee90b513411", actual)
+	assert.Equal(t, "de6ecbc3b6cb148b", actual)
 }
 
 func TestMaskinportenClientScopeSpec_Hash(t *testing.T) {
@@ -50,8 +51,10 @@ func minimalIDPortenClient() *nais_io_v1.IDPortenClient {
 			ClusterName: "test-cluster",
 		},
 		Spec: nais_io_v1.IDPortenClientSpec{
-			RedirectURI: "https://test.com",
-			SecretName:  "test",
+			RedirectURIs: []nais_io_v1.IDPortenURI{
+				"https://test.com",
+			},
+			SecretName: "test",
 		},
 	}
 }

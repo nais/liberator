@@ -1253,6 +1253,11 @@ func (in *IDPortenClientSpec) DeepCopyInto(out *IDPortenClientSpec) {
 		*out = make([]IDPortenURI, len(*in))
 		copy(*out, *in)
 	}
+	if in.RedirectURIs != nil {
+		in, out := &in.RedirectURIs, &out.RedirectURIs
+		*out = make([]IDPortenURI, len(*in))
+		copy(*out, *in)
+	}
 	if in.Scopes != nil {
 		in, out := &in.Scopes, &out.Scopes
 		*out = make([]string, len(*in))

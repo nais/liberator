@@ -1,9 +1,10 @@
 package nais_io_v1
 
 import (
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+
 	"github.com/nais/liberator/pkg/events"
 	"github.com/nais/liberator/pkg/hash"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // DigdiratorStatus defines the observed state of Current Client
@@ -258,8 +259,11 @@ type IDPortenClientSpec struct {
 	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI,omitempty"`
 	// PostLogoutRedirectURI is a list of valid URIs that ID-porten may redirect to after logout
 	PostLogoutRedirectURIs []IDPortenURI `json:"postLogoutRedirectURIs,omitempty"`
-	// RedirectURI is the redirect URI to be registered at DigDir
-	RedirectURI IDPortenURI `json:"redirectURI"`
+	// RedirectURI is the redirect URI to be registered at DigDir.
+	// Deprecated, prefer RedirectURIs.
+	RedirectURI IDPortenURI `json:"redirectURI,omitempty"`
+	// RedirectURIs is the list of redirect URIs to be registered at DigDir.
+	RedirectURIs []IDPortenURI `json:"redirectURIs,omitempty"`
 	// SecretName is the name of the resulting Secret resource to be created
 	SecretName string `json:"secretName"`
 	// Register different oauth2 Scopes on your client.

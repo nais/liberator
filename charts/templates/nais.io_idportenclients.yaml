@@ -88,9 +88,17 @@ spec:
                   type: string
                 type: array
               redirectURI:
-                description: RedirectURI is the redirect URI to be registered at DigDir
+                description: RedirectURI is the redirect URI to be registered at DigDir.
+                  Deprecated, prefer RedirectURIs.
                 pattern: ^https:\/\/.+$
                 type: string
+              redirectURIs:
+                description: RedirectURIs is the list of redirect URIs to be registered
+                  at DigDir.
+                items:
+                  pattern: ^https:\/\/.+$
+                  type: string
+                type: array
               scopes:
                 description: "Register different oauth2 Scopes on your client. You
                   will not be able to add a scope to your client that conflicts with
@@ -114,7 +122,6 @@ spec:
                 minimum: 3600
                 type: integer
             required:
-            - redirectURI
             - secretName
             type: object
           status:
