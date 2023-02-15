@@ -54,37 +54,37 @@ type Topic struct {
 type Config struct {
 	// CleanupPolicy is either "delete" or "compact" or both.
 	// This designates the retention policy to use on old log segments.
-	// Defaults to `delete`.
+	// +nais:doc:Default="delete"
 	// +kubebuilder:validation:Enum=delete;compact;"compact,delete"
 	CleanupPolicy *string `json:"cleanupPolicy,omitempty"`
 	// When a producer sets acks to "all" (or "-1"), `min.insync.replicas` specifies the minimum number of replicas
 	// that must acknowledge a write for the write to be considered successful.
-	// Defaults to `2`.
+	// +nais:doc:Default="2"
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=7
 	MinimumInSyncReplicas *int `json:"minimumInSyncReplicas,omitempty"`
 	// The default number of log partitions per topic.
-	// Defaults to `1`.
+	// +nais:doc:Default="1"
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=1000000
 	Partitions *int `json:"partitions,omitempty"`
 	// The default replication factor for created topics.
-	// Defaults to `3`.
+	// +nais:doc:Default="3"
 	// +kubebuilder:validation:Minimum=2
 	// +optional
 	Replication *int `json:"replication,omitempty"`
 	// Configuration controls the maximum size a partition can grow to before we will discard old log segments
 	// to free up space if we are using the "delete" retention policy. By default there is no size limit only a time limit.
 	// Since this limit is enforced at the partition level, multiply it by the number of partitions to compute the topic retention in bytes.
-	// Defaults to `-1`.
+	// +nais:doc:Default="-1"
 	RetentionBytes *int `json:"retentionBytes,omitempty"`
 	// The number of hours to keep a log file before deleting it.
-	// Defaults to `168` hours (1 week).
+	// +nais:doc:Default="168"
 	// +kubebuilder:validation:Maximum=2562047788015
 	RetentionHours *int `json:"retentionHours,omitempty"`
 	// The number of hours after which Kafka will force the log to roll even if the segment file isn't full to ensure
 	// that retention can delete or compact old data.
-	// Defaults to `168` hours (1 week).
+	// +nais:doc:Default="168"
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=8760
 	SegmentHours *int `json:"segmentHours,omitempty"`
@@ -93,7 +93,7 @@ type Config struct {
 	// so that they can fetch record batches this large. In the latest message format version, records are always grouped
 	// into batches for efficiency. In previous message format versions, uncompressed records are not grouped into
 	// batches and this limit only applies to a single record in that case.
-	// Defaults to `1048588` bytes (1 MiB/mebibyte).
+	// +nais:doc:Default="1048588"
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=5242880
 	MaxMessageBytes *int `json:"maxMessageBytes,omitempty"`
@@ -169,6 +169,12 @@ func (in *Topic) NeedsSynchronization(hash string) bool {
 		}
 	}
 	return in.Status.SynchronizationHash != hash
+}
+
+func (in *Topic) ApplyDefaults() error {
+	in.Spec.Config = &Config{}
+	in.Spec.Config.ApplyDefaults()
+	return nil
 }
 
 // Apply default values to Topic Config where the nil-value is not what we want
