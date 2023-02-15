@@ -248,7 +248,7 @@ func Test_shortTeamName(t *testing.T) {
 
 func Test_aiven_sync_failed_long_time_ago(t *testing.T) {
 	now := time.Now()
-	aboveThreshold := now.Add(-AivenSyncFailureThreshold - time.Minute)
+	beforeThreshold := now.Add(-AivenSyncFailureThreshold - time.Minute)
 	syncHash := "123"
 	topic := Topic{
 		TypeMeta:   metav1.TypeMeta{},
@@ -256,7 +256,7 @@ func Test_aiven_sync_failed_long_time_ago(t *testing.T) {
 		Spec:       TopicSpec{},
 		Status: &TopicStatus{
 			SynchronizationHash:    syncHash,
-			LatestAivenSyncFailure: aboveThreshold.Format(time.RFC3339),
+			LatestAivenSyncFailure: beforeThreshold.Format(time.RFC3339),
 		},
 	}
 	assert.True(t, topic.NeedsSynchronization(syncHash))
@@ -264,7 +264,7 @@ func Test_aiven_sync_failed_long_time_ago(t *testing.T) {
 
 func Test_aiven_sync_failed_recently(t *testing.T) {
 	now := time.Now()
-	belowThreshold := now.Add(-AivenSyncFailureThreshold + time.Minute)
+	afterThreshold := now.Add(-AivenSyncFailureThreshold + time.Minute)
 	syncHash := "123"
 	topic := Topic{
 		TypeMeta:   metav1.TypeMeta{},
@@ -272,7 +272,7 @@ func Test_aiven_sync_failed_recently(t *testing.T) {
 		Spec:       TopicSpec{},
 		Status: &TopicStatus{
 			SynchronizationHash:    syncHash,
-			LatestAivenSyncFailure: belowThreshold.Format(time.RFC3339),
+			LatestAivenSyncFailure: afterThreshold.Format(time.RFC3339),
 		},
 	}
 	assert.False(t, topic.NeedsSynchronization(syncHash))

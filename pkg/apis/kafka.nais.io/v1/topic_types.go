@@ -163,8 +163,7 @@ func (in *Topic) NeedsSynchronization(hash string) bool {
 		parsedTime, err := time.Parse(time.RFC3339, strTime)
 		if err == nil {
 			threshold := time.Now().Add(-AivenSyncFailureThreshold)
-			timeDiff := threshold.Sub(parsedTime)
-			if timeDiff > 0 {
+			if parsedTime.Before(threshold) {
 				return true
 			}
 		}
