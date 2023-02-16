@@ -5,6 +5,7 @@ import (
 	"hash/crc32"
 	"strconv"
 	"strings"
+	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/pointer"
@@ -19,8 +20,9 @@ const (
 
 	RemoveDataAnnotation = "kafka.nais.io/removeDataWhenResourceIsDeleted"
 
-	TeamNameLength = 20
-	AppNameLength  = 30
+	TeamNameLength            = 20
+	AppNameLength             = 30
+	AivenSyncFailureThreshold = time.Hour * 12
 )
 
 func init() {
@@ -105,13 +107,14 @@ type TopicSpec struct {
 }
 
 type TopicStatus struct {
-	SynchronizationState  string   `json:"synchronizationState,omitempty"`
-	SynchronizationHash   string   `json:"synchronizationHash,omitempty"`
-	SynchronizationTime   string   `json:"synchronizationTime,omitempty"`
-	CredentialsExpiryTime string   `json:"credentialsExpiryTime,omitempty"`
-	Errors                []string `json:"errors,omitempty"`
-	Message               string   `json:"message,omitempty"`
-	FullyQualifiedName    string   `json:"fullyQualifiedName,omitempty"`
+	SynchronizationState   string   `json:"synchronizationState,omitempty"`
+	SynchronizationHash    string   `json:"synchronizationHash,omitempty"`
+	SynchronizationTime    string   `json:"synchronizationTime,omitempty"`
+	CredentialsExpiryTime  string   `json:"credentialsExpiryTime,omitempty"`
+	Errors                 []string `json:"errors,omitempty"`
+	Message                string   `json:"message,omitempty"`
+	FullyQualifiedName     string   `json:"fullyQualifiedName,omitempty"`
+	LatestAivenSyncFailure string   `json:"latestAivenSyncFailure,omitempty"`
 }
 
 type TopicACLs []TopicACL
@@ -155,6 +158,15 @@ func (in TopicACL) ServiceUserNameWithSuffix(suffix string) (string, error) {
 func (in *Topic) NeedsSynchronization(hash string) bool {
 	if in.Status == nil {
 		return true
+	}
+	if strTime := in.Status.LatestAivenSyncFailure; strTime != "" {
+		parsedTime, err := time.Parse(time.RFC3339, strTime)
+		if err == nil {
+			threshold := time.Now().Add(-AivenSyncFailureThreshold)
+			if parsedTime.Before(threshold) {
+				return true
+			}
+		}
 	}
 	return in.Status.SynchronizationHash != hash
 }
