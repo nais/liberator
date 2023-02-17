@@ -78,7 +78,7 @@ spec:
                   cleanupPolicy:
                     description: CleanupPolicy is either "delete" or "compact" or
                       both. This designates the retention policy to use on old log
-                      segments. Defaults to `delete`.
+                      segments.
                     enum:
                     - delete
                     - compact
@@ -93,27 +93,23 @@ spec:
                       always grouped into batches for efficiency. In previous message
                       format versions, uncompressed records are not grouped into batches
                       and this limit only applies to a single record in that case.
-                      Defaults to `1048588` bytes (1 MiB/mebibyte).
                     maximum: 5242880
                     minimum: 1
                     type: integer
                   minimumInSyncReplicas:
                     description: When a producer sets acks to "all" (or "-1"), `min.insync.replicas`
                       specifies the minimum number of replicas that must acknowledge
-                      a write for the write to be considered successful. Defaults
-                      to `2`.
+                      a write for the write to be considered successful.
                     maximum: 7
                     minimum: 1
                     type: integer
                   partitions:
-                    description: The default number of log partitions per topic. Defaults
-                      to `1`.
+                    description: The default number of log partitions per topic.
                     maximum: 1000000
                     minimum: 1
                     type: integer
                   replication:
                     description: The default replication factor for created topics.
-                      Defaults to `3`.
                     minimum: 2
                     type: integer
                   retentionBytes:
@@ -122,19 +118,17 @@ spec:
                       up space if we are using the "delete" retention policy. By default
                       there is no size limit only a time limit. Since this limit is
                       enforced at the partition level, multiply it by the number of
-                      partitions to compute the topic retention in bytes. Defaults
-                      to `-1`.
+                      partitions to compute the topic retention in bytes.
                     type: integer
                   retentionHours:
                     description: The number of hours to keep a log file before deleting
-                      it. Defaults to `168` hours (1 week).
+                      it.
                     maximum: 2562047788015
                     type: integer
                   segmentHours:
                     description: The number of hours after which Kafka will force
                       the log to roll even if the segment file isn't full to ensure
-                      that retention can delete or compact old data. Defaults to `168`
-                      hours (1 week).
+                      that retention can delete or compact old data.
                     maximum: 8760
                     minimum: 1
                     type: integer
@@ -154,6 +148,8 @@ spec:
                   type: string
                 type: array
               fullyQualifiedName:
+                type: string
+              latestAivenSyncFailure:
                 type: string
               message:
                 type: string
