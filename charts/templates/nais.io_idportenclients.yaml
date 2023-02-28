@@ -13,6 +13,8 @@ spec:
     kind: IDPortenClient
     listKind: IDPortenClientList
     plural: idportenclients
+    shortNames:
+    - idportenclient
     singular: idportenclient
   scope: Namespaced
   versions:
@@ -161,7 +163,8 @@ spec:
         type: object
     served: true
     storage: true
-    subresources: {}
+    subresources:
+      status: {}
 status:
   acceptedNames:
     kind: ""
