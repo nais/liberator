@@ -118,7 +118,7 @@ spec:
               sessionLifetime:
                 description: SessionLifetime is the maximum session lifetime in seconds
                   for a logged in end-user for this client.
-                maximum: 7200
+                maximum: 28800
                 minimum: 3600
                 type: integer
             required:

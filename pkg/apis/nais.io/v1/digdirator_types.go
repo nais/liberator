@@ -278,7 +278,7 @@ type IDPortenClientSpec struct {
 	Scopes []string `json:"scopes,omitempty"`
 	// SessionLifetime is the maximum session lifetime in seconds for a logged in end-user for this client.
 	// +kubebuilder:validation:Minimum=3600
-	// +kubebuilder:validation:Maximum=7200
+	// +kubebuilder:validation:Maximum=28800
 	SessionLifetime *int `json:"sessionLifetime,omitempty"`
 }
 
