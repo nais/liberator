@@ -632,12 +632,12 @@ func (i *InsightsConfiguration) IsEnabled() bool {
 type MediumType string
 
 const (
-	MediumTypeMemory = "Memory"
-	MediumTypeDisk   = "Disk"
+	MediumTypeMemory MediumType = "Memory"
+	MediumTypeDisk   MediumType = "Disk"
 )
 
 type EmptyDir struct {
-	// +kubebuilde:validation:Enum=Memory;Disk
+	// +kubebuilder:validation:Enum=Memory;Disk
 	Medium MediumType `json:"medium,omitempty"`
 }
 
