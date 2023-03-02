@@ -57,7 +57,7 @@ func getAppDefaults() *Application {
 				Min:                    intutil.Intp(2),
 				Max:                    intutil.Intp(4),
 				CpuThresholdPercentage: 50,
-				DisableAutoScaling: false,
+				DisableAutoScaling:     false,
 			},
 			Liveness: &nais_io_v1.Probe{
 				PeriodSeconds:    DefaultProbePeriodSeconds,
@@ -74,7 +74,6 @@ func getAppDefaults() *Application {
 			Ingresses: []nais_io_v1.Ingress{},
 			Resources: &nais_io_v1.ResourceRequirements{
 				Limits: &nais_io_v1.ResourceSpec{
-					Cpu:    "500m",
 					Memory: "512Mi",
 				},
 				Requests: &nais_io_v1.ResourceSpec{
