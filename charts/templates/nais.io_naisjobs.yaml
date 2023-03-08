@@ -366,6 +366,9 @@ spec:
                       description: Specification of an empty directory
                       properties:
                         medium:
+                          enum:
+                          - Memory
+                          - Disk
                           type: string
                       type: object
                     mountPath:
