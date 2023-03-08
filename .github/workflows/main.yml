@@ -1,4 +1,4 @@
-name: Build liberator and deploy CRDs
+name: Run tests and deploy docs and schemas
 
 on: [push]
 
