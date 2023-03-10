@@ -35,24 +35,22 @@ spec:
       initialDelay: 20
       path: /isalive
       periodSeconds: 5
-      port: 8080
+      port: 8090
       timeout: 1
     readiness:
       failureThreshold: 10
       initialDelay: 20
       path: /isalive
       periodSeconds: 5
-      port: 8080
+      port: 8090
       timeout: 1
     startup:
       failureThreshold: 10
       initialDelay: 20
       path: /isalive
       periodSeconds: 5
-      port: 8080
+      port: 8090
       timeout: 1
-    ports:
-      - # TODO
     resources:
       limits:
         cpu: 500m
@@ -63,7 +61,7 @@ spec:
   metrics:
     enabled: true
     path: /metrics
-    port: "8080"
+    port: 8080
   replicas: # TODO
   leaderElection:
     enabled: true
@@ -73,9 +71,45 @@ spec:
     enabled: false
   # Communication
   ingress:
-    - # TODO
+    routes:
+      - host: "myapp.nav.no"
+        path: "/asd"
+        port: 8080 # container port
+        type: http # default
+      - host: "grpc.nav.no"
+        path: "/service"
+        port: 8082
+        type: grpc
+      - host: "myapp-admin.nav.no"
+        path: "/"
+        port: 8081
+    networkAccess:
+      - app: app1 # required
+        namespace: team1
+        ports:
+          - 8081
+    tokenAccess:
+      - app: app1 # required
+        namespace: team1
+        cluster: cluster1 # used to allow applications in other clusters to get tokens
+        permissions: # additional roles/scopes to add to tokens app `name` gets when consuming this app
+          roles:
+            - custom-role
+          scopes:
+            - custom-scope
   egress:
-    - # TODO
+    routes:
+      - host: "myapp.nav.no"
+        port: 8080
+      - host: "grpc.nav.no"
+        port: 8080
+      - host: "myapp-admin.nav.no"
+        port: 8080
+    networkAccess: # document that routes will always be available if routes are specified, this is for *in-cluster* communication only
+      - app: app1 # required
+        namespace: team1
+        ports:
+          - 8081
   # Authentication
   azure: # TODO
   maskinporten: # TODO
