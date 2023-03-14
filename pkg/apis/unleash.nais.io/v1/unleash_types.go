@@ -37,13 +37,58 @@ type UnleashSpec struct {
 	Size int32 `json:"size,omitempty"`
 
 	// Database is the database configuration
+	// +kubebuilder:validation:Required
 	Database DatabaseConfig `json:"database,omitempty"`
+
+	// Ingress defines the ingress configuration
+	// +kubebuilder:validation:Optional
+	Ingress []IngressConfig `json:"ingress,omitempty"`
 
 	// ExtraEnv is a list of extra environment variables to add to the deployment
 	// +kubebuilder:validation:Optional
-	ExtraEnvVars      []corev1.EnvVar      `json:"extraEnvVars,omitempty"`
-	ExtraVolumes      []corev1.Volume      `json:"extraVolumes,omitempty"`
+	ExtraEnvVars []corev1.EnvVar `json:"extraEnvVars,omitempty"`
+
+	// ExtraVolumeMounts is a list of extra volume mounts to add to the deployment
+	// +kubebuilder:validation:Optional
+	ExtraVolumes []corev1.Volume `json:"extraVolumes,omitempty"`
+
+	// ExtraVolumeMounts is a list of extra volume mounts to add to the deployment
+	// +kubebuilder:validation:Optional
 	ExtraVolumeMounts []corev1.VolumeMount `json:"extraVolumeMounts,omitempty"`
+
+	// ExtraContainers is a list of extra containers to add to the deployment
+	// +kubebuilder:validation:Optional
+	ExtraContainers []corev1.Container `json:"extraContainers,omitempty"`
+}
+
+// IngressConfig defines the ingress configuration
+type IngressConfig struct {
+	// Host is the hostname to use for the ingress
+	Host string `json:"host,omitempty"`
+
+	// Path is the path to use for the ingress
+	Path string `json:"path,omitempty"`
+
+	// TLS is the TLS configuration to use for the ingress
+	TLS *IngressTLSConfig `json:"tls,omitempty"`
+
+	// Annotations is a map of annotations to add to the ingress
+	Annotations map[string]string `json:"annotations,omitempty"`
+
+	// Class is the ingress class to use for the ingress
+	Class string `json:"class,omitempty"`
+}
+
+// IngressTLSConfig defines the TLS configuration for the ingress
+type IngressTLSConfig struct {
+	// SecretName is the name of the secret containing the TLS certificate
+	SecretName string `json:"secretName,omitempty"`
+
+	// SecretCertKey is the key in the secret containing the TLS certificate
+	SecretCertKey string `json:"secretCertKey,omitempty"`
+
+	// SecretKeyKey is the key in the secret containing the TLS key
+	SecretKeyKey string `json:"secretKeyKey,omitempty"`
 }
 
 // DatabaseConfig defines the database configuration
