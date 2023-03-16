@@ -111,8 +111,32 @@ spec:
         ports:
           - 8081
   # Authentication
-  azure: # TODO
-  maskinporten: # TODO
+  azure:
+    allowAllUsers: true
+    # claims is removed, we'll automatically assign custom claims to all apps
+    # groups controls both group claims and assignment to azure application
+    allowedGroups:
+      - id: 00000000-0000-0000-0000-000000000000
+    enabled: true
+    # replyURLs is reduced to redirectPath. we'll register redirect URLs by appending the path to the application's ingresses
+    redirectPath: "/oauth2/callback"
+    # singlePageApplication, likely not used - can manually provision if needed
+    tenant: nav.no
+  maskinporten:
+    # enabled: true - automatically enable if list of scopes is non-empty
+    scopes:
+      - name: skatt:scope.read
+      # extract to separate MaskinportenScope k8s resource
+      #exposes:
+      #  - allowedIntegrations:
+      #      - maskinporten
+      #    atMaxAge: 30
+      #    consumers:
+      #      - name: KST
+      #        orgno: "123456789"
+      #    enabled: true
+      #    name: scope.read
+      #    product: arbeid
   tokenx:
     enabled: true
   wonderwall:
@@ -122,6 +146,7 @@ spec:
       - /internal/*
     enabled: true
     errorPath: /error
+    provider: azure # enum of azure|idporten|etc...
     resources:
       limits:
         cpu: 250m
@@ -140,7 +165,15 @@ spec:
   openSearch:
     access: readwrite
     instance: my-open-search-instance
-  postgres: # TODO
+  postgres:
+    # TODO - SQLInstance settings moved out to own custom resource, or re-use CNRM CRD?
+    server: # name of SQLInstance to refer to
+    databases:
+      - cascadingDelete: true
+        envVarPrefix: DB
+        name: mydatabase
+        users:
+          - name: extra_user
   bigQuery:
     - cascadingDelete: true
       description: Contains big data, supporting big queries, for use in big ideas.
