@@ -1,0 +1,213 @@
+spec:
+  # Runtime
+  container:
+    command:
+      - python
+      - main.py
+    env:
+      - name: LOG_LEVEL
+        value: DEBUG
+      - name: PORT
+        value: "8080"
+    envFrom:
+      - configMap: my-cm
+      - secret: my-secret
+      - configMap: my-other-cm
+    filesFrom:
+      - secret:
+          name: my-other-secret
+          mountPath: /somewhere
+      - configMap:
+          name: my-third-cm
+          mountPath: /config
+      - emptyDir:
+          medium: Memory
+          mountPath: /tmp
+      - emptyDir:
+          medium: Disk
+          mountPath: /mnt
+      - persistentVolumeClaim:
+          name: my-pvc
+          mountPath: /tmp
+    image: ghcr.io/nais/example:20230302-cafebabe
+    liveness:
+      failureThreshold: 10
+      initialDelay: 20
+      path: /isalive
+      periodSeconds: 5
+      port: 8090
+      timeout: 1
+    readiness:
+      failureThreshold: 10
+      initialDelay: 20
+      path: /isalive
+      periodSeconds: 5
+      port: 8090
+      timeout: 1
+    startup:
+      failureThreshold: 10
+      initialDelay: 20
+      path: /isalive
+      periodSeconds: 5
+      port: 8090
+      timeout: 1
+    resources:
+      limits:
+        cpu: 500m
+        memory: 512Mi
+      requests:
+        cpu: 200m
+        memory: 256Mi
+  metrics:
+    enabled: true
+    path: /metrics
+    port: 8080
+  replicas:
+    min: 1
+    max: 5
+    autoscaling:
+      enabled: true
+      cpu: 50%
+      memory: 70%
+      kafka:
+        - topic: mytopic
+          group: losGroupos
+          maxLag: 123
+  leaderElection:
+    enabled: true
+  secureLogs:
+    enabled: false
+  caBundle:
+    enabled: false
+  # Communication
+  ingress:
+    routes:
+      - host: "myapp.nav.no"
+        path: "/asd"
+        port: 8080 # container port
+        type: http # default
+      - host: "grpc.nav.no"
+        path: "/service"
+        port: 8082
+        type: grpc
+      - host: "myapp-admin.nav.no"
+        path: "/"
+        port: 8081
+    networkAccess:
+      - app: app1 # required
+        namespace: team1
+        ports:
+          - 8081
+    tokenAccess:
+      - app: app1 # required
+        namespace: team1
+        cluster: cluster1 # used to allow applications in other clusters to get tokens
+        permissions: # additional roles/scopes to add to tokens app `name` gets when consuming this app
+          roles:
+            - custom-role
+          scopes:
+            - custom-scope
+  egress:
+    routes:
+      - host: "myapp.nav.no"
+        port: 8080
+      - host: "grpc.nav.no"
+        port: 8080
+      - host: "myapp-admin.nav.no"
+        port: 8080
+    networkAccess: # document that routes will always be available if routes are specified, this is for *in-cluster* communication only
+      - app: app1 # required
+        namespace: team1
+        ports:
+          - 8081
+  # Authentication
+  azure:
+    allowAllUsers: true
+    # claims is removed, we'll automatically assign custom claims to all apps
+    # groups controls both group claims and assignment to azure application
+    allowedGroups:
+      - id: 00000000-0000-0000-0000-000000000000
+    enabled: true
+    # replyURLs is reduced to redirectPath. we'll register redirect URLs by appending the path to the application's ingresses
+    redirectPath: "/oauth2/callback"
+    # singlePageApplication, likely not used - can manually provision if needed
+    tenant: nav.no
+  maskinporten:
+    # enabled: true - automatically enable if list of scopes is non-empty
+    scopes:
+      - name: skatt:scope.read
+      # extract to separate MaskinportenScope k8s resource
+      #exposes:
+      #  - allowedIntegrations:
+      #      - maskinporten
+      #    atMaxAge: 30
+      #    consumers:
+      #      - name: KST
+      #        orgno: "123456789"
+      #    enabled: true
+      #    name: scope.read
+      #    product: arbeid
+  tokenx:
+    enabled: true
+  wonderwall:
+    autoLogin: true
+    autoLoginIgnorePaths:
+      - /path
+      - /internal/*
+    enabled: true
+    errorPath: /error
+    provider: azure # enum of azure|idporten|etc...
+    resources:
+      limits:
+        cpu: 250m
+        memory: 256Mi
+      requests:
+        cpu: 20m
+        memory: 32Mi
+  # Persistence
+  influx:
+    instance: my-influx
+  kafka:
+    - pool: nav-dev
+      streams: false
+    - pool: tbd-dev
+      streams: true
+  openSearch:
+    access: readwrite
+    instance: my-open-search-instance
+  postgres:
+    # TODO - SQLInstance settings moved out to own custom resource, or re-use CNRM CRD?
+    server: # name of SQLInstance to refer to
+    database:
+      allowDeletion: false
+      name: mydatabase
+      users:
+        - name: extra_user
+  bigQuery:
+    - allowDeletion: false
+      description: Contains big data, supporting big queries, for use in big ideas.
+      name: my_bigquery_dataset1
+      permission: READWRITE
+    - description: Contains big data, supporting big queries, for use in big ideas.
+      name: my_bigquery_dataset2
+      permission: READ
+  buckets:
+    - allowDeletion: false
+      lifecycleCondition:
+        age: 10
+        createdBefore: "2020-01-01"
+        numNewerVersions: 2
+        withState: ARCHIVED
+      name: my-cloud-storage-bucket
+      publicAccessPrevention: true
+      retentionPeriodDays: 30
+      uniformBucketLevelAccess: true
+  # Misc
+  rollout:
+    type: Recreate
+  workloadPermissions:
+    - resource:
+        apiVersion: resourcemanager.cnrm.cloud.google.com/v1beta1
+        kind: Project
+        name: myteam-dev-ab23
+      role: roles/cloudsql.client
