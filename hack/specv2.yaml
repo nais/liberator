@@ -62,7 +62,17 @@ spec:
     enabled: true
     path: /metrics
     port: 8080
-  replicas: # TODO
+  replicas:
+    min: 1
+    max: 5
+    autoscaling:
+      enabled: true
+      cpu: 50%
+      memory: 70%
+      kafka:
+        - topic: mytopic
+          group: losGroupos
+          maxLag: 123
   leaderElection:
     enabled: true
   secureLogs:
@@ -168,14 +178,13 @@ spec:
   postgres:
     # TODO - SQLInstance settings moved out to own custom resource, or re-use CNRM CRD?
     server: # name of SQLInstance to refer to
-    databases:
-      - cascadingDelete: true
-        envVarPrefix: DB
-        name: mydatabase
-        users:
-          - name: extra_user
+    database:
+      allowDeletion: false
+      name: mydatabase
+      users:
+        - name: extra_user
   bigQuery:
-    - cascadingDelete: true
+    - allowDeletion: false
       description: Contains big data, supporting big queries, for use in big ideas.
       name: my_bigquery_dataset1
       permission: READWRITE
@@ -183,7 +192,7 @@ spec:
       name: my_bigquery_dataset2
       permission: READ
   buckets:
-    - cascadingDelete: true
+    - allowDeletion: false
       lifecycleCondition:
         age: 10
         createdBefore: "2020-01-01"
