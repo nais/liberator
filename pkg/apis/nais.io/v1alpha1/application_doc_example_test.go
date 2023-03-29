@@ -3,9 +3,10 @@ package nais_io_v1alpha1_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	"github.com/nais/liberator/pkg/testutil"
-	"github.com/stretchr/testify/assert"
 )
 
 var ignoredApplicationFields = []string{
@@ -26,6 +27,11 @@ var ignoredApplicationFields = []string{
 	`.ObjectMeta.ResourceVersion`,
 	`.ObjectMeta.SelfLink`,
 	`.ObjectMeta.UID`,
+	`.Spec.Strategy.RollingUpdate.MaxSurge.IntVal`,
+	`.Spec.Strategy.RollingUpdate.MaxUnavailable`,
+	`.Spec.Strategy.RollingUpdate.MaxUnavailable.IntVal`,
+	`.Spec.Strategy.RollingUpdate.MaxUnavailable.StrVal`,
+	`.Spec.Strategy.RollingUpdate.MaxUnavailable.Type`,
 	`.Status`,
 	`.Status.Conditions`,
 	`.Status.CorrelationID`,

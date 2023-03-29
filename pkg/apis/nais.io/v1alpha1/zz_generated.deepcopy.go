@@ -189,7 +189,7 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 	if in.Strategy != nil {
 		in, out := &in.Strategy, &out.Strategy
 		*out = new(v1.Strategy)
-		**out = **in
+		(*in).DeepCopyInto(*out)
 	}
 	if in.TokenX != nil {
 		in, out := &in.TokenX, &out.TokenX
