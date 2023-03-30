@@ -1,7 +1,9 @@
 package nais_io_v1alpha1
 
 import (
+	v1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/util/intstr"
 
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/nais/liberator/pkg/intutil"
@@ -441,6 +443,16 @@ func ExampleApplicationForDocumentation() *Application {
 			},
 			Strategy: &nais_io_v1.Strategy{
 				Type: DeploymentStrategyRollingUpdate,
+				RollingUpdate: &v1.RollingUpdateDeployment{
+					MaxUnavailable: &intstr.IntOrString{
+						Type:   intstr.Int,
+						IntVal: int32(0),
+					},
+					MaxSurge: &intstr.IntOrString{
+						Type:   intstr.String,
+						StrVal: "25%",
+					},
+				},
 			},
 			TerminationGracePeriodSeconds: int64p(60),
 			TokenX: &nais_io_v1.TokenX{

@@ -3,6 +3,7 @@ package nais_io_v1
 import (
 	"fmt"
 
+	v1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 )
 
@@ -318,7 +319,8 @@ type Strategy struct {
 	// Specifies the strategy used to replace old Pods by new ones.
 	// `RollingUpdate` is the default value.
 	// +kubebuilder:validation:Enum=Recreate;RollingUpdate
-	Type string `json:"type"`
+	Type          string                      `json:"type"`
+	RollingUpdate *v1.RollingUpdateDeployment `json:"rollingUpdate,omitempty"`
 }
 
 type Service struct {
