@@ -1331,8 +1331,6 @@ spec:
                     - Recreate
                     - RollingUpdate
                     type: string
-                required:
-                - type
                 type: object
               terminationGracePeriodSeconds:
                 description: The grace period is the duration in seconds after the

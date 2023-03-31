@@ -319,7 +319,7 @@ type Strategy struct {
 	// Specifies the strategy used to replace old Pods by new ones.
 	// `RollingUpdate` is the default value.
 	// +kubebuilder:validation:Enum=Recreate;RollingUpdate
-	Type          string                      `json:"type"`
+	Type          string                      `json:"type,omitempty"`
 	RollingUpdate *v1.RollingUpdateDeployment `json:"rollingUpdate,omitempty"`
 }
 
