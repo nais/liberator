@@ -114,9 +114,7 @@ func ExampleApplicationForDocumentation() *Application {
 							Host: "non-http-service.example.com",
 							Ports: []nais_io_v1.AccessPolicyPortRule{
 								{
-									Name:     "kafka",
-									Port:     9200,
-									Protocol: "TCP",
+									Port: 9200,
 								},
 							},
 						},
@@ -151,8 +149,7 @@ func ExampleApplicationForDocumentation() *Application {
 							"/path",
 							"/internal/*",
 						},
-						Enabled:   true,
-						ErrorPath: "/error",
+						Enabled: true,
 						Resources: &nais_io_v1.ResourceRequirements{
 							Limits: &nais_io_v1.ResourceSpec{
 								Cpu:    "250m",
@@ -317,8 +314,7 @@ func ExampleApplicationForDocumentation() *Application {
 							"/path",
 							"/internal/*",
 						},
-						Enabled:   true,
-						ErrorPath: "/error",
+						Enabled: true,
 						Resources: &nais_io_v1.ResourceRequirements{
 							Limits: &nais_io_v1.ResourceSpec{
 								Cpu:    "250m",

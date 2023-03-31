@@ -1,13 +1,8 @@
 package nais_io_v1
 
 type AccessPolicyPortRule struct {
-	// Human-readable identifier for this rule.
-	Name string `json:"name"`
 	// The port used for communication.
 	Port uint32 `json:"port"`
-	// The protocol used for communication.
-	// +kubebuilder:validation:Enum=HTTP;HTTPS;GRPC;HTTP2;MONGO;TCP;TLS
-	Protocol string `json:"protocol"`
 }
 
 type AccessPolicyExternalRule struct {
