@@ -23,7 +23,7 @@ require (
 )
 
 require (
-	github.com/aiven/aiven-go-client v1.7.0
+	github.com/aiven/aiven-go-client v1.11.0
 	k8s.io/utils v0.0.0-20211116205334-6203023598ed
 )
 
@@ -42,6 +42,8 @@ require (
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/gofuzz v1.1.0 // indirect
 	github.com/googleapis/gnostic v0.5.5 // indirect
+	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
+	github.com/hashicorp/go-retryablehttp v0.7.2 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
