@@ -112,9 +112,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 							Host: "non-http-service.example.com",
 							Ports: []AccessPolicyPortRule{
 								{
-									Name:     "kafka",
-									Port:     9200,
-									Protocol: "TCP",
+									Port: 9200,
 								},
 							},
 						},

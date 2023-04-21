@@ -687,11 +687,8 @@ type Wonderwall struct {
 	AutoLoginIgnorePaths []WonderwallIgnorePaths `json:"autoLoginIgnorePaths,omitempty"`
 	// Enable the sidecar.
 	Enabled bool `json:"enabled"`
-	// Absolute path to redirect the user to on authentication errors for custom error handling.
-	// +nais:doc:Link="https://doc.nais.io/appendix/wonderwall/#4-error-handling"
-	ErrorPath string `json:"errorPath,omitempty"`
 	// Resource requirements for the sidecar container.
-	// +nais:doc:Link="https://doc.nais.io/appendix/wonderwall/#5-resource-requirements"
+	// +nais:doc:Link="https://doc.nais.io/appendix/wonderwall/#4-resource-requirements"
 	Resources *ResourceRequirements `json:"resources,omitempty"`
 }
 

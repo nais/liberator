@@ -107,29 +107,12 @@ spec:
                                 Must be specified if using protocols other than HTTPS.
                               items:
                                 properties:
-                                  name:
-                                    description: Human-readable identifier for this
-                                      rule.
-                                    type: string
                                   port:
                                     description: The port used for communication.
                                     format: int32
                                     type: integer
-                                  protocol:
-                                    description: The protocol used for communication.
-                                    enum:
-                                    - HTTP
-                                    - HTTPS
-                                    - GRPC
-                                    - HTTP2
-                                    - MONGO
-                                    - TCP
-                                    - TLS
-                                    type: string
                                 required:
-                                - name
                                 - port
-                                - protocol
                                 type: object
                               type: array
                           required:
