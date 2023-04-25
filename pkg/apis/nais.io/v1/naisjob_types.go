@@ -144,7 +144,7 @@ type NaisjobSpec struct {
 	// PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
 	// The handler is not called if the container crashes or exits by itself.
 	// The reason for termination is passed to the handler.
-	// +nais:doc:Link="https://doc.nais.io/naisjob/#handles-termination-gracefully";"https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks"
+	// +nais:doc:Link="https://doc.nais.io/nais-application/good-practices/#handles-termination-gracefully";"https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks"
 	PreStopHook *PreStopHook `json:"preStopHook,omitempty"`
 
 	// Sometimes, Naisjobs are temporarily unable to serve traffic. For example, an Naisjob might need

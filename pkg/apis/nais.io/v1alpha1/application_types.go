@@ -155,12 +155,12 @@ type ApplicationSpec struct {
 	// PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
 	// The handler is not called if the container crashes or exits by itself.
 	// The reason for termination is passed to the handler.
-	// +nais:doc:Link="https://doc.nais.io/naisjob/#handles-termination-gracefully";"https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks"
+	// +nais:doc:Link="https://doc.nais.io/nais-application/good-practices/#handles-termination-gracefully";"https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks"
 	PreStopHook *nais_io_v1.PreStopHook `json:"preStopHook,omitempty"`
 
 	// A HTTP GET will be issued to this endpoint at least once before the pod is terminated.
 	// This feature is deprecated and will be removed in the next major version (nais.io/v1).
-	// +nais:doc:Link="https://doc.nais.io/nais-application/#handles-termination-gracefully"
+	// +nais:doc:Link="https://doc.nais.io/nais-application/good-practices/#handles-termination-gracefully"
 	PreStopHookPath string `json:"preStopHookPath,omitempty"`
 
 	// Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/observability/metrics/).
