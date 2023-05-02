@@ -89,6 +89,23 @@ spec:
                 description: A Protected secret will not be deleted by the janitor
                   even when not in use
                 type: boolean
+              redis:
+                description: Redis is a section configuring the Redis credentials
+                  to provision
+                properties:
+                  access:
+                    description: Access level for redis user
+                    enum:
+                    - read
+                    - write
+                    - readwrite
+                    - admin
+                    type: string
+                  instance:
+                    description: The last part of the name used when creating the
+                      instance (ie. redis-<team>-<instance>)
+                    type: string
+                type: object
               secretName:
                 description: SecretName is the name of the secret containing Aiven
                   credentials

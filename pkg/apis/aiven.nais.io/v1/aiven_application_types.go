@@ -49,6 +49,14 @@ type OpenSearchSpec struct {
 	Access string `json:"access,omitempty"`
 }
 
+type RedisSpec struct {
+	// The last part of the name used when creating the instance (ie. redis-<team>-<instance>)
+	Instance string `json:"instance,omitempty"`
+	// Access level for redis user
+	// +kubebuilder:validation:Enum=read;write;readwrite;admin
+	Access string `json:"access,omitempty"`
+}
+
 type AivenApplicationSpec struct {
 	// SecretName is the name of the secret containing Aiven credentials
 	SecretName string `json:"secretName"`
@@ -63,6 +71,8 @@ type AivenApplicationSpec struct {
 	Kafka *KafkaSpec `json:"kafka,omitempty"`
 	// OpenSearch is a section configuring the OpenSearch credentials to provision
 	OpenSearch *OpenSearchSpec `json:"openSearch,omitempty"`
+	// Redis is a section configuring the Redis credentials to provision
+	Redis *RedisSpec `json:"redis,omitempty"`
 }
 
 type KafkaSpec struct {
