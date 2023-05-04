@@ -1,10 +1,11 @@
 package finalizer_test
 
 import (
+	"testing"
+
 	"github.com/nais/liberator/pkg/finalizer"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"testing"
 )
 
 func TestIsBeingDeleted(t *testing.T) {
@@ -43,9 +44,8 @@ type someResource struct {
 func someResourceInstance() *someResource {
 	return &someResource{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        "test-app",
-			Namespace:   "test-namespace",
-			ClusterName: "test-cluster",
+			Name:      "test-app",
+			Namespace: "test-namespace",
 		},
 	}
 }

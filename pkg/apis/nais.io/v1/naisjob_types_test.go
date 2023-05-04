@@ -21,15 +21,13 @@ func TestNaisjobHash(t *testing.T) {
 	hash, err := job.Hash()
 	assert.NoError(t, err)
 	assert.Equalf(t, naisjobHash, hash, "Your Naisjob default value changes will trigger a FULL REDEPLOY of ALL NAISJOBS in ALL NAMESPACES across ALL CLUSTERS. If this is what you really want, change the `naisjobHash` constant in this test file to `%s`.", hash)
-
 }
 
 func minimalNaisjob() *nais_io_v1.Naisjob {
 	return &nais_io_v1.Naisjob{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        "test-app",
-			Namespace:   "test-namespace",
-			ClusterName: "test-cluster",
+			Name:      "test-app",
+			Namespace: "test-namespace",
 		},
 		Spec: nais_io_v1.NaisjobSpec{
 			Schedule: "test * * * * :)",

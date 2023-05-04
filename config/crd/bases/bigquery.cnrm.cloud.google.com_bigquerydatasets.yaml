@@ -1,11 +1,9 @@
-
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.6.2
-  creationTimestamp: null
+    controller-gen.kubebuilder.io/version: v0.12.0
   name: bigquerydatasets.bigquery.cnrm.cloud.google.com
 spec:
   group: bigquery.cnrm.cloud.google.com
@@ -34,7 +32,7 @@ spec:
             type: object
           spec:
             description: 'This map (and its members) are inspired by output of (the
-              resource existed in GCP clusters already):   kubectl get crd bigquerydatasets.bigquery.cnrm.cloud.google.com
+              resource existed in GCP clusters already): kubectl get crd bigquerydatasets.bigquery.cnrm.cloud.google.com
               -o yaml'
             properties:
               access:
@@ -74,9 +72,3 @@ spec:
         type: object
     served: true
     storage: true
-status:
-  acceptedNames:
-    kind: ""
-    plural: ""
-  conditions: []
-  storedVersions: []
