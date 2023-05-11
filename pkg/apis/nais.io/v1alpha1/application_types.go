@@ -99,6 +99,9 @@ type ApplicationSpec struct {
 	FilesFrom []nais_io_v1.FilesFrom `json:"filesFrom,omitempty"`
 
 	// +nais:doc:Availability="GCP"
+	Frontend *nais_io_v1.Frontend `json:"frontend,omitempty"`
+
+	// +nais:doc:Availability="GCP"
 	GCP *nais_io_v1.GCP `json:"gcp,omitempty"`
 
 	// Configures an ID-porten client for this application.

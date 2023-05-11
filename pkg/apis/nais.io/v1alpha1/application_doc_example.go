@@ -206,6 +206,9 @@ func ExampleApplicationForDocumentation() *Application {
 					MountPath:             "/var/run/pvc",
 				},
 			},
+			Frontend: &nais_io_v1.Frontend{
+				ConfigJSPath: ptr("/usr/share/nginx/html/js/nais.js"),
+			},
 			GCP: &nais_io_v1.GCP{
 				BigQueryDatasets: []nais_io_v1.CloudBigQueryDataset{
 					{

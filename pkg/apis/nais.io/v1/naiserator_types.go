@@ -694,3 +694,11 @@ type Wonderwall struct {
 
 // +kubebuilder:validation:Pattern=`^\/.*$`
 type WonderwallIgnorePaths string
+
+type Frontend struct {
+	// If specified, a Javascript file with NAIS configuration variables
+	// will be mounted into the pod at the specified path.
+	// You can import this file directly from your Javascript application.
+	// +nais:doc:Link="https://doc.nais.io/FIXME"
+	ConfigJSPath *string `json:"configJSPath,omitempty"`
+}
