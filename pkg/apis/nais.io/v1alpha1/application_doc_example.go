@@ -9,17 +9,11 @@ import (
 	"github.com/nais/liberator/pkg/intutil"
 )
 
-func ExampleApplicationForDocumentation() *Application {
-	intp := func(i int) *int {
-		return &i
-	}
-	int64p := func(i int64) *int64 {
-		return &i
-	}
-	boolp := func(b bool) *bool {
-		return &b
-	}
+func ptr[T any](x T) *T {
+	return &x
+}
 
+func ExampleApplicationForDocumentation() *Application {
 	return &Application{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "Application",
@@ -124,7 +118,7 @@ func ExampleApplicationForDocumentation() *Application {
 			Azure: &nais_io_v1.Azure{
 				Application: &nais_io_v1.AzureApplication{
 					Enabled:       true,
-					AllowAllUsers: boolp(true),
+					AllowAllUsers: ptr(true),
 					Claims: &nais_io_v1.AzureAdClaims{
 						Extra: []nais_io_v1.AzureAdExtraClaim{
 							"NAVident",
@@ -139,7 +133,7 @@ func ExampleApplicationForDocumentation() *Application {
 					ReplyURLs: []nais_io_v1.AzureAdReplyUrlString{
 						"https://myapplication.nav.no/oauth2/callback",
 					},
-					SinglePageApplication: boolp(true),
+					SinglePageApplication: ptr(true),
 					Tenant:                "nav.no",
 				},
 				Sidecar: &nais_io_v1.AzureSidecar{
@@ -230,7 +224,7 @@ func ExampleApplicationForDocumentation() *Application {
 					{
 						Name:                "my-cloud-storage-bucket",
 						CascadingDelete:     true,
-						RetentionPeriodDays: intp(30),
+						RetentionPeriodDays: ptr(30),
 						LifecycleCondition: &nais_io_v1.LifecycleCondition{
 							Age:              10,
 							CreatedBefore:    "2020-01-01",
@@ -250,11 +244,11 @@ func ExampleApplicationForDocumentation() *Application {
 						HighAvailability: true,
 						DiskSize:         30,
 						DiskAutoresize:   true,
-						AutoBackupHour:   intp(1),
-						RetainedBackups:  intp(14),
+						AutoBackupHour:   ptr(1),
+						RetainedBackups:  ptr(14),
 						Maintenance: &nais_io_v1.Maintenance{
 							Day:  1,
-							Hour: intp(4),
+							Hour: ptr(4),
 						},
 						Flags: []nais_io_v1.CloudSqlFlag{
 							{
@@ -277,7 +271,7 @@ func ExampleApplicationForDocumentation() *Application {
 						Collation:           "nb_NO.UTF8",
 						PointInTimeRecovery: true,
 						Insights: &nais_io_v1.InsightsConfiguration{
-							Enabled:               boolp(true),
+							Enabled:               ptr(true),
 							QueryStringLength:     4500,
 							RecordApplicationTags: true,
 							RecordClientAddress:   true,
@@ -296,7 +290,7 @@ func ExampleApplicationForDocumentation() *Application {
 				},
 			},
 			IDPorten: &nais_io_v1.IDPorten{
-				AccessTokenLifetime:    intp(3600),
+				AccessTokenLifetime:    ptr(3600),
 				ClientURI:              "https://www.nav.no",
 				Enabled:                true,
 				FrontchannelLogoutPath: "/oauth2/logout",
@@ -306,7 +300,7 @@ func ExampleApplicationForDocumentation() *Application {
 				},
 				RedirectPath:    "/oauth2/callback",
 				Scopes:          []string{"openid", "profile"},
-				SessionLifetime: intp(7200),
+				SessionLifetime: ptr(7200),
 				Sidecar: &nais_io_v1.IDPortenSidecar{
 					Wonderwall: nais_io_v1.Wonderwall{
 						AutoLogin: true,
@@ -366,7 +360,7 @@ func ExampleApplicationForDocumentation() *Application {
 							Name:                "scope.read",
 							Product:             "arbeid",
 							AllowedIntegrations: []string{"maskinporten"},
-							AtMaxAge:            intp(30),
+							AtMaxAge:            ptr(30),
 							Consumers: []nais_io_v1.ExposedScopeConsumer{
 								{
 									Orgno: "123456789",
@@ -388,7 +382,7 @@ func ExampleApplicationForDocumentation() *Application {
 				},
 				Http: &nais_io_v1.HttpGetAction{
 					Path: "/internal/stop",
-					Port: intp(8080),
+					Port: ptr(8080),
 				},
 			},
 			PreStopHookPath: "/internal/stop",
@@ -450,7 +444,7 @@ func ExampleApplicationForDocumentation() *Application {
 					},
 				},
 			},
-			TerminationGracePeriodSeconds: int64p(60),
+			TerminationGracePeriodSeconds: ptr(int64(60)),
 			TokenX: &nais_io_v1.TokenX{
 				Enabled:                 true,
 				MountSecretsAsFilesOnly: true,
