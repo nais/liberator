@@ -209,8 +209,8 @@ spec:
                           type: string
                         type: array
                       singlePageApplication:
-                        description: SinglePageApplication denotes whether or not
-                          this Azure AD application should be registered as a single-page-application
+                        description: SinglePageApplication denotes whether this Azure
+                          AD application should be registered as a single-page-application
                           for usage in client-side applications without access to
                           secrets.
                         type: boolean
@@ -397,6 +397,21 @@ spec:
                       type: string
                   type: object
                 type: array
+              frontend:
+                description: Configuration options specifically for frontend applications.
+                properties:
+                  generatedConfig:
+                    properties:
+                      mountPath:
+                        description: If specified, a Javascript file with application
+                          specific frontend configuration variables will be generated
+                          and mounted into the pod file system at the specified path.
+                          You can import this file directly from your Javascript application.
+                        type: string
+                    required:
+                    - mountPath
+                    type: object
+                type: object
               gcp:
                 properties:
                   bigQueryDatasets:
