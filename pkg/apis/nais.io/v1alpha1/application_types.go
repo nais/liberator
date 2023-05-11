@@ -98,7 +98,9 @@ type ApplicationSpec struct {
 	// +nais:doc:Availability="team namespaces"
 	FilesFrom []nais_io_v1.FilesFrom `json:"filesFrom,omitempty"`
 
+	// Configuration options specifically for frontend applications.
 	// +nais:doc:Availability="GCP"
+	// +nais:doc:Experimental
 	Frontend *nais_io_v1.Frontend `json:"frontend,omitempty"`
 
 	// +nais:doc:Availability="GCP"

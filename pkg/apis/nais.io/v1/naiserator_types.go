@@ -699,10 +699,9 @@ type FrontendGeneratedConfig struct {
 	// If specified, a Javascript file with application specific frontend configuration variables
 	// will be generated and mounted into the pod file system at the specified path.
 	// You can import this file directly from your Javascript application.
-	MountPath string `json:"mountPath,omitempty"`
+	MountPath string `json:"mountPath"`
 }
 
-// Variables specifically for frontend applications.
 type Frontend struct {
 	GeneratedConfig *FrontendGeneratedConfig `json:"generatedConfig,omitempty"`
 }
