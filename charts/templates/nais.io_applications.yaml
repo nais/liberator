@@ -115,6 +115,7 @@ spec:
                               description: The _host_ that your application should
                                 be able to reach, i.e. without the protocol (e.g.
                                 `https://`).
+                              pattern: (?=^.{4,253}$)(^((?!-)[a-zA-Z0-9-]{0,62}[a-zA-Z0-9]\.)+[a-zA-Z]{2,63}$)
                               type: string
                             ports:
                               description: List of port rules for external communication.
