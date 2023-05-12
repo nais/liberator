@@ -699,6 +699,7 @@ type FrontendGeneratedConfig struct {
 	// If specified, a Javascript file with application specific frontend configuration variables
 	// will be generated and mounted into the pod file system at the specified path.
 	// You can import this file directly from your Javascript application.
+	// +nais:doc:Link="https://doc.nais.io/observability/frontend/#auto-configuration"
 	MountPath string `json:"mountPath"`
 }
 
