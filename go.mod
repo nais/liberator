@@ -23,7 +23,7 @@ require (
 )
 
 require (
-	github.com/aiven/aiven-go-client v1.14.0
+	github.com/aiven/aiven-go-client v1.15.0
 	k8s.io/utils v0.0.0-20211116205334-6203023598ed
 )
 
