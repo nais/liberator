@@ -116,6 +116,7 @@ spec:
                               description: The _host_ that your application should
                                 be able to reach, i.e. without the protocol (e.g.
                                 `https://`).
+                              pattern: (?=^.{4,253}$)(^((?!-)[a-zA-Z0-9-]{0,62}[a-zA-Z0-9]\.)+[a-zA-Z]{2,63}$)
                               type: string
                             ports:
                               description: List of port rules for external communication.
@@ -217,8 +218,8 @@ spec:
                           type: string
                         type: array
                       singlePageApplication:
-                        description: SinglePageApplication denotes whether or not
-                          this Azure AD application should be registered as a single-page-application
+                        description: SinglePageApplication denotes whether this Azure
+                          AD application should be registered as a single-page-application
                           for usage in client-side applications without access to
                           secrets.
                         type: boolean

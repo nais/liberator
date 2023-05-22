@@ -106,6 +106,11 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 			(*in)[i].DeepCopyInto(&(*out)[i])
 		}
 	}
+	if in.Frontend != nil {
+		in, out := &in.Frontend, &out.Frontend
+		*out = new(v1.Frontend)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.GCP != nil {
 		in, out := &in.GCP, &out.GCP
 		*out = new(v1.GCP)

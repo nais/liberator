@@ -152,3 +152,7 @@ func (in *Application) GetVault() *nais_io_v1.Vault {
 func (in *Application) GetTerminationGracePeriodSeconds() *int64 {
 	return in.Spec.TerminationGracePeriodSeconds
 }
+
+func (in *Application) GetFrontend() *nais_io_v1.Frontend {
+	return in.Spec.Frontend
+}

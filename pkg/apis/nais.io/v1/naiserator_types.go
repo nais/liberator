@@ -46,7 +46,7 @@ type AzureApplication struct {
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
 	Tenant string         `json:"tenant,omitempty"`
 	Claims *AzureAdClaims `json:"claims,omitempty"`
-	// SinglePageApplication denotes whether or not this Azure AD application should be registered as a single-page-application for usage in client-side applications without access to secrets.
+	// SinglePageApplication denotes whether this Azure AD application should be registered as a single-page-application for usage in client-side applications without access to secrets.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#single-page-application"
 	// +nais:doc:Default="false"
 	SinglePageApplication *bool `json:"singlePageApplication,omitempty"`
@@ -694,3 +694,15 @@ type Wonderwall struct {
 
 // +kubebuilder:validation:Pattern=`^\/.*$`
 type WonderwallIgnorePaths string
+
+type FrontendGeneratedConfig struct {
+	// If specified, a Javascript file with application specific frontend configuration variables
+	// will be generated and mounted into the pod file system at the specified path.
+	// You can import this file directly from your Javascript application.
+	// +nais:doc:Link="https://doc.nais.io/observability/frontend/#auto-configuration"
+	MountPath string `json:"mountPath"`
+}
+
+type Frontend struct {
+	GeneratedConfig *FrontendGeneratedConfig `json:"generatedConfig,omitempty"`
+}
