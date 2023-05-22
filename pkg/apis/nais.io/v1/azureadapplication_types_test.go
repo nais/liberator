@@ -22,9 +22,8 @@ func TestAzureAdApplication_Hash(t *testing.T) {
 func minimalApplication() *nais_io_v1.AzureAdApplication {
 	return &nais_io_v1.AzureAdApplication{
 		ObjectMeta: metav1.ObjectMeta{
-			Name:        "test-app",
-			Namespace:   "test-namespace",
-			ClusterName: "test-cluster",
+			Name:      "test-app",
+			Namespace: "test-namespace",
 		},
 		Spec: nais_io_v1.AzureAdApplicationSpec{
 			SecretName: "test",
