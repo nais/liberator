@@ -151,7 +151,7 @@ type IDPorten struct {
 	// will be proxied to the application.
 	//
 	// If the client is authenticated with IDPorten, the `Authorization` header will be set to `Bearer <JWT>`.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar/"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/"
 	Sidecar *IDPortenSidecar `json:"sidecar,omitempty"`
 }
 
@@ -159,12 +159,12 @@ type IDPortenSidecar struct {
 	Wonderwall `json:",inline"`
 	// Default security level for all authentication requests.
 	// +nais:doc:Default="Level4"
-	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#security-levels"
-	// +kubebuilder:validation:Enum=Level3;Level4
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten#security-levels"
+	// +kubebuilder:validation:Enum=Level3;Level4;idporten-loa-substantial;idporten-loa-high
 	Level string `json:"level,omitempty"`
 	// Default user interface locale for all authentication requests.
 	// +nais:doc:Default="nb"
-	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/sidecar#locales"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten#locales"
 	// +kubebuilder:validation:Enum=nb;nn;en;se
 	Locale string `json:"locale,omitempty"`
 }

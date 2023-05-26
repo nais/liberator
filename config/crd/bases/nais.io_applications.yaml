@@ -809,6 +809,8 @@ spec:
                         enum:
                         - Level3
                         - Level4
+                        - idporten-loa-substantial
+                        - idporten-loa-high
                         type: string
                       locale:
                         description: Default user interface locale for all authentication
