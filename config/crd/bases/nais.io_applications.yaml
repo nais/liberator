@@ -1176,7 +1176,7 @@ spec:
                     type: integer
                 type: object
               resources:
-                description: When Containers have [resource requests](http://kubernetes.io/docs/user-guide/compute-resources/)
+                description: When Containers have [resource requests](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
                   specified, the Kubernetes scheduler can make better decisions about
                   which nodes to place pods on.
                 properties:

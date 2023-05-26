@@ -161,8 +161,9 @@ type NaisjobSpec struct {
 	// +kubebuilder:validation:Enum=OnFailure;Never
 	RestartPolicy string `json:"restartPolicy,omitempty"`
 
-	// When Containers have [resource requests](http://kubernetes.io/docs/user-guide/compute-resources/) specified,
+	// When Containers have [resource requests](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) specified,
 	// the Kubernetes scheduler can make better decisions about which nodes to place pods on.
+	// +nais:doc:Link="https://doc.nais.io/nais-application/good-practices/#set-reasonable-resource-requests-and-limits"
 	Resources *ResourceRequirements `json:"resources,omitempty"`
 
 	// The [Cron](https://en.wikipedia.org/wiki/Cron) schedule for running the Naisjob.
