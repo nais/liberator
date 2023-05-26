@@ -3,8 +3,9 @@ package nais_io_v1alpha1
 import (
 	"testing"
 
-	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
+
+	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 )
 
 var expectedErrors = []string{
@@ -44,7 +45,7 @@ func oldApp() *Application {
 func TestWebhookValidateUpdateError(t *testing.T) {
 	input := inputApp()
 	old := oldApp()
-	err := input.ValidateUpdate(old)
+	_, err := input.ValidateUpdate(old)
 	if err == nil {
 		t.Fatal("no error returned")
 	}
@@ -73,7 +74,7 @@ func TestWebhookValidateUpdateError(t *testing.T) {
 func TestWebhookValidateUpdate(t *testing.T) {
 	input := inputApp()
 	old := inputApp()
-	err := input.ValidateUpdate(old)
+	_, err := input.ValidateUpdate(old)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
