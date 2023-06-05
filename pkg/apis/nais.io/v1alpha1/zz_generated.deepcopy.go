@@ -206,6 +206,11 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = new(int64)
 		**out = **in
 	}
+	if in.Observability != nil {
+		in, out := &in.Observability, &out.Observability
+		*out = new(v1.Observability)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Vault != nil {
 		in, out := &in.Vault, &out.Vault
 		*out = new(v1.Vault)

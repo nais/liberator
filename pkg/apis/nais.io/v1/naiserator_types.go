@@ -706,3 +706,15 @@ type FrontendGeneratedConfig struct {
 type Frontend struct {
 	GeneratedConfig *FrontendGeneratedConfig `json:"generatedConfig,omitempty"`
 }
+
+type Tracing struct {
+	Enabled bool `json:"enabled,omitempty"`
+}
+
+type Observability struct {
+	// Enable application performance monitoring with traces collected using OpenTelemetry and the OTLP exporter.
+	// +nais:doc:Availability="GCP"
+	// +nais:doc:Experimental
+	// +nais:doc:Link="https://doc.nais.io/observability/tracing/"
+	Tracing *Tracing `json:"tracing,omitempty"`
+}
