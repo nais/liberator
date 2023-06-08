@@ -454,6 +454,11 @@ func ExampleApplicationForDocumentation() *Application {
 				Enabled:                 true,
 				MountSecretsAsFilesOnly: true,
 			},
+			Observability: &nais_io_v1.Observability{
+				Tracing: &nais_io_v1.Tracing{
+					Enabled: true,
+				},
+			},
 			Vault: &nais_io_v1.Vault{
 				Enabled: true,
 				Sidecar: true,

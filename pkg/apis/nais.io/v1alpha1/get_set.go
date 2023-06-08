@@ -156,3 +156,7 @@ func (in *Application) GetTerminationGracePeriodSeconds() *int64 {
 func (in *Application) GetFrontend() *nais_io_v1.Frontend {
 	return in.Spec.Frontend
 }
+
+func (in *Application) GetObservability() *nais_io_v1.Observability {
+	return in.Spec.Observability
+}

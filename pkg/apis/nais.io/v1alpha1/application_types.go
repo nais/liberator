@@ -218,6 +218,10 @@ type ApplicationSpec struct {
 	// +kubebuilder:validation:Maximum=180
 	TerminationGracePeriodSeconds *int64 `json:"terminationGracePeriodSeconds,omitempty"`
 
+	// Configuration options related to application observability.
+	// +nais:doc:Link="https://doc.nais.io/observability/"
+	Observability *nais_io_v1.Observability `json:"observability,omitempty"`
+
 	// Provides secrets management, identity-based access, and encrypting application data for auditing of secrets
 	// for applications, systems, and users.
 	// +nais:doc:Link="https://github.com/navikt/vault-iac/tree/master/doc"

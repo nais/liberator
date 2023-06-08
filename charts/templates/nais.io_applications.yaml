@@ -1044,6 +1044,17 @@ spec:
                 required:
                 - enabled
                 type: object
+              observability:
+                description: Configuration options related to application observability.
+                properties:
+                  tracing:
+                    description: Enable application performance monitoring with traces
+                      collected using OpenTelemetry and the OTLP exporter.
+                    properties:
+                      enabled:
+                        type: boolean
+                    type: object
+                type: object
               openSearch:
                 description: To get your own OpenSearch instance head over to the
                   IaC-repo to provision each instance. See [navikt/aiven-iac](https://github.com/navikt/aiven-iac)
