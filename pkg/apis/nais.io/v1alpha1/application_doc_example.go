@@ -103,9 +103,11 @@ func ExampleApplicationForDocumentation() *Application {
 					External: []nais_io_v1.AccessPolicyExternalRule{
 						{
 							Host: "external-application.example.com",
+							IPv4: "",
 						},
 						{
 							Host: "non-http-service.example.com",
+							IPv4: "",
 							Ports: []nais_io_v1.AccessPolicyPortRule{
 								{
 									Port: 9200,
