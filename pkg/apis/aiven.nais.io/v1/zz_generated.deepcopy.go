@@ -119,8 +119,14 @@ func (in *AivenApplicationSpec) DeepCopyInto(out *AivenApplicationSpec) {
 	}
 	if in.Redis != nil {
 		in, out := &in.Redis, &out.Redis
-		*out = new(RedisSpec)
-		**out = **in
+		*out = make([]*RedisSpec, len(*in))
+		for i := range *in {
+			if (*in)[i] != nil {
+				in, out := &(*in)[i], &(*out)[i]
+				*out = new(RedisSpec)
+				**out = **in
+			}
+		}
 	}
 }
 

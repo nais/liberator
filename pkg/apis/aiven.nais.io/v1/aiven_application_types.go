@@ -72,7 +72,7 @@ type AivenApplicationSpec struct {
 	// OpenSearch is a section configuring the OpenSearch credentials to provision
 	OpenSearch *OpenSearchSpec `json:"openSearch,omitempty"`
 	// Redis is a section configuring the Redis credentials to provision
-	Redis *RedisSpec `json:"redis,omitempty"`
+	Redis []*RedisSpec `json:"redis,omitempty"`
 }
 
 type KafkaSpec struct {
