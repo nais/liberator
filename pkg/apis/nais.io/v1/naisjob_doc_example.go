@@ -107,9 +107,11 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					External: []AccessPolicyExternalRule{
 						{
 							Host: "external-application.example.com",
+							IPv4: "",
 						},
 						{
 							Host: "non-http-service.example.com",
+							IPv4: "",
 							Ports: []AccessPolicyPortRule{
 								{
 									Port: 9200,

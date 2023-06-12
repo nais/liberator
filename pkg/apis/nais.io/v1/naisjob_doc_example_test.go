@@ -34,6 +34,7 @@ var ignoredApplicationFields = []string{
 	`.Status.SynchronizationHash`,
 	`.Status.SynchronizationState`,
 	`.Status.SynchronizationTime`,
+	`.Spec.AccessPolicy.Outbound.External.IPv4`,
 }
 
 // Test that the example NaisJob contains examples for all fields encountered.

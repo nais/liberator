@@ -6,9 +6,12 @@ type AccessPolicyPortRule struct {
 }
 
 type AccessPolicyExternalRule struct {
-	// The _host_ that your application should be able to reach, i.e. without the protocol (e.g. `https://`).
+	// The _host_ that your application should be able to reach, i.e. without the protocol (e.g. `https://`). "Host" and "IPv4" are mutually exclusive
 	// +kubebuilder:validation:Pattern=`^([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])(\.([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]{0,61}[a-zA-Z0-9]))*$`
-	Host string `json:"host"`
+	Host string `json:"host,omitempty"`
+	// The IPv4 address that your application should be able to reach. "IPv4" and "Host" are mutually exclusive
+	// +kubebuilder:validation:Pattern=`^(([0-9])|([1-9][0-9])|(1([0-9]{2}))|(2[0-4][0-9])|(25[0-5]))((\.(([0-9])|([1-9][0-9])|(1([0-9]{2}))|(2[0-4][0-9])|(25[0-5]))){3})$`
+	IPv4 string `json:"ipv4,omitempty"`
 	// List of port rules for external communication. Must be specified if using protocols other than HTTPS.
 	Ports []AccessPolicyPortRule `json:"ports,omitempty"`
 }
