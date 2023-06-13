@@ -87,6 +87,8 @@ type Doc struct {
 	Deprecated bool `marker:"Deprecated,optional"`
 	// Experimental declares the field as subject to instability, change, or removal
 	Experimental bool `marker:"Experimental,optional"`
+	// Hidden declares the field as hidden from reference and example documentation
+	Hidden bool `marker:"Hidden,optional"`
 }
 
 type ExtDoc struct {
@@ -106,6 +108,7 @@ type ExtDoc struct {
 	Immutable    bool
 	Deprecated   bool
 	Experimental bool
+	Hidden       bool
 }
 
 // Hijack the "example" field for custom documentation fields
@@ -534,9 +537,14 @@ func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, pare
 			entry.Deprecated = d.Deprecated
 			entry.Experimental = d.Experimental
 			entry.Immutable = d.Immutable
+			entry.Hidden = d.Hidden
 		} else {
 			log.Errorf("unable to merge structs: %s", err)
 		}
+	}
+
+	if entry.Hidden {
+		return
 	}
 
 	if len(jsonpath) > 0 {
