@@ -83,6 +83,10 @@ func (in *Naisjob) GetOpenSearch() *OpenSearch {
 	return in.Spec.OpenSearch
 }
 
+func (in *Naisjob) GetRedis() []Redis {
+	return in.Spec.Redis
+}
+
 func (in *Naisjob) GetVault() *Vault {
 	return in.Spec.Vault
 }

@@ -145,6 +145,10 @@ func (in *Application) GetOpenSearch() *nais_io_v1.OpenSearch {
 	return in.Spec.OpenSearch
 }
 
+func (in *Application) GetRedis() []nais_io_v1.Redis {
+	return in.Spec.Redis
+}
+
 func (in *Application) GetVault() *nais_io_v1.Vault {
 	return in.Spec.Vault
 }
