@@ -605,7 +605,7 @@ type CloudSqlInstance struct {
 	// to make sure the values match against the specification, otherwise your deployment
 	// will seemingly work OK, but the database flags will not function as expected.
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/flags#list-flags-postgres"
-	// +nais:doc:Experimental
+	// +nais:doc:Experimental=true
 	Flags []CloudSqlFlag `json:"flags,omitempty"`
 }
 
@@ -715,7 +715,7 @@ type Tracing struct {
 type Observability struct {
 	// Enable application performance monitoring with traces collected using OpenTelemetry and the OTLP exporter.
 	// +nais:doc:Availability="GCP"
-	// +nais:doc:Experimental
+	// +nais:doc:Experimental=true
 	// +nais:doc:Link="https://doc.nais.io/observability/tracing/"
 	Tracing *Tracing `json:"tracing,omitempty"`
 }

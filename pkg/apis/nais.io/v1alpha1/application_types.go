@@ -100,7 +100,7 @@ type ApplicationSpec struct {
 
 	// Configuration options specifically for frontend applications.
 	// +nais:doc:Availability="GCP"
-	// +nais:doc:Experimental
+	// +nais:doc:Experimental=true
 	Frontend *nais_io_v1.Frontend `json:"frontend,omitempty"`
 
 	// +nais:doc:Availability="GCP"
