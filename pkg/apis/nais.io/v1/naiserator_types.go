@@ -73,6 +73,14 @@ type OpenSearch struct {
 	Access string `json:"access,omitempty"`
 }
 
+type Redis struct {
+	// The last part of the name used when creating the instance (ie. redis-<team>-<instance>)
+	Instance string `json:"instance,omitempty"`
+	// Access level for redis user
+	// +kubebuilder:validation:Enum=read;write;readwrite;admin
+	Access string `json:"access,omitempty"`
+}
+
 type Influx struct {
 	// Provisions an InfluxDB instance and configures your application to access it.
 	// Use the prefix: `influx-` + `team` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.

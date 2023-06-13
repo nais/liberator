@@ -1176,6 +1176,25 @@ spec:
                 required:
                 - path
                 type: object
+              redis:
+                description: List of redis instances this job needs credentials for.
+                  Must be owned by same team.
+                items:
+                  properties:
+                    access:
+                      description: Access level for redis user
+                      enum:
+                      - read
+                      - write
+                      - readwrite
+                      - admin
+                      type: string
+                    instance:
+                      description: The last part of the name used when creating the
+                        instance (ie. redis-<team>-<instance>)
+                      type: string
+                  type: object
+                type: array
               replicas:
                 description: The numbers of pods to run in parallel.
                 properties:

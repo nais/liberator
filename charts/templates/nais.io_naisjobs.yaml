@@ -956,6 +956,25 @@ spec:
                 required:
                 - path
                 type: object
+              redis:
+                description: List of redis instances this job needs credentials for.
+                  Must be owned by same team.
+                items:
+                  properties:
+                    access:
+                      description: Access level for redis user
+                      enum:
+                      - read
+                      - write
+                      - readwrite
+                      - admin
+                      type: string
+                    instance:
+                      description: The last part of the name used when creating the
+                        instance (ie. redis-<team>-<instance>)
+                      type: string
+                  type: object
+                type: array
               resources:
                 description: When Containers have [resource requests](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
                   specified, the Kubernetes scheduler can make better decisions about

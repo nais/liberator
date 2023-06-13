@@ -155,6 +155,12 @@ type NaisjobSpec struct {
 	// Read more about this over at the [Kubernetes readiness documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
 	Readiness *Probe `json:"readiness,omitempty"`
 
+	// List of redis instances this job needs credentials for.
+	// Must be owned by same team.
+	// +nais:doc:Link="https://doc.nais.io/persistence/redis/"
+	// +nais:doc:Hidden=true
+	Redis []Redis `json:"redis,omitempty"`
+
 	// RestartPolicy describes how the container should be restarted. Only one of the following restart policies may be specified.
 	// If none of the following policies is specified, the default one is Never.
 	// Read more about [Kubernetes handling pod and container failures](https://kubernetes.io/docs/concepts/workloads/controllers/job/#handling-pod-and-container-failures)
