@@ -175,6 +175,11 @@ spec:
   openSearch:
     access: readwrite
     instance: my-open-search-instance
+  redis:
+    - instance: my-redis-instance
+      access: readwrite
+    - instance: that-other-instance
+      access: read
   postgres:
     # TODO - SQLInstance settings moved out to own custom resource, or re-use CNRM CRD?
     server: # name of SQLInstance to refer to
