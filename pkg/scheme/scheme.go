@@ -3,6 +3,7 @@ package scheme
 import (
 	"fmt"
 
+	aiven_io_v1alpha1 "github.com/nais/liberator/pkg/apis/aiven.io/v1alpha1"
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	bigquery_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/bigquery.cnrm.cloud.google.com/v1beta1"
 	google_nais_io_v1 "github.com/nais/liberator/pkg/apis/google.nais.io/v1"
@@ -56,6 +57,7 @@ func AddAll(scheme *runtime.Scheme) (*runtime.Scheme, error) {
 		aiven_nais_io_v1.AddToScheme,
 		kafka_nais_io_v1.AddToScheme,
 		google_nais_io_v1.AddToScheme,
+		aiven_io_v1alpha1.AddToScheme,
 	)
 }
 
