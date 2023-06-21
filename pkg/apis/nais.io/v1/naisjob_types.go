@@ -158,7 +158,6 @@ type NaisjobSpec struct {
 	// List of redis instances this job needs credentials for.
 	// Must be owned by same team.
 	// +nais:doc:Link="https://doc.nais.io/persistence/redis/"
-	// +nais:doc:Hidden=true
 	Redis []Redis `json:"redis,omitempty"`
 
 	// RestartPolicy describes how the container should be restarted. Only one of the following restart policies may be specified.
