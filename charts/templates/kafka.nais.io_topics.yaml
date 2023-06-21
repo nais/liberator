@@ -24,9 +24,6 @@ spec:
     - jsonPath: .status.fullyQualifiedName
       name: Fully Qualified Name
       type: string
-    - jsonPath: .status.credentialsExpiryTime
-      name: Credentials expiry time
-      type: string
     name: v1
     schema:
       openAPIV3Schema:
@@ -82,6 +79,28 @@ spec:
                     - compact
                     - compact,delete
                     type: string
+                  compaction:
+                    description: Compaction configures compaction, ignored when CleanupPolicy
+                      is not `compact`
+                    properties:
+                      maxCompactionLagMs:
+                        description: MaxCompactionLagMs indicates the maximum time
+                          a message will remain ineligible for compaction in the log
+                        minimum: 0
+                        type: integer
+                      minCleanableDirtyRatioPercent:
+                        anyOf:
+                        - type: integer
+                        - type: string
+                        description: MinCleanableDirtyRatio indicates the minimum
+                          ratio of dirty log to retention size to initiate log compaction
+                        x-kubernetes-int-or-string: true
+                      minCompactionLagMs:
+                        description: MinCompactionLagMs indicates the minimum time
+                          a message will remain uncompacted in the log
+                        minimum: 0
+                        type: integer
+                    type: object
                   maxMessageBytes:
                     description: The largest record batch size allowed by Kafka (after
                       compression if compression is enabled). If this is increased
