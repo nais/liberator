@@ -465,6 +465,7 @@ func ExampleApplicationForDocumentation() *Application {
 				Enabled:                 true,
 				MountSecretsAsFilesOnly: true,
 			},
+			TTL: "1h",
 			Observability: &nais_io_v1.Observability{
 				Tracing: &nais_io_v1.Tracing{
 					Enabled: true,
