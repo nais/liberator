@@ -7,6 +7,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/errors"
+	"k8s.io/apimachinery/pkg/util/validation"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
@@ -27,6 +28,10 @@ func (a *Application) SetupWebhookWithManager(mgr ctrl.Manager) error {
 var _ webhook.Validator = &Application{}
 
 func (a *Application) ValidateCreate() (admission.Warnings, error) {
+	if len(a.GetName()) > validation.LabelValueMaxLength {
+		return nil, apierrors.NewBadRequest(fmt.Sprintf("Application name length must be no more than %d characters", validation.LabelValueMaxLength))
+	}
+
 	return nil, nil
 }
 

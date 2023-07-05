@@ -79,3 +79,20 @@ func TestWebhookValidateUpdate(t *testing.T) {
 		t.Fatal("unexpected error", err)
 	}
 }
+
+func TestWebhookValidateCreate(t *testing.T) {
+	input := inputApp()
+	_, err := input.ValidateCreate()
+	if err != nil {
+		t.Fatal("unexpected error", err)
+	}
+}
+
+func TestWebhookValidateCreateTooLongName(t *testing.T) {
+	input := inputApp()
+	input.SetName("this-is-a-very-long-name-that-is-longer-than-63-characters-which-is-the-maximum-length-of-a-kubernetes-resource-name")
+	_, err := input.ValidateCreate()
+	if err.Error() != "Application name length must be no more than 63 characters" {
+		t.Errorf("unexpected error: %v", err)
+	}
+}
