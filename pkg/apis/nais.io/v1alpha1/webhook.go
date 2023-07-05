@@ -2,6 +2,7 @@ package nais_io_v1alpha1
 
 import (
 	"fmt"
+	"time"
 
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -30,6 +31,12 @@ var _ webhook.Validator = &Application{}
 func (a *Application) ValidateCreate() (admission.Warnings, error) {
 	if len(a.GetName()) > validation.LabelValueMaxLength {
 		return nil, apierrors.NewBadRequest(fmt.Sprintf("Application name length must be no more than %d characters", validation.LabelValueMaxLength))
+	}
+
+	if a.Spec.TTL != "" {
+		if _, err := time.ParseDuration(a.Spec.TTL); err != nil {
+			return nil, apierrors.NewBadRequest(fmt.Sprintf("TTL is not a valid duration: %q. Example of valid duration is '12h'", a.Spec.TTL))
+		}
 	}
 
 	return nil, nil

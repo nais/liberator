@@ -223,6 +223,9 @@ type ApplicationSpec struct {
 	// +kubebuilder:validation:Maximum=180
 	TerminationGracePeriodSeconds *int64 `json:"terminationGracePeriodSeconds,omitempty"`
 
+	// After the specified TTL, the application will be deleted.
+	TTL string `json:"ttl,omitempty"`
+
 	// Configuration options related to application observability.
 	// +nais:doc:Link="https://doc.nais.io/observability/"
 	Observability *nais_io_v1.Observability `json:"observability,omitempty"`

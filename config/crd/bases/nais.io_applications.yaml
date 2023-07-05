@@ -1383,6 +1383,9 @@ spec:
                 required:
                 - enabled
                 type: object
+              ttl:
+                description: After the specified TTL, the application will be deleted.
+                type: string
               vault:
                 description: Provides secrets management, identity-based access, and
                   encrypting application data for auditing of secrets for applications,

@@ -96,3 +96,24 @@ func TestWebhookValidateCreateTooLongName(t *testing.T) {
 		t.Errorf("unexpected error: %v", err)
 	}
 }
+
+func TestWebhookValidateTTL(t *testing.T) {
+	t.Run("valid", func(t *testing.T) {
+		input := inputApp()
+		input.Spec.TTL = "12h"
+		_, err := input.ValidateCreate()
+		if err != nil {
+			t.Errorf("unexpected error: %v", err)
+		}
+	})
+
+	t.Run("invalid", func(t *testing.T) {
+		input := inputApp()
+		input.Spec.TTL = "invalid"
+		_, err := input.ValidateCreate()
+		want := "TTL is not a valid duration: \"invalid\". Example of valid duration is '12h'"
+		if err.Error() != want {
+			t.Errorf("got: %s, want: %s", err, want)
+		}
+	})
+}
