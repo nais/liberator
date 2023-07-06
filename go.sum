@@ -39,8 +39,8 @@ dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
-github.com/aiven/aiven-go-client v1.23.0 h1:b2TrtSDD1aBt2/jPPmAQOIVhvD0yaMXJc7UvVr9XgpQ=
-github.com/aiven/aiven-go-client v1.23.0/go.mod h1:3Hh1PDNcqNNCYrkU/jSAHMV/b/ynoy73fwhBPKnMe6I=
+github.com/aiven/aiven-go-client v1.25.0 h1:gTlAd8Np2eJIHtLT6GBb+am87yqVZdlNoGBhzqlY2cQ=
+github.com/aiven/aiven-go-client v1.25.0/go.mod h1:3Hh1PDNcqNNCYrkU/jSAHMV/b/ynoy73fwhBPKnMe6I=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
 github.com/beorn7/perks v1.0.1 h1:VlbKKnNfV8bJzeqoa4cOKqO6bYr3WgKZxO8Z16+hsOM=
 github.com/beorn7/perks v1.0.1/go.mod h1:G2ZrVWU2WbWT9wwq4/hrbKbnv/1ERSJQ0ibhJ6rlkpw=
