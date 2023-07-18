@@ -100,7 +100,9 @@ type MaskinportenClient struct {
 
 // MaskinportenClientSpec defines the desired state of MaskinportenClient
 type MaskinportenClientSpec struct {
-	IntegrationName string `json:"integrationName,omitempty"`
+	// ClientName is the client name to be registered at DigDir.
+	// It is shown during login for user-centric flows, and is otherwise a human-readable way to differentiate between clients at DigDir's self-service portal.
+	ClientName string `json:"clientName,omitempty"`
 	// Scopes is a object of used end exposed scopes by application
 	Scopes MaskinportenScope `json:"scopes,omitempty"`
 	// SecretName is the name of the resulting Secret resource to be created
@@ -244,8 +246,9 @@ type IDPortenClientSpec struct {
 	AccessTokenLifetime *int `json:"accessTokenLifetime,omitempty"`
 	// ClientURI is the URL to the client to be used at DigDir when displaying a 'back' button or on errors
 	ClientURI IDPortenURI `json:"clientURI,omitempty"`
-	// Name of integration
-	IntegrationName string `json:"integrationName,omitempty"`
+	// ClientName is the client name to be registered at DigDir.
+	// It is shown during login for user-centric flows, and is otherwise a human-readable way to differentiate between clients at DigDir's self-service portal.
+	ClientName string `json:"clientName,omitempty"`
 	// IntegrationType is used to make sensible choices for your client.
 	// Which type of integration you choose will provide guidance on which scopes you can use with the client.
 	// A client can only have one integration type.
