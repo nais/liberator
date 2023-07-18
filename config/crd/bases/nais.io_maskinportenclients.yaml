@@ -52,7 +52,11 @@ spec:
           spec:
             description: MaskinportenClientSpec defines the desired state of MaskinportenClient
             properties:
-              integrationName:
+              clientName:
+                description: ClientName is the client name to be registered at DigDir.
+                  It is shown during login for user-centric flows, and is otherwise
+                  a human-readable way to differentiate between clients at DigDir's
+                  self-service portal.
                 type: string
               scopes:
                 description: Scopes is a object of used end exposed scopes by application
