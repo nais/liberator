@@ -55,6 +55,14 @@ spec:
                   secrets. Format RFC3339 = "2006-01-02T15:04:05Z07:00"
                 format: date-time
                 type: string
+              influxDB:
+                description: InfluxDB is a section configuring the InfluxDB credentials
+                  to provision
+                properties:
+                  instance:
+                    description: Name of the InfluxDB instance (`influx-<team>`)
+                    type: string
+                type: object
               kafka:
                 description: Kafka is a section configuring the kafka credentials
                   to provision
