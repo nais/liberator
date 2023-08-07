@@ -164,3 +164,7 @@ func (in *Application) GetFrontend() *nais_io_v1.Frontend {
 func (in *Application) GetObservability() *nais_io_v1.Observability {
 	return in.Spec.Observability
 }
+
+func (in *Application) GetTTL() string {
+	return in.Spec.TTL
+}
