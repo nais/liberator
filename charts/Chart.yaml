@@ -1,7 +1,7 @@
 apiVersion: v2
 name: nais-crds
 description: Base NAIS crds
-
 type: application
-
 version: 0.3.1
+sources:
+  - https://github.com/nais/liberator/tree/main/charts
