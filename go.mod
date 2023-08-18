@@ -1,6 +1,6 @@
 module github.com/nais/liberator
 
-go 1.20
+go 1.21
 
 require (
 	github.com/aiven/aiven-go-client v1.35.0
