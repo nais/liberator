@@ -5,6 +5,7 @@ import (
 	"time"
 
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
+	"github.com/nais/liberator/pkg/controller"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -255,7 +256,9 @@ func Test_aiven_sync_failed_long_time_ago(t *testing.T) {
 		ObjectMeta: metav1.ObjectMeta{},
 		Spec:       TopicSpec{},
 		Status: &TopicStatus{
-			SynchronizationHash:    syncHash,
+			NaisStatus: controller.NaisStatus{
+				SynchronizationHash: syncHash,
+			},
 			LatestAivenSyncFailure: beforeThreshold.Format(time.RFC3339),
 		},
 	}
@@ -271,7 +274,9 @@ func Test_aiven_sync_failed_recently(t *testing.T) {
 		ObjectMeta: metav1.ObjectMeta{},
 		Spec:       TopicSpec{},
 		Status: &TopicStatus{
-			SynchronizationHash:    syncHash,
+			NaisStatus: controller.NaisStatus{
+				SynchronizationHash: syncHash,
+			},
 			LatestAivenSyncFailure: afterThreshold.Format(time.RFC3339),
 		},
 	}

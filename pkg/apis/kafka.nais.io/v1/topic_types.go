@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/nais/liberator/pkg/controller"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/utils/pointer"
@@ -137,9 +138,7 @@ type TopicSpec struct {
 }
 
 type TopicStatus struct {
-	SynchronizationState   string   `json:"synchronizationState,omitempty"`
-	SynchronizationHash    string   `json:"synchronizationHash,omitempty"`
-	SynchronizationTime    string   `json:"synchronizationTime,omitempty"`
+	controller.NaisStatus
 	CredentialsExpiryTime  string   `json:"credentialsExpiryTime,omitempty"`
 	Errors                 []string `json:"errors,omitempty"`
 	Message                string   `json:"message,omitempty"`
