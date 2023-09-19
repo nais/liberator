@@ -3,7 +3,7 @@ module github.com/nais/liberator
 go 1.21
 
 require (
-	github.com/aiven/aiven-go-client v1.35.0
+	github.com/aiven/aiven-go-client v1.36.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/google/uuid v1.3.1
 	github.com/imdario/mergo v0.3.16
