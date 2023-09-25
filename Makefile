@@ -11,6 +11,7 @@ test:
 # Generate code
 generate:
 	$(CONTROLLER_GEN) object paths="./pkg/apis/..."
+	$(CONTROLLER_GEN) object paths="./pkg/controller/..."
 	$(CONTROLLER_GEN) crd rbac:roleName=manager-role webhook paths="./pkg/apis/..." output:crd:artifacts:config=config/crd/bases
 	cp ./config/crd/bases/*nais.io_*.yaml ./charts/templates
 

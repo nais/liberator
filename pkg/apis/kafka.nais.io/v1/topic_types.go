@@ -138,8 +138,7 @@ type TopicSpec struct {
 }
 
 type TopicStatus struct {
-	controller.NaisStatus
-	CredentialsExpiryTime  string   `json:"credentialsExpiryTime,omitempty"`
+	controller.NaisStatus  `json:",inline"`
 	Errors                 []string `json:"errors,omitempty"`
 	Message                string   `json:"message,omitempty"`
 	FullyQualifiedName     string   `json:"fullyQualifiedName,omitempty"`
@@ -200,8 +199,14 @@ func (in *Topic) NeedsSynchronization(hash string) bool {
 	return in.Status.SynchronizationHash != hash
 }
 
+func (in *Topic) GetStatus() *controller.NaisStatus {
+	return &in.Status.NaisStatus
+}
+
 func (in *Topic) ApplyDefaults() error {
-	in.Spec.Config = &Config{}
+	if in.Spec.Config == nil {
+		in.Spec.Config = &Config{}
+	}
 	in.Spec.Config.ApplyDefaults()
 	return nil
 }

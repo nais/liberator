@@ -7,39 +7,69 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/runtime"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/tools/record"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 )
 
-func NewReconciler[R client.Object](c client.Client, inner NaisReconciler[R], scheme *runtime.Scheme, logger log.FieldLogger) *Reconciler[R] {
-	return &Reconciler[R]{
-		Client: c,
-		inner:  inner,
-		Scheme: scheme,
-		logger: logger,
+func CreateWithManager[R NaisResource](mgr ctrl.Manager, inner NaisReconciler[R], logger log.FieldLogger) (reconcile.Reconciler, error) {
+	r := &reconciler[R]{
+		Client:        mgr.GetClient(),
+		eventRecorder: mgr.GetEventRecorderFor(inner.Name()),
+		inner:         inner,
+		logger:        logger.WithField("controller", inner.Name()),
+		finalizer:     fmt.Sprintf("%s.nais.io", inner.Name()),
 	}
+	return r, ctrl.NewControllerManagedBy(mgr).
+		For(r.inner.New()).
+		Complete(r)
 }
 
-type Reconciler[R client.Object] struct {
+type reconciler[R NaisResource] struct {
 	client.Client
 	inner           NaisReconciler[R]
-	Scheme          *runtime.Scheme
 	logger          log.FieldLogger
-	RequeueInterval time.Duration
+	requeueInterval time.Duration
+	eventRecorder   record.EventRecorder
+	finalizer       string
 }
 
-type NaisReconciler[R client.Object] interface {
+type NaisReconciler[R NaisResource] interface {
+	// New returns a pointer to a new instance of the resource type that this reconciler handles.
 	New() R
+
+	// Name returns the name of this reconciler in all lowercase characters.
+	Name() string
+
+	// LogDetail returns a set of fields that identify the resource in log messages.
 	LogDetail(resource R) log.Fields
-	GetStatus(resource R) *NaisStatus
-	SetStatus(resource R, status *NaisStatus)
-	Process(resource R, logger log.FieldLogger) ReconcileResult
-	Finalizer() string
+
+	// Process should make any necessary changes to bring the real world in line with the resource specification.
+	//
+	// When Process encounters an error, it is responsible for informing the user/operator about the error.
+	// This should be done via the logger, and by emitting an event attached to the resource if possible.
+	//
+	// If the reconciler needs to set custom fields on the resource status, these fields must be set on the status
+	// before returning. The status will be saved to the cluster after Process is complete.
+	Process(resource R, logger log.FieldLogger, eventRecorder record.EventRecorder) ReconcileResult
+
+	// Delete is called to clean up any external dependencies when the resource is scheduled for deletion.
+	//
+	// When Delete encounters an error, it is responsible for informing the user/operator about the error.
+	// This should be done via the logger, and by emitting an event attached to the resource if possible.
+	//
+	// Returns true if deletion was successful, false otherwise.
+	Delete(resource R, logger log.FieldLogger, eventRecorder record.EventRecorder) error
+
+	// NeedsProcessing is called to determine if the resource needs to be processed.
+	// When NeedsProcessing is called, the resource has already been checked for changes in hash, so most reconcilers should just return false.
+	NeedsProcessing(resource R, logger log.FieldLogger, eventRecorder record.EventRecorder) bool
 }
 
-func (r *Reconciler[R]) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
+func (r *reconciler[R]) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
 	logger := r.logger.WithFields(log.Fields{
 		"namespace": req.Namespace,
 		"name":      req.Name,
@@ -54,7 +84,7 @@ func (r *Reconciler[R]) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 		logger.Error(err)
 		cr := &ctrl.Result{}
 		if requeue {
-			cr.RequeueAfter = r.RequeueInterval
+			cr.RequeueAfter = r.requeueInterval
 		}
 		return *cr, nil
 	}
@@ -71,59 +101,104 @@ func (r *Reconciler[R]) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 
 	logger = logger.WithFields(r.inner.LogDetail(resource))
 
-	status := r.inner.GetStatus(resource)
-	if status != nil {
+	status := resource.GetStatus()
+	status.UpdateObservationData(resource.GetGeneration())
+	if status.SynchronizationTime != nil {
 		logger.Infof("Last synchronization time: %s", status.SynchronizationTime)
 	} else {
 		logger.Info("Resource not synchronized before")
 	}
 
-	result := r.inner.Process(resource, logger)
-
-	if result.Skipped {
+	if resource.GetDeletionTimestamp() != nil {
+		logger.Info("Resource is marked for deletion")
+		err = r.inner.Delete(resource, logger, r.eventRecorder)
+		if err != nil {
+			return fail(fmt.Errorf("failed to delete resource: %w", err), true)
+		}
+		if controllerutil.RemoveFinalizer(resource, r.finalizer) {
+			err = r.Update(ctx, resource)
+			if err != nil {
+				return fail(fmt.Errorf("failed to remove finalizer: %w", err), true)
+			}
+		}
 		return ctrl.Result{}, nil
 	}
 
-	// TODO: Metrics
-	// defer func() {
-	// 	metrics.TopicsProcessed.With(prometheus.Labels{
-	// 		metrics.LabelSyncState: result.Status.SynchronizationState,
-	// 		metrics.LabelPool:      topic.Spec.Pool,
-	// 	}).Inc()
-	// }()
+	err = resource.ApplyDefaults()
+	if err != nil {
+		return fail(err, false)
+	}
 
-	if result.Error != nil {
-		r.inner.SetStatus(resource, result.Status)
+	hash, err := resource.Hash()
+	if err != nil {
+		return fail(err, false)
+	}
+
+	if !r.needsProcessing(resource, hash, logger) {
+		return ctrl.Result{}, nil
+	}
+
+	result := r.inner.Process(resource, logger, r.eventRecorder)
+
+	status.UpdateSynchronizationData(hash, result.State, resource.GetGeneration())
+	conditions := append(result.Conditions, r.calculateSucess(result.Conditions, result.State))
+	status.UpdateConditions(conditions, resource.GetGeneration())
+
+	if controllerutil.AddFinalizer(resource, r.finalizer) {
 		err = r.Update(ctx, resource)
-		if err != nil {
-			logger.Errorf("Write resource status: %s", err)
-		}
-		return fail(result.Error, result.Requeue)
-	}
-
-	// If delete was finalized, mark resource as finally deleted by removing finalizer.
-	// Otherwise, append finalizer to finalizers to ensure proper cleanup when resource is deleted
-	if result.DeleteFinalized {
-		controllerutil.RemoveFinalizer(resource, r.inner.Finalizer())
 	} else {
-		controllerutil.AddFinalizer(resource, r.inner.Finalizer())
+		err = r.Status().Update(ctx, resource)
 	}
-
-	// Write resource status; retry always
-	r.inner.SetStatus(resource, result.Status)
-	err = r.Update(ctx, resource)
 	if err != nil {
 		return fail(err, true)
 	}
 
-	logger.Infof("Resource object updated: %s", result.Status.SynchronizationState)
+	if result.State == SynchronizationStateFailed {
+		return fail(fmt.Errorf("synchronisation failed"), result.Requeue)
+	}
 
 	return ctrl.Result{}, nil
 }
 
-// SetupWithManager sets up the controller with the Manager.
-func (r *Reconciler[R]) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(r.inner.New()).
-		Complete(r)
+func (r *reconciler[R]) needsProcessing(resource R, hash string, logger log.FieldLogger) bool {
+	status := resource.GetStatus()
+	if status == nil {
+		return true
+	}
+
+	if status.SynchronizationHash != hash {
+		logger.Infof("Resource has changed since last synchronization: %s != %s", status.SynchronizationHash, hash)
+		return true
+	}
+
+	return r.inner.NeedsProcessing(resource, logger, r.eventRecorder)
+}
+
+// calculateSucess uses the other conditions to calculate the overall success of the reconciliation
+//
+// If the reconciliation fails, reason and message are copied from the first failing condition
+// Conditions should be a list of possible failure states
+func (r *reconciler[R]) calculateSucess(conditions []metav1.Condition, state SynchronizationState) metav1.Condition {
+	var succeededState metav1.ConditionStatus
+	if state == SynchronizationStateFailed {
+		succeededState = metav1.ConditionFalse
+	} else {
+		succeededState = metav1.ConditionTrue
+	}
+
+	succeeded := metav1.Condition{
+		Type:    "Succeeded",
+		Status:  succeededState,
+		Reason:  "",
+		Message: "",
+	}
+
+	for _, c := range conditions {
+		if c.Status == metav1.ConditionTrue {
+			succeeded.Reason = c.Reason
+			succeeded.Message = c.Message
+			break
+		}
+	}
+	return succeeded
 }
