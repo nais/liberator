@@ -162,10 +162,6 @@ func (r *reconciler[R]) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 
 func (r *reconciler[R]) needsProcessing(resource R, hash string, logger log.FieldLogger) bool {
 	status := resource.GetStatus()
-	if status == nil {
-		return true
-	}
-
 	if status.SynchronizationHash != hash {
 		logger.Infof("Resource has changed since last synchronization: %s != %s", status.SynchronizationHash, hash)
 		return true
