@@ -146,9 +146,12 @@ func (r *reconciler[R]) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 
 	if controllerutil.AddFinalizer(resource, r.finalizer) {
 		err = r.Update(ctx, resource)
-	} else {
-		err = r.Status().Update(ctx, resource)
+		if err != nil {
+			return fail(err, true)
+		}
 	}
+
+	err = r.Status().Update(ctx, resource)
 	if err != nil {
 		return fail(err, true)
 	}
