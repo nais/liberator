@@ -91,66 +91,46 @@ type Influx struct {
 type Ingress string
 
 type IDPorten struct {
-	// Whether to enable provisioning of an ID-porten client.
-	// If enabled, an ID-porten client be provisioned.
-	// +nais:doc:Availability="team namespaces"
+	// Enable ID-porten authentication. Requires `.spec.idporten.sidecar.enabled=true`.
+	// +nais:doc:Availability="GCP"
 	Enabled bool `json:"enabled"`
-	// AccessTokenLifetime is the lifetime in seconds for any issued access token from ID-porten.
-	//
-	// If unspecified, defaults to `3600` seconds (1 hour).
-	// +nais:doc:Default="3600"
+	// Deprecated, do not use.
+	// +nais:doc:Deprecated=true
+	// +nais:doc:Hidden=true
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=3600
 	AccessTokenLifetime *int `json:"accessTokenLifetime,omitempty"`
-	// ClientURI is the URL shown to the user at ID-porten when displaying a 'back' button or on errors.
+	// Deprecated, do not use.
+	// +nais:doc:Deprecated=true
+	// +nais:doc:Hidden=true
 	ClientURI IDPortenURI `json:"clientURI,omitempty"`
-	// FrontchannelLogoutPath is a valid path for your application where ID-porten sends a request to whenever the user has
-	// initiated a logout elsewhere as part of a single logout (front channel logout) process.
-	//
-	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#front-channel-logout";"https://docs.digdir.no/oidc_func_sso.html#2-h%C3%A5ndtere-utlogging-fra-id-porten"
-	// +nais:doc:Default="/oauth2/logout"
+	// Deprecated, do not use.
+	// +nais:doc:Deprecated=true
+	// +nais:doc:Hidden=true
 	// +kubebuilder:validation:Pattern=`^\/.*$`
 	FrontchannelLogoutPath string `json:"frontchannelLogoutPath,omitempty"`
-	// IntegrationType is used to make sensible choices for your client.
-	// Which type of integration you choose will provide guidance on which scopes you can use with the client.
-	// A client can only have one integration type.
-	//
-	// NB! It is not possible to change the integration type after creation.
-	//
+	// Deprecated, do not use.
+	// +nais:doc:Deprecated=true
+	// +nais:doc:Hidden=true
 	// +nais:doc:Immutable=true
-	// +nais:doc:Default=idporten
-	// +nais:doc:Link="https://docs.digdir.no/oidc_protocol_scope.html#scope-limitations"
-	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html"
 	// +kubebuilder:validation:Enum=krr;idporten;api_klient
 	IntegrationType string `json:"integrationType,omitempty" nais:"immutable"`
-	// PostLogoutRedirectURIs are valid URIs that ID-porten will allow redirecting the end-user to after a single logout
-	// has been initiated and performed by the application.
-	//
-	// +nais:doc:Default="https://www.nav.no"
-	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/#self-initiated-logout";"https://docs.digdir.no/oidc_func_sso.html#1-utlogging-fra-egen-tjeneste"
+	// Deprecated, do not use.
+	// +nais:doc:Deprecated=true
+	// +nais:doc:Hidden=true
 	PostLogoutRedirectURIs []IDPortenURI `json:"postLogoutRedirectURIs,omitempty"`
-	// RedirectPath is a valid path that ID-porten redirects back to after a successful authorization request.
-	//
-	// +nais:doc:Default="/oauth2/callback"
+	// Deprecated, do not use.
+	// +nais:doc:Deprecated=true
+	// +nais:doc:Hidden=true
 	// +kubebuilder:validation:Pattern=`^\/.*$`
 	RedirectPath string `json:"redirectPath,omitempty"`
-	// Register different oauth2 Scopes on your client.
-	// You will not be able to add a scope to your client that conflicts with the client's IntegrationType.
-	// For example, you can not add a scope that is limited to the IntegrationType `krr` of IntegrationType `idporten`, and vice versa.
-	//
-	// Default for IntegrationType `krr` = ("krr:global/kontaktinformasjon.read", "krr:global/digitalpost.read")
-	// Default for IntegrationType `idporten` = ("openid", "profile")
-	// IntegrationType `api_klient` have no Default, checkout Digdir documentation.
-	//
-	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html?h=api_klient#scopes"
+	// Deprecated, do not use.
+	// +nais:doc:Deprecated=true
+	// +nais:doc:Hidden=true
 	Scopes []string `json:"scopes,omitempty"`
-	// SessionLifetime is the maximum lifetime in seconds for any given user's session in your application.
-	// The timeout starts whenever the user is redirected from the `authorization_endpoint` at ID-porten.
-	//
-	// If unspecified, defaults to `7200` seconds (2 hours).
-	// Note: Attempting to refresh the user's `access_token` beyond this timeout will yield an error.
-	//
-	// +nais:doc:Default="7200"
+	// Deprecated, do not use.
+	// +nais:doc:Deprecated=true
+	// +nais:doc:Hidden=true
 	// +kubebuilder:validation:Minimum=3600
 	// +kubebuilder:validation:Maximum=7200
 	SessionLifetime *int `json:"sessionLifetime,omitempty"`

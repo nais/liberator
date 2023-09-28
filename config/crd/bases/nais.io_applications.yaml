@@ -712,77 +712,50 @@ spec:
                     type: array
                 type: object
               idporten:
-                description: Configures an ID-porten client for this application.
+                description: Configures ID-porten authentication for this application.
                   See [ID-porten](https://doc.nais.io/security/auth/idporten/) for
                   more details.
                 properties:
                   accessTokenLifetime:
-                    description: "AccessTokenLifetime is the lifetime in seconds for
-                      any issued access token from ID-porten. \n If unspecified, defaults
-                      to `3600` seconds (1 hour)."
+                    description: Deprecated, do not use.
                     maximum: 3600
                     minimum: 1
                     type: integer
                   clientURI:
-                    description: ClientURI is the URL shown to the user at ID-porten
-                      when displaying a 'back' button or on errors.
+                    description: Deprecated, do not use.
                     pattern: ^https:\/\/.+$
                     type: string
                   enabled:
-                    description: Whether to enable provisioning of an ID-porten client.
-                      If enabled, an ID-porten client be provisioned.
+                    description: Enable ID-porten authentication. Requires `.spec.idporten.sidecar.enabled=true`.
                     type: boolean
                   frontchannelLogoutPath:
-                    description: FrontchannelLogoutPath is a valid path for your application
-                      where ID-porten sends a request to whenever the user has initiated
-                      a logout elsewhere as part of a single logout (front channel
-                      logout) process.
+                    description: Deprecated, do not use.
                     pattern: ^\/.*$
                     type: string
                   integrationType:
-                    description: "IntegrationType is used to make sensible choices
-                      for your client. Which type of integration you choose will provide
-                      guidance on which scopes you can use with the client. A client
-                      can only have one integration type. \n NB! It is not possible
-                      to change the integration type after creation."
+                    description: Deprecated, do not use.
                     enum:
                     - krr
                     - idporten
                     - api_klient
                     type: string
                   postLogoutRedirectURIs:
-                    description: PostLogoutRedirectURIs are valid URIs that ID-porten
-                      will allow redirecting the end-user to after a single logout
-                      has been initiated and performed by the application.
+                    description: Deprecated, do not use.
                     items:
                       pattern: ^https:\/\/.+$
                       type: string
                     type: array
                   redirectPath:
-                    description: RedirectPath is a valid path that ID-porten redirects
-                      back to after a successful authorization request.
+                    description: Deprecated, do not use.
                     pattern: ^\/.*$
                     type: string
                   scopes:
-                    description: "Register different oauth2 Scopes on your client.
-                      You will not be able to add a scope to your client that conflicts
-                      with the client's IntegrationType. For example, you can not
-                      add a scope that is limited to the IntegrationType `krr` of
-                      IntegrationType `idporten`, and vice versa. \n Default for IntegrationType
-                      `krr` = (\"krr:global/kontaktinformasjon.read\", \"krr:global/digitalpost.read\")
-                      Default for IntegrationType `idporten` = (\"openid\", \"profile\")
-                      IntegrationType `api_klient` have no Default, checkout Digdir
-                      documentation."
+                    description: Deprecated, do not use.
                     items:
                       type: string
                     type: array
                   sessionLifetime:
-                    description: "SessionLifetime is the maximum lifetime in seconds
-                      for any given user's session in your application. The timeout
-                      starts whenever the user is redirected from the `authorization_endpoint`
-                      at ID-porten. \n If unspecified, defaults to `7200` seconds
-                      (2 hours). Note: Attempting to refresh the user's `access_token`
-                      beyond this timeout will yield an error."
+                    description: Deprecated, do not use.
                     maximum: 7200
                     minimum: 3600
                     type: integer

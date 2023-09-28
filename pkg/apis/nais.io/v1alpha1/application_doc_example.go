@@ -306,17 +306,7 @@ func ExampleApplicationForDocumentation() *Application {
 				},
 			},
 			IDPorten: &nais_io_v1.IDPorten{
-				AccessTokenLifetime:    ptr(3600),
-				ClientURI:              "https://www.nav.no",
-				Enabled:                true,
-				FrontchannelLogoutPath: "/oauth2/logout",
-				IntegrationType:        "idporten",
-				PostLogoutRedirectURIs: []nais_io_v1.IDPortenURI{
-					"https://www.nav.no",
-				},
-				RedirectPath:    "/oauth2/callback",
-				Scopes:          []string{"openid", "profile"},
-				SessionLifetime: ptr(7200),
+				Enabled: true,
 				Sidecar: &nais_io_v1.IDPortenSidecar{
 					Wonderwall: nais_io_v1.Wonderwall{
 						AutoLogin: true,

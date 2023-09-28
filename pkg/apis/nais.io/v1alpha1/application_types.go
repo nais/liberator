@@ -106,7 +106,7 @@ type ApplicationSpec struct {
 	// +nais:doc:Availability="GCP"
 	GCP *nais_io_v1.GCP `json:"gcp,omitempty"`
 
-	// Configures an ID-porten client for this application.
+	// Configures ID-porten authentication for this application.
 	// See [ID-porten](https://doc.nais.io/security/auth/idporten/) for more details.
 	IDPorten *nais_io_v1.IDPorten `json:"idporten,omitempty"`
 
