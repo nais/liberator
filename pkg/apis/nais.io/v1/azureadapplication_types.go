@@ -8,8 +8,6 @@ import (
 
 // Machine readable event "Reason" fields, used for determining synchronization state.
 const (
-	EventAddedFinalizer     = "AddedFinalizer"
-	EventDeletedFinalizer   = "DeletedFinalizer"
 	EventCreatedInAzure     = "CreatedInAzure"
 	EventUpdatedInAzure     = "UpdatedInAzure"
 	EventRotatedInAzure     = "RotatedInAzure"
@@ -127,9 +125,9 @@ type AzureAdPreAuthorizedApp struct {
 
 // Claims defines additional configuration of the emitted claims in tokens returned to the Azure AD application.
 type AzureAdClaims struct {
-	// Extra is a list of additional claims to be mapped from an associated claim-mapping policy.
-	// Currently, the only supported values are `NAVident` and `azp_name`.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#extra"
+	// Deprecated, do not use.
+	// +nais:doc:Deprecated=true
+	// +nais:doc:Hidden=true
 	Extra []AzureAdExtraClaim `json:"extra,omitempty"`
 	// Groups is a list of Azure AD group IDs to be emitted in the `groups` claim in tokens issued by Azure AD.
 	// This also assigns groups to the application for access control. Only direct members of the groups are granted access.

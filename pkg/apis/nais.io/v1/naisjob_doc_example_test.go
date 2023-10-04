@@ -3,9 +3,10 @@ package nais_io_v1_test
 import (
 	"testing"
 
+	"github.com/stretchr/testify/assert"
+
 	"github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/nais/liberator/pkg/testutil"
-	"github.com/stretchr/testify/assert"
 )
 
 var ignoredApplicationFields = []string{
@@ -35,7 +36,8 @@ var ignoredApplicationFields = []string{
 	`.Status.SynchronizationState`,
 	`.Status.SynchronizationTime`,
 	`.Spec.AccessPolicy.Outbound.External.IPv4`,
-	`.Spec.Redis`, // TODO: Add to example when feature is ready
+	`.Spec.Azure.Application.Claims.Extra`, // TODO: Remove when the deprecated Azure field is removed.
+	`.Spec.Redis`,                          // TODO: Add to example when feature is ready
 }
 
 // Test that the example NaisJob contains examples for all fields encountered.

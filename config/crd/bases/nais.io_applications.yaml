@@ -174,9 +174,7 @@ spec:
                           emitted claims in tokens returned to the Azure AD application.
                         properties:
                           extra:
-                            description: Extra is a list of additional claims to be
-                              mapped from an associated claim-mapping policy. Currently,
-                              the only supported values are `NAVident` and `azp_name`.
+                            description: Deprecated, do not use.
                             items:
                               enum:
                               - NAVident

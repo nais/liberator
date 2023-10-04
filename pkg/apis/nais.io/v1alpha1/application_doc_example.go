@@ -131,10 +131,6 @@ func ExampleApplicationForDocumentation() *Application {
 					Enabled:       true,
 					AllowAllUsers: ptr(true),
 					Claims: &nais_io_v1.AzureAdClaims{
-						Extra: []nais_io_v1.AzureAdExtraClaim{
-							"NAVident",
-							"azp_name",
-						},
 						Groups: []nais_io_v1.AzureAdGroup{
 							{
 								ID: "00000000-0000-0000-0000-000000000000",

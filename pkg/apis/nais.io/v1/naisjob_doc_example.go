@@ -127,10 +127,6 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					Enabled:       true,
 					AllowAllUsers: boolp(true),
 					Claims: &AzureAdClaims{
-						Extra: []AzureAdExtraClaim{
-							"NAVident",
-							"azp_name",
-						},
 						Groups: []AzureAdGroup{
 							{
 								ID: "00000000-0000-0000-0000-000000000000",

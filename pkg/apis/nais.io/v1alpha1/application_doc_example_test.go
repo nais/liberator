@@ -27,7 +27,8 @@ var ignoredApplicationFields = []string{
 	`.ObjectMeta.ResourceVersion`,
 	`.ObjectMeta.SelfLink`,
 	`.ObjectMeta.UID`,
-	`.Spec.IDPorten.AccessTokenLifetime`, // TODO: Remove when these deprecated ID-porten fields are removed.
+	`.Spec.Azure.Application.Claims.Extra`, // TODO: Remove when the deprecated Azure field is removed.
+	`.Spec.IDPorten.AccessTokenLifetime`,   // TODO: Remove when these deprecated ID-porten fields are removed.
 	`.Spec.IDPorten.ClientURI`,
 	`.Spec.IDPorten.FrontchannelLogoutPath`,
 	`.Spec.IDPorten.IntegrationType`,
