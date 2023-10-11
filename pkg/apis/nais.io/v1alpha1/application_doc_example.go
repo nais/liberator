@@ -137,11 +137,6 @@ func ExampleApplicationForDocumentation() *Application {
 							},
 						},
 					},
-					ReplyURLs: []nais_io_v1.AzureAdReplyUrlString{
-						"https://myapplication.nav.no/oauth2/callback",
-					},
-					SinglePageApplication: ptr(true),
-					Tenant:                "nav.no",
 				},
 				Sidecar: &nais_io_v1.AzureSidecar{
 					Wonderwall: nais_io_v1.Wonderwall{

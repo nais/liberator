@@ -133,11 +133,6 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 							},
 						},
 					},
-					ReplyURLs: []AzureAdReplyUrlString{
-						"https://myapplication.nav.no/oauth2/callback",
-					},
-					SinglePageApplication: boolp(true),
-					Tenant:                "nav.no",
 				},
 			},
 			BackoffLimit: 5,

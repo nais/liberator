@@ -36,8 +36,11 @@ var ignoredApplicationFields = []string{
 	`.Status.SynchronizationState`,
 	`.Status.SynchronizationTime`,
 	`.Spec.AccessPolicy.Outbound.External.IPv4`,
-	`.Spec.Azure.Application.Claims.Extra`, // TODO: Remove when the deprecated Azure field is removed.
-	`.Spec.Redis`,                          // TODO: Add to example when feature is ready
+	`.Spec.Azure.Application.Claims.Extra`, // TODO: Remove when these deprecated Azure fields are removed.
+	`.Spec.Azure.Application.ReplyURLs`,
+	`.Spec.Azure.Application.SinglePageApplication`,
+	`.Spec.Azure.Application.Tenant`,
+	`.Spec.Redis`, // TODO: Add to example when feature is ready
 }
 
 // Test that the example NaisJob contains examples for all fields encountered.

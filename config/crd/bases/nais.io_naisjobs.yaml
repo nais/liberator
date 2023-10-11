@@ -212,23 +212,17 @@ spec:
                           provisioned.
                         type: boolean
                       replyURLs:
-                        description: ReplyURLs is a list of allowed redirect URLs
-                          used when performing OpenID Connect flows for authenticating
-                          end-users.
+                        description: Deprecated. Only use if you're implementing logins
+                          _without_ using sidecar.
                         items:
                           pattern: ^https?:\/\/.+$
                           type: string
                         type: array
                       singlePageApplication:
-                        description: SinglePageApplication denotes whether this Azure
-                          AD application should be registered as a single-page-application
-                          for usage in client-side applications without access to
-                          secrets.
+                        description: Deprecated, do not use.
                         type: boolean
                       tenant:
-                        description: "A Tenant represents an organization in Azure
-                          AD. \n If unspecified, will default to `trygdeetaten.no`
-                          for development clusters and `nav.no` for production clusters."
+                        description: Deprecated, do not use.
                         enum:
                         - nav.no
                         - trygdeetaten.no

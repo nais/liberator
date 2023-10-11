@@ -52,16 +52,16 @@ type AccessPolicyInboundRule struct {
 	AccessPolicyRule `json:",inline"`
 	// Permissions contains a set of permissions that are granted to the given application.
 	// Currently only applicable for Azure AD clients.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#fine-grained-access-control"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#fine-grained-access-control"
 	Permissions *AccessPolicyPermissions `json:"permissions,omitempty"`
 }
 
 type AccessPolicyPermissions struct {
 	// Scopes is a set of custom permission scopes that are granted to a given application.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#custom-scopes"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#custom-scopes"
 	Scopes []AccessPolicyPermission `json:"scopes,omitempty"`
 	// Roles is a set of custom permission roles that are granted to a given application.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#custom-roles"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#custom-roles"
 	Roles []AccessPolicyPermission `json:"roles,omitempty"`
 }
 

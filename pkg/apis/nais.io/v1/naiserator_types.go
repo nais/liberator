@@ -36,24 +36,23 @@ type AzureApplication struct {
 	// Whether to enable provisioning of an Azure AD application.
 	// If enabled, an Azure AD application will be provisioned.
 	Enabled bool `json:"enabled"`
-	// ReplyURLs is a list of allowed redirect URLs used when performing OpenID Connect flows for authenticating end-users.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#reply-urls"
+	// Deprecated. Only use if you're implementing logins _without_ using sidecar.
+	// +nais:doc:Deprecated=true
+	// +nais:doc:Hidden=true
 	ReplyURLs []AzureAdReplyUrlString `json:"replyURLs,omitempty"`
-	// A Tenant represents an organization in Azure AD.
-	//
-	// If unspecified, will default to `trygdeetaten.no` for development clusters and `nav.no` for production clusters.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/concepts#tenants"
+	// Deprecated, do not use.
+	// +nais:doc:Deprecated=true
+	// +nais:doc:Hidden=true
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
 	Tenant string         `json:"tenant,omitempty"`
 	Claims *AzureAdClaims `json:"claims,omitempty"`
-	// SinglePageApplication denotes whether this Azure AD application should be registered as a single-page-application for usage in client-side applications without access to secrets.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#single-page-application"
-	// +nais:doc:Default="false"
+	// Deprecated, do not use.
+	// +nais:doc:Deprecated=true
+	// +nais:doc:Hidden=true
 	SinglePageApplication *bool `json:"singlePageApplication,omitempty"`
 	// AllowAllUsers denotes whether all users within the tenant should be allowed to access this AzureAdApplication.
 	// +nais:doc:Default="false"
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#users"
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#groups"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#all-users"
 	AllowAllUsers *bool `json:"allowAllUsers,omitempty"`
 }
 

@@ -132,7 +132,6 @@ type AzureAdClaims struct {
 	// Groups is a list of Azure AD group IDs to be emitted in the `groups` claim in tokens issued by Azure AD.
 	// This also assigns groups to the application for access control. Only direct members of the groups are granted access.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration/#groups"
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/access-policy#users"
 	Groups []AzureAdGroup `json:"groups,omitempty"`
 }
 
