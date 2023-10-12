@@ -137,6 +137,7 @@ func ExampleApplicationForDocumentation() *Application {
 							},
 						},
 					},
+					Tenant: "nav.no",
 				},
 				Sidecar: &nais_io_v1.AzureSidecar{
 					Wonderwall: nais_io_v1.Wonderwall{
