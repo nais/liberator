@@ -40,9 +40,10 @@ type AzureApplication struct {
 	// +nais:doc:Deprecated=true
 	// +nais:doc:Hidden=true
 	ReplyURLs []AzureAdReplyUrlString `json:"replyURLs,omitempty"`
-	// Deprecated, do not use.
-	// +nais:doc:Deprecated=true
-	// +nais:doc:Hidden=true
+	// Tenant targets a specific tenant for the Azure AD application.
+	// Only works in the development clusters. Only use this if you have a specific reason to do so.
+	// Using this will _isolate_ your application from all other applications that are not using the same tenant.
+	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad#tenants"
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
 	Tenant string         `json:"tenant,omitempty"`
 	Claims *AzureAdClaims `json:"claims,omitempty"`

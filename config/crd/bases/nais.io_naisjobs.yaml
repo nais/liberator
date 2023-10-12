@@ -222,7 +222,11 @@ spec:
                         description: Deprecated, do not use.
                         type: boolean
                       tenant:
-                        description: Deprecated, do not use.
+                        description: Tenant targets a specific tenant for the Azure
+                          AD application. Only works in the development clusters.
+                          Only use this if you have a specific reason to do so. Using
+                          this will _isolate_ your application from all other applications
+                          that are not using the same tenant.
                         enum:
                         - nav.no
                         - trygdeetaten.no
