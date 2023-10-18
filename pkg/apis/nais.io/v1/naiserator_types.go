@@ -669,15 +669,15 @@ func (envVars EnvVars) ToKubernetes() []corev1.EnvVar {
 type Wonderwall struct {
 	// Automatically redirect the user to login for all proxied GET requests.
 	// +nais:doc:Default="false"
-	// +nais:doc:Link="https://doc.nais.io/appendix/wonderwall/#12-autologin"
+	// +nais:doc:Link="https://doc.nais.io/addons/wonderwall/#12-autologin"
 	AutoLogin bool `json:"autoLogin,omitempty"`
 	// Comma separated list of absolute paths to ignore when auto-login is enabled.
-	// +nais:doc:Link="https://doc.nais.io/appendix/wonderwall/#12-autologin"
+	// +nais:doc:Link="https://doc.nais.io/addons/wonderwall/#12-autologin"
 	AutoLoginIgnorePaths []WonderwallIgnorePaths `json:"autoLoginIgnorePaths,omitempty"`
 	// Enable the sidecar.
 	Enabled bool `json:"enabled"`
 	// Resource requirements for the sidecar container.
-	// +nais:doc:Link="https://doc.nais.io/appendix/wonderwall/#4-resource-requirements"
+	// +nais:doc:Link="https://doc.nais.io/addons/wonderwall/#4-resource-requirements"
 	Resources *ResourceRequirements `json:"resources,omitempty"`
 }
 
