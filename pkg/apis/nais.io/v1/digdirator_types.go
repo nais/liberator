@@ -249,17 +249,19 @@ type IDPortenClientSpec struct {
 	// ClientName is the client name to be registered at DigDir.
 	// It is shown during login for user-centric flows, and is otherwise a human-readable way to differentiate between clients at DigDir's self-service portal.
 	ClientName string `json:"clientName,omitempty"`
-	// IntegrationType is used to make sensible choices for your client.
-	// Which type of integration you choose will provide guidance on which scopes you can use with the client.
-	// A client can only have one integration type.
-	//
-	// NB! It is not possible to change the integration type after creation.
+	// IntegrationType sets the integration type for your client.
+	// The integration type restricts which scopes you can register on your client.
+	// The integration type is immutable, and can only be set on creation of the IDPortenClient.
+	// If you need to change the integration type, you should either create a new IDPortenClient or delete and recreate the existing one.
 	//
 	// +nais:doc:Immutable=true
 	// +nais:doc:Default=idporten
-	// +nais:doc:Link="https://docs.digdir.no/oidc_protocol_scope.html#scope-limitations"
-	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html"
+	// +nais:doc:Link="https://docs.digdir.no/docs/idporten/oidc_old/oidc_protocol_scope.html#scope-limitations"
+	// +nais:doc:Link="https://docs.digdir.no/docs/idporten/oidc/oidc_func_clientreg.html#integrasjonstyper"
+	// +kubebuilder:default=idporten
+	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=krr;idporten;api_klient
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="integrationType is immutable; delete and recreate the IDPortenClient to change integrationType"
 	IntegrationType string `json:"integrationType,omitempty" nais:"immutable"`
 	// FrontchannelLogoutURI is the URL that ID-porten sends a requests to whenever a logout is triggered by another application using the same session
 	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI,omitempty"`

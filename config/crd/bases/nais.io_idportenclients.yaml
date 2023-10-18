@@ -76,16 +76,22 @@ spec:
                 pattern: ^https:\/\/.+$
                 type: string
               integrationType:
-                description: "IntegrationType is used to make sensible choices for
-                  your client. Which type of integration you choose will provide guidance
-                  on which scopes you can use with the client. A client can only have
-                  one integration type. \n NB! It is not possible to change the integration
-                  type after creation."
+                default: idporten
+                description: IntegrationType sets the integration type for your client.
+                  The integration type restricts which scopes you can register on
+                  your client. The integration type is immutable, and can only be
+                  set on creation of the IDPortenClient. If you need to change the
+                  integration type, you should either create a new IDPortenClient
+                  or delete and recreate the existing one.
                 enum:
                 - krr
                 - idporten
                 - api_klient
                 type: string
+                x-kubernetes-validations:
+                - message: integrationType is immutable; delete and recreate the IDPortenClient
+                    to change integrationType
+                  rule: self == oldSelf
               postLogoutRedirectURIs:
                 description: PostLogoutRedirectURI is a list of valid URIs that ID-porten
                   may redirect to after logout
