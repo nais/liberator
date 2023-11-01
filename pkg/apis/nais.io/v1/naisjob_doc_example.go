@@ -17,6 +17,9 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 	boolp := func(b bool) *bool {
 		return &b
 	}
+	stringp := func(s string) *string {
+		return &s
+	}
 
 	return &Naisjob{
 		TypeMeta: metav1.TypeMeta{
@@ -362,6 +365,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			},
 			SuccessfulJobsHistoryLimit:    2,
 			TerminationGracePeriodSeconds: int64p(60),
+			TimeZone:                      stringp("Europe/Oslo"),
 			TTLSecondsAfterFinished:       int32p(60),
 			Vault: &Vault{
 				Enabled: true,
