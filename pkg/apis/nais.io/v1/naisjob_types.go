@@ -199,7 +199,7 @@ type NaisjobSpec struct {
 
 	// TimeZone for Naisjobs. Defaults to UTC. Only used if Schedule is specified.
 	// Specify a valid [IANA timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
-	TimeZone *string `json:"timezone,omitempty"`
+	TimeZone *string `json:"timeZone,omitempty"`
 
 	// Specify the number of seconds to wait before removing the Job after it has finished (either Completed or Failed).
 	// If the field is unset, this Job won't be cleaned up by the TTL controller after it finishes.

@@ -1076,7 +1076,7 @@ spec:
                 maximum: 180
                 minimum: 0
                 type: integer
-              timezone:
+              timeZone:
                 description: TimeZone for Naisjobs. Defaults to UTC. Only used if
                   Schedule is specified. Specify a valid [IANA timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
                 type: string
