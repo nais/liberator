@@ -1670,6 +1670,11 @@ func (in *NaisjobSpec) DeepCopyInto(out *NaisjobSpec) {
 		*out = new(int64)
 		**out = **in
 	}
+	if in.TimeZone != nil {
+		in, out := &in.TimeZone, &out.TimeZone
+		*out = new(string)
+		**out = **in
+	}
 	if in.TTLSecondsAfterFinished != nil {
 		in, out := &in.TTLSecondsAfterFinished, &out.TTLSecondsAfterFinished
 		*out = new(int32)
