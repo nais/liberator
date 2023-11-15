@@ -66,7 +66,7 @@ type AzureSidecar struct {
 
 type OpenSearch struct {
 	// Configure your application to access your OpenSearch instance.
-	// Use the `instance_name` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+	// The last part of the name used when creating the instance (ie. opensearch-<team>-<instance>)
 	Instance string `json:"instance"`
 	// Access level for OpenSearch user
 	// +kubebuilder:validation:Enum=read;write;readwrite;admin
