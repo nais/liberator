@@ -410,6 +410,7 @@ type Replicas struct {
 	DisableAutoScaling bool `json:"disableAutoScaling,omitempty"`
 	// ScalingStrategy configures how automatic scaling is performed.
 	// Exactly one of the available strategies should be used.
+	// +nais:doc:Hidden=true
 	ScalingStrategy *ScalingStrategy `json:"scalingStrategy,omitempty"`
 }
 
