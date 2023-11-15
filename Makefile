@@ -8,6 +8,8 @@ CONTROLLER_GEN ?= go run sigs.k8s.io/controller-tools/cmd/controller-gen
 test:
 	go test ./... -count=1
 
+all: mocks test generate doc
+
 # Generate code
 generate:
 	$(CONTROLLER_GEN) object paths="./pkg/apis/..."

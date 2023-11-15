@@ -1167,9 +1167,9 @@ spec:
                 description: The numbers of pods to run in parallel.
                 properties:
                   cpuThresholdPercentage:
-                    description: 'Deprecated: Use ScalingMechanism.Cpu.ThresholdPercentage
+                    description: 'Deprecated: Use ScalingStrategy.Cpu.ThresholdPercentage
                       instead. Amount of CPU usage before the autoscaler kicks in.
-                      Can''t be set if anything under ScalingMechanism is set.'
+                      Can''t be set if anything under ScalingStrategy is set.'
                     type: integer
                   disableAutoScaling:
                     description: Disable autoscaling
@@ -1181,13 +1181,13 @@ spec:
                   min:
                     description: The minimum amount of running replicas for a deployment.
                     type: integer
-                  scalingMechanism:
-                    description: ScalingMechanism defines which mechanism the horizontal
-                      pod autoscaler should use
+                  scalingStrategy:
+                    description: ScalingStrategy configures how automatic scaling
+                      is performed. Exactly one of the available strategies should
+                      be used.
                     properties:
                       cpu:
-                        description: Cpu configures HPA based on CPU usage. Can't
-                          be set if Kafka is set
+                        description: Configures HPA based on CPU usage.
                         properties:
                           thresholdPercentage:
                             description: Amount of CPU usage before the autoscaler
@@ -1195,8 +1195,7 @@ spec:
                             type: integer
                         type: object
                       kafka:
-                        description: Kafka configures HPA based on Kafka lag. Can't
-                          be set if Cpu is set
+                        description: Configures HPA based on Kafka lag.
                         properties:
                           consumerGroup:
                             description: ConsumerGroup your application uses when

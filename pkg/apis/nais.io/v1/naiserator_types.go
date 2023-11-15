@@ -388,12 +388,10 @@ type CpuScaling struct {
 	ThresholdPercentage int `json:"thresholdPercentage,omitempty"`
 }
 
-type ScalingMechanism struct {
-	// Cpu configures HPA based on CPU usage.
-	// Can't be set if Kafka is set
+type ScalingStrategy struct {
+	// Configures HPA based on CPU usage.
 	Cpu *CpuScaling `json:"cpu,omitempty"`
-	// Kafka configures HPA based on Kafka lag.
-	// Can't be set if Cpu is set
+	// Configures HPA based on Kafka lag.
 	Kafka *KafkaScaling `json:"kafka,omitempty"`
 }
 
@@ -402,16 +400,17 @@ type Replicas struct {
 	Min *int `json:"min,omitempty"`
 	// The pod autoscaler will increase replicas when required up to the maximum.
 	Max *int `json:"max,omitempty"`
-	// Deprecated: Use ScalingMechanism.Cpu.ThresholdPercentage instead.
+	// Deprecated: Use ScalingStrategy.Cpu.ThresholdPercentage instead.
 	// Amount of CPU usage before the autoscaler kicks in.
-	// Can't be set if anything under ScalingMechanism is set.
+	// Can't be set if anything under ScalingStrategy is set.
 	// +nais:doc:Deprecated=true
 	CpuThresholdPercentage int `json:"cpuThresholdPercentage,omitempty"`
 	// Disable autoscaling
 	// +nais:doc:Default="false"
 	DisableAutoScaling bool `json:"disableAutoScaling,omitempty"`
-	// ScalingMechanism defines which mechanism the horizontal pod autoscaler should use
-	ScalingMechanism *ScalingMechanism `json:"scalingMechanism,omitempty"`
+	// ScalingStrategy configures how automatic scaling is performed.
+	// Exactly one of the available strategies should be used.
+	ScalingStrategy *ScalingStrategy `json:"scalingStrategy,omitempty"`
 }
 
 type ResourceSpec struct {
