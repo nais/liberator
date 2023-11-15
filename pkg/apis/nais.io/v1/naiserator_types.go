@@ -391,10 +391,10 @@ type CpuScaling struct {
 type ScalingMechanism struct {
 	// Cpu configures HPA based on CPU usage.
 	// Can't be set if Kafka is set
-	Cpu CpuScaling `json:"cpu,omitempty"`
+	Cpu *CpuScaling `json:"cpu,omitempty"`
 	// Kafka configures HPA based on Kafka lag.
 	// Can't be set if Cpu is set
-	Kafka KafkaScaling `json:"kafka,omitempty"`
+	Kafka *KafkaScaling `json:"kafka,omitempty"`
 }
 
 type Replicas struct {
@@ -411,7 +411,7 @@ type Replicas struct {
 	// +nais:doc:Default="false"
 	DisableAutoScaling bool `json:"disableAutoScaling,omitempty"`
 	// ScalingMechanism defines which mechanism the horizontal pod autoscaler should use
-	ScalingMechanism ScalingMechanism `json:"scalingMechanism,omitempty"`
+	ScalingMechanism *ScalingMechanism `json:"scalingMechanism,omitempty"`
 }
 
 type ResourceSpec struct {

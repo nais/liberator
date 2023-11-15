@@ -43,6 +43,8 @@ var ignoredApplicationFields = []string{
 	`.Spec.Strategy.RollingUpdate.MaxUnavailable.IntVal`,
 	`.Spec.Strategy.RollingUpdate.MaxUnavailable.StrVal`,
 	`.Spec.Strategy.RollingUpdate.MaxUnavailable.Type`,
+	`.Spec.Replicas.ScalingMechanism.Cpu.ThresholdPercentage`,
+	`.Spec.Replicas.ScalingMechanism.Cpu`,
 	`.Status`,
 	`.Status.Conditions`,
 	`.Status.CorrelationID`,

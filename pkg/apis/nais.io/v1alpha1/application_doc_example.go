@@ -402,6 +402,13 @@ func ExampleApplicationForDocumentation() *Application {
 				Max:                    intutil.Intp(4),
 				CpuThresholdPercentage: 50,
 				DisableAutoScaling:     true,
+				ScalingMechanism: &nais_io_v1.ScalingMechanism{
+					Kafka: &nais_io_v1.KafkaScaling{
+						Topic:         "nais-verification.kafka-canary-dev-gcp",
+						ConsumerGroup: "dev-gcp",
+						Threshold:     10,
+					},
+				},
 			},
 			Resources: &nais_io_v1.ResourceRequirements{
 				Limits: &nais_io_v1.ResourceSpec{
