@@ -1167,9 +1167,7 @@ spec:
                 description: The numbers of pods to run in parallel.
                 properties:
                   cpuThresholdPercentage:
-                    description: 'Deprecated: Use ScalingStrategy.Cpu.ThresholdPercentage
-                      instead. Amount of CPU usage before the autoscaler kicks in.
-                      Can''t be set if anything under ScalingStrategy is set.'
+                    description: Amount of CPU usage before the autoscaler kicks in.
                     type: integer
                   disableAutoScaling:
                     description: Disable autoscaling
@@ -1183,8 +1181,7 @@ spec:
                     type: integer
                   scalingStrategy:
                     description: ScalingStrategy configures how automatic scaling
-                      is performed. Exactly one of the available strategies should
-                      be used.
+                      is performed.
                     properties:
                       cpu:
                         description: Configures HPA based on CPU usage.
