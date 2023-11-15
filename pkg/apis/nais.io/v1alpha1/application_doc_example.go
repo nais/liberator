@@ -397,6 +397,12 @@ func ExampleApplicationForDocumentation() *Application {
 				Port:             8080,
 				Timeout:          1,
 			},
+			Redis: []nais_io_v1.Redis{
+				{
+					Instance: "cache",
+					Access:   "readwrite",
+				},
+			},
 			Replicas: &nais_io_v1.Replicas{
 				Min:                    intutil.Intp(2),
 				Max:                    intutil.Intp(4),

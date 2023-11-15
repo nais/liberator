@@ -59,7 +59,6 @@ var ignoredApplicationFields = []string{
 	`.Status.SynchronizationHash`,
 	`.Status.SynchronizationState`,
 	`.Status.SynchronizationTime`,
-	`.Spec.Redis`, // TODO: Add to example when feature is ready
 }
 
 // Test that the example Application contains examples for all fields encountered.
