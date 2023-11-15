@@ -1043,7 +1043,7 @@ spec:
                   instance:
                     description: Configure your application to access your OpenSearch
                       instance. The last part of the name used when creating the instance
-                      (ie. opensearch-<team>-<instance>)
+                      (ie. opensearch-{team}-{instance})
                     type: string
                 required:
                 - instance
@@ -1159,7 +1159,7 @@ spec:
                       type: string
                     instance:
                       description: The last part of the name used when creating the
-                        instance (ie. redis-<team>-<instance>)
+                        instance (ie. redis-{team}-{instance})
                       type: string
                   type: object
                 type: array

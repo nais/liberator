@@ -66,7 +66,7 @@ type AzureSidecar struct {
 
 type OpenSearch struct {
 	// Configure your application to access your OpenSearch instance.
-	// The last part of the name used when creating the instance (ie. opensearch-<team>-<instance>)
+	// The last part of the name used when creating the instance (ie. opensearch-{team}-{instance})
 	Instance string `json:"instance"`
 	// Access level for OpenSearch user
 	// +kubebuilder:validation:Enum=read;write;readwrite;admin
@@ -74,7 +74,7 @@ type OpenSearch struct {
 }
 
 type Redis struct {
-	// The last part of the name used when creating the instance (ie. redis-<team>-<instance>)
+	// The last part of the name used when creating the instance (ie. redis-{team}-{instance})
 	Instance string `json:"instance,omitempty"`
 	// Access level for redis user
 	// +kubebuilder:validation:Enum=read;write;readwrite;admin
