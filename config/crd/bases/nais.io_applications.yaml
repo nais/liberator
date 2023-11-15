@@ -1167,7 +1167,9 @@ spec:
                 description: The numbers of pods to run in parallel.
                 properties:
                   cpuThresholdPercentage:
-                    description: Amount of CPU usage before the autoscaler kicks in.
+                    description: 'Deprecated: Use ScalingStrategy.Cpu.ThresholdPercentage
+                      instead. Amount of CPU usage before the autoscaler kicks in.
+                      Can''t be set if anything under ScalingStrategy is set.'
                     type: integer
                   disableAutoScaling:
                     description: Disable autoscaling
@@ -1179,6 +1181,39 @@ spec:
                   min:
                     description: The minimum amount of running replicas for a deployment.
                     type: integer
+                  scalingStrategy:
+                    description: ScalingStrategy configures how automatic scaling
+                      is performed. Exactly one of the available strategies should
+                      be used.
+                    properties:
+                      cpu:
+                        description: Configures HPA based on CPU usage.
+                        properties:
+                          thresholdPercentage:
+                            description: Amount of CPU usage before the autoscaler
+                              kicks in.
+                            type: integer
+                        type: object
+                      kafka:
+                        description: Configures HPA based on Kafka lag.
+                        properties:
+                          consumerGroup:
+                            description: ConsumerGroup your application uses when
+                              consuming
+                            type: string
+                          threshold:
+                            description: Threshold is the amount of lag allowed before
+                              the application should scale up
+                            type: integer
+                          topic:
+                            description: Topic your application is consuming
+                            type: string
+                        required:
+                        - consumerGroup
+                        - threshold
+                        - topic
+                        type: object
+                    type: object
                 type: object
               resources:
                 description: When Containers have [resource requests](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)

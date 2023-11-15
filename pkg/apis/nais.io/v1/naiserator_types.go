@@ -374,16 +374,44 @@ type PrometheusConfig struct {
 	Path    string `json:"path,omitempty"`
 }
 
+type KafkaScaling struct {
+	// Topic your application is consuming
+	Topic string `json:"topic"`
+	// ConsumerGroup your application uses when consuming
+	ConsumerGroup string `json:"consumerGroup"`
+	// Threshold is the amount of lag allowed before the application should scale up
+	Threshold int `json:"threshold"`
+}
+
+type CpuScaling struct {
+	// Amount of CPU usage before the autoscaler kicks in.
+	ThresholdPercentage int `json:"thresholdPercentage,omitempty"`
+}
+
+type ScalingStrategy struct {
+	// Configures HPA based on CPU usage.
+	Cpu *CpuScaling `json:"cpu,omitempty"`
+	// Configures HPA based on Kafka lag.
+	Kafka *KafkaScaling `json:"kafka,omitempty"`
+}
+
 type Replicas struct {
 	// The minimum amount of running replicas for a deployment.
 	Min *int `json:"min,omitempty"`
 	// The pod autoscaler will increase replicas when required up to the maximum.
 	Max *int `json:"max,omitempty"`
+	// Deprecated: Use ScalingStrategy.Cpu.ThresholdPercentage instead.
 	// Amount of CPU usage before the autoscaler kicks in.
+	// Can't be set if anything under ScalingStrategy is set.
+	// +nais:doc:Deprecated=true
 	CpuThresholdPercentage int `json:"cpuThresholdPercentage,omitempty"`
 	// Disable autoscaling
 	// +nais:doc:Default="false"
 	DisableAutoScaling bool `json:"disableAutoScaling,omitempty"`
+	// ScalingStrategy configures how automatic scaling is performed.
+	// Exactly one of the available strategies should be used.
+	// +nais:doc:Hidden=true
+	ScalingStrategy *ScalingStrategy `json:"scalingStrategy,omitempty"`
 }
 
 type ResourceSpec struct {
