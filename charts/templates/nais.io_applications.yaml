@@ -1167,7 +1167,9 @@ spec:
                 description: The numbers of pods to run in parallel.
                 properties:
                   cpuThresholdPercentage:
-                    description: Amount of CPU usage before the autoscaler kicks in.
+                    description: 'Deprecated: Use ScalingStrategy.Cpu.ThresholdPercentage
+                      instead. Amount of CPU usage before the autoscaler kicks in.
+                      If anything under ScalingStrategy is set, that takes precedence.'
                     type: integer
                   disableAutoScaling:
                     description: Disable autoscaling
