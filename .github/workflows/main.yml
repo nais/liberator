@@ -76,7 +76,7 @@ jobs:
         with:
           go-version: "1.21"
       - id: 'auth'
-        uses: 'google-github-actions/auth@v1'
+        uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: ${{ secrets.NAIS_JSON_SCHEMA_BUCKET_SA }}
       - name: 'Set up Cloud SDK'
@@ -130,7 +130,7 @@ jobs:
           echo "archive=$name-$chart_version.tgz" >> $GITHUB_OUTPUT
       - id: "auth"
         name: "Authenticate to Google Cloud"
-        uses: "google-github-actions/auth@v1"
+        uses: "google-github-actions/auth@v2"
         with:
           workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: "gh-liberator@nais-io.iam.gserviceaccount.com"
