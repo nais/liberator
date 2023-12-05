@@ -30,14 +30,6 @@ var ignoredApplicationFields = []string{
 	`.Spec.Azure.Application.Claims.Extra`, // TODO: Remove when these deprecated Azure fields are removed.
 	`.Spec.Azure.Application.ReplyURLs`,
 	`.Spec.Azure.Application.SinglePageApplication`,
-	`.Spec.IDPorten.AccessTokenLifetime`, // TODO: Remove when these deprecated ID-porten fields are removed.
-	`.Spec.IDPorten.ClientURI`,
-	`.Spec.IDPorten.FrontchannelLogoutPath`,
-	`.Spec.IDPorten.IntegrationType`,
-	`.Spec.IDPorten.PostLogoutRedirectURIs`,
-	`.Spec.IDPorten.RedirectPath`,
-	`.Spec.IDPorten.Scopes`,
-	`.Spec.IDPorten.SessionLifetime`,
 	`.Spec.Strategy.RollingUpdate.MaxSurge.IntVal`,
 	`.Spec.Strategy.RollingUpdate.MaxUnavailable`,
 	`.Spec.Strategy.RollingUpdate.MaxUnavailable.IntVal`,
