@@ -712,49 +712,9 @@ spec:
                   See [ID-porten](https://doc.nais.io/security/auth/idporten/) for
                   more details.
                 properties:
-                  accessTokenLifetime:
-                    description: Deprecated, do not use.
-                    maximum: 3600
-                    minimum: 1
-                    type: integer
-                  clientURI:
-                    description: Deprecated, do not use.
-                    pattern: ^https:\/\/.+$
-                    type: string
                   enabled:
                     description: Enable ID-porten authentication. Requires `.spec.idporten.sidecar.enabled=true`.
                     type: boolean
-                  frontchannelLogoutPath:
-                    description: Deprecated, do not use.
-                    pattern: ^\/.*$
-                    type: string
-                  integrationType:
-                    description: Deprecated, do not use.
-                    enum:
-                    - krr
-                    - idporten
-                    - api_klient
-                    type: string
-                  postLogoutRedirectURIs:
-                    description: Deprecated, do not use.
-                    items:
-                      pattern: ^https:\/\/.+$
-                      type: string
-                    type: array
-                  redirectPath:
-                    description: Deprecated, do not use.
-                    pattern: ^\/.*$
-                    type: string
-                  scopes:
-                    description: Deprecated, do not use.
-                    items:
-                      type: string
-                    type: array
-                  sessionLifetime:
-                    description: Deprecated, do not use.
-                    maximum: 7200
-                    minimum: 3600
-                    type: integer
                   sidecar:
                     description: "Sidecar configures a sidecar that intercepts every
                       HTTP request, and performs the OIDC flow if necessary. All requests

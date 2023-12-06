@@ -94,46 +94,6 @@ type IDPorten struct {
 	// Enable ID-porten authentication. Requires `.spec.idporten.sidecar.enabled=true`.
 	// +nais:doc:Availability="GCP"
 	Enabled bool `json:"enabled"`
-	// Deprecated, do not use.
-	// +nais:doc:Deprecated=true
-	// +nais:doc:Hidden=true
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=3600
-	AccessTokenLifetime *int `json:"accessTokenLifetime,omitempty"`
-	// Deprecated, do not use.
-	// +nais:doc:Deprecated=true
-	// +nais:doc:Hidden=true
-	ClientURI IDPortenURI `json:"clientURI,omitempty"`
-	// Deprecated, do not use.
-	// +nais:doc:Deprecated=true
-	// +nais:doc:Hidden=true
-	// +kubebuilder:validation:Pattern=`^\/.*$`
-	FrontchannelLogoutPath string `json:"frontchannelLogoutPath,omitempty"`
-	// Deprecated, do not use.
-	// +nais:doc:Deprecated=true
-	// +nais:doc:Hidden=true
-	// +nais:doc:Immutable=true
-	// +kubebuilder:validation:Enum=krr;idporten;api_klient
-	IntegrationType string `json:"integrationType,omitempty" nais:"immutable"`
-	// Deprecated, do not use.
-	// +nais:doc:Deprecated=true
-	// +nais:doc:Hidden=true
-	PostLogoutRedirectURIs []IDPortenURI `json:"postLogoutRedirectURIs,omitempty"`
-	// Deprecated, do not use.
-	// +nais:doc:Deprecated=true
-	// +nais:doc:Hidden=true
-	// +kubebuilder:validation:Pattern=`^\/.*$`
-	RedirectPath string `json:"redirectPath,omitempty"`
-	// Deprecated, do not use.
-	// +nais:doc:Deprecated=true
-	// +nais:doc:Hidden=true
-	Scopes []string `json:"scopes,omitempty"`
-	// Deprecated, do not use.
-	// +nais:doc:Deprecated=true
-	// +nais:doc:Hidden=true
-	// +kubebuilder:validation:Minimum=3600
-	// +kubebuilder:validation:Maximum=7200
-	SessionLifetime *int `json:"sessionLifetime,omitempty"`
 	// Sidecar configures a sidecar that intercepts every HTTP request, and performs the OIDC flow if necessary.
 	// All requests to ingress + `/oauth2` will be processed only by the sidecar, whereas all other requests
 	// will be proxied to the application.
