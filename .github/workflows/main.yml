@@ -80,7 +80,7 @@ jobs:
         with:
           credentials_json: ${{ secrets.NAIS_JSON_SCHEMA_BUCKET_SA }}
       - name: 'Set up Cloud SDK'
-        uses: 'google-github-actions/setup-gcloud@v1'
+        uses: 'google-github-actions/setup-gcloud@v2'
       - name: Generate json-spec
         run: make doc && ./hack/build-json-spec.sh
       - name: Upload spec
