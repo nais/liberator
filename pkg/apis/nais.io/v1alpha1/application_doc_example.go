@@ -318,7 +318,7 @@ func ExampleApplicationForDocumentation() *Application {
 							},
 						},
 					},
-					Level:  "Level4",
+					Level:  "idporten-loa-high",
 					Locale: "nb",
 				},
 			},

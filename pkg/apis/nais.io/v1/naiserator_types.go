@@ -106,7 +106,7 @@ type IDPorten struct {
 type IDPortenSidecar struct {
 	Wonderwall `json:",inline"`
 	// Default security level for all authentication requests.
-	// +nais:doc:Default="Level4"
+	// +nais:doc:Default="idporten-loa-high"
 	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten#security-levels"
 	// +kubebuilder:validation:Enum=Level3;Level4;idporten-loa-substantial;idporten-loa-high
 	Level string `json:"level,omitempty"`
