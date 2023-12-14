@@ -288,6 +288,9 @@ type IDPortenClientSpec struct {
 	// +kubebuilder:validation:Minimum=3600
 	// +kubebuilder:validation:Maximum=28800
 	SessionLifetime *int `json:"sessionLifetime,omitempty"`
+	// SSODisabled controls the SSO behavior for this client.
+	// +nais:doc:Link="https://docs.digdir.no/docs/idporten/oidc/oidc_func_nosso"
+	SSODisabled *bool `json:"ssoDisabled,omitempty"`
 }
 
 // +kubebuilder:validation:Pattern=`^https:\/\/.+$`

@@ -133,6 +133,9 @@ spec:
                 maximum: 28800
                 minimum: 3600
                 type: integer
+              ssoDisabled:
+                description: SSODisabled controls the SSO behavior for this client.
+                type: boolean
             required:
             - secretName
             type: object
