@@ -179,6 +179,14 @@ func run() error {
 		Checker:   typechecker,
 	}
 
+	intstr := "k8s.io/apimachinery/pkg/util/intstr"
+	if override, ok := crd.KnownPackages[intstr]; ok {
+		if pars.PackageOverrides == nil {
+			pars.PackageOverrides = make(map[string]crd.PackageOverride)
+		}
+		pars.PackageOverrides[intstr] = override
+	}
+
 	for _, pkg := range packages {
 		pars.NeedPackage(pkg)
 	}
@@ -419,7 +427,12 @@ func (m ExtDoc) formatStraight(w io.Writer) {
 		}
 		io.WriteString(w, "\n")
 	}
-	io.WriteString(w, linefmt("Type: `%s`", m.Type))
+
+	if types := strings.Split(m.Type, ","); len(types) > 1 {
+		io.WriteString(w, linefmt("Type: `%s`", strings.Join(types, "` or `")))
+	} else {
+		io.WriteString(w, linefmt("Type: `%s`", m.Type))
+	}
 	io.WriteString(w, linefmt("Required: `%s`", strconv.FormatBool(m.Required)))
 	if m.Immutable {
 		io.WriteString(w, linefmt("Immutable: `%v`", m.Immutable))
@@ -508,6 +521,15 @@ func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, pare
 	if node.Type == "array" {
 		node.Properties = node.Items.Schema.Properties
 		jsonpath += "[]"
+	}
+
+	if node.XIntOrString {
+		t := make([]string, len(node.AnyOf))
+		for i, v := range node.AnyOf {
+			t[i] = v.Type
+		}
+
+		entry.Type = strings.Join(t, ",")
 	}
 
 	defaultValue, err := getValueFromStruct("spec"+jsonpath, defaultResource)
