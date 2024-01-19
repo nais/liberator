@@ -360,7 +360,7 @@ type Replicas struct {
 	Min *int `json:"min,omitempty"`
 	// The pod autoscaler will increase replicas when required up to the maximum.
 	Max *int `json:"max,omitempty"`
-	// Deprecated: Use ScalingStrategy.Cpu.ThresholdPercentage instead.
+	// Deprecated: Use `spec.scalingStrategy.cpu.thresholdPercentage` instead.
 	// Amount of CPU usage before the autoscaler kicks in.
 	// If anything under ScalingStrategy is set, that takes precedence.
 	// +nais:doc:Deprecated=true
@@ -369,6 +369,7 @@ type Replicas struct {
 	// +nais:doc:Default="false"
 	DisableAutoScaling bool `json:"disableAutoScaling,omitempty"`
 	// ScalingStrategy configures how automatic scaling is performed.
+	// +nais:doc:link:https://doc.nais.io/nais-application/automatic-scaling/
 	ScalingStrategy *ScalingStrategy `json:"scalingStrategy,omitempty"`
 }
 
