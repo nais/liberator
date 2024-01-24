@@ -997,8 +997,8 @@ spec:
                         type: array
                       enabled:
                         default: true
-                        description: Set this to false to disable forwarding of application
-                          logs to persistent storage.
+                        description: Enable forwarding of application logs to persistent
+                          storage.
                         type: boolean
                     type: object
                   tracing:
