@@ -980,6 +980,27 @@ spec:
               observability:
                 description: Configuration options related to application observability.
                 properties:
+                  logging:
+                    description: Configure logging for your application.
+                    properties:
+                      destinations:
+                        description: Log destinations for where to forward application
+                          logs for persistent storage. Leave empty to use default
+                          destinations.
+                        items:
+                          properties:
+                            id:
+                              type: string
+                          required:
+                          - id
+                          type: object
+                        type: array
+                      enabled:
+                        default: true
+                        description: Set this to false to disable forwarding of application
+                          logs to persistent storage.
+                        type: boolean
+                    type: object
                   tracing:
                     description: Enable application performance monitoring with traces
                       collected using OpenTelemetry and the OTLP exporter.
@@ -1127,7 +1148,7 @@ spec:
                 description: The numbers of pods to run in parallel.
                 properties:
                   cpuThresholdPercentage:
-                    description: 'Deprecated: Use ScalingStrategy.Cpu.ThresholdPercentage
+                    description: 'Deprecated: Use `spec.scalingStrategy.cpu.thresholdPercentage`
                       instead. Amount of CPU usage before the autoscaler kicks in.
                       If anything under ScalingStrategy is set, that takes precedence.'
                     type: integer
