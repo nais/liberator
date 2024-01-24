@@ -687,10 +687,28 @@ type Tracing struct {
 	Enabled bool `json:"enabled,omitempty"`
 }
 
+type Logging struct {
+	// Set this to false to disable forwarding of application logs to persistent storage.
+	// +nais:doc:Default="true"
+	Enabled bool `json:"enabled,omitempty"`
+
+	// Log destinations for where to forward application logs for persistent storage. Leave empty to use default destinations.
+	// +nais:doc:Link="https://doc.nais.io/observability/logging/#log-destinations"
+	Destinations []LogDestination `json:"destinations,omitempty"`
+}
+
+type LogDestination struct {
+	ID string `json:"id"`
+}
+
 type Observability struct {
 	// Enable application performance monitoring with traces collected using OpenTelemetry and the OTLP exporter.
 	// +nais:doc:Availability="GCP"
 	// +nais:doc:Experimental=true
 	// +nais:doc:Link="https://doc.nais.io/observability/tracing/"
 	Tracing *Tracing `json:"tracing,omitempty"`
+
+	// Configure logging for your application.
+	// +nais:doc:Link="https://doc.nais.io/observability/logging/"
+	Logging *Logging `json:"logging,omitempty"`
 }
