@@ -468,6 +468,12 @@ func ExampleApplicationForDocumentation() *Application {
 				Tracing: &nais_io_v1.Tracing{
 					Enabled: true,
 				},
+				Logging: &nais_io_v1.Logging{
+					Enabled: true,
+					Destinations: []nais_io_v1.LogDestination{
+						{ID: "my-destination"},
+					},
+				},
 			},
 			Vault: &nais_io_v1.Vault{
 				Enabled: true,
