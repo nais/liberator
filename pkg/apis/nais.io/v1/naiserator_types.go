@@ -688,7 +688,7 @@ type Tracing struct {
 }
 
 type Logging struct {
-	// Set this to false to disable forwarding of application logs to persistent storage.
+	// Enable forwarding of application logs to persistent storage.
 	// +kubebuilder:default=true
 	// +nais:doc:Default="true"
 	Enabled bool `json:"enabled,omitempty"`
