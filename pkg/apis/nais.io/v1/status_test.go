@@ -2,17 +2,14 @@ package nais_io_v1_test
 
 import (
 	"testing"
+	"time"
+
+	"github.com/stretchr/testify/assert"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/nais/liberator/pkg/events"
-	"github.com/stretchr/testify/assert"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
-
-type KStatusTests struct {
-	State          string
-	TrueConditions []string
-}
 
 func NewTestStatus(state string) *v1.Status {
 	return &v1.Status{
@@ -26,36 +23,58 @@ func NewTestStatus(state string) *v1.Status {
 	}
 }
 
-func TestGenerateCorrectKStatus(t *testing.T) {
-
-	testCases := []KStatusTests{
-		{events.RolloutComplete, []string{"Ready"}},
-		{events.FailedSynchronization, []string{"Stalled"}},
-		{events.Synchronized, []string{"Reconciling"}},
-		{events.FailedStatusUpdate, []string{"Reconciling"}},
-		{events.Retrying, []string{"Reconciling"}},
-		{events.FailedPrepare, []string{"Reconciling"}},
+func TestSetCondition(t *testing.T) {
+	expected := metav1.Condition{
+		Type:    "StatusType",
+		Status:  "True",
+		Reason:  "Reezon",
+		Message: "MessH",
 	}
 
-	for _, test := range testCases {
+	status := NewTestStatus("NOSTATE")
 
-		t.Run(test.State, func(t *testing.T) {
-			t.Parallel()
+	status.SetCondition(expected.Type, metav1.ConditionTrue, expected.Reason, expected.Message)
 
-			status := NewTestStatus(test.State)
-			status.SetStatusConditions()
+	// timestamp is always updated
+	assert.NotEqual(t, time.Time{}, (*status.Conditions)[0].LastTransitionTime)
+	expected.LastTransitionTime = (*status.Conditions)[0].LastTransitionTime
 
-			var trueConditions []string
-			for _, condition := range *status.Conditions {
-				if condition.Status == metav1.ConditionTrue {
-					trueConditions = append(trueConditions, condition.Type)
-				}
-			}
+	assert.Len(t, *status.Conditions, 1)
+	assert.Equal(t, []metav1.Condition{expected}, *status.Conditions)
+}
 
-			assert.Equal(t, test.TrueConditions, trueConditions)
-			assert.Equal(t, 3, len(*status.Conditions))
-		})
+func TestSetSynchronizationStateWithCondition(t *testing.T) {
+	const typeStr = "SynchronizationState"
+	const statusStr = "True"
+	const okMsg = "well done, sir"
+	const errMsg = "situation normal; all fudged up"
 
+	// Initialize empty state
+	status := NewTestStatus("NOSTATE")
+
+	// Set condition for the first time
+	status.SetSynchronizationStateWithCondition(events.RolloutComplete, okMsg)
+
+	// Test against expectations
+	expected := metav1.Condition{
+		Type:               typeStr,
+		Status:             statusStr,
+		Message:            okMsg,
+		Reason:             "RolloutComplete",
+		LastTransitionTime: (*status.Conditions)[0].LastTransitionTime,
 	}
+	assert.Equal(t, []metav1.Condition{expected}, *status.Conditions)
 
+	// Set condition for the second time
+	status.SetSynchronizationStateWithCondition(events.FailedSynchronization, errMsg)
+
+	// Test against expectations
+	expected = metav1.Condition{
+		Type:               typeStr,
+		Status:             statusStr,
+		Message:            errMsg,
+		Reason:             "FailedSynchronization",
+		LastTransitionTime: (*status.Conditions)[0].LastTransitionTime,
+	}
+	assert.Equal(t, []metav1.Condition{expected}, *status.Conditions)
 }

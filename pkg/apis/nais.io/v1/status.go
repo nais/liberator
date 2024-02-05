@@ -1,9 +1,6 @@
 package nais_io_v1
 
 import (
-	"time"
-
-	"github.com/nais/liberator/pkg/events"
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -19,46 +16,27 @@ type Status struct {
 	Conditions              *[]metav1.Condition `json:"conditions,omitempty"`
 }
 
-func (in *Status) SetStatusConditions() {
+// SetSynchronizationStateWithCondition
+// is a shorthand function for setting synchronization state.
+// Additionally, the state and the human-readable message is stored in a condition.
+func (in *Status) SetSynchronizationStateWithCondition(reason, message string) {
+	const conditionType = "SynchronizationState"
+	in.SynchronizationState = reason
+	in.SetCondition(conditionType, metav1.ConditionTrue, reason, message)
+}
 
+// SetCondition is a wrapper around an upstream API that does more or less the same thing.
+// The condition with the matching `typ` is either created or updated in .status.conditions[].
+func (in *Status) SetCondition(typ string, status metav1.ConditionStatus, reason, message string) {
 	if in.Conditions == nil {
 		in.Conditions = &[]metav1.Condition{}
 	}
 
-	reconcilingConditionStatus := metav1.ConditionFalse
-	if in.SynchronizationState != events.RolloutComplete && in.SynchronizationState != events.FailedSynchronization {
-		reconcilingConditionStatus = metav1.ConditionTrue
-	}
-
-	readyConditionStatus := metav1.ConditionFalse
-	if in.SynchronizationState == events.RolloutComplete {
-		readyConditionStatus = metav1.ConditionTrue
-	}
-
-	stalledConditionStatus := metav1.ConditionFalse
-	if in.SynchronizationState == events.FailedSynchronization {
-		stalledConditionStatus = metav1.ConditionTrue
-	}
-
-	in.addStatusCondition("Ready", readyConditionStatus)
-	in.addStatusCondition("Stalled", stalledConditionStatus)
-	in.addStatusCondition("Reconciling", reconcilingConditionStatus)
-}
-
-func (in *Status) addStatusCondition(name string, conditionStatus metav1.ConditionStatus) {
-	condition := meta.FindStatusCondition(*in.Conditions, name)
-	if condition == nil {
-		condition = &metav1.Condition{
-			Type:               name,
-			Status:             conditionStatus,
-			LastTransitionTime: metav1.NewTime(time.Now()),
-			Reason:             in.SynchronizationState,
-			Message:            in.DeploymentRolloutStatus,
-		}
-	} else {
-		condition.Status = conditionStatus
-		condition.Reason = in.SynchronizationState
-		condition.Message = in.DeploymentRolloutStatus
+	condition := &metav1.Condition{
+		Type:    typ,
+		Status:  status,
+		Reason:  reason,
+		Message: message,
 	}
 
 	meta.SetStatusCondition(in.Conditions, *condition)

@@ -22,10 +22,6 @@ func (in *Naisjob) SetStatus(status *Status) {
 	in.Status = *status
 }
 
-func (in *Naisjob) SetStatusConditions() {
-	in.Status.SetStatusConditions()
-}
-
 func (in *Naisjob) GetConcurrencyPolicy() string {
 	switch in.Spec.ConcurrencyPolicy {
 	case string(v1beta1.ForbidConcurrent), string(v1beta1.ReplaceConcurrent):
