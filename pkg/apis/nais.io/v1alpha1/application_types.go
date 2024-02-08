@@ -61,7 +61,7 @@ type ApplicationSpec struct {
 	// By default, no traffic is allowed between applications inside the cluster.
 	// Configure access policies to explicitly allow communication between applications.
 	// This is also used for granting inbound access in the context of Azure AD and TokenX clients.
-	// +nais:doc:Link="https://doc.nais.io/appendix/zero-trust/";"https://doc.nais.io/security/auth/azure-ad/configuration/#access-policy";"https://doc.nais.io/security/auth/tokenx/#access-policies"
+	// +nais:doc:Link="https://doc.nais.io/explanation/zero-trust/"
 	AccessPolicy *nais_io_v1.AccessPolicy `json:"accessPolicy,omitempty"`
 
 	// Provisions and configures Azure resources.
@@ -107,7 +107,7 @@ type ApplicationSpec struct {
 	GCP *nais_io_v1.GCP `json:"gcp,omitempty"`
 
 	// Configures ID-porten authentication for this application.
-	// See [ID-porten](https://doc.nais.io/security/auth/idporten/) for more details.
+	// See [ID-porten](https://doc.nais.io/explanation/auth/idporten/) for more details.
 	IDPorten *nais_io_v1.IDPorten `json:"idporten,omitempty"`
 
 	// Your application's Docker image location and tag.
@@ -115,7 +115,7 @@ type ApplicationSpec struct {
 
 	// List of URLs that will route HTTPS traffic to the application.
 	// All URLs must start with `https://`. Domain availability differs according to which environment your application is running in.
-	// +nais:doc:Link="https://doc.nais.io/clusters/gcp/";"https://doc.nais.io/clusters/on-premises/"
+	// Check the available environments in the reference documentation.
 	Ingresses []nais_io_v1.Ingress `json:"ingresses,omitempty"`
 
 	// An InfluxDB via Aiven. A typical use case for influxdb is to store metrics from your application and visualize them in Grafana.
@@ -123,11 +123,11 @@ type ApplicationSpec struct {
 	Influx *nais_io_v1.Influx `json:"influx,omitempty"`
 
 	// Set up Aiven Kafka for your application.
-	// +nais:doc:Link="https://doc.nais.io/persistence/kafka/"
+	// +nais:doc:Link="https://doc.nais.io/explanation/persistence/kafka/"
 	Kafka *nais_io_v1.Kafka `json:"kafka,omitempty"`
 
 	// If true, an HTTP endpoint will be available at `$ELECTOR_PATH` that returns the current leader.
-	// +nais:doc:Link="https://doc.nais.io/addons/leader-election/"
+	// +nais:doc:Link="https://doc.nais.io/explanation/leader-election/"
 	LeaderElection bool `json:"leaderElection,omitempty"`
 
 	// Many applications running for long periods of time eventually transition to broken states,
@@ -146,12 +146,12 @@ type ApplicationSpec struct {
 	Logtransform string `json:"logtransform,omitempty"`
 
 	// Configures a Maskinporten client for this application.
-	// See [Maskinporten](https://doc.nais.io/security/auth/maskinporten/) for more details.
+	// See [Maskinporten](https://doc.nais.io/explanation/auth/maskinporten/) for more details.
 	Maskinporten *nais_io_v1.Maskinporten `json:"maskinporten,omitempty"`
 
 	// OpenSearch instance to get credentials for.
 	// Must be owned by same team.
-	// +nais:doc:Link="https://doc.nais.io/persistence/open-search/"
+	// +nais:doc:Link="https://doc.nais.io/explanation/persistence/open-search/"
 	OpenSearch *nais_io_v1.OpenSearch `json:"openSearch,omitempty"`
 
 	// The port number which is exposed by the container and should receive traffic.
@@ -161,15 +161,15 @@ type ApplicationSpec struct {
 	// PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
 	// The handler is not called if the container crashes or exits by itself.
 	// The reason for termination is passed to the handler.
-	// +nais:doc:Link="https://doc.nais.io/nais-application/good-practices/#handles-termination-gracefully";"https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks"
+	// +nais:doc:Link="https://doc.nais.io/reference/good-practices/#handles-termination-gracefully";"https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks"
 	PreStopHook *nais_io_v1.PreStopHook `json:"preStopHook,omitempty"`
 
 	// A HTTP GET will be issued to this endpoint at least once before the pod is terminated.
 	// This feature is deprecated and will be removed in the next major version (nais.io/v1).
-	// +nais:doc:Link="https://doc.nais.io/nais-application/good-practices/#handles-termination-gracefully"
+	// +nais:doc:Link="https://doc.nais.io/reference/good-practices/#handles-termination-gracefully"
 	PreStopHookPath string `json:"preStopHookPath,omitempty"`
 
-	// Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/observability/metrics/).
+	// Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/explanation/observability/metrics/).
 	// Use this configuration to override the default values.
 	Prometheus *nais_io_v1.PrometheusConfig `json:"prometheus,omitempty"`
 
@@ -183,7 +183,7 @@ type ApplicationSpec struct {
 
 	// List of redis instances this job needs credentials for.
 	// Must be owned by same team.
-	// +nais:doc:Link="https://doc.nais.io/persistence/redis/"
+	// +nais:doc:Link="https://doc.nais.io/explanation/persistence/redis/"
 	Redis []nais_io_v1.Redis `json:"redis,omitempty"`
 
 	// The numbers of pods to run in parallel.
@@ -191,7 +191,7 @@ type ApplicationSpec struct {
 
 	// When Containers have [resource requests](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) specified,
 	// the Kubernetes scheduler can make better decisions about which nodes to place pods on.
-	// +nais:doc:Link="https://doc.nais.io/nais-application/good-practices/#set-reasonable-resource-requests-and-limits"
+	// +nais:doc:Link="https://doc.nais.io/reference/good-practices/#set-reasonable-resource-requests-and-limits"
 	Resources *nais_io_v1.ResourceRequirements `json:"resources,omitempty"`
 
 	// Whether or not to enable a sidecar container for secure logging.
@@ -214,7 +214,7 @@ type ApplicationSpec struct {
 	Strategy *nais_io_v1.Strategy `json:"strategy,omitempty"`
 
 	// Provisions and configures a TokenX client for your application.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/tokenx/"
+	// +nais:doc:Link="https://doc.nais.io/explanation/auth/tokenx/"
 	TokenX *nais_io_v1.TokenX `json:"tokenx,omitempty"`
 
 	// The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal.
@@ -228,7 +228,7 @@ type ApplicationSpec struct {
 	TTL string `json:"ttl,omitempty"`
 
 	// Configuration options related to application observability.
-	// +nais:doc:Link="https://doc.nais.io/observability/"
+	// +nais:doc:Link="https://doc.nais.io/explanation/observability/"
 	Observability *nais_io_v1.Observability `json:"observability,omitempty"`
 
 	// Provides secrets management, identity-based access, and encrypting application data for auditing of secrets
