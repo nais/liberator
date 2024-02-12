@@ -530,7 +530,6 @@ type CloudSqlInstance struct {
 	// Server tier, i.e. how much CPU and memory allocated.
 	// Available tiers are `db-f1-micro`, `db-g1-small` and custom `db-custom-CPU-RAM`.
 	// Custom memory must be mulitple of 256 MB and at least 3.75 GB (e.g. `db-custom-1-3840` for 1 cpu, 3840 MB ram)
-	// Also check out [sizing your database](../../persistence/postgres/#sizing-your-database).
 	// +kubebuilder:validation:Pattern="db-.+"
 	// +nais:doc:Default="db-f1-micro"
 	Tier string `json:"tier,omitempty"`
