@@ -690,7 +690,7 @@ spec:
                             Available tiers are `db-f1-micro`, `db-g1-small` and custom
                             `db-custom-CPU-RAM`. Custom memory must be mulitple of
                             256 MB and at least 3.75 GB (e.g. `db-custom-1-3840` for
-                            1 cpu, 3840 MB ram).
+                            1 cpu, 3840 MB ram)
                           pattern: db-.+
                           type: string
                         type:
@@ -709,8 +709,8 @@ spec:
                 type: object
               idporten:
                 description: Configures ID-porten authentication for this application.
-                  See [ID-porten](https://doc.nais.io/security/auth/idporten/) for
-                  more details.
+                  See [ID-porten](https://doc.nais.io/explanation/auth/idporten/)
+                  for more details.
                 properties:
                   enabled:
                     description: Enable ID-porten authentication. Requires `.spec.idporten.sidecar.enabled=true`.
@@ -807,7 +807,8 @@ spec:
               ingresses:
                 description: List of URLs that will route HTTPS traffic to the application.
                   All URLs must start with `https://`. Domain availability differs
-                  according to which environment your application is running in.
+                  according to which environment your application is running in. Check
+                  the available environments in the reference documentation.
                 items:
                   pattern: ^https:\/\/.+$
                   type: string
@@ -888,7 +889,7 @@ spec:
                 type: string
               maskinporten:
                 description: Configures a Maskinporten client for this application.
-                  See [Maskinporten](https://doc.nais.io/security/auth/maskinporten/)
+                  See [Maskinporten](https://doc.nais.io/explanation/auth/maskinporten/)
                   for more details.
                 properties:
                   enabled:
@@ -1079,7 +1080,7 @@ spec:
                   be removed in the next major version (nais.io/v1).
                 type: string
               prometheus:
-                description: Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/observability/metrics/).
+                description: Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/explanation/observability/metrics/).
                   Use this configuration to override the default values.
                 properties:
                   enabled:

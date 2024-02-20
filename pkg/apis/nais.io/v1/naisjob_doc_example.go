@@ -367,6 +367,17 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			TerminationGracePeriodSeconds: int64p(60),
 			TimeZone:                      stringp("Europe/Oslo"),
 			TTLSecondsAfterFinished:       int32p(60),
+			Observability: &Observability{
+				Tracing: &Tracing{
+					Enabled: true,
+				},
+				Logging: &Logging{
+					Enabled: true,
+					Destinations: []LogDestination{
+						{ID: "my-destination"},
+					},
+				},
+			},
 			Vault: &Vault{
 				Enabled: true,
 				Sidecar: true,

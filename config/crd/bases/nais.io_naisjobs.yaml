@@ -655,7 +655,7 @@ spec:
                             Available tiers are `db-f1-micro`, `db-g1-small` and custom
                             `db-custom-CPU-RAM`. Custom memory must be mulitple of
                             256 MB and at least 3.75 GB (e.g. `db-custom-1-3840` for
-                            1 cpu, 3840 MB ram).
+                            1 cpu, 3840 MB ram)
                           pattern: db-.+
                           type: string
                         type:
@@ -761,7 +761,7 @@ spec:
                 type: string
               maskinporten:
                 description: Configures a Maskinporten client for this Naisjob. See
-                  [Maskinporten](https://doc.nais.io/security/auth/maskinporten/)
+                  [Maskinporten](https://doc.nais.io/explanation/auth/maskinporten/)
                   for more details.
                 properties:
                   enabled:
@@ -849,6 +849,38 @@ spec:
                     type: object
                 required:
                 - enabled
+                type: object
+              observability:
+                description: Configuration options related to application observability.
+                properties:
+                  logging:
+                    description: Configure logging for your application.
+                    properties:
+                      destinations:
+                        description: Log destinations for where to forward application
+                          logs for persistent storage. Leave empty to use default
+                          destinations.
+                        items:
+                          properties:
+                            id:
+                              type: string
+                          required:
+                          - id
+                          type: object
+                        type: array
+                      enabled:
+                        default: true
+                        description: Enable forwarding of application logs to persistent
+                          storage.
+                        type: boolean
+                    type: object
+                  tracing:
+                    description: Enable application performance monitoring with traces
+                      collected using OpenTelemetry and the OTLP exporter.
+                    properties:
+                      enabled:
+                        type: boolean
+                    type: object
                 type: object
               openSearch:
                 description: To get your own OpenSearch instance head over to the

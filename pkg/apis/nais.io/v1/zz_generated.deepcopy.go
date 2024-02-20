@@ -1730,6 +1730,11 @@ func (in *NaisjobSpec) DeepCopyInto(out *NaisjobSpec) {
 		*out = new(int32)
 		**out = **in
 	}
+	if in.Observability != nil {
+		in, out := &in.Observability, &out.Observability
+		*out = new(Observability)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Vault != nil {
 		in, out := &in.Vault, &out.Vault
 		*out = new(Vault)

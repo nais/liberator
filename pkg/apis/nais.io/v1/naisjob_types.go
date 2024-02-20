@@ -205,6 +205,10 @@ type NaisjobSpec struct {
 	// If the field is unset, this Job won't be cleaned up by the TTL controller after it finishes.
 	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty"`
 
+	// Configuration options related to application observability.
+	// +nais:doc:Link="https://doc.nais.io/explanation/observability/"
+	Observability *Observability `json:"observability,omitempty"`
+
 	// Provides secrets management, identity-based access, and encrypting application data for auditing of secrets
 	// for applications, systems, and users.
 	// +nais:doc:Link="https://github.com/navikt/vault-iac/tree/master/doc"
