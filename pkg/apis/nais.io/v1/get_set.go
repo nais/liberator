@@ -87,6 +87,10 @@ func (in *Naisjob) GetVault() *Vault {
 	return in.Spec.Vault
 }
 
+func (in *Naisjob) GetObservability() *Observability {
+	return in.Spec.Observability
+}
+
 func (in *Naisjob) GetLeaderElection() bool {
 	return false
 }
