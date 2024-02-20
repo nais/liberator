@@ -494,6 +494,7 @@ const (
 
 type CloudSqlDatabase struct {
 	// Database name.
+	// *Be aware that only one database with this name is allowed in a namespace, regardless of which SQLInstance it belongs to*
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 	// Prefix to add to environment variables made available for database connection.
