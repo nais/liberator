@@ -377,6 +377,10 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 						{ID: "my-destination"},
 					},
 				},
+				AutoInstrumentation: &AutoInstrumentation{
+					Enabled: true,
+					Runtime: "java",
+				},
 			},
 			Vault: &Vault{
 				Enabled: true,

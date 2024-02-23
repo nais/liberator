@@ -474,6 +474,10 @@ func ExampleApplicationForDocumentation() *Application {
 						{ID: "my-destination"},
 					},
 				},
+				AutoInstrumentation: &nais_io_v1.AutoInstrumentation{
+					Enabled: true,
+					Runtime: "java",
+				},
 			},
 			Vault: &nais_io_v1.Vault{
 				Enabled: true,

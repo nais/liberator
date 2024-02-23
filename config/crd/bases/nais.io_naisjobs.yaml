@@ -539,7 +539,9 @@ spec:
                                   to `EnvVarPrefix` you need to [reset database credentials](https://docs.nais.io/persistence/postgres/#reset-database-credentials).
                                 type: string
                               name:
-                                description: Database name.
+                                description: Database name. *Be aware that only one
+                                  database with this name is allowed in a namespace,
+                                  regardless of which SQLInstance it belongs to*
                                 type: string
                               users:
                                 description: Add extra users for database access.
@@ -853,6 +855,24 @@ spec:
               observability:
                 description: Configuration options related to application observability.
                 properties:
+                  autoInstrumentation:
+                    description: Enable auto-instrumenting your application using
+                      the OpenTelemetry Agent.
+                    properties:
+                      enabled:
+                        description: Enable automatic instrumentation of your application
+                          using OpenTelemetry Agent.
+                        type: boolean
+                      runtime:
+                        description: Application runtime. Supported runtimes are `java`,
+                          `nodejs`, `python`, `sdk`.
+                        enum:
+                        - java
+                        - nodejs
+                        - python
+                        - sdk
+                        type: string
+                    type: object
                   logging:
                     description: Configure logging for your application.
                     properties:

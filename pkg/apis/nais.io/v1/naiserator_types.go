@@ -687,6 +687,15 @@ type Tracing struct {
 	Enabled bool `json:"enabled,omitempty"`
 }
 
+type AutoInstrumentation struct {
+	// Enable automatic instrumentation of your application using OpenTelemetry Agent.
+	Enabled bool `json:"enabled,omitempty"`
+
+	// Application runtime. Supported runtimes are `java`, `nodejs`, `python`, `sdk`.
+	// +kubebuilder:validation:Enum=java;nodejs;python;sdk
+	Runtime string `json:"runtime,omitempty"`
+}
+
 type Logging struct {
 	// Enable forwarding of application logs to persistent storage.
 	// +kubebuilder:default=true
@@ -712,4 +721,10 @@ type Observability struct {
 	// Configure logging for your application.
 	// +nais:doc:Link="https://doc.nais.io/explanation/observability/logging/"
 	Logging *Logging `json:"logging,omitempty"`
+
+	// Enable auto-instrumenting your application using the OpenTelemetry Agent.
+	// +nais:doc:Availability="GCP"
+	// +nais:doc:Experimental=true
+	// +nais:doc:Link="https://doc.nais.io/observability/auto-instrumentation/"
+	AutoInstrumentation *AutoInstrumentation `json:"autoInstrumentation,omitempty"`
 }
