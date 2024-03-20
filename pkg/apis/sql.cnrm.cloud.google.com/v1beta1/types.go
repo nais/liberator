@@ -63,8 +63,13 @@ type SQLInstanceBackupRetentionSetting struct {
 	RetainedBackups int `json:"retainedBackups"`
 }
 
+type PrivateNetworkRef struct {
+	External string `json:"external"`
+}
+
 type SQLInstanceIpConfiguration struct {
-	RequireSsl bool `json:"requireSsl"`
+	RequireSsl        bool               `json:"requireSsl"`
+	PrivateNetworkRef *PrivateNetworkRef `json:"privateNetworkRef, omitempty"`
 }
 
 // +kubebuilder:object:root=true
