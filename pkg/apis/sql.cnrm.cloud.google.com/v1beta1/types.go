@@ -69,7 +69,7 @@ type PrivateNetworkRef struct {
 
 type SQLInstanceIpConfiguration struct {
 	RequireSsl        bool               `json:"requireSsl"`
-	PrivateNetworkRef *PrivateNetworkRef `json:"privateNetworkRef, omitempty"`
+	PrivateNetworkRef *PrivateNetworkRef `json:"privateNetworkRef,omitempty"`
 }
 
 // +kubebuilder:object:root=true

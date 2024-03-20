@@ -111,7 +111,6 @@ spec:
                       requireSsl:
                         type: boolean
                     required:
-                    - privateNetworkRef
                     - requireSsl
                     type: object
                   maintenanceWindow:
