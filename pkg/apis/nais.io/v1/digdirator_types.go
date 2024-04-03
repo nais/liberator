@@ -293,7 +293,7 @@ type IDPortenClientSpec struct {
 	SSODisabled *bool `json:"ssoDisabled,omitempty"`
 }
 
-// +kubebuilder:validation:Pattern=`^https:\/\/.+$`
+// +kubebuilder:validation:Pattern=`^(https:\/\/)|(http:\/\/localhost\:).+$`
 type IDPortenURI string
 
 func (in *IDPortenClient) Hash() (string, error) {
