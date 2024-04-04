@@ -102,10 +102,6 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 							Namespace:   "q2",
 							Cluster:     "dev-gcp",
 						},
-						{
-							Application: "*",
-							Namespace:   "q3",
-						},
 					},
 					External: []AccessPolicyExternalRule{
 						{
