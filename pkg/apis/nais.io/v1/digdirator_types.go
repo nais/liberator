@@ -164,6 +164,14 @@ type ExposedScope struct {
 	AllowedIntegrations []string `json:"allowedIntegrations,omitempty"`
 	// External consumers granted access to this scope and able to request access_token.
 	Consumers []ExposedScopeConsumer `json:"consumers,omitempty"`
+	// Accessible for all, if scope should be available for all organizations.
+	// +nais:doc:Default="false"
+	// +kubebuilder:validation:Optional
+	AccessibleForAll bool `json:"accessibleForAll,omitempty"`
+	// The delegation source is the organization number that is allowed to delegate access to this scope.
+	// +nais:doc:Link="https://docs.digdir.no/maskinporten_guide_apitilbyder.html#delegasjon"
+	// +kubebuilder:validation:Optional
+	DelegationSource *string `json:"delegationSource,omitempty"`
 }
 
 type ExposedScopeConsumer struct {
