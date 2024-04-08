@@ -14,9 +14,6 @@ func ptr[T any](x T) *T {
 }
 
 func ExampleApplicationForDocumentation() *Application {
-	stringp := func(s string) *string {
-		return &s
-	}
 	return &Application{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "Application",
@@ -368,8 +365,8 @@ func ExampleApplicationForDocumentation() *Application {
 									Name:  "KST",
 								},
 							},
-							AccessibleForAll: true,
-							DelegationSource: stringp("delegation-source"),
+							AccessibleForAll: ptr(true),
+							DelegationSource: ptr("delegation-source"),
 						},
 					},
 				},

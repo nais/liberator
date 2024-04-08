@@ -931,6 +931,11 @@ func (in *ExposedScope) DeepCopyInto(out *ExposedScope) {
 		*out = make([]ExposedScopeConsumer, len(*in))
 		copy(*out, *in)
 	}
+	if in.AccessibleForAll != nil {
+		in, out := &in.AccessibleForAll, &out.AccessibleForAll
+		*out = new(bool)
+		**out = **in
+	}
 	if in.DelegationSource != nil {
 		in, out := &in.DelegationSource, &out.DelegationSource
 		*out = new(string)

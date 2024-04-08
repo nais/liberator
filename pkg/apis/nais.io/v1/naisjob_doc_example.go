@@ -313,7 +313,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 									Name:  "KST",
 								},
 							},
-							AccessibleForAll: true,
+							AccessibleForAll: boolp(true),
 							DelegationSource: stringp("delegation-source"),
 						},
 					},

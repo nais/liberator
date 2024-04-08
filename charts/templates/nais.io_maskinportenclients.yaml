@@ -87,8 +87,7 @@ spec:
                     items:
                       properties:
                         accessibleForAll:
-                          description: Accessible for all, if scope should be available
-                            for all organizations.
+                          description: Allow any organization to access the scope.
                           type: boolean
                         allowedIntegrations:
                           description: |-
