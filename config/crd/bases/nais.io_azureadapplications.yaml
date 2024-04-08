@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
+    controller-gen.kubebuilder.io/version: v0.14.0
   name: azureadapplications.nais.io
 spec:
   group: nais.io
@@ -52,14 +52,19 @@ spec:
           API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -84,10 +89,9 @@ spec:
                       type: string
                     type: array
                   groups:
-                    description: Groups is a list of Azure AD group IDs to be emitted
-                      in the `groups` claim in tokens issued by Azure AD. This also
-                      assigns groups to the application for access control. Only direct
-                      members of the groups are granted access.
+                    description: |-
+                      Groups is a list of Azure AD group IDs to be emitted in the `groups` claim in tokens issued by Azure AD.
+                      This also assigns groups to the application for access control. Only direct members of the groups are granted access.
                     items:
                       properties:
                         id:
@@ -98,9 +102,9 @@ spec:
                     type: array
                 type: object
               logoutUrl:
-                description: LogoutUrl is the URL where Azure AD sends a request to
-                  have the application clear the user's session data. This is required
-                  if single sign-out should work correctly. Must start with 'https'
+                description: |-
+                  LogoutUrl is the URL where Azure AD sends a request to have the application clear the user's session data.
+                  This is required if single sign-out should work correctly. Must start with 'https'
                 type: string
               preAuthorizedApplications:
                 items:
@@ -117,9 +121,9 @@ spec:
                         it should be in the same namespace as your application.
                       type: string
                     permissions:
-                      description: Permissions contains a set of permissions that
-                        are granted to the given application. Currently only applicable
-                        for Azure AD clients.
+                      description: |-
+                        Permissions contains a set of permissions that are granted to the given application.
+                        Currently only applicable for Azure AD clients.
                       properties:
                         roles:
                           description: Roles is a set of custom permission roles that
@@ -168,9 +172,9 @@ spec:
                   for usage in client-side applications without access to secrets.
                 type: boolean
               tenant:
-                description: Tenant is an optional alias for targeting a tenant matching
-                  an instance of Azurerator that targets said tenant. Can be omitted
-                  if only running a single instance or targeting the default tenant.
+                description: |-
+                  Tenant is an optional alias for targeting a tenant matching an instance of Azurerator that targets said tenant.
+                  Can be omitted if only running a single instance or targeting the default tenant.
                 type: string
             required:
             - secretName

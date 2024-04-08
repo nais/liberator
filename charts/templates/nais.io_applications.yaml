@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
+    controller-gen.kubebuilder.io/version: v0.14.0
   name: applications.nais.io
 spec:
   group: nais.io
@@ -32,35 +32,40 @@ spec:
         description: Application defines a NAIS application.
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
           spec:
-            description: ApplicationSpec contains the NAIS manifest. Please keep this
-              list sorted for clarity.
+            description: |-
+              ApplicationSpec contains the NAIS manifest.
+              Please keep this list sorted for clarity.
             properties:
               accessPolicy:
-                description: By default, no traffic is allowed between applications
-                  inside the cluster. Configure access policies to explicitly allow
-                  communication between applications. This is also used for granting
-                  inbound access in the context of Azure AD and TokenX clients.
+                description: |-
+                  By default, no traffic is allowed between applications inside the cluster.
+                  Configure access policies to explicitly allow communication between applications.
+                  This is also used for granting inbound access in the context of Azure AD and TokenX clients.
                 properties:
                   inbound:
                     description: Configures inbound access for your application.
                     properties:
                       rules:
-                        description: List of NAIS applications that may access your
-                          application. These settings apply both to Zero Trust network
-                          connectivity and token validity for Azure AD and TokenX
-                          tokens.
+                        description: |-
+                          List of NAIS applications that may access your application.
+                          These settings apply both to Zero Trust network connectivity and token validity for Azure AD and TokenX tokens.
                         items:
                           properties:
                             application:
@@ -75,9 +80,9 @@ spec:
                                 if it should be in the same namespace as your application.
                               type: string
                             permissions:
-                              description: Permissions contains a set of permissions
-                                that are granted to the given application. Currently
-                                only applicable for Azure AD clients.
+                              description: |-
+                                Permissions contains a set of permissions that are granted to the given application.
+                                Currently only applicable for Azure AD clients.
                               properties:
                                 roles:
                                   description: Roles is a set of custom permission
@@ -137,9 +142,9 @@ spec:
                           type: object
                         type: array
                       rules:
-                        description: List of NAIS applications that your application
-                          needs to access. These settings apply to Zero Trust network
-                          connectivity.
+                        description: |-
+                          List of NAIS applications that your application needs to access.
+                          These settings apply to Zero Trust network connectivity.
                         items:
                           properties:
                             application:
@@ -182,11 +187,9 @@ spec:
                               type: string
                             type: array
                           groups:
-                            description: Groups is a list of Azure AD group IDs to
-                              be emitted in the `groups` claim in tokens issued by
-                              Azure AD. This also assigns groups to the application
-                              for access control. Only direct members of the groups
-                              are granted access.
+                            description: |-
+                              Groups is a list of Azure AD group IDs to be emitted in the `groups` claim in tokens issued by Azure AD.
+                              This also assigns groups to the application for access control. Only direct members of the groups are granted access.
                             items:
                               properties:
                                 id:
@@ -197,9 +200,9 @@ spec:
                             type: array
                         type: object
                       enabled:
-                        description: Whether to enable provisioning of an Azure AD
-                          application. If enabled, an Azure AD application will be
-                          provisioned.
+                        description: |-
+                          Whether to enable provisioning of an Azure AD application.
+                          If enabled, an Azure AD application will be provisioned.
                         type: boolean
                       replyURLs:
                         description: Deprecated. Only use if you're implementing logins
@@ -212,11 +215,10 @@ spec:
                         description: Deprecated, do not use.
                         type: boolean
                       tenant:
-                        description: Tenant targets a specific tenant for the Azure
-                          AD application. Only works in the development clusters.
-                          Only use this if you have a specific reason to do so. Using
-                          this will _isolate_ your application from all other applications
-                          that are not using the same tenant.
+                        description: |-
+                          Tenant targets a specific tenant for the Azure AD application.
+                          Only works in the development clusters. Only use this if you have a specific reason to do so.
+                          Using this will _isolate_ your application from all other applications that are not using the same tenant.
                         enum:
                         - nav.no
                         - trygdeetaten.no
@@ -225,12 +227,13 @@ spec:
                     - enabled
                     type: object
                   sidecar:
-                    description: "Sidecar configures a sidecar that intercepts every
-                      HTTP request, and performs the OIDC flow if necessary. All requests
-                      to ingress + `/oauth2` will be processed only by the sidecar,
-                      whereas all other requests will be proxied to the application.
-                      \n If the client is authenticated with Azure AD, the `Authorization`
-                      header will be set to `Bearer <JWT>`."
+                    description: |-
+                      Sidecar configures a sidecar that intercepts every HTTP request, and performs the OIDC flow if necessary.
+                      All requests to ingress + `/oauth2` will be processed only by the sidecar, whereas all other requests
+                      will be proxied to the application.
+
+
+                      If the client is authenticated with Azure AD, the `Authorization` header will be set to `Bearer <JWT>`.
                     properties:
                       autoLogin:
                         description: Automatically redirect the user to login for
@@ -284,7 +287,8 @@ spec:
                   type: string
                 type: array
               env:
-                description: Custom environment variables injected into your container.
+                description: |-
+                  Custom environment variables injected into your container.
                   Specify either `value` or `valueFrom`, but not both.
                 items:
                   properties:
@@ -293,8 +297,9 @@ spec:
                         digits, and the underscore `_` character.
                       type: string
                     value:
-                      description: Environment variable value. Numbers and boolean
-                        values must be quoted. Required unless `valueFrom` is specified.
+                      description: |-
+                        Environment variable value. Numbers and boolean values must be quoted.
+                        Required unless `valueFrom` is specified.
                       type: string
                     valueFrom:
                       description: Dynamically set environment variables based on
@@ -327,42 +332,53 @@ spec:
                   type: object
                 type: array
               envFrom:
-                description: "EnvFrom exposes all variables in the ConfigMap or Secret
-                  resources as environment variables. One of `configMap` or `secret`
-                  is required. \n Environment variables will take the form `KEY=VALUE`,
-                  where `key` is the ConfigMap or Secret key. You can specify as many
-                  keys as you like in a single ConfigMap or Secret. \n The ConfigMap
-                  and Secret resources must live in the same Kubernetes namespace
-                  as the Application resource."
+                description: |-
+                  EnvFrom exposes all variables in the ConfigMap or Secret resources as environment variables.
+                  One of `configMap` or `secret` is required.
+
+
+                  Environment variables will take the form `KEY=VALUE`, where `key` is the ConfigMap or Secret key.
+                  You can specify as many keys as you like in a single ConfigMap or Secret.
+
+
+                  The ConfigMap and Secret resources must live in the same Kubernetes namespace as the Application resource.
                 items:
                   properties:
                     configmap:
-                      description: Name of the `ConfigMap` where environment variables
-                        are specified. Required unless `secret` is set.
+                      description: |-
+                        Name of the `ConfigMap` where environment variables are specified.
+                        Required unless `secret` is set.
                       type: string
                     secret:
-                      description: Name of the `Secret` where environment variables
-                        are specified. Required unless `configMap` is set.
+                      description: |-
+                        Name of the `Secret` where environment variables are specified.
+                        Required unless `configMap` is set.
                       type: string
                   type: object
                 type: array
               filesFrom:
-                description: "List of ConfigMap, Secret, or EmptyDir resources that
-                  will have their contents mounted into the containers. Either `configMap`,
-                  `secret`, or `emptyDir` is required. \n Files will take the path
-                  `<mountPath>/<key>`, where `key` is the ConfigMap or Secret key.
-                  You can specify as many keys as you like in a single ConfigMap or
-                  Secret, and they will all be mounted to the same directory. \n If
-                  you reference an emptyDir you will just get an empty directory,
-                  backed by your requested memory or the disk on the node where your
-                  pod is running. \n The ConfigMap and Secret resources must live
-                  in the same Kubernetes namespace as the Application resource."
+                description: |-
+                  List of ConfigMap, Secret, or EmptyDir resources that will have their contents mounted into the containers.
+                  Either `configMap`, `secret`, or `emptyDir` is required.
+
+
+                  Files will take the path `<mountPath>/<key>`, where `key` is the ConfigMap or Secret key.
+                  You can specify as many keys as you like in a single ConfigMap or Secret, and they will all
+                  be mounted to the same directory.
+
+
+                  If you reference an emptyDir you will just get an empty directory, backed
+                  by your requested memory or the disk on the node where your pod is
+                  running.
+
+
+                  The ConfigMap and Secret resources must live in the same Kubernetes namespace as the Application resource.
                 items:
                   properties:
                     configmap:
-                      description: Name of the `ConfigMap` that contains files that
-                        should be mounted into the container. Required unless `secret`
-                        or `persistentVolumeClaim` is set.
+                      description: |-
+                        Name of the `ConfigMap` that contains files that should be mounted into the container.
+                        Required unless `secret` or `persistentVolumeClaim` is set.
                       type: string
                     emptyDir:
                       description: Specification of an empty directory
@@ -374,25 +390,26 @@ spec:
                           type: string
                       type: object
                     mountPath:
-                      description: "Filesystem path inside the pod where files are
-                        mounted. The directory will be created if it does not exist.
-                        If the directory exists, any files in the directory will be
-                        made unaccessible. \n Defaults to `/var/run/configmaps/<NAME>`,
-                        `/var/run/secrets`, or `/var/run/pvc/<NAME>`, depending on
-                        which of them is specified. For EmptyDir, MountPath must be
-                        set."
+                      description: |-
+                        Filesystem path inside the pod where files are mounted.
+                        The directory will be created if it does not exist. If the directory exists,
+                        any files in the directory will be made unaccessible.
+
+
+                        Defaults to `/var/run/configmaps/<NAME>`, `/var/run/secrets`, or `/var/run/pvc/<NAME>`, depending on which of them is specified.
+                        For EmptyDir, MountPath must be set.
                       type: string
                     persistentVolumeClaim:
-                      description: Name of the `PersistentVolumeClaim` that should
-                        be mounted into the container. Required unless `configMap`
-                        or `secret` is set. This feature requires coordination with
-                        the NAIS team.
+                      description: |-
+                        Name of the `PersistentVolumeClaim` that should be mounted into the container.
+                        Required unless `configMap` or `secret` is set.
+                        This feature requires coordination with the NAIS team.
                       type: string
                     secret:
-                      description: Name of the `Secret` that contains files that should
-                        be mounted into the container. Required unless `configMap`
-                        or `persistentVolumeClaim` is set. If mounting multiple secrets,
-                        `mountPath` *MUST* be set to avoid collisions.
+                      description: |-
+                        Name of the `Secret` that contains files that should be mounted into the container.
+                        Required unless `configMap` or `persistentVolumeClaim` is set.
+                        If mounting multiple secrets, `mountPath` *MUST* be set to avoid collisions.
                       type: string
                   type: object
                 type: array
@@ -402,9 +419,9 @@ spec:
                   generatedConfig:
                     properties:
                       mountPath:
-                        description: If specified, a Javascript file with application
-                          specific frontend configuration variables will be generated
-                          and mounted into the pod file system at the specified path.
+                        description: |-
+                          If specified, a Javascript file with application specific frontend configuration variables
+                          will be generated and mounted into the pod file system at the specified path.
                           You can import this file directly from your Javascript application.
                         type: string
                     required:
@@ -414,26 +431,26 @@ spec:
               gcp:
                 properties:
                   bigQueryDatasets:
-                    description: Provision BigQuery datasets and give your application's
-                      pod mountable secrets for connecting to each dataset. Datasets
-                      are immutable and cannot be changed.
+                    description: |-
+                      Provision BigQuery datasets and give your application's pod mountable secrets for connecting to each dataset.
+                      Datasets are immutable and cannot be changed.
                     items:
                       properties:
                         cascadingDelete:
-                          description: 'When set to true will delete the dataset,
-                            when the application resource is deleted. NB: If no tables
-                            exist in the bigquery dataset, it _will_ delete the dataset
-                            even if this value is set/defaulted to `false`. Default
-                            value is `false`.'
+                          description: |-
+                            When set to true will delete the dataset, when the application resource is deleted.
+                            NB: If no tables exist in the bigquery dataset, it _will_ delete the dataset even if this value is set/defaulted to `false`.
+                            Default value is `false`.
                           type: boolean
                         description:
-                          description: Human-readable description of what this BigQuery
-                            dataset contains, or is used for. Will be visible in the
-                            GCP Console.
+                          description: |-
+                            Human-readable description of what this BigQuery dataset contains, or is used for.
+                            Will be visible in the GCP Console.
                           type: string
                         name:
-                          description: Name of the BigQuery Dataset. The canonical
-                            name of the dataset will be `<TEAM_PROJECT_ID>:<NAME>`.
+                          description: |-
+                            Name of the BigQuery Dataset.
+                            The canonical name of the dataset will be `<TEAM_PROJECT_ID>:<NAME>`.
                           pattern: ^[a-z0-9][a-z0-9_]+$
                           type: string
                         permission:
@@ -470,9 +487,9 @@ spec:
                                 These will be deleted.
                               type: string
                             numNewerVersions:
-                              description: Condition is satisfied when the object
-                                has the specified number of newer versions. The older
-                                versions will be deleted.
+                              description: |-
+                                Condition is satisfied when the object has the specified number of newer versions.
+                                The older versions will be deleted.
                               type: integer
                             withState:
                               description: Condition is satisfied when the object
@@ -498,14 +515,13 @@ spec:
                           minimum: 1
                           type: integer
                         uniformBucketLevelAccess:
-                          description: "Allows you to uniformly control access to
-                            your Cloud Storage resources. When you enable uniform
-                            bucket-level access on a bucket, Access Control Lists
-                            (ACLs) are disabled, and only bucket-level Identity and
-                            Access Management (IAM) permissions grant access to that
-                            bucket and the objects it contains. \n Uniform access
-                            control can not be reversed after 90 days! This is controlled
-                            by Google."
+                          description: |-
+                            Allows you to uniformly control access to your Cloud Storage resources.
+                            When you enable uniform bucket-level access on a bucket, Access Control Lists (ACLs) are disabled, and only bucket-level Identity
+                            and Access Management (IAM) permissions grant access to that bucket and the objects it contains.
+
+
+                            Uniform access control can not be reversed after 90 days! This is controlled by Google.
                           type: boolean
                       required:
                       - name
@@ -547,18 +563,17 @@ spec:
                     items:
                       properties:
                         autoBackupHour:
-                          description: If specified, run automatic backups of the
-                            SQL database at the given hour. Note that this will backup
-                            the whole SQL instance, and not separate databases. Restores
-                            are done using the Google Cloud Console.
+                          description: |-
+                            If specified, run automatic backups of the SQL database at the given hour.
+                            Note that this will backup the whole SQL instance, and not separate databases.
+                            Restores are done using the Google Cloud Console.
                           maximum: 23
                           minimum: 0
                           type: integer
                         cascadingDelete:
-                          description: Remove the entire Postgres server including
-                            all data when the Kubernetes resource is deleted. *THIS
-                            IS A DESTRUCTIVE OPERATION*! Set cascading delete only
-                            when you want to remove data forever.
+                          description: |-
+                            Remove the entire Postgres server including all data when the Kubernetes resource is deleted.
+                            *THIS IS A DESTRUCTIVE OPERATION*! Set cascading delete only when you want to remove data forever.
                           type: boolean
                         collation:
                           description: Sort order for `ORDER BY ...` clauses.
@@ -569,14 +584,14 @@ spec:
                           items:
                             properties:
                               envVarPrefix:
-                                description: Prefix to add to environment variables
-                                  made available for database connection. If switching
-                                  to `EnvVarPrefix` you need to [reset database credentials](https://docs.nais.io/persistence/postgres/#reset-database-credentials).
+                                description: |-
+                                  Prefix to add to environment variables made available for database connection.
+                                  If switching to `EnvVarPrefix` you need to [reset database credentials](https://docs.nais.io/persistence/postgres/#reset-database-credentials).
                                 type: string
                               name:
-                                description: Database name. *Be aware that only one
-                                  database with this name is allowed in a namespace,
-                                  regardless of which SQLInstance it belongs to*
+                                description: |-
+                                  Database name.
+                                  *Be aware that only one database with this name is allowed in a namespace, regardless of which SQLInstance it belongs to*
                                 type: string
                               users:
                                 description: Add extra users for database access.
@@ -597,17 +612,16 @@ spec:
                             type: object
                           type: array
                         diskAutoresize:
-                          description: When set to true, GCP will automatically increase
-                            storage by XXX for the database when disk usage is above
-                            the high water mark. Setting this field to true also disables
-                            manual control over disk size, i.e. the `diskSize` parameter
-                            will be ignored.
+                          description: |-
+                            When set to true, GCP will automatically increase storage by XXX for the database when
+                            disk usage is above the high water mark. Setting this field to true also disables
+                            manual control over disk size, i.e. the `diskSize` parameter will be ignored.
                           type: boolean
                         diskSize:
-                          description: How much hard drive space to allocate for the
-                            SQL server, in gigabytes. This parameter is used when
-                            first provisioning a server. Disk size can be changed
-                            using this field _only when diskAutoresize is set to false_.
+                          description: |-
+                            How much hard drive space to allocate for the SQL server, in gigabytes.
+                            This parameter is used when first provisioning a server.
+                            Disk size can be changed using this field _only when diskAutoresize is set to false_.
                           minimum: 10
                           type: integer
                         diskType:
@@ -617,11 +631,11 @@ spec:
                           - HDD
                           type: string
                         flags:
-                          description: Set flags to control the behavior of the instance.
-                            Be aware that NAIS _does not validate_ these flags, so
-                            take extra care to make sure the values match against
-                            the specification, otherwise your deployment will seemingly
-                            work OK, but the database flags will not function as expected.
+                          description: |-
+                            Set flags to control the behavior of the instance.
+                            Be aware that NAIS _does not validate_ these flags, so take extra care
+                            to make sure the values match against the specification, otherwise your deployment
+                            will seemingly work OK, but the database flags will not function as expected.
                           items:
                             properties:
                               name:
@@ -688,11 +702,10 @@ spec:
                           minimum: 1
                           type: integer
                         tier:
-                          description: Server tier, i.e. how much CPU and memory allocated.
-                            Available tiers are `db-f1-micro`, `db-g1-small` and custom
-                            `db-custom-CPU-RAM`. Custom memory must be mulitple of
-                            256 MB and at least 3.75 GB (e.g. `db-custom-1-3840` for
-                            1 cpu, 3840 MB ram)
+                          description: |-
+                            Server tier, i.e. how much CPU and memory allocated.
+                            Available tiers are `db-f1-micro`, `db-g1-small` and custom `db-custom-CPU-RAM`.
+                            Custom memory must be mulitple of 256 MB and at least 3.75 GB (e.g. `db-custom-1-3840` for 1 cpu, 3840 MB ram)
                           pattern: db-.+
                           type: string
                         type:
@@ -710,20 +723,21 @@ spec:
                     type: array
                 type: object
               idporten:
-                description: Configures ID-porten authentication for this application.
-                  See [ID-porten](https://doc.nais.io/explanation/auth/idporten/)
-                  for more details.
+                description: |-
+                  Configures ID-porten authentication for this application.
+                  See [ID-porten](https://doc.nais.io/explanation/auth/idporten/) for more details.
                 properties:
                   enabled:
                     description: Enable ID-porten authentication. Requires `.spec.idporten.sidecar.enabled=true`.
                     type: boolean
                   sidecar:
-                    description: "Sidecar configures a sidecar that intercepts every
-                      HTTP request, and performs the OIDC flow if necessary. All requests
-                      to ingress + `/oauth2` will be processed only by the sidecar,
-                      whereas all other requests will be proxied to the application.
-                      \n If the client is authenticated with IDPorten, the `Authorization`
-                      header will be set to `Bearer <JWT>`."
+                    description: |-
+                      Sidecar configures a sidecar that intercepts every HTTP request, and performs the OIDC flow if necessary.
+                      All requests to ingress + `/oauth2` will be processed only by the sidecar, whereas all other requests
+                      will be proxied to the application.
+
+
+                      If the client is authenticated with IDPorten, the `Authorization` header will be set to `Bearer <JWT>`.
                     properties:
                       autoLogin:
                         description: Automatically redirect the user to login for
@@ -798,19 +812,18 @@ spec:
                   Grafana.
                 properties:
                   instance:
-                    description: 'Provisions an InfluxDB instance and configures your
-                      application to access it. Use the prefix: `influx-` + `team`
-                      that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac)
-                      repository.'
+                    description: |-
+                      Provisions an InfluxDB instance and configures your application to access it.
+                      Use the prefix: `influx-` + `team` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
                     type: string
                 required:
                 - instance
                 type: object
               ingresses:
-                description: List of URLs that will route HTTPS traffic to the application.
-                  All URLs must start with `https://`. Domain availability differs
-                  according to which environment your application is running in. Check
-                  the available environments in the reference documentation.
+                description: |-
+                  List of URLs that will route HTTPS traffic to the application.
+                  All URLs must start with `https://`. Domain availability differs according to which environment your application is running in.
+                  Check the available environments in the reference documentation.
                 items:
                   pattern: ^https:\/\/.+$
                   type: string
@@ -833,16 +846,16 @@ spec:
                   that returns the current leader.
                 type: boolean
               liveness:
-                description: Many applications running for long periods of time eventually
-                  transition to broken states, and cannot recover except by being
-                  restarted. Kubernetes provides liveness probes to detect and remedy
-                  such situations. Read more about this over at the [Kubernetes probes
-                  documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
+                description: |-
+                  Many applications running for long periods of time eventually transition to broken states,
+                  and cannot recover except by being restarted. Kubernetes provides liveness probes to detect
+                  and remedy such situations. Read more about this over at the
+                  [Kubernetes probes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
                 properties:
                   failureThreshold:
-                    description: When a Pod starts, and the probe fails, Kubernetes
-                      will try _failureThreshold_ times before giving up. Giving up
-                      in case of a startup probe means restarting the Pod.
+                    description: |-
+                      When a Pod starts, and the probe fails, Kubernetes will try _failureThreshold_ times before giving up.
+                      Giving up in case of a startup probe means restarting the Pod.
                     type: integer
                   initialDelay:
                     description: Number of seconds after the container has started
@@ -865,9 +878,9 @@ spec:
                 - path
                 type: object
               logformat:
-                description: Format of the logs from the container. Use this if the
-                  container doesn't support JSON logging and the log is in a special
-                  format that need to be parsed.
+                description: |-
+                  Format of the logs from the container. Use this if the container doesn't support
+                  JSON logging and the log is in a special format that need to be parsed.
                 enum:
                 - ""
                 - accesslog
@@ -890,9 +903,9 @@ spec:
                 - dns_loglevel
                 type: string
               maskinporten:
-                description: Configures a Maskinporten client for this application.
-                  See [Maskinporten](https://doc.nais.io/explanation/auth/maskinporten/)
-                  for more details.
+                description: |-
+                  Configures a Maskinporten client for this application.
+                  See [Maskinporten](https://doc.nais.io/explanation/auth/maskinporten/) for more details.
                 properties:
                   enabled:
                     description: If enabled, provisions and configures a Maskinporten
@@ -903,16 +916,15 @@ spec:
                       scopes and/or exposed scopes.
                     properties:
                       consumes:
-                        description: This is the Schema for the consumes and exposes
-                          API. `consumes` is a list of scopes that your client can
-                          request access to.
+                        description: |-
+                          This is the Schema for the consumes and exposes API.
+                          `consumes` is a list of scopes that your client can request access to.
                         items:
                           properties:
                             name:
-                              description: The scope consumed by the application to
-                                gain access to an external organization API. Ensure
-                                that the NAV organization has been granted access
-                                to the scope prior to requesting access.
+                              description: |-
+                                The scope consumed by the application to gain access to an external organization API.
+                                Ensure that the NAV organization has been granted access to the scope prior to requesting access.
                               type: string
                           required:
                           - name
@@ -925,14 +937,16 @@ spec:
                         items:
                           properties:
                             allowedIntegrations:
-                              description: Whitelisting of integration's allowed.
+                              description: |-
+                                Whitelisting of integration's allowed.
                                 Default is `maskinporten`
                               items:
                                 type: string
                               minItems: 1
                               type: array
                             atMaxAge:
-                              description: Max time in seconds for a issued access_token.
+                              description: |-
+                                Max time in seconds for a issued access_token.
                                 Default is `30` sec.
                               maximum: 680
                               minimum: 30
@@ -960,14 +974,15 @@ spec:
                                 to be used and consumed by organizations granted access.
                               type: boolean
                             name:
-                              description: The actual subscope combined with `Product`.
+                              description: |-
+                                The actual subscope combined with `Product`.
                                 Ensure that `<Product><Name>` matches `Pattern`.
                               pattern: ^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$
                               type: string
                             product:
-                              description: The product-area your application belongs
-                                to e.g. arbeid, helse ... This will be included in
-                                the final scope `nav:<Product><Name>`.
+                              description: |-
+                                The product-area your application belongs to e.g. arbeid, helse ...
+                                This will be included in the final scope `nav:<Product><Name>`.
                               pattern: ^[a-z0-9]+$
                               type: string
                           required:
@@ -1031,8 +1046,9 @@ spec:
                     type: object
                 type: object
               openSearch:
-                description: OpenSearch instance to get credentials for. Must be owned
-                  by same team.
+                description: |-
+                  OpenSearch instance to get credentials for.
+                  Must be owned by same team.
                 properties:
                   access:
                     description: Access level for OpenSearch user
@@ -1043,36 +1059,36 @@ spec:
                     - admin
                     type: string
                   instance:
-                    description: Configure your application to access your OpenSearch
-                      instance. The last part of the name used when creating the instance
-                      (ie. opensearch-{team}-{instance})
+                    description: |-
+                      Configure your application to access your OpenSearch instance.
+                      The last part of the name used when creating the instance (ie. opensearch-{team}-{instance})
                     type: string
                 required:
                 - instance
                 type: object
               port:
-                description: The port number which is exposed by the container and
-                  should receive traffic. Note that ports under 1024 are unavailable.
+                description: |-
+                  The port number which is exposed by the container and should receive traffic.
+                  Note that ports under 1024 are unavailable.
                 type: integer
               preStopHook:
-                description: PreStopHook is called immediately before a container
-                  is terminated due to an API request or management event such as
-                  liveness/startup probe failure, preemption, resource contention,
-                  etc. The handler is not called if the container crashes or exits
-                  by itself. The reason for termination is passed to the handler.
+                description: |-
+                  PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
+                  The handler is not called if the container crashes or exits by itself.
+                  The reason for termination is passed to the handler.
                 properties:
                   exec:
                     description: Command that should be run inside the main container
                       just before the pod is shut down by Kubernetes.
                     properties:
                       command:
-                        description: "Command is the command line to execute inside
-                          the container before the pod is shut down. The command is
-                          not run inside a shell, so traditional shell instructions
-                          (pipes, redirects, etc.) won't work. To use a shell, you
-                          need to explicitly call out to that shell. \n If the exit
-                          status is non-zero, the pod will still be shut down, and
-                          marked as `Failed`."
+                        description: |-
+                          Command is the command line to execute inside the container before the pod is shut down.
+                          The command is not run inside a shell, so traditional shell instructions (pipes, redirects, etc.) won't work.
+                          To use a shell, you need to explicitly call out to that shell.
+
+
+                          If the exit status is non-zero, the pod will still be shut down, and marked as `Failed`.
                         items:
                           type: string
                         type: array
@@ -1085,8 +1101,9 @@ spec:
                         description: Path to access on the HTTP server.
                         type: string
                       port:
-                        description: Port to access on the container. Defaults to
-                          application port, as defined in `.spec.port`.
+                        description: |-
+                          Port to access on the container.
+                          Defaults to application port, as defined in `.spec.port`.
                         maximum: 65535
                         minimum: 1
                         type: integer
@@ -1095,12 +1112,13 @@ spec:
                     type: object
                 type: object
               preStopHookPath:
-                description: A HTTP GET will be issued to this endpoint at least once
-                  before the pod is terminated. This feature is deprecated and will
-                  be removed in the next major version (nais.io/v1).
+                description: |-
+                  A HTTP GET will be issued to this endpoint at least once before the pod is terminated.
+                  This feature is deprecated and will be removed in the next major version (nais.io/v1).
                 type: string
               prometheus:
-                description: Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/explanation/observability/metrics/).
+                description: |-
+                  Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/explanation/observability/metrics/).
                   Use this configuration to override the default values.
                 properties:
                   enabled:
@@ -1111,20 +1129,18 @@ spec:
                     type: string
                 type: object
               readiness:
-                description: Sometimes, applications are temporarily unable to serve
-                  traffic. For example, an application might need to load large data
-                  or configuration files during startup, or depend on external services
-                  after startup. In such cases, you don't want to kill the application,
-                  but you don’t want to send it requests either. Kubernetes provides
-                  readiness probes to detect and mitigate these situations. A pod
-                  with containers reporting that they are not ready does not receive
-                  traffic through Kubernetes Services. Read more about this over at
-                  the [Kubernetes readiness documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
+                description: |-
+                  Sometimes, applications are temporarily unable to serve traffic. For example, an application might need
+                  to load large data or configuration files during startup, or depend on external services after startup.
+                  In such cases, you don't want to kill the application, but you don’t want to send it requests either.
+                  Kubernetes provides readiness probes to detect and mitigate these situations. A pod with containers
+                  reporting that they are not ready does not receive traffic through Kubernetes Services.
+                  Read more about this over at the [Kubernetes readiness documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
                 properties:
                   failureThreshold:
-                    description: When a Pod starts, and the probe fails, Kubernetes
-                      will try _failureThreshold_ times before giving up. Giving up
-                      in case of a startup probe means restarting the Pod.
+                    description: |-
+                      When a Pod starts, and the probe fails, Kubernetes will try _failureThreshold_ times before giving up.
+                      Giving up in case of a startup probe means restarting the Pod.
                     type: integer
                   initialDelay:
                     description: Number of seconds after the container has started
@@ -1147,7 +1163,8 @@ spec:
                 - path
                 type: object
               redis:
-                description: List of redis instances this job needs credentials for.
+                description: |-
+                  List of redis instances this job needs credentials for.
                   Must be owned by same team.
                 items:
                   properties:
@@ -1169,9 +1186,10 @@ spec:
                 description: The numbers of pods to run in parallel.
                 properties:
                   cpuThresholdPercentage:
-                    description: 'Deprecated: Use `spec.scalingStrategy.cpu.thresholdPercentage`
-                      instead. Amount of CPU usage before the autoscaler kicks in.
-                      If anything under ScalingStrategy is set, that takes precedence.'
+                    description: |-
+                      Deprecated: Use `spec.scalingStrategy.cpu.thresholdPercentage` instead.
+                      Amount of CPU usage before the autoscaler kicks in.
+                      If anything under ScalingStrategy is set, that takes precedence.
                     type: integer
                   disableAutoScaling:
                     description: Disable autoscaling
@@ -1217,9 +1235,9 @@ spec:
                     type: object
                 type: object
               resources:
-                description: When Containers have [resource requests](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/)
-                  specified, the Kubernetes scheduler can make better decisions about
-                  which nodes to place pods on.
+                description: |-
+                  When Containers have [resource requests](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) specified,
+                  the Kubernetes scheduler can make better decisions about which nodes to place pods on.
                 properties:
                   limits:
                     description: Limit defines the maximum amount of resources a container
@@ -1249,16 +1267,17 @@ spec:
                   logging.
                 properties:
                   enabled:
-                    description: Whether to enable a sidecar container for secure
-                      logging. If enabled, a volume is mounted in the pods where secure
-                      logs can be saved.
+                    description: |-
+                      Whether to enable a sidecar container for secure logging.
+                      If enabled, a volume is mounted in the pods where secure logs can be saved.
                     type: boolean
                 required:
                 - enabled
                 type: object
               service:
-                description: Specify which port and protocol is used to connect to
-                  the application in the container. Defaults to HTTP on port 80.
+                description: |-
+                  Specify which port and protocol is used to connect to the application in the container.
+                  Defaults to HTTP on port 80.
                 properties:
                   port:
                     description: Port for the default service. Default port is 80.
@@ -1281,17 +1300,16 @@ spec:
                   bundle or not. Defaults to false.
                 type: boolean
               startup:
-                description: Kubernetes uses startup probes to know when a container
-                  application has started. If such a probe is configured, it disables
-                  liveness and readiness checks until it succeeds, making sure those
-                  probes don't interfere with the application startup. This can be
-                  used to adopt liveness checks on slow starting containers, avoiding
-                  them getting killed by Kubernetes before they are up and running.
+                description: |-
+                  Kubernetes uses startup probes to know when a container application has started. If such a probe is configured,
+                  it disables liveness and readiness checks until it succeeds, making sure those probes don't interfere with the
+                  application startup. This can be used to adopt liveness checks on slow starting containers, avoiding them getting
+                  killed by Kubernetes before they are up and running.
                 properties:
                   failureThreshold:
-                    description: When a Pod starts, and the probe fails, Kubernetes
-                      will try _failureThreshold_ times before giving up. Giving up
-                      in case of a startup probe means restarting the Pod.
+                    description: |-
+                      When a Pod starts, and the probe fails, Kubernetes will try _failureThreshold_ times before giving up.
+                      Giving up in case of a startup probe means restarting the Pod.
                     type: integer
                   initialDelay:
                     description: Number of seconds after the container has started
@@ -1324,51 +1342,50 @@ spec:
                         anyOf:
                         - type: integer
                         - type: string
-                        description: 'The maximum number of pods that can be scheduled
-                          above the desired number of pods. Value can be an absolute
-                          number (ex: 5) or a percentage of desired pods (ex: 10%).
-                          This can not be 0 if MaxUnavailable is 0. Absolute number
-                          is calculated from percentage by rounding up. Defaults to
-                          25%. Example: when this is set to 30%, the new ReplicaSet
-                          can be scaled up immediately when the rolling update starts,
-                          such that the total number of old and new pods do not exceed
-                          130% of desired pods. Once old pods have been killed, new
-                          ReplicaSet can be scaled up further, ensuring that total
-                          number of pods running at any time during the update is
-                          at most 130% of desired pods.'
+                        description: |-
+                          The maximum number of pods that can be scheduled above the desired number of
+                          pods.
+                          Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%).
+                          This can not be 0 if MaxUnavailable is 0.
+                          Absolute number is calculated from percentage by rounding up.
+                          Defaults to 25%.
+                          Example: when this is set to 30%, the new ReplicaSet can be scaled up immediately when
+                          the rolling update starts, such that the total number of old and new pods do not exceed
+                          130% of desired pods. Once old pods have been killed,
+                          new ReplicaSet can be scaled up further, ensuring that total number of pods running
+                          at any time during the update is at most 130% of desired pods.
                         x-kubernetes-int-or-string: true
                       maxUnavailable:
                         anyOf:
                         - type: integer
                         - type: string
-                        description: 'The maximum number of pods that can be unavailable
-                          during the update. Value can be an absolute number (ex:
-                          5) or a percentage of desired pods (ex: 10%). Absolute number
-                          is calculated from percentage by rounding down. This can
-                          not be 0 if MaxSurge is 0. Defaults to 25%. Example: when
-                          this is set to 30%, the old ReplicaSet can be scaled down
-                          to 70% of desired pods immediately when the rolling update
-                          starts. Once new pods are ready, old ReplicaSet can be scaled
-                          down further, followed by scaling up the new ReplicaSet,
-                          ensuring that the total number of pods available at all
-                          times during the update is at least 70% of desired pods.'
+                        description: |-
+                          The maximum number of pods that can be unavailable during the update.
+                          Value can be an absolute number (ex: 5) or a percentage of desired pods (ex: 10%).
+                          Absolute number is calculated from percentage by rounding down.
+                          This can not be 0 if MaxSurge is 0.
+                          Defaults to 25%.
+                          Example: when this is set to 30%, the old ReplicaSet can be scaled down to 70% of desired pods
+                          immediately when the rolling update starts. Once new pods are ready, old ReplicaSet
+                          can be scaled down further, followed by scaling up the new ReplicaSet, ensuring
+                          that the total number of pods available at all times during the update is at
+                          least 70% of desired pods.
                         x-kubernetes-int-or-string: true
                     type: object
                   type:
-                    description: Specifies the strategy used to replace old Pods by
-                      new ones. `RollingUpdate` is the default value.
+                    description: |-
+                      Specifies the strategy used to replace old Pods by new ones.
+                      `RollingUpdate` is the default value.
                     enum:
                     - Recreate
                     - RollingUpdate
                     type: string
                 type: object
               terminationGracePeriodSeconds:
-                description: The grace period is the duration in seconds after the
-                  processes running in the pod are sent a termination signal and the
-                  time when the processes are forcibly halted with a kill signal.
+                description: |-
+                  The grace period is the duration in seconds after the processes running in the pod are sent a termination signal and the time when the processes are forcibly halted with a kill signal.
                   Set this value longer than the expected cleanup time for your process.
-                  For most applications, the default is more than enough. Defaults
-                  to 30 seconds.
+                  For most applications, the default is more than enough. Defaults to 30 seconds.
                 format: int64
                 maximum: 180
                 minimum: 0
@@ -1391,22 +1408,28 @@ spec:
                 description: After the specified TTL, the application will be deleted.
                 type: string
               vault:
-                description: Provides secrets management, identity-based access, and
-                  encrypting application data for auditing of secrets for applications,
-                  systems, and users.
+                description: |-
+                  Provides secrets management, identity-based access, and encrypting application data for auditing of secrets
+                  for applications, systems, and users.
                 properties:
                   enabled:
                     description: If set to true, fetch secrets from Vault and inject
                       into the pods.
                     type: boolean
                   paths:
-                    description: "List of secret paths to be read from Vault and injected
-                      into the pod's filesystem. Overriding the `paths` array is optional,
-                      and will give you fine-grained control over which Vault paths
-                      that will be mounted on the file system. \n By default, the
-                      list will contain an entry with \n `kvPath: /kv/<environment>/<zone>/<application>/<namespace>`
-                      `mountPath: /var/run/secrets/nais.io/vault` \n that will always
-                      be attempted to be mounted."
+                    description: |-
+                      List of secret paths to be read from Vault and injected into the pod's filesystem.
+                      Overriding the `paths` array is optional, and will give you fine-grained control over which Vault paths that will be mounted on the file system.
+
+
+                      By default, the list will contain an entry with
+
+
+                      `kvPath: /kv/<environment>/<zone>/<application>/<namespace>`
+                      `mountPath: /var/run/secrets/nais.io/vault`
+
+
+                      that will always be attempted to be mounted.
                     items:
                       properties:
                         format:
@@ -1438,12 +1461,10 @@ spec:
                     type: boolean
                 type: object
               webproxy:
-                description: Inject on-premises web proxy configuration into the application
-                  pod. Most Linux applications should auto-detect these settings from
-                  the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables
-                  (and their lowercase counterparts). Java applications can start
-                  the JVM using parameters from the `$JAVA_PROXY_OPTIONS` environment
-                  variable.
+                description: |-
+                  Inject on-premises web proxy configuration into the application pod.
+                  Most Linux applications should auto-detect these settings from the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables (and their lowercase counterparts).
+                  Java applications can start the JVM using parameters from the `$JAVA_PROXY_OPTIONS` environment variable.
                 type: boolean
             required:
             - image
@@ -1454,42 +1475,42 @@ spec:
               conditions:
                 items:
                   description: "Condition contains details for one aspect of the current
-                    state of this API Resource. --- This struct is intended for direct
-                    use as an array at the field path .status.conditions.  For example,
-                    \n type FooStatus struct{ // Represents the observations of a
-                    foo's current state. // Known .status.conditions.type are: \"Available\",
-                    \"Progressing\", and \"Degraded\" // +patchMergeKey=type // +patchStrategy=merge
-                    // +listType=map // +listMapKey=type Conditions []metav1.Condition
-                    `json:\"conditions,omitempty\" patchStrategy:\"merge\" patchMergeKey:\"type\"
-                    protobuf:\"bytes,1,rep,name=conditions\"` \n // other fields }"
+                    state of this API Resource.\n---\nThis struct is intended for
+                    direct use as an array at the field path .status.conditions.  For
+                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
+                    observations of a foo's current state.\n\t    // Known .status.conditions.type
+                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
+                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
+                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
+                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
+                    \   // other fields\n\t}"
                   properties:
                     lastTransitionTime:
-                      description: lastTransitionTime is the last time the condition
-                        transitioned from one status to another. This should be when
-                        the underlying condition changed.  If that is not known, then
-                        using the time when the API field changed is acceptable.
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
                       format: date-time
                       type: string
                     message:
-                      description: message is a human readable message indicating
-                        details about the transition. This may be an empty string.
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
                       maxLength: 32768
                       type: string
                     observedGeneration:
-                      description: observedGeneration represents the .metadata.generation
-                        that the condition was set based upon. For instance, if .metadata.generation
-                        is currently 12, but the .status.conditions[x].observedGeneration
-                        is 9, the condition is out of date with respect to the current
-                        state of the instance.
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
                       format: int64
                       minimum: 0
                       type: integer
                     reason:
-                      description: reason contains a programmatic identifier indicating
-                        the reason for the condition's last transition. Producers
-                        of specific condition types may define expected values and
-                        meanings for this field, and whether the values are considered
-                        a guaranteed API. The value should be a CamelCase string.
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
                         This field may not be empty.
                       maxLength: 1024
                       minLength: 1
@@ -1503,11 +1524,12 @@ spec:
                       - Unknown
                       type: string
                     type:
-                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
-                        --- Many .condition.type values are consistent across resources
-                        like Available, but because arbitrary conditions can be useful
-                        (see .node.status.conditions), the ability to deconflict is
-                        important. The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      description: |-
+                        type of condition in CamelCase or in foo.example.com/CamelCase.
+                        ---
+                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
+                        useful (see .node.status.conditions), the ability to deconflict is important.
+                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
                       maxLength: 316
                       pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
                       type: string

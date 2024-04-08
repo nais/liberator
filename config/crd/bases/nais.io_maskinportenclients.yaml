@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
+    controller-gen.kubebuilder.io/version: v0.14.0
   name: maskinportenclients.nais.io
 spec:
   group: nais.io
@@ -38,14 +38,19 @@ spec:
         description: MaskinportenClient is the Schema for the MaskinportenClient API
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -53,25 +58,23 @@ spec:
             description: MaskinportenClientSpec defines the desired state of MaskinportenClient
             properties:
               clientName:
-                description: ClientName is the client name to be registered at DigDir.
-                  It is shown during login for user-centric flows, and is otherwise
-                  a human-readable way to differentiate between clients at DigDir's
-                  self-service portal.
+                description: |-
+                  ClientName is the client name to be registered at DigDir.
+                  It is shown during login for user-centric flows, and is otherwise a human-readable way to differentiate between clients at DigDir's self-service portal.
                 type: string
               scopes:
                 description: Scopes is a object of used end exposed scopes by application
                 properties:
                   consumes:
-                    description: This is the Schema for the consumes and exposes API.
-                      `consumes` is a list of scopes that your client can request
-                      access to.
+                    description: |-
+                      This is the Schema for the consumes and exposes API.
+                      `consumes` is a list of scopes that your client can request access to.
                     items:
                       properties:
                         name:
-                          description: The scope consumed by the application to gain
-                            access to an external organization API. Ensure that the
-                            NAV organization has been granted access to the scope
-                            prior to requesting access.
+                          description: |-
+                            The scope consumed by the application to gain access to an external organization API.
+                            Ensure that the NAV organization has been granted access to the scope prior to requesting access.
                           type: string
                       required:
                       - name
@@ -84,14 +87,16 @@ spec:
                     items:
                       properties:
                         allowedIntegrations:
-                          description: Whitelisting of integration's allowed. Default
-                            is `maskinporten`
+                          description: |-
+                            Whitelisting of integration's allowed.
+                            Default is `maskinporten`
                           items:
                             type: string
                           minItems: 1
                           type: array
                         atMaxAge:
-                          description: Max time in seconds for a issued access_token.
+                          description: |-
+                            Max time in seconds for a issued access_token.
                             Default is `30` sec.
                           maximum: 680
                           minimum: 30
@@ -118,14 +123,15 @@ spec:
                             to be used and consumed by organizations granted access.
                           type: boolean
                         name:
-                          description: The actual subscope combined with `Product`.
+                          description: |-
+                            The actual subscope combined with `Product`.
                             Ensure that `<Product><Name>` matches `Pattern`.
                           pattern: ^([a-zæøå0-9]+\/?)+(\:[a-zæøå0-9]+)*[a-zæøå0-9]+(\.[a-zæøå0-9]+)*$
                           type: string
                         product:
-                          description: The product-area your application belongs to
-                            e.g. arbeid, helse ... This will be included in the final
-                            scope `nav:<Product><Name>`.
+                          description: |-
+                            The product-area your application belongs to e.g. arbeid, helse ...
+                            This will be included in the final scope `nav:<Product><Name>`.
                           pattern: ^[a-z0-9]+$
                           type: string
                       required:
