@@ -168,9 +168,10 @@ type ExposedScope struct {
 	// +nais:doc:Default="false"
 	// +kubebuilder:validation:Optional
 	AccessibleForAll bool `json:"accessibleForAll,omitempty"`
-	// The delegation source is the organization number that is allowed to delegate access to this scope.
-	// +nais:doc:Link="https://docs.digdir.no/maskinporten_guide_apitilbyder.html#delegasjon"
+	// Delegation source for the scope. Default is empty, which means no delegation is allowed.
+	// +nais:doc:Link="https://docs.digdir.no/docs/Maskinporten/maskinporten_func_delegering"
 	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Enum=altinn
 	DelegationSource *string `json:"delegationSource,omitempty"`
 }
 
