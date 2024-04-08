@@ -365,6 +365,8 @@ func ExampleApplicationForDocumentation() *Application {
 									Name:  "KST",
 								},
 							},
+							AccessibleForAll: ptr(true),
+							DelegationSource: ptr("delegation-source"),
 						},
 					},
 				},

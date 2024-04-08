@@ -86,6 +86,9 @@ spec:
                       based on organization number.'
                     items:
                       properties:
+                        accessibleForAll:
+                          description: Allow any organization to access the scope.
+                          type: boolean
                         allowedIntegrations:
                           description: |-
                             Whitelisting of integration's allowed.
@@ -118,6 +121,12 @@ spec:
                             - orgno
                             type: object
                           type: array
+                        delegationSource:
+                          description: Delegation source for the scope. Default is
+                            empty, which means no delegation is allowed.
+                          enum:
+                          - altinn
+                          type: string
                         enabled:
                           description: If Enabled the configured scope is available
                             to be used and consumed by organizations granted access.
