@@ -14,16 +14,16 @@ func init() {
 // Copied and simplified types as of v0.12.0
 
 // +kubebuilder:object:root=true
-type Redis struct {
+type OpenSearch struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              RedisSpec   `json:"spec,omitempty"`
-	Status            RedisStatus `json:"status,omitempty"`
+	Spec              OpenSearchSpec   `json:"spec,omitempty"`
+	Status            OpenSearchStatus `json:"status,omitempty"`
 }
 
-type RedisSpec struct {
+type OpenSearchSpec struct {
 	ServiceCommonSpec
 }
 
-type RedisStatus struct {
+type OpenSearchStatus struct {
 }
