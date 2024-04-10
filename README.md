@@ -20,17 +20,13 @@ To update to the latest version, run:
 go get -u github.com/nais/liberator@HEAD
 ```
 
-The library is semantically versioned. Minor and patch level releases contain
-only new features and bugfixes, respectively. API breaking changes occurs only
-in major version releases.
-
 ## Developing
 
 ### Using a locally checked out copy of Liberator
 
 When developing applications using new Liberator features, you can point the application to link
 against your local Liberator by running the following command in the application repository:
- 
+
 ```
 go mod edit -replace github.com/nais/liberator=../liberator
 ```
@@ -102,5 +98,5 @@ Check for compatibility here: https://github.com/kubernetes-sigs/controller-tool
 ### Code generation
 
 Make sure `controller-gen` is of a compatible version by doing `go get sigs.k8s.io/controller-tools@VERSION`
- 
+
 Run `make generate` to generate deep copy functions and CRD files.
