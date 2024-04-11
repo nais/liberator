@@ -152,9 +152,9 @@ type SQLSSLCertSpec struct {
 
 // +kubebuilder:object:root=true
 type SQLSSLCert struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Spec            SQLSSLCertSpec `json:"spec"`
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              SQLSSLCertSpec `json:"spec"`
 }
 
 // +kubebuilder:object:root=true
