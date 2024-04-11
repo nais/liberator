@@ -146,8 +146,8 @@ type SQLUserList struct {
 }
 
 type SQLSSLCertSpec struct {
-	CommonName  string
-	InstanceRef InstanceRef
+	CommonName  string      `json:"commonName"`
+	InstanceRef InstanceRef `json:"instanceRef"`
 }
 
 // +kubebuilder:object:root=true

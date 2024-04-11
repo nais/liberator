@@ -318,7 +318,7 @@ func (in *SQLInstanceSpec) DeepCopy() *SQLInstanceSpec {
 func (in *SQLSSLCert) DeepCopyInto(out *SQLSSLCert) {
 	*out = *in
 	out.TypeMeta = in.TypeMeta
-	in.ListMeta.DeepCopyInto(&out.ListMeta)
+	in.ObjectMeta.DeepCopyInto(&out.ObjectMeta)
 	out.Spec = in.Spec
 }
 
