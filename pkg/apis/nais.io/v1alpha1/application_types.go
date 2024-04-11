@@ -22,7 +22,7 @@ const (
 	DefaultKafkaratorMountPath             = "/var/run/secrets/nais.io/kafka"
 	DefaultDigdiratorIDPortenMountPath     = "/var/run/secrets/nais.io/idporten"
 	DefaultDigdiratorMaskinportenMountPath = "/var/run/secrets/nais.io/maskinporten"
-	DefaultSqeletorMountPath               = "/var/run/secrets/nais.io/sqeletor"
+	DefaultSqeletorMountPath               = "/var/run/secrets/nais.io/sqlcertificate"
 )
 
 func init() {
