@@ -87,7 +87,9 @@ type SQLInstanceList struct {
 }
 
 type InstanceRef struct {
-	Name string `json:"name"`
+	Name      string `json:"name"`
+	Namespace string `json:"namespace,omitempty"`
+	External  string `json:"external,omitempty"`
 }
 
 type SQLDatabaseSpec struct {
@@ -141,4 +143,23 @@ type SQLUserList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []SQLUser `json:"items"`
+}
+
+type SQLSSLCertSpec struct {
+	CommonName  string
+	InstanceRef InstanceRef
+}
+
+// +kubebuilder:object:root=true
+type SQLSSLCert struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Spec            SQLSSLCertSpec `json:"spec"`
+}
+
+// +kubebuilder:object:root=true
+type SQLSSLCertList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []SQLSSLCert `json:"items"`
 }

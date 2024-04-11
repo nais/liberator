@@ -39,7 +39,11 @@ spec:
             properties:
               instanceRef:
                 properties:
+                  external:
+                    type: string
                   name:
+                    type: string
+                  namespace:
                     type: string
                 required:
                 - name
