@@ -12,6 +12,8 @@ func init() {
 		&SQLDatabaseList{},
 		&SQLUser{},
 		&SQLUserList{},
+		&SQLSSLCert{},
+		&SQLSSLCertList{},
 	)
 }
 
