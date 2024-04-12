@@ -173,6 +173,15 @@ type ExposedScope struct {
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=altinn
 	DelegationSource *string `json:"delegationSource,omitempty"`
+	// Separator is the character that separates `product` and `name` in the final scope:
+	// `scope := <prefix>:<product><separator><name>`
+	// This overrides the default separator.
+	// The default separator is `:`. If `name` contains `/`, the default separator is instead `/`.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Pattern=`^[\/:]$`
+	// +kubebuilder:validation:MaxLength=1
+	// +kubebuilder:validation:MinLength=1
+	Separator *string `json:"separator,omitempty"`
 }
 
 type ExposedScopeConsumer struct {

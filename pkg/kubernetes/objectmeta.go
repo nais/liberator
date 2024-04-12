@@ -2,7 +2,6 @@ package kubernetes
 
 import (
 	"fmt"
-	"strings"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -17,24 +16,4 @@ func ObjectMeta(name, namespace string, labels map[string]string) metav1.ObjectM
 		Namespace: namespace,
 		Labels:    labels,
 	}
-}
-
-func UniformResourceScopeName(resource metav1.Object, clusterName, product, subScope string) string {
-	return replace(fmt.Sprintf("%s:%s:%s.%s", clusterName, resource.GetNamespace(), resource.GetName(), ToScope(product, subScope)))
-}
-
-func replace(x string) string {
-	return strings.ReplaceAll(x, "-", "")
-}
-
-func ToScope(product, subScope string) string {
-	if !strings.Contains(subScope, "/") {
-		return toScope(product, subScope, ":")
-	}
-	// able to use legacy scopes from on-prem in gcp
-	return toScope(product, subScope, "/")
-}
-
-func toScope(product, subScope, separator string) string {
-	return fmt.Sprintf("%s%s%s", product, separator, subScope)
 }
