@@ -556,11 +556,18 @@ type CloudSqlInstance struct {
 	// +kubebuilder:validation:Maximum=23
 	AutoBackupHour *int `json:"autoBackupHour,omitempty"`
 	// Number of daily backups to retain. Defaults to 7 backups.
+	// The number of retained backups must be greater or equal TransactionLogRetentionDays.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=365
 	// +nais:doc:Default="7"
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/backup-recovery/backups"
 	RetainedBackups *int `json:"retainedBackups,omitempty"`
+	// The number of days of transaction logs gcp retain for point in time restore, from 1-7.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=7
+	// +nais:doc:Default="7"
+	// +nais:doc:Link="https://cloud.google.com/sql/docs/mysql/backup-recovery/backups#retention"
+	TransactionLogRetentionDays *int `json:"transactionLogRetentionDays,omitempty"`
 	// Desired maintenance window for database updates.
 	Maintenance *Maintenance `json:"maintenance,omitempty"`
 	// List of databases that should be created on this Postgres server.

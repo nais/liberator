@@ -656,8 +656,9 @@ spec:
                             using write-ahead logs.
                           type: boolean
                         retainedBackups:
-                          description: Number of daily backups to retain. Defaults
-                            to 7 backups.
+                          description: |-
+                            Number of daily backups to retain. Defaults to 7 backups.
+                            The number of retained backups must be greater or equal TransactionLogRetentionDays.
                           maximum: 365
                           minimum: 1
                           type: integer
@@ -668,6 +669,12 @@ spec:
                             Custom memory must be mulitple of 256 MB and at least 3.75 GB (e.g. `db-custom-1-3840` for 1 cpu, 3840 MB ram)
                           pattern: db-.+
                           type: string
+                        transactionLogRetentionDays:
+                          description: The number of days of transaction logs gcp
+                            retain for point in time restore, from 1-7.
+                          maximum: 7
+                          minimum: 1
+                          type: integer
                         type:
                           description: PostgreSQL version.
                           enum:
