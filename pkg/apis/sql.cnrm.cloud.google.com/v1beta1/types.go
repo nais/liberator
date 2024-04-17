@@ -40,6 +40,7 @@ type SQLInstanceSettings struct {
 	InsightsConfig      SQLInstanceInsightsConfiguration `json:"insightsConfig"`
 	IpConfiguration     SQLInstanceIpConfiguration       `json:"ipConfiguration"`
 	DiskAutoresize      bool                             `json:"diskAutoresize"`
+	DiskAutoresizeLimit int                              `json:"diskAutoresizeLimit"`
 	DiskSize            int                              `json:"diskSize"`
 	DiskType            string                           `json:"diskType"`
 	Tier                string                           `json:"tier"`
