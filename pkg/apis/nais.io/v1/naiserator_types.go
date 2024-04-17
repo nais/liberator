@@ -548,6 +548,7 @@ type CloudSqlInstance struct {
 	// disk usage is above the high water mark. Setting this field to true also disables
 	// manual control over disk size, i.e. the `diskSize` parameter will be ignored.
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/instance-settings#threshold"
+	// +nais:doc:Default="false"
 	DiskAutoresize bool `json:"diskAutoresize,omitempty"`
 	// If specified, run automatic backups of the SQL database at the given hour.
 	// Note that this will backup the whole SQL instance, and not separate databases.
