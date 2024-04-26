@@ -548,7 +548,6 @@ type CloudSqlInstance struct {
 	// disk usage is above the high water mark. Setting this field to true also disables
 	// manual control over disk size, i.e. the `diskSize` parameter will be ignored.
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/instance-settings#threshold"
-	// +nais:doc:Default="false"
 	DiskAutoresize bool `json:"diskAutoresize,omitempty"`
 	// If specified, run automatic backups of the SQL database at the given hour.
 	// Note that this will backup the whole SQL instance, and not separate databases.
@@ -563,7 +562,7 @@ type CloudSqlInstance struct {
 	// +nais:doc:Default="7"
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/backup-recovery/backups"
 	RetainedBackups *int `json:"retainedBackups,omitempty"`
-	// The number of days of transaction logs gcp retains for point in time restore, from 1-7.
+	// The number of days of transaction logs gcp retains for point in time restore.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=7
 	// +nais:doc:Default="7"
