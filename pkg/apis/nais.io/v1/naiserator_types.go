@@ -553,7 +553,7 @@ type CloudSqlInstance struct {
 	// The default value is 0, which specifies that there is no limit.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=1000
-	// naisteam:doc:Default="0"
+	// +nais:doc:Default="0"
 	DiskAutoresizeLimit int `json:"diskAutoresizeLimit,omitempty"`
 	// If specified, run automatic backups of the SQL database at the given hour.
 	// Note that this will backup the whole SQL instance, and not separate databases.
