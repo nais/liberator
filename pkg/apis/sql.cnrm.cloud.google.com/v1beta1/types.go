@@ -63,7 +63,8 @@ type SQLInstanceBackupConfiguration struct {
 }
 
 type SQLInstanceBackupRetentionSetting struct {
-	RetainedBackups int `json:"retainedBackups"`
+	RetainedBackups             int `json:"retainedBackups"`
+	TransactionLogRetentionDays int `json:"transactionLogRetentionDays"`
 }
 
 type PrivateNetworkRef struct {

@@ -53,8 +53,11 @@ spec:
                         properties:
                           retainedBackups:
                             type: integer
+                          transactionLogRetentionDays:
+                            type: integer
                         required:
                         - retainedBackups
+                        - transactionLogRetentionDays
                         type: object
                       enabled:
                         type: boolean
