@@ -706,7 +706,7 @@ spec:
                         retainedBackups:
                           description: |-
                             Number of daily backups to retain. Defaults to 7 backups.
-                            The number of retained backups must be greater or equal TransactionLogRetentionDays.
+                            The number of retained backups must be greater or equal to TransactionLogRetentionDays.
                           maximum: 365
                           minimum: 1
                           type: integer
@@ -719,7 +719,7 @@ spec:
                           type: string
                         transactionLogRetentionDays:
                           description: The number of days of transaction logs gcp
-                            retain for point in time restore, from 1-7.
+                            retains for point in time restores.
                           maximum: 7
                           minimum: 1
                           type: integer

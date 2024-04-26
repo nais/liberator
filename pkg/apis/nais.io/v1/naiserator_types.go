@@ -568,7 +568,7 @@ type CloudSqlInstance struct {
 	// +nais:doc:Default="7"
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/backup-recovery/backups"
 	RetainedBackups *int `json:"retainedBackups,omitempty"`
-	// The number of days of transaction logs gcp retains for point in time restore.
+	// The number of days of transaction logs gcp retains for point in time restores.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=7
 	// +nais:doc:Default="7"

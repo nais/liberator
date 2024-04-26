@@ -229,6 +229,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 						HighAvailability:            true,
 						DiskSize:                    30,
 						DiskAutoresize:              true,
+						DiskAutoresizeLimit:         60,
 						AutoBackupHour:              intp(1),
 						RetainedBackups:             intp(14),
 						TransactionLogRetentionDays: intp(3),

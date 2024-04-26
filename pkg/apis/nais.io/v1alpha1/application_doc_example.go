@@ -252,6 +252,7 @@ func ExampleApplicationForDocumentation() *Application {
 						HighAvailability:            true,
 						DiskSize:                    30,
 						DiskAutoresize:              true,
+						DiskAutoresizeLimit:         60,
 						AutoBackupHour:              ptr(1),
 						RetainedBackups:             ptr(14),
 						TransactionLogRetentionDays: ptr(3),
