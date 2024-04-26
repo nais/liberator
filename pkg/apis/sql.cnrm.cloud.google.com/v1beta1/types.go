@@ -149,6 +149,7 @@ type SQLUserList struct {
 }
 
 type SQLSSLCertSpec struct {
+	ResourceID  string      `json:"resourceID,omitempty"`
 	CommonName  string      `json:"commonName"`
 	InstanceRef InstanceRef `json:"instanceRef"`
 }

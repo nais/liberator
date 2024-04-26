@@ -50,6 +50,8 @@ spec:
                 required:
                 - name
                 type: object
+              resourceID:
+                type: string
             required:
             - commonName
             - instanceRef
