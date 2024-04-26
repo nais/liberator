@@ -84,6 +84,8 @@ spec:
                     type: array
                   diskAutoresize:
                     type: boolean
+                  diskAutoresizeLimit:
+                    type: integer
                   diskSize:
                     type: integer
                   diskType:
@@ -133,6 +135,7 @@ spec:
                 - backupConfiguration
                 - databaseFlags
                 - diskAutoresize
+                - diskAutoresizeLimit
                 - diskSize
                 - diskType
                 - insightsConfig
