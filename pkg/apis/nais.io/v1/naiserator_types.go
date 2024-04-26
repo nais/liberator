@@ -557,7 +557,7 @@ type CloudSqlInstance struct {
 	// +kubebuilder:validation:Maximum=23
 	AutoBackupHour *int `json:"autoBackupHour,omitempty"`
 	// Number of daily backups to retain. Defaults to 7 backups.
-	// The number of retained backups must be greater or equal TransactionLogRetentionDays.
+	// The number of retained backups must be greater or equal to TransactionLogRetentionDays.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=365
 	// +nais:doc:Default="7"
