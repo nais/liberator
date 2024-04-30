@@ -134,6 +134,7 @@ type ConsumedScope struct {
 	Name string `json:"name"`
 }
 
+// +kubebuilder:validation:XValidation:rule="!has(self.delegationSource) || (has(self.separator) && self.separator == \"/\")",message="scopes.exposes[].separator must be set to \"/\" when scopes.exposes[].delegationSource is set"
 type ExposedScope struct {
 	// If Enabled the configured scope is available to be used and consumed by organizations granted access.
 	// +kubebuilder:validation:Required
