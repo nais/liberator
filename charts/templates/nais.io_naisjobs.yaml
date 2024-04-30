@@ -581,7 +581,6 @@ spec:
                           description: |-
                             The maximum size, in GB, to which storage capacity can be automatically increased.
                             The default value is 0, which specifies that there is no limit.
-                            naisteam:doc:Default="0"
                           maximum: 1000
                           minimum: 0
                           type: integer
