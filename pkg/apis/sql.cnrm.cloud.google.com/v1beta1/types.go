@@ -12,6 +12,8 @@ func init() {
 		&SQLDatabaseList{},
 		&SQLUser{},
 		&SQLUserList{},
+		&SQLSSLCert{},
+		&SQLSSLCertList{},
 	)
 }
 
@@ -38,6 +40,7 @@ type SQLInstanceSettings struct {
 	InsightsConfig      SQLInstanceInsightsConfiguration `json:"insightsConfig"`
 	IpConfiguration     SQLInstanceIpConfiguration       `json:"ipConfiguration"`
 	DiskAutoresize      bool                             `json:"diskAutoresize"`
+	DiskAutoresizeLimit int                              `json:"diskAutoresizeLimit"`
 	DiskSize            int                              `json:"diskSize"`
 	DiskType            string                           `json:"diskType"`
 	Tier                string                           `json:"tier"`
@@ -60,7 +63,8 @@ type SQLInstanceBackupConfiguration struct {
 }
 
 type SQLInstanceBackupRetentionSetting struct {
-	RetainedBackups int `json:"retainedBackups"`
+	RetainedBackups             int `json:"retainedBackups"`
+	TransactionLogRetentionDays int `json:"transactionLogRetentionDays"`
 }
 
 type PrivateNetworkRef struct {
@@ -87,7 +91,9 @@ type SQLInstanceList struct {
 }
 
 type InstanceRef struct {
-	Name string `json:"name"`
+	Name      string `json:"name"`
+	Namespace string `json:"namespace,omitempty"`
+	External  string `json:"external,omitempty"`
 }
 
 type SQLDatabaseSpec struct {
@@ -141,4 +147,24 @@ type SQLUserList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
 	Items           []SQLUser `json:"items"`
+}
+
+type SQLSSLCertSpec struct {
+	ResourceID  string      `json:"resourceID,omitempty"`
+	CommonName  string      `json:"commonName"`
+	InstanceRef InstanceRef `json:"instanceRef"`
+}
+
+// +kubebuilder:object:root=true
+type SQLSSLCert struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+	Spec              SQLSSLCertSpec `json:"spec"`
+}
+
+// +kubebuilder:object:root=true
+type SQLSSLCertList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []SQLSSLCert `json:"items"`
 }

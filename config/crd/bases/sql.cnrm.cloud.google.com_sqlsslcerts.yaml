@@ -4,14 +4,14 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: sqldatabases.sql.cnrm.cloud.google.com
+  name: sqlsslcerts.sql.cnrm.cloud.google.com
 spec:
   group: sql.cnrm.cloud.google.com
   names:
-    kind: SQLDatabase
-    listKind: SQLDatabaseList
-    plural: sqldatabases
-    singular: sqldatabase
+    kind: SQLSSLCert
+    listKind: SQLSSLCertList
+    plural: sqlsslcerts
+    singular: sqlsslcert
   scope: Namespaced
   versions:
   - name: v1beta1
@@ -37,6 +37,8 @@ spec:
             type: object
           spec:
             properties:
+              commonName:
+                type: string
               instanceRef:
                 properties:
                   external:
@@ -51,6 +53,7 @@ spec:
               resourceID:
                 type: string
             required:
+            - commonName
             - instanceRef
             type: object
         required:

@@ -693,6 +693,11 @@ func (in *CloudSqlInstance) DeepCopyInto(out *CloudSqlInstance) {
 		*out = new(int)
 		**out = **in
 	}
+	if in.TransactionLogRetentionDays != nil {
+		in, out := &in.TransactionLogRetentionDays, &out.TransactionLogRetentionDays
+		*out = new(int)
+		**out = **in
+	}
 	if in.Maintenance != nil {
 		in, out := &in.Maintenance, &out.Maintenance
 		*out = new(Maintenance)
@@ -938,6 +943,11 @@ func (in *ExposedScope) DeepCopyInto(out *ExposedScope) {
 	}
 	if in.DelegationSource != nil {
 		in, out := &in.DelegationSource, &out.DelegationSource
+		*out = new(string)
+		**out = **in
+	}
+	if in.Separator != nil {
+		in, out := &in.Separator, &out.Separator
 		*out = new(string)
 		**out = **in
 	}

@@ -53,8 +53,11 @@ spec:
                         properties:
                           retainedBackups:
                             type: integer
+                          transactionLogRetentionDays:
+                            type: integer
                         required:
                         - retainedBackups
+                        - transactionLogRetentionDays
                         type: object
                       enabled:
                         type: boolean
@@ -81,6 +84,8 @@ spec:
                     type: array
                   diskAutoresize:
                     type: boolean
+                  diskAutoresizeLimit:
+                    type: integer
                   diskSize:
                     type: integer
                   diskType:
@@ -130,6 +135,7 @@ spec:
                 - backupConfiguration
                 - databaseFlags
                 - diskAutoresize
+                - diskAutoresizeLimit
                 - diskSize
                 - diskType
                 - insightsConfig

@@ -549,6 +549,12 @@ type CloudSqlInstance struct {
 	// manual control over disk size, i.e. the `diskSize` parameter will be ignored.
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/instance-settings#threshold"
 	DiskAutoresize bool `json:"diskAutoresize,omitempty"`
+	// The maximum size, in GB, to which storage capacity can be automatically increased.
+	// The default value is 0, which specifies that there is no limit.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=1000
+	// +nais:doc:Default="0"
+	DiskAutoresizeLimit int `json:"diskAutoresizeLimit,omitempty"`
 	// If specified, run automatic backups of the SQL database at the given hour.
 	// Note that this will backup the whole SQL instance, and not separate databases.
 	// Restores are done using the Google Cloud Console.
@@ -556,11 +562,18 @@ type CloudSqlInstance struct {
 	// +kubebuilder:validation:Maximum=23
 	AutoBackupHour *int `json:"autoBackupHour,omitempty"`
 	// Number of daily backups to retain. Defaults to 7 backups.
+	// The number of retained backups must be greater or equal to TransactionLogRetentionDays.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=365
 	// +nais:doc:Default="7"
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/backup-recovery/backups"
 	RetainedBackups *int `json:"retainedBackups,omitempty"`
+	// The number of days of transaction logs gcp retains for point in time restores.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=7
+	// +nais:doc:Default="7"
+	// +nais:doc:Link="https://cloud.google.com/sql/docs/mysql/backup-recovery/backups#retention"
+	TransactionLogRetentionDays *int `json:"transactionLogRetentionDays,omitempty"`
 	// Desired maintenance window for database updates.
 	Maintenance *Maintenance `json:"maintenance,omitempty"`
 	// List of databases that should be created on this Postgres server.

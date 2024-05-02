@@ -617,6 +617,13 @@ spec:
                             disk usage is above the high water mark. Setting this field to true also disables
                             manual control over disk size, i.e. the `diskSize` parameter will be ignored.
                           type: boolean
+                        diskAutoresizeLimit:
+                          description: |-
+                            The maximum size, in GB, to which storage capacity can be automatically increased.
+                            The default value is 0, which specifies that there is no limit.
+                          maximum: 1000
+                          minimum: 0
+                          type: integer
                         diskSize:
                           description: |-
                             How much hard drive space to allocate for the SQL server, in gigabytes.
@@ -696,8 +703,9 @@ spec:
                             using write-ahead logs.
                           type: boolean
                         retainedBackups:
-                          description: Number of daily backups to retain. Defaults
-                            to 7 backups.
+                          description: |-
+                            Number of daily backups to retain. Defaults to 7 backups.
+                            The number of retained backups must be greater or equal to TransactionLogRetentionDays.
                           maximum: 365
                           minimum: 1
                           type: integer
@@ -708,6 +716,12 @@ spec:
                             Custom memory must be mulitple of 256 MB and at least 3.75 GB (e.g. `db-custom-1-3840` for 1 cpu, 3840 MB ram)
                           pattern: db-.+
                           type: string
+                        transactionLogRetentionDays:
+                          description: The number of days of transaction logs gcp
+                            retains for point in time restores.
+                          maximum: 7
+                          minimum: 1
+                          type: integer
                         type:
                           description: PostgreSQL version.
                           enum:
@@ -993,6 +1007,16 @@ spec:
                                 The product-area your application belongs to e.g. arbeid, helse ...
                                 This will be included in the final scope `nav:<Product><Name>`.
                               pattern: ^[a-z0-9]+$
+                              type: string
+                            separator:
+                              description: |-
+                                Separator is the character that separates `product` and `name` in the final scope:
+                                `scope := <prefix>:<product><separator><name>`
+                                This overrides the default separator.
+                                The default separator is `:`. If `name` contains `/`, the default separator is instead `/`.
+                              maxLength: 1
+                              minLength: 1
+                              pattern: ^[\/:]$
                               type: string
                           required:
                           - enabled
