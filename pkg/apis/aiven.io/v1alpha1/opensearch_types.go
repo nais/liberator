@@ -6,7 +6,7 @@ import (
 
 func init() {
 	SchemeBuilder.Register(
-		&Redis{},
+		&OpenSearch{}, &OpenSearchList{},
 	)
 }
 
@@ -26,4 +26,11 @@ type OpenSearchSpec struct {
 }
 
 type OpenSearchStatus struct {
+}
+
+// +kubebuilder:object:root=true
+type OpenSearchList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []OpenSearch `json:"items"`
 }
