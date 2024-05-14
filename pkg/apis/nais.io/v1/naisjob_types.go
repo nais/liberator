@@ -43,7 +43,7 @@ type NaisjobSpec struct {
 	// By default, no traffic is allowed between naisjobs inside the cluster.
 	// Configure access policies to explicitly allow communication between naisjobs.
 	// This is also used for granting inbound access in the context of Azure AD and TokenX clients.
-	// +nais:doc:Link="https://doc.nais.io/explanation/zero-trust/"
+	// +nais:doc:Link="https://doc.nais.io/workloads/explanations/zero-trust/"
 	AccessPolicy *AccessPolicy `json:"accessPolicy,omitempty"`
 
 	// Once a Naisjob reaches activeDeadlineSeconds, all of its running Pods are terminated and the Naisjob status will become type: Failed with reason: DeadlineExceeded.
@@ -128,7 +128,7 @@ type NaisjobSpec struct {
 	Logtransform string `json:"logtransform,omitempty"`
 
 	// Configures a Maskinporten client for this Naisjob.
-	// See [Maskinporten](https://doc.nais.io/explanation/auth/maskinporten/) for more details.
+	// See [Maskinporten](https://doc.nais.io/security/auth/maskinporten/) for more details.
 	Maskinporten *Maskinporten `json:"maskinporten,omitempty"`
 
 	// To get your own OpenSearch instance head over to the IaC-repo to provision each instance.
@@ -144,7 +144,7 @@ type NaisjobSpec struct {
 	// PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
 	// The handler is not called if the container crashes or exits by itself.
 	// The reason for termination is passed to the handler.
-	// +nais:doc:Link="https://doc.nais.io/reference/good-practices/#handles-termination-gracefully";"https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks"
+	// +nais:doc:Link="https://doc.nais.io/workloads/explanations/good-practices/#handles-termination-gracefully";"https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks"
 	PreStopHook *PreStopHook `json:"preStopHook,omitempty"`
 
 	// Sometimes, Naisjobs are temporarily unable to serve traffic. For example, an Naisjob might need
@@ -157,7 +157,7 @@ type NaisjobSpec struct {
 
 	// List of redis instances this job needs credentials for.
 	// Must be owned by same team.
-	// +nais:doc:Link="https://doc.nais.io/explanation/persistence/redis/"
+	// +nais:doc:Link="https://doc.nais.io/persistence/redis/"
 	Redis []Redis `json:"redis,omitempty"`
 
 	// RestartPolicy describes how the container should be restarted. Only one of the following restart policies may be specified.
@@ -168,7 +168,7 @@ type NaisjobSpec struct {
 
 	// When Containers have [resource requests](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) specified,
 	// the Kubernetes scheduler can make better decisions about which nodes to place pods on.
-	// +nais:doc:Link="https://doc.nais.io/reference/good-practices/#set-reasonable-resource-requests-and-limits"
+	// +nais:doc:Link="https://doc.nais.io/workloads/explanations/good-practices/#set-reasonable-resource-requests-and-limits"
 	Resources *ResourceRequirements `json:"resources,omitempty"`
 
 	// The [Cron](https://en.wikipedia.org/wiki/Cron) schedule for running the Naisjob.
@@ -206,7 +206,7 @@ type NaisjobSpec struct {
 	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty"`
 
 	// Configuration options related to application observability.
-	// +nais:doc:Link="https://doc.nais.io/explanation/observability/"
+	// +nais:doc:Link="https://doc.nais.io/observability/"
 	Observability *Observability `json:"observability,omitempty"`
 
 	// Provides secrets management, identity-based access, and encrypting application data for auditing of secrets

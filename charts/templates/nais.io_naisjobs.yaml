@@ -546,7 +546,7 @@ spec:
                               envVarPrefix:
                                 description: |-
                                   Prefix to add to environment variables made available for database connection.
-                                  If switching to `EnvVarPrefix` you need to [reset database credentials](https://docs.nais.io/persistence/postgres/#reset-database-credentials).
+                                  If switching to `EnvVarPrefix` you need to [reset database credentials](https://doc.nais.io/persistence/postgres/#reset-database-credentials).
                                 type: string
                               name:
                                 description: |-
@@ -785,7 +785,7 @@ spec:
               maskinporten:
                 description: |-
                   Configures a Maskinporten client for this Naisjob.
-                  See [Maskinporten](https://doc.nais.io/explanation/auth/maskinporten/) for more details.
+                  See [Maskinporten](https://doc.nais.io/security/auth/maskinporten/) for more details.
                 properties:
                   enabled:
                     description: If enabled, provisions and configures a Maskinporten

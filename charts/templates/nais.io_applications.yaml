@@ -586,7 +586,7 @@ spec:
                               envVarPrefix:
                                 description: |-
                                   Prefix to add to environment variables made available for database connection.
-                                  If switching to `EnvVarPrefix` you need to [reset database credentials](https://docs.nais.io/persistence/postgres/#reset-database-credentials).
+                                  If switching to `EnvVarPrefix` you need to [reset database credentials](https://doc.nais.io/persistence/postgres/#reset-database-credentials).
                                 type: string
                               name:
                                 description: |-
@@ -739,7 +739,7 @@ spec:
               idporten:
                 description: |-
                   Configures ID-porten authentication for this application.
-                  See [ID-porten](https://doc.nais.io/explanation/auth/idporten/) for more details.
+                  See [ID-porten](https://doc.nais.io/security/auth/idporten/) for more details.
                 properties:
                   enabled:
                     description: Enable ID-porten authentication. Requires `.spec.idporten.sidecar.enabled=true`.
@@ -919,7 +919,7 @@ spec:
               maskinporten:
                 description: |-
                   Configures a Maskinporten client for this application.
-                  See [Maskinporten](https://doc.nais.io/explanation/auth/maskinporten/) for more details.
+                  See [Maskinporten](https://doc.nais.io/security/auth/maskinporten/) for more details.
                 properties:
                   enabled:
                     description: If enabled, provisions and configures a Maskinporten
@@ -1151,7 +1151,7 @@ spec:
                 type: string
               prometheus:
                 description: |-
-                  Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/explanation/observability/metrics/).
+                  Prometheus is used to [scrape metrics from the pod](https://doc.nais.io/observability/metrics/).
                   Use this configuration to override the default values.
                 properties:
                   enabled:

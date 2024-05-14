@@ -136,7 +136,6 @@ type ConsumedScope struct {
 
 type ExposedScope struct {
 	// If Enabled the configured scope is available to be used and consumed by organizations granted access.
-	// +nais:doc:Link="https://doc.nais.io/naisjob/reference/#maskinportenscopesexposesconsumers"
 	// +kubebuilder:validation:Required
 	Enabled bool `json:"enabled"`
 	// The actual subscope combined with `Product`.
