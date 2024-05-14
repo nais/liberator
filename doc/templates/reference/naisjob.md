@@ -1,3 +1,7 @@
+---
+tags: [job, reference]
+---
+
 # NAIS Job reference
 
 <!--
