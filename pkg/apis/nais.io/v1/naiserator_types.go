@@ -132,7 +132,6 @@ type GCP struct {
 	// +nais:doc:Availability=GCP
 	SqlInstances []CloudSqlInstance `json:"sqlInstances,omitempty"`
 	// List of _additional_ permissions that should be granted to your application for accessing external GCP resources that have not been provisioned through NAIS.
-	// +nais:doc:Link="https://doc.nais.io/nais-application/permissions-in-gcp/"
 	// +nais:doc:Availability=GCP
 	Permissions []CloudIAMPermission `json:"permissions,omitempty"`
 }
@@ -291,7 +290,7 @@ type Kafka struct {
 	Pool string `json:"pool"`
 
 	// Allow this app to use kafka streams
-	// +nais:doc:Link="https://doc.nais.io/persistence/kafka/application/#using-kafka-streams-with-internal-topics"
+	// +nais:doc:Link="https://doc.nais.io/persistence/kafka/how-to/internal"
 	// +nais:doc:Availability=GCP
 	// +nais:doc:Default="false"
 	Streams bool `json:"streams,omitempty"`
@@ -369,7 +368,7 @@ type Replicas struct {
 	// +nais:doc:Default="false"
 	DisableAutoScaling bool `json:"disableAutoScaling,omitempty"`
 	// ScalingStrategy configures how automatic scaling is performed.
-	// +nais:doc:link:https://doc.nais.io/nais-application/automatic-scaling/
+	// +nais:doc:link:https://doc.nais.io/workloads/application/reference/automatic-scaling/
 	ScalingStrategy *ScalingStrategy `json:"scalingStrategy,omitempty"`
 }
 
@@ -498,7 +497,7 @@ type CloudSqlDatabase struct {
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 	// Prefix to add to environment variables made available for database connection.
-	// If switching to `EnvVarPrefix` you need to [reset database credentials](https://docs.nais.io/persistence/postgres/#reset-database-credentials).
+	// If switching to `EnvVarPrefix` you need to [reset database credentials](https://doc.nais.io/persistence/postgres/#reset-database-credentials).
 	EnvVarPrefix string `json:"envVarPrefix,omitempty"`
 	// Add extra users for database access. These users need to be manually given access to database tables.
 	Users []CloudSqlDatabaseUser `json:"users,omitempty"`
@@ -669,15 +668,15 @@ func (envVars EnvVars) ToKubernetes() []corev1.EnvVar {
 type Wonderwall struct {
 	// Automatically redirect the user to login for all proxied GET requests.
 	// +nais:doc:Default="false"
-	// +nais:doc:Link="https://doc.nais.io/explanation/auth/wonderwall/#12-autologin"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/wonderwall/#12-autologin"
 	AutoLogin bool `json:"autoLogin,omitempty"`
 	// Comma separated list of absolute paths to ignore when auto-login is enabled.
-	// +nais:doc:Link="https://doc.nais.io/explanation/auth/wonderwall/#12-autologin"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/wonderwall/#12-autologin"
 	AutoLoginIgnorePaths []WonderwallIgnorePaths `json:"autoLoginIgnorePaths,omitempty"`
 	// Enable the sidecar.
 	Enabled bool `json:"enabled"`
 	// Resource requirements for the sidecar container.
-	// +nais:doc:Link="https://doc.nais.io/explanation/auth/wonderwall/#4-resource-requirements"
+	// +nais:doc:Link="https://doc.nais.io/security/auth/wonderwall/#4-resource-requirements"
 	Resources *ResourceRequirements `json:"resources,omitempty"`
 }
 
@@ -688,7 +687,7 @@ type FrontendGeneratedConfig struct {
 	// If specified, a Javascript file with application specific frontend configuration variables
 	// will be generated and mounted into the pod file system at the specified path.
 	// You can import this file directly from your Javascript application.
-	// +nais:doc:Link="https://doc.nais.io/explanation/observability/frontend/#auto-configuration"
+	// +nais:doc:Link="https://doc.nais.io/observability/frontend/#auto-configuration"
 	MountPath string `json:"mountPath"`
 }
 
@@ -716,7 +715,7 @@ type Logging struct {
 	Enabled bool `json:"enabled,omitempty"`
 
 	// Log destinations for where to forward application logs for persistent storage. Leave empty to use default destinations.
-	// +nais:doc:Link="https://doc.nais.io/explanation/observability/logging/#log-destinations"
+	// +nais:doc:Link="https://doc.nais.io/observability/logging/#log-destinations"
 	Destinations []LogDestination `json:"destinations,omitempty"`
 }
 
@@ -728,11 +727,11 @@ type Observability struct {
 	// Enable application performance monitoring with traces collected using OpenTelemetry and the OTLP exporter.
 	// +nais:doc:Availability="GCP"
 	// +nais:doc:Experimental=true
-	// +nais:doc:Link="https://doc.nais.io/explanation/observability/tracing/"
+	// +nais:doc:Link="https://doc.nais.io/observability/tracing/"
 	Tracing *Tracing `json:"tracing,omitempty"`
 
 	// Configure logging for your application.
-	// +nais:doc:Link="https://doc.nais.io/explanation/observability/logging/"
+	// +nais:doc:Link="https://doc.nais.io/observability/logging/"
 	Logging *Logging `json:"logging,omitempty"`
 
 	// Enable auto-instrumenting your application using the OpenTelemetry Agent.

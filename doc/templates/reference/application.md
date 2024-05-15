@@ -1,3 +1,7 @@
+---
+tags: [application, reference]
+---
+
 # NAIS Application reference
 
 <!--

@@ -47,12 +47,12 @@ jobs:
       - name: Commit documentation to nais/doc
         run: |
           cd naisdoc
-          cp -v ../liberator/doc/output/application/reference.md docs/reference/application-spec.md
-          cp -v ../liberator/doc/output/application/example.md docs/reference/application-example.md
-          cp -v ../liberator/doc/output/naisjob/reference.md docs/reference/naisjob-spec.md
-          cp -v ../liberator/doc/output/naisjob/example.md docs/reference/naisjob-example.md
-          cp -v ../liberator/doc/output/topic/reference.md docs/reference/kafka-topic-spec.md
-          cp -v ../liberator/doc/output/topic/example.md docs/reference/kafka-topic-example.md
+          cp -v ../liberator/doc/output/application/reference.md docs/workloads/application/reference/application-spec.md
+          cp -v ../liberator/doc/output/application/example.md docs/workloads/application/reference/application-example.md
+          cp -v ../liberator/doc/output/naisjob/reference.md docs/workloads/jobs/reference/naisjob-spec.md
+          cp -v ../liberator/doc/output/naisjob/example.md docs/workloads/jobs/reference/naisjob-example.md
+          cp -v ../liberator/doc/output/topic/reference.md docs/persistence/kafka/reference/kafka-topic-spec.md
+          cp -v ../liberator/doc/output/topic/example.md docs/persistence/kafka/reference/kafka-topic-example.md
 
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
