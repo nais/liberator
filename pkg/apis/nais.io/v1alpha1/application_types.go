@@ -152,7 +152,7 @@ type ApplicationSpec struct {
 
 	// OpenSearch instance to get credentials for.
 	// Must be owned by same team.
-	// +nais:doc:Link="https://doc.nais.io/persistence/open-search/"
+	// +nais:doc:Link="https://doc.nais.io/persistence/opensearch/"
 	OpenSearch *nais_io_v1.OpenSearch `json:"openSearch,omitempty"`
 
 	// The port number which is exposed by the container and should receive traffic.
