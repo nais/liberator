@@ -96,9 +96,13 @@ type InstanceRef struct {
 	External  string `json:"external,omitempty"`
 }
 
+const DeletionPolicyAbandon = "ABANDON"
+const DeletionPolicyDelete = "DELETE"
+
 type SQLDatabaseSpec struct {
-	ResourceID  string      `json:"resourceID,omitempty"`
-	InstanceRef InstanceRef `json:"instanceRef"`
+	ResourceID     string      `json:"resourceID,omitempty"`
+	InstanceRef    InstanceRef `json:"instanceRef"`
+	DeletionPolicy string      `json:"deletionPolicy"`
 }
 
 // +kubebuilder:object:root=true

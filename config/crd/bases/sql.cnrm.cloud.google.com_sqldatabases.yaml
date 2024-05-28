@@ -37,6 +37,8 @@ spec:
             type: object
           spec:
             properties:
+              deletionPolicy:
+                type: string
               instanceRef:
                 properties:
                   external:
@@ -51,6 +53,7 @@ spec:
               resourceID:
                 type: string
             required:
+            - deletionPolicy
             - instanceRef
             type: object
         required:
