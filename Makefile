@@ -8,7 +8,7 @@ CONTROLLER_GEN ?= go run sigs.k8s.io/controller-tools/cmd/controller-gen
 test:
 	go test ./... -count=1
 
-all: mocks test generate doc
+all: generate mocks test doc
 
 # Generate code
 generate:
