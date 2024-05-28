@@ -26,6 +26,11 @@ type RedisSpec struct {
 }
 
 type RedisStatus struct {
+	// Conditions represent the latest available observations of a service state
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
+	// Service state
+	State string `json:"state,omitempty"`
 }
 
 // +kubebuilder:object:root=true
