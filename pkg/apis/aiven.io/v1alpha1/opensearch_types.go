@@ -14,6 +14,7 @@ func init() {
 // Copied and simplified types as of v0.12.0
 
 // +kubebuilder:object:root=true
+// +kubebuilder:subresource:status
 type OpenSearch struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -25,7 +26,13 @@ type OpenSearchSpec struct {
 	ServiceCommonSpec
 }
 
+// +kubebuilder:object:generate=true
 type OpenSearchStatus struct {
+	// Conditions represent the latest available observations of a service state
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
+
+	// Service state
+	State string `json:"state,omitempty"`
 }
 
 // +kubebuilder:object:root=true

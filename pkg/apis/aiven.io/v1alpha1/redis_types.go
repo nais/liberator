@@ -9,6 +9,7 @@ func init() {
 		&Redis{}, &RedisList{},
 	)
 }
+
 // +kubebuilder:object:generate=true
 type RedisStatus struct {
 	// Conditions represent the latest available observations of a service state
