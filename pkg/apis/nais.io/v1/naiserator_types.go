@@ -14,36 +14,37 @@ const (
 )
 
 type Azure struct {
-	// Configures an Azure AD client for this application.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/"
+	// Configures an Entra ID client for this application.
+	// +nais:doc:Link="https://doc.nais.io/auth/entra-id/"
 	Application *AzureApplication `json:"application"`
 	// Sidecar configures a sidecar that intercepts every HTTP request, and performs the OIDC flow if necessary.
 	// All requests to ingress + `/oauth2` will be processed only by the sidecar, whereas all other requests
 	// will be proxied to the application.
 	//
-	// If the client is authenticated with Azure AD, the `Authorization` header will be set to `Bearer <JWT>`.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/sidecar/"
+	// If the user is authenticated with Entra ID, the `Authorization` header will be set to `Bearer <JWT>`.
+	// +nais:doc:Link="https://doc.nais.io/auth/explanations/#login-proxy"
+	// +nais:doc:Link="https://doc.nais.io/auth/entra-id/how-to/login/"
+	// +nais:doc:Availability="GCP"
 	Sidecar *AzureSidecar `json:"sidecar,omitempty"`
 }
 
 type AzureNaisJob struct {
-	// Configures an Azure AD client for this application.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/"
+	// Configures an Entra ID client for this application.
+	// +nais:doc:Link="https://doc.nais.io/auth/entra-id/"
 	Application *AzureApplication `json:"application"`
 }
 
 type AzureApplication struct {
-	// Whether to enable provisioning of an Azure AD application.
-	// If enabled, an Azure AD application will be provisioned.
+	// If enabled, provisions an Entra ID application.
 	Enabled bool `json:"enabled"`
 	// Deprecated. Only use if you're implementing logins _without_ using sidecar.
 	// +nais:doc:Deprecated=true
 	// +nais:doc:Hidden=true
 	ReplyURLs []AzureAdReplyUrlString `json:"replyURLs,omitempty"`
-	// Tenant targets a specific tenant for the Azure AD application.
+	// Tenant targets a specific tenant for the Entra ID application.
 	// Only works in the development clusters. Only use this if you have a specific reason to do so.
 	// Using this will _isolate_ your application from all other applications that are not using the same tenant.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad#tenants"
+	// +nais:doc:Link="https://doc.nais.io/auth/entra-id/explanations/#tenants"
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
 	Tenant string         `json:"tenant,omitempty"`
 	Claims *AzureAdClaims `json:"claims,omitempty"`
@@ -51,9 +52,9 @@ type AzureApplication struct {
 	// +nais:doc:Deprecated=true
 	// +nais:doc:Hidden=true
 	SinglePageApplication *bool `json:"singlePageApplication,omitempty"`
-	// AllowAllUsers denotes whether all users within the tenant should be allowed to access this AzureAdApplication.
+	// AllowAllUsers grants all users within the tenant access to this application.
 	// +nais:doc:Default="false"
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#all-users"
+	// +nais:doc:Link="https://doc.nais.io/auth/entra-id/how-to/secure/#all-users"
 	AllowAllUsers *bool `json:"allowAllUsers,omitempty"`
 }
 
@@ -93,13 +94,16 @@ type Ingress string
 type IDPorten struct {
 	// Enable ID-porten authentication. Requires `.spec.idporten.sidecar.enabled=true`.
 	// +nais:doc:Availability="GCP"
+	// +nais:doc:Link="https://doc.nais.io/auth/idporten/"
 	Enabled bool `json:"enabled"`
 	// Sidecar configures a sidecar that intercepts every HTTP request, and performs the OIDC flow if necessary.
 	// All requests to ingress + `/oauth2` will be processed only by the sidecar, whereas all other requests
 	// will be proxied to the application.
 	//
-	// If the client is authenticated with IDPorten, the `Authorization` header will be set to `Bearer <JWT>`.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten/"
+	// If the user is authenticated with ID-porten, the `Authorization` header will be set to `Bearer <JWT>`.
+	// +nais:doc:Link="https://doc.nais.io/auth/idporten/how-to/login/"
+	// +nais:doc:Link="https://doc.nais.io/auth/explanations/#login-proxy"
+	// +nais:doc:Availability="GCP"
 	Sidecar *IDPortenSidecar `json:"sidecar,omitempty"`
 }
 
@@ -107,12 +111,12 @@ type IDPortenSidecar struct {
 	Wonderwall `json:",inline"`
 	// Default security level for all authentication requests.
 	// +nais:doc:Default="idporten-loa-high"
-	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten#security-levels"
+	// +nais:doc:Link="https://doc.nais.io/auth/idporten/reference/#security-levels"
 	// +kubebuilder:validation:Enum=Level3;Level4;idporten-loa-substantial;idporten-loa-high
 	Level string `json:"level,omitempty"`
 	// Default user interface locale for all authentication requests.
 	// +nais:doc:Default="nb"
-	// +nais:doc:Link="https://doc.nais.io/security/auth/idporten#locales"
+	// +nais:doc:Link="https://doc.nais.io/auth/idporten/reference/#locales"
 	// +kubebuilder:validation:Enum=nb;nn;en;se
 	Locale string `json:"locale,omitempty"`
 }
@@ -668,15 +672,14 @@ func (envVars EnvVars) ToKubernetes() []corev1.EnvVar {
 type Wonderwall struct {
 	// Automatically redirect the user to login for all proxied GET requests.
 	// +nais:doc:Default="false"
-	// +nais:doc:Link="https://doc.nais.io/security/auth/wonderwall/#12-autologin"
+	// +nais:doc:Link="https://doc.nais.io/auth/explanations/#autologin"
 	AutoLogin bool `json:"autoLogin,omitempty"`
-	// Comma separated list of absolute paths to ignore when auto-login is enabled.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/wonderwall/#12-autologin"
+	// Absolute paths to ignore when auto-login is enabled.
+	// +nais:doc:Link="https://doc.nais.io/auth/reference/#autologin-exclusions"
 	AutoLoginIgnorePaths []WonderwallIgnorePaths `json:"autoLoginIgnorePaths,omitempty"`
 	// Enable the sidecar.
 	Enabled bool `json:"enabled"`
 	// Resource requirements for the sidecar container.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/wonderwall/#4-resource-requirements"
 	Resources *ResourceRequirements `json:"resources,omitempty"`
 }
 

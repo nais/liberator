@@ -177,11 +177,11 @@ spec:
                 description: Provisions and configures Azure resources.
                 properties:
                   application:
-                    description: Configures an Azure AD client for this application.
+                    description: Configures an Entra ID client for this application.
                     properties:
                       allowAllUsers:
-                        description: AllowAllUsers denotes whether all users within
-                          the tenant should be allowed to access this AzureAdApplication.
+                        description: AllowAllUsers grants all users within the tenant
+                          access to this application.
                         type: boolean
                       claims:
                         description: Claims defines additional configuration of the
@@ -209,9 +209,7 @@ spec:
                             type: array
                         type: object
                       enabled:
-                        description: |-
-                          Whether to enable provisioning of an Azure AD application.
-                          If enabled, an Azure AD application will be provisioned.
+                        description: If enabled, provisions an Entra ID application.
                         type: boolean
                       replyURLs:
                         description: Deprecated. Only use if you're implementing logins
@@ -225,7 +223,7 @@ spec:
                         type: boolean
                       tenant:
                         description: |-
-                          Tenant targets a specific tenant for the Azure AD application.
+                          Tenant targets a specific tenant for the Entra ID application.
                           Only works in the development clusters. Only use this if you have a specific reason to do so.
                           Using this will _isolate_ your application from all other applications that are not using the same tenant.
                         enum:
