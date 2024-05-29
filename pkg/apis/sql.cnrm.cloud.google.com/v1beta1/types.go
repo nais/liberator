@@ -102,7 +102,7 @@ const DeletionPolicyDelete = "DELETE"
 type SQLDatabaseSpec struct {
 	ResourceID     string      `json:"resourceID,omitempty"`
 	InstanceRef    InstanceRef `json:"instanceRef"`
-	DeletionPolicy string      `json:"deletionPolicy"`
+	DeletionPolicy string      `json:"deletionPolicy,omitempty"`
 }
 
 // +kubebuilder:object:root=true
