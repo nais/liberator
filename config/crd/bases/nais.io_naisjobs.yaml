@@ -887,6 +887,11 @@ spec:
                           - name
                           - product
                           type: object
+                          x-kubernetes-validations:
+                          - message: scopes.exposes[].separator must be set to "/"
+                              when scopes.exposes[].delegationSource is set
+                            rule: '!has(self.delegationSource) || (has(self.separator)
+                              && self.separator == "/")'
                         type: array
                     type: object
                 required:
