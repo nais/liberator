@@ -2,7 +2,7 @@ package kafka_nais_io_v1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/utils/pointer"
+	"k8s.io/utils/ptr"
 )
 
 func ExampleTopicForDocumentation() *Topic {
@@ -19,16 +19,16 @@ func ExampleTopicForDocumentation() *Topic {
 			},
 		},
 		Spec: TopicSpec{
-			Pool: "nav-integration-test",
+			Pool: "dev-nais-dev",
 			Config: &Config{
-				CleanupPolicy:         pointer.StringPtr("delete"),
-				MinimumInSyncReplicas: pointer.IntPtr(2),
-				Partitions:            pointer.IntPtr(1),
-				Replication:           pointer.IntPtr(3),
-				RetentionBytes:        pointer.IntPtr(-1),
-				RetentionHours:        pointer.IntPtr(168),
-				SegmentHours:          pointer.IntPtr(168),
-				MaxMessageBytes:       pointer.IntPtr(1048588),
+				CleanupPolicy:         ptr.To("delete"),
+				MinimumInSyncReplicas: ptr.To(2),
+				Partitions:            ptr.To(1),
+				Replication:           ptr.To(3),
+				RetentionBytes:        ptr.To(-1),
+				RetentionHours:        ptr.To(168),
+				SegmentHours:          ptr.To(168),
+				MaxMessageBytes:       ptr.To(1048588),
 			},
 			ACL: TopicACLs{
 				{
