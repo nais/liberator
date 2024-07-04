@@ -1,4 +1,7 @@
-// +kubebuilder:skip
+// Package v1 contains API Schema definitions for the aiven.io v1alpha1 API group
+// +kubebuilder:object:generate=true
+// +groupName=aiven.io
+// +versionName=v1alpha1
 package aiven_io_v1alpha1
 
 import (

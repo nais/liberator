@@ -24,6 +24,7 @@ type RedisStatus struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:deprecatedversion:warning="Simplified Redis type copied from aiven-operator, not to be installed in clusters!"
 type Redis struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -32,7 +33,7 @@ type Redis struct {
 }
 
 type RedisSpec struct {
-	ServiceCommonSpec
+	ServiceCommonSpec `json:",inline"`
 }
 
 // +kubebuilder:object:root=true

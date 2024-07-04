@@ -15,6 +15,7 @@ func init() {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:deprecatedversion:warning="Simplified OpenSearch type copied from aiven-operator, not to be installed in clusters!"
 type OpenSearch struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -23,7 +24,7 @@ type OpenSearch struct {
 }
 
 type OpenSearchSpec struct {
-	ServiceCommonSpec
+	ServiceCommonSpec `json:",inline"`
 }
 
 // +kubebuilder:object:generate=true
