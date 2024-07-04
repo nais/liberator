@@ -727,6 +727,7 @@ spec:
                           - POSTGRES_13
                           - POSTGRES_14
                           - POSTGRES_15
+                          - POSTGRES_16
                           type: string
                       required:
                       - type
