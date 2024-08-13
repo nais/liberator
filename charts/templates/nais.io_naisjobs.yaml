@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.15.0
   name: naisjobs.nais.io
 spec:
   group: nais.io
@@ -681,7 +681,11 @@ spec:
                           minimum: 1
                           type: integer
                         type:
-                          description: PostgreSQL version.
+                          description: |-
+                            PostgreSQL version.
+                            About `POSTGRES_16`; if you are creating a *new* instance with this version, you will be enrolled with the [Enterprice Plus](https://cloud.google.com/sql/docs/postgres/editions-intro) edition.
+                            This is a more expensive version than what previous version of Postgres was running on. As for now there is no way to change edition.
+                            If you are upgrading from a previous version of Postgres, you will not be enrolled in the Enterprice Plus edition.
                           enum:
                           - POSTGRES_11
                           - POSTGRES_12
