@@ -165,7 +165,7 @@ type ApplicationSpec struct {
 	// +nais:doc:Link="https://doc.nais.io/workloads/explanations/good-practices/#handles-termination-gracefully";"https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks"
 	PreStopHook *nais_io_v1.PreStopHook `json:"preStopHook,omitempty"`
 
-	// A HTTP GET will be issued to this endpoint at least once before the pod is terminated.
+	// An HTTP GET will be issued to this endpoint at least once before the pod is terminated.
 	// This feature is deprecated and will be removed in the next major version (nais.io/v1).
 	// +nais:doc:Link="https://doc.nais.io/workloads/explanations/good-practices/#handles-termination-gracefully"
 	PreStopHookPath string `json:"preStopHookPath,omitempty"`
@@ -195,7 +195,7 @@ type ApplicationSpec struct {
 	// +nais:doc:Link="https://doc.nais.io/workloads/explanations/good-practices/#set-reasonable-resource-requests-and-limits"
 	Resources *nais_io_v1.ResourceRequirements `json:"resources,omitempty"`
 
-	// Whether or not to enable a sidecar container for secure logging.
+	// Whether to enable a sidecar container for secure logging.
 	SecureLogs *nais_io_v1.SecureLogs `json:"secureLogs,omitempty"`
 
 	// Specify which port and protocol is used to connect to the application in the container.
