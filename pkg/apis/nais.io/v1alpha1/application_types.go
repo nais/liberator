@@ -127,7 +127,7 @@ type ApplicationSpec struct {
 	// +nais:doc:Link="https://doc.nais.io/persistence/kafka/"
 	Kafka *nais_io_v1.Kafka `json:"kafka,omitempty"`
 
-	// If true, an HTTP endpoint will be available at `$ELECTOR_PATH` that returns the current leader.
+	// If true, an HTTP endpoint will be available at `$ELECTOR_GET_URL` that returns the current leader.
 	// +nais:doc:Link="https://doc.nais.io/services/leader-election/"
 	LeaderElection bool `json:"leaderElection,omitempty"`
 

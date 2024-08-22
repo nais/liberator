@@ -860,7 +860,7 @@ spec:
                 - pool
                 type: object
               leaderElection:
-                description: If true, an HTTP endpoint will be available at `$ELECTOR_PATH`
+                description: If true, an HTTP endpoint will be available at `$ELECTOR_GET_URL`
                   that returns the current leader.
                 type: boolean
               liveness:
