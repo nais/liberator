@@ -715,6 +715,15 @@ type AutoInstrumentation struct {
 	// Application runtime. Supported runtimes are `java`, `nodejs`, `python`, `sdk`.
 	// +kubebuilder:validation:Enum=java;nodejs;python;sdk
 	Runtime string `json:"runtime,omitempty"`
+
+	// Destinations are where telemetry data should be stored.
+	// +nais:doc:Link="https://doc.nais.io/observability/reference/auto-config/#destinations"
+	Destinations []AutoInstrumentationDestination `json:"destinations,omitempty"`
+}
+
+type AutoInstrumentationDestination struct {
+	// Destination ID.
+	ID string `json:"id"`
 }
 
 type Logging struct {

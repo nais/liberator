@@ -912,6 +912,18 @@ spec:
                     description: Enable auto-instrumenting your application using
                       the OpenTelemetry Agent.
                     properties:
+                      destinations:
+                        description: Destinations are where telemetry data should
+                          be stored.
+                        items:
+                          properties:
+                            id:
+                              description: Destination ID.
+                              type: string
+                          required:
+                          - id
+                          type: object
+                        type: array
                       enabled:
                         description: Enable automatic instrumentation of your application
                           using OpenTelemetry Agent.

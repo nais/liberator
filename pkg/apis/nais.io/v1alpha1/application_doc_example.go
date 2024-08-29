@@ -482,6 +482,9 @@ func ExampleApplicationForDocumentation() *Application {
 				AutoInstrumentation: &nais_io_v1.AutoInstrumentation{
 					Enabled: true,
 					Runtime: "java",
+					Destinations: []nais_io_v1.AutoInstrumentationDestination{
+						{ID: "my-destination"},
+					},
 				},
 			},
 			Vault: &nais_io_v1.Vault{
