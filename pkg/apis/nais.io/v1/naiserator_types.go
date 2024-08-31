@@ -743,18 +743,16 @@ type LogDestination struct {
 
 type Observability struct {
 	// Enable application performance monitoring with traces collected using OpenTelemetry and the OTLP exporter.
-	// +nais:doc:Availability="GCP"
-	// +nais:doc:Experimental=true
-	// +nais:doc:Link="https://doc.nais.io/observability/tracing/"
+	// Deprecated. Use AutoInstrumentation instead.
+	// +nais:doc:Deprecated=true
+	// +nais:doc:Hidden=true
 	Tracing *Tracing `json:"tracing,omitempty"`
 
 	// Configure logging for your application.
 	// +nais:doc:Link="https://doc.nais.io/observability/logging/"
 	Logging *Logging `json:"logging,omitempty"`
 
-	// Enable auto-instrumenting your application using the OpenTelemetry Agent.
-	// +nais:doc:Availability="GCP"
-	// +nais:doc:Experimental=true
+	// Auto-instrumentiation for your application using OpenTelemetry for collecting telemetry data such as traces, metrics and logs.
 	// +nais:doc:Link="https://doc.nais.io/observability/auto-instrumentation/"
 	AutoInstrumentation *AutoInstrumentation `json:"autoInstrumentation,omitempty"`
 }

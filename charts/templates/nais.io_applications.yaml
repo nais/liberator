@@ -1092,8 +1092,9 @@ spec:
                         type: boolean
                     type: object
                   tracing:
-                    description: Enable application performance monitoring with traces
-                      collected using OpenTelemetry and the OTLP exporter.
+                    description: |-
+                      Enable application performance monitoring with traces collected using OpenTelemetry and the OTLP exporter.
+                      Deprecated. Use AutoInstrumentation instead.
                     properties:
                       enabled:
                         type: boolean

@@ -47,6 +47,10 @@ func (in *Naisjob) GetImage() string {
 	return in.Spec.Image
 }
 
+func (in *Naisjob) GetEnv() EnvVars {
+	return in.Spec.Env
+}
+
 func (in *Naisjob) GetGCP() *GCP {
 	return in.Spec.GCP
 }
