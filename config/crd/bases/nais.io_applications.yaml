@@ -1041,8 +1041,9 @@ spec:
                 description: Configuration options related to application observability.
                 properties:
                   autoInstrumentation:
-                    description: Enable auto-instrumenting your application using
-                      the OpenTelemetry Agent.
+                    description: Auto-instrumentiation for your application using
+                      OpenTelemetry for collecting telemetry data such as traces,
+                      metrics and logs.
                     properties:
                       destinations:
                         description: Destinations are where telemetry data should
