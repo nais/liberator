@@ -148,3 +148,7 @@ func (in *CloudSqlInstance) Database() *CloudSqlDatabase {
 	}
 	return &in.Databases[0]
 }
+
+func (in *Naisjob) GetLogin() *Login {
+	return nil
+}

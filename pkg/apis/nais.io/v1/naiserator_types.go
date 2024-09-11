@@ -756,3 +756,19 @@ type Observability struct {
 	// +nais:doc:Link="https://doc.nais.io/observability/auto-instrumentation/"
 	AutoInstrumentation *AutoInstrumentation `json:"autoInstrumentation,omitempty"`
 }
+
+type Login struct {
+	// Provider configures the authentication provider for the application.
+	// +kubebuilder:validation:required
+	// +kubebuilder:validation:Enum=openid
+	Provider string `json:"provider"`
+	// Enforce login for all requests to the application.
+	Enforce *LoginEnforce `json:"enforce,omitempty"`
+}
+
+type LoginEnforce struct {
+	// If enabled, all unauthenticated requests to the application will be redirected to the login provider.
+	Enabled bool `json:"enabled"`
+	// Absolute paths to ignore when enforcing login.
+	ExcludePaths []WonderwallIgnorePaths `json:"excludePaths,omitempty"`
+}

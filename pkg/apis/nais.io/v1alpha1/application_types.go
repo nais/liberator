@@ -142,6 +142,11 @@ type ApplicationSpec struct {
 	// +kubebuilder:validation:Enum="";accesslog;accesslog_with_processing_time;accesslog_with_referer_useragent;capnslog;logrus;gokit;redis;glog;simple;influxdb;log15
 	Logformat string `json:"logformat,omitempty"`
 
+	// Login configures a login proxy that sits in front of the application.
+	// +nais:doc:Link="https://doc.nais.io/auth/explanations/#login-proxy"
+	// +nais:doc:Availability="Tenant: SSB"
+	Login *nais_io_v1.Login `json:"login,omitempty"`
+
 	// Extra filters for modifying log content. This can e.g. be used for setting loglevel based on http status code.
 	// +kubebuilder:validation:Enum=http_loglevel;dns_loglevel
 	Logtransform string `json:"logtransform,omitempty"`
