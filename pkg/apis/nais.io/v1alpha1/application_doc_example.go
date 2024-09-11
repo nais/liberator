@@ -346,7 +346,7 @@ func ExampleApplicationForDocumentation() *Application {
 			},
 			Logformat: "accesslog_with_referer_useragent",
 			Login: &nais_io_v1.Login{
-				Provider: "oidc",
+				Provider: "openid",
 				Enforce: &nais_io_v1.LoginEnforce{
 					Enabled: true,
 					ExcludePaths: []nais_io_v1.WonderwallIgnorePaths{
