@@ -164,3 +164,7 @@ func (in *Application) GetObservability() *nais_io_v1.Observability {
 func (in *Application) GetTTL() string {
 	return in.Spec.TTL
 }
+
+func (in *Application) GetLogin() *nais_io_v1.Login {
+	return in.Spec.Login
+}

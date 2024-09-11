@@ -913,6 +913,35 @@ spec:
                 - influxdb
                 - log15
                 type: string
+              login:
+                description: Login configures a login proxy that sits in front of
+                  the application.
+                properties:
+                  enforce:
+                    description: Enforce login for all requests to the application.
+                    properties:
+                      enabled:
+                        description: If enabled, all unauthenticated requests to the
+                          application will be redirected to the login provider.
+                        type: boolean
+                      excludePaths:
+                        description: Absolute paths to ignore when enforcing login.
+                        items:
+                          pattern: ^\/.*$
+                          type: string
+                        type: array
+                    required:
+                    - enabled
+                    type: object
+                  provider:
+                    description: Provider configures the authentication provider for
+                      the application.
+                    enum:
+                    - openid
+                    type: string
+                required:
+                - provider
+                type: object
               logtransform:
                 description: Extra filters for modifying log content. This can e.g.
                   be used for setting loglevel based on http status code.

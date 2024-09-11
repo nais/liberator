@@ -344,7 +344,17 @@ func ExampleApplicationForDocumentation() *Application {
 				Port:             8080,
 				Timeout:          1,
 			},
-			Logformat:    "accesslog_with_referer_useragent",
+			Logformat: "accesslog_with_referer_useragent",
+			Login: &nais_io_v1.Login{
+				Provider: "oidc",
+				Enforce: &nais_io_v1.LoginEnforce{
+					Enabled: true,
+					ExcludePaths: []nais_io_v1.WonderwallIgnorePaths{
+						"/some/path",
+						"/api/**",
+					},
+				},
+			},
 			Logtransform: "http_loglevel",
 			Maskinporten: &nais_io_v1.Maskinporten{
 				Enabled: true,

@@ -140,6 +140,11 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = new(v1.Probe)
 		**out = **in
 	}
+	if in.Login != nil {
+		in, out := &in.Login, &out.Login
+		*out = new(v1.Login)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.Maskinporten != nil {
 		in, out := &in.Maskinporten, &out.Maskinporten
 		*out = new(v1.Maskinporten)
