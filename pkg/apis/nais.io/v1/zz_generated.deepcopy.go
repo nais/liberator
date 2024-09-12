@@ -5,8 +5,8 @@
 package nais_io_v1
 
 import (
-	"k8s.io/api/apps/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	appsv1 "k8s.io/api/apps/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -818,6 +818,22 @@ func (in *DigdiratorStatus) DeepCopyInto(out *DigdiratorStatus) {
 		in, out := &in.KeyIDs, &out.KeyIDs
 		*out = make([]string, len(*in))
 		copy(*out, *in)
+	}
+	if in.ObservedGeneration != nil {
+		in, out := &in.ObservedGeneration, &out.ObservedGeneration
+		*out = new(int64)
+		**out = **in
+	}
+	if in.Conditions != nil {
+		in, out := &in.Conditions, &out.Conditions
+		*out = new([]v1.Condition)
+		if **in != nil {
+			in, out := *in, *out
+			*out = make([]v1.Condition, len(*in))
+			for i := range *in {
+				(*in)[i].DeepCopyInto(&(*out)[i])
+			}
+		}
 	}
 }
 
@@ -2122,10 +2138,10 @@ func (in *Status) DeepCopyInto(out *Status) {
 	*out = *in
 	if in.Conditions != nil {
 		in, out := &in.Conditions, &out.Conditions
-		*out = new([]metav1.Condition)
+		*out = new([]v1.Condition)
 		if **in != nil {
 			in, out := *in, *out
-			*out = make([]metav1.Condition, len(*in))
+			*out = make([]v1.Condition, len(*in))
 			for i := range *in {
 				(*in)[i].DeepCopyInto(&(*out)[i])
 			}
@@ -2148,7 +2164,7 @@ func (in *Strategy) DeepCopyInto(out *Strategy) {
 	*out = *in
 	if in.RollingUpdate != nil {
 		in, out := &in.RollingUpdate, &out.RollingUpdate
-		*out = new(v1.RollingUpdateDeployment)
+		*out = new(appsv1.RollingUpdateDeployment)
 		(*in).DeepCopyInto(*out)
 	}
 }
