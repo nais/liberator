@@ -37,15 +37,15 @@ type SQLDatabaseFlag struct {
 type SQLInstanceSettings struct {
 	AvailabilityType    string                           `json:"availabilityType"`
 	BackupConfiguration SQLInstanceBackupConfiguration   `json:"backupConfiguration"`
-	InsightsConfig      SQLInstanceInsightsConfiguration `json:"insightsConfig"`
-	IpConfiguration     SQLInstanceIpConfiguration       `json:"ipConfiguration"`
+	DatabaseFlags       []SQLDatabaseFlag                `json:"databaseFlags"`
 	DiskAutoresize      bool                             `json:"diskAutoresize"`
 	DiskAutoresizeLimit int                              `json:"diskAutoresizeLimit"`
 	DiskSize            int                              `json:"diskSize"`
 	DiskType            string                           `json:"diskType"`
-	Tier                string                           `json:"tier"`
+	InsightsConfig      SQLInstanceInsightsConfiguration `json:"insightsConfig"`
+	IpConfiguration     SQLInstanceIpConfiguration       `json:"ipConfiguration"`
 	MaintenanceWindow   *MaintenanceWindow               `json:"maintenanceWindow,omitempty"`
-	DatabaseFlags       []SQLDatabaseFlag                `json:"databaseFlags"`
+	Tier                string                           `json:"tier"`
 }
 
 type SQLInstanceInsightsConfiguration struct {
