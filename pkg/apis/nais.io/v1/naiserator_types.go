@@ -526,9 +526,6 @@ type CloudSqlFlag struct {
 
 type CloudSqlInstance struct {
 	// PostgreSQL version.
-	// About `POSTGRES_16`; if you are creating a *new* instance with this version, you will be enrolled with the [Enterprice Plus](https://cloud.google.com/sql/docs/postgres/editions-intro) edition.
-	// This is a more expensive version than what previous version of Postgres was running on. As for now there is no way to change edition.
-	// If you are upgrading from a previous version of Postgres, you will not be enrolled in the Enterprice Plus edition.
 	// +kubebuilder:validation:Enum=POSTGRES_11;POSTGRES_12;POSTGRES_13;POSTGRES_14;POSTGRES_15;POSTGRES_16
 	// +kubebuilder:validation:Required
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/instance-settings"
