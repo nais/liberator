@@ -274,17 +274,17 @@ func (in *SQLInstanceList) DeepCopyObject() runtime.Object {
 func (in *SQLInstanceSettings) DeepCopyInto(out *SQLInstanceSettings) {
 	*out = *in
 	in.BackupConfiguration.DeepCopyInto(&out.BackupConfiguration)
+	if in.DatabaseFlags != nil {
+		in, out := &in.DatabaseFlags, &out.DatabaseFlags
+		*out = make([]SQLDatabaseFlag, len(*in))
+		copy(*out, *in)
+	}
 	out.InsightsConfig = in.InsightsConfig
 	in.IpConfiguration.DeepCopyInto(&out.IpConfiguration)
 	if in.MaintenanceWindow != nil {
 		in, out := &in.MaintenanceWindow, &out.MaintenanceWindow
 		*out = new(MaintenanceWindow)
 		**out = **in
-	}
-	if in.DatabaseFlags != nil {
-		in, out := &in.DatabaseFlags, &out.DatabaseFlags
-		*out = make([]SQLDatabaseFlag, len(*in))
-		copy(*out, *in)
 	}
 }
 

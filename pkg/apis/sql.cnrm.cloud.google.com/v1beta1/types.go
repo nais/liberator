@@ -34,6 +34,9 @@ type SQLDatabaseFlag struct {
 	Value string `json:"value"`
 }
 
+const SQLInstanceEditionEnterprise = "ENTERPRISE"
+const SQLInstanceEditionEnterprisePlus = "ENTERPRISE_PLUS"
+
 type SQLInstanceSettings struct {
 	AvailabilityType    string                           `json:"availabilityType"`
 	BackupConfiguration SQLInstanceBackupConfiguration   `json:"backupConfiguration"`
@@ -42,6 +45,7 @@ type SQLInstanceSettings struct {
 	DiskAutoresizeLimit int                              `json:"diskAutoresizeLimit"`
 	DiskSize            int                              `json:"diskSize"`
 	DiskType            string                           `json:"diskType"`
+	Edition             string                           `json:"edition"`
 	InsightsConfig      SQLInstanceInsightsConfiguration `json:"insightsConfig"`
 	IpConfiguration     SQLInstanceIpConfiguration       `json:"ipConfiguration"`
 	MaintenanceWindow   *MaintenanceWindow               `json:"maintenanceWindow,omitempty"`
