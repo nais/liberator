@@ -134,6 +134,7 @@ type GCP struct {
 	// Provision database instances and connect them to your application.
 	// +nais:doc:Link="https://doc.nais.io/persistence/postgres/";"https://cloud.google.com/sql/docs/postgres/instance-settings#impact"
 	// +nais:doc:Availability=GCP
+	// +kubebuilder:validation:MaxItems=1
 	SqlInstances []CloudSqlInstance `json:"sqlInstances,omitempty"`
 	// List of _additional_ permissions that should be granted to your application for accessing external GCP resources that have not been provisioned through NAIS.
 	// +nais:doc:Availability=GCP
@@ -538,7 +539,6 @@ type CloudSqlInstance struct {
 	// The smallest possible instance is `db-f1-micro`, which is recommended only for development instances.
 	// For production workloads, please specify at least `db-custom-1-3840`.
 	// +kubebuilder:validation:Pattern="db-.+"
-	// +nais:doc:Default="db-f1-micro"
 	Tier string `json:"tier"`
 	// Disk type to use for storage in the database.
 	// +kubebuilder:validation:Enum=SSD;HDD
@@ -584,6 +584,7 @@ type CloudSqlInstance struct {
 	Maintenance *Maintenance `json:"maintenance,omitempty"`
 	// List of databases that should be created on this Postgres server.
 	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MaxItems=1
 	Databases []CloudSqlDatabase `json:"databases,omitempty"`
 	// Remove the entire Postgres server including all data when the Kubernetes resource is deleted.
 	// *THIS IS A DESTRUCTIVE OPERATION*! Set cascading delete only when you want to remove data forever.
