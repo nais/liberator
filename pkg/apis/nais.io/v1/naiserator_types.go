@@ -132,6 +132,7 @@ type GCP struct {
 	// +nais:doc:Availability=GCP
 	Buckets []CloudStorageBucket `json:"buckets,omitempty"`
 	// Provision database instances and connect them to your application.
+	// Only one item allowed in the list.
 	// +nais:doc:Link="https://doc.nais.io/persistence/postgres/";"https://cloud.google.com/sql/docs/postgres/instance-settings#impact"
 	// +nais:doc:Availability=GCP
 	// +kubebuilder:validation:MaxItems=1
@@ -582,8 +583,8 @@ type CloudSqlInstance struct {
 	TransactionLogRetentionDays *int `json:"transactionLogRetentionDays,omitempty"`
 	// Desired maintenance window for database updates.
 	Maintenance *Maintenance `json:"maintenance,omitempty"`
-	// List of databases that should be created on this Postgres server.
-	// +kubebuilder:validation:Required
+	// List of one database or less(!) that should be created on this Postgres server.
+	// If not present, a default database with the same name as the application will be created.
 	// +kubebuilder:validation:MaxItems=1
 	Databases []CloudSqlDatabase `json:"databases,omitempty"`
 	// Remove the entire Postgres server including all data when the Kubernetes resource is deleted.
