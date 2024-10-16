@@ -254,8 +254,6 @@ type SecretPath struct {
 type Vault struct {
 	// If set to true, fetch secrets from Vault and inject into the pods.
 	Enabled bool `json:"enabled,omitempty"`
-	// If enabled, the sidecar will automatically refresh the token's Time-To-Live before it expires.
-	Sidecar bool `json:"sidecar,omitempty"`
 	// List of secret paths to be read from Vault and injected into the pod's filesystem.
 	// Overriding the `paths` array is optional, and will give you fine-grained control over which Vault paths that will be mounted on the file system.
 	//

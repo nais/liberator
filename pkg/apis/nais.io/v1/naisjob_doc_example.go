@@ -392,7 +392,6 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			},
 			Vault: &Vault{
 				Enabled: true,
-				Sidecar: true,
 				Paths: []SecretPath{
 					{
 						MountPath: "/var/run/secrets/nais.io/vault",

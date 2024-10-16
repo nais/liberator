@@ -499,7 +499,6 @@ func ExampleApplicationForDocumentation() *Application {
 			},
 			Vault: &nais_io_v1.Vault{
 				Enabled: true,
-				Sidecar: true,
 				Paths: []nais_io_v1.SecretPath{
 					{
 						MountPath: "/var/run/secrets/nais.io/vault",
