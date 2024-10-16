@@ -1539,10 +1539,6 @@ spec:
                       - mountPath
                       type: object
                     type: array
-                  sidecar:
-                    description: If enabled, the sidecar will automatically refresh
-                      the token's Time-To-Live before it expires.
-                    type: boolean
                 type: object
               webproxy:
                 description: |-
