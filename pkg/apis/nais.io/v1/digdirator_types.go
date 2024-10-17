@@ -1,6 +1,7 @@
 package nais_io_v1
 
 import (
+	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
 	"github.com/nais/liberator/pkg/events"
@@ -23,52 +24,28 @@ type DigdiratorStatus struct {
 	CorrelationID string `json:"correlationID,omitempty"`
 	// KeyIDs is the list of key IDs for valid JWKs registered for the client at Digdir
 	KeyIDs []string `json:"keyIDs,omitempty"`
+	// ObservedGeneration is the generation most recently observed by Digdirator.
+	ObservedGeneration *int64 `json:"observedGeneration,omitempty"`
+	// Conditions is the list of details for the current state of this API Resource.
+	Conditions *[]metav1.Condition `json:"conditions,omitempty"`
 }
 
-func (in *DigdiratorStatus) GetSynchronizationHash() string {
-	return in.SynchronizationHash
-}
-
-func (in *DigdiratorStatus) SetHash(hash string) {
-	in.SynchronizationHash = hash
-}
-
-func (in *DigdiratorStatus) SetStateSynchronized() {
+func (in *DigdiratorStatus) SetState(state string) {
 	now := metav1.Now()
 	in.SynchronizationTime = &now
-	in.SynchronizationState = events.Synchronized
-}
-
-func (in *DigdiratorStatus) GetClientID() string {
-	return in.ClientID
-}
-
-func (in *DigdiratorStatus) SetClientID(clientID string) {
-	in.ClientID = clientID
-}
-
-func (in *DigdiratorStatus) SetCorrelationID(correlationID string) {
-	in.CorrelationID = correlationID
-}
-
-func (in *DigdiratorStatus) GetKeyIDs() []string {
-	return in.KeyIDs
-}
-
-func (in *DigdiratorStatus) SetKeyIDs(keyIDs []string) {
-	in.KeyIDs = keyIDs
-}
-
-func (in *DigdiratorStatus) SetSynchronizationState(state string) {
 	in.SynchronizationState = state
 }
 
-func (in *DigdiratorStatus) GetSynchronizationSecretName() string {
-	return in.SynchronizationSecretName
+func (in *DigdiratorStatus) SetStateSynchronized() {
+	in.SetState(events.Synchronized)
 }
 
-func (in *DigdiratorStatus) SetSynchronizationSecretName(name string) {
-	in.SynchronizationSecretName = name
+func (in *DigdiratorStatus) SetCondition(condition metav1.Condition) {
+	if in.Conditions == nil {
+		in.Conditions = &[]metav1.Condition{}
+	}
+
+	meta.SetStatusCondition(in.Conditions, condition)
 }
 
 func init() {
