@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"fmt"
 )
 
@@ -14,11 +15,11 @@ type CachedNameResolver struct {
 	cache map[string]string
 }
 
-func (r *CachedNameResolver) ResolveKafkaServiceName(project string) (string, error) {
+func (r *CachedNameResolver) ResolveKafkaServiceName(ctx context.Context, project string) (string, error) {
 	if name, ok := r.cache[project]; ok {
 		return name, nil
 	}
-	svcs, err := r.List(project)
+	svcs, err := r.List(ctx, project)
 	if err != nil {
 		return "", err
 	}

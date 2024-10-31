@@ -3,7 +3,10 @@
 package service
 
 import (
-	aiven "github.com/aiven/aiven-go-client"
+	context "context"
+
+	aiven "github.com/aiven/aiven-go-client/v2"
+
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -12,25 +15,25 @@ type MockInterface struct {
 	mock.Mock
 }
 
-// List provides a mock function with given fields: project
-func (_m *MockInterface) List(project string) ([]*aiven.Service, error) {
-	ret := _m.Called(project)
+// List provides a mock function with given fields: ctx, project
+func (_m *MockInterface) List(ctx context.Context, project string) ([]*aiven.Service, error) {
+	ret := _m.Called(ctx, project)
 
 	var r0 []*aiven.Service
 	var r1 error
-	if rf, ok := ret.Get(0).(func(string) ([]*aiven.Service, error)); ok {
-		return rf(project)
+	if rf, ok := ret.Get(0).(func(context.Context, string) ([]*aiven.Service, error)); ok {
+		return rf(ctx, project)
 	}
-	if rf, ok := ret.Get(0).(func(string) []*aiven.Service); ok {
-		r0 = rf(project)
+	if rf, ok := ret.Get(0).(func(context.Context, string) []*aiven.Service); ok {
+		r0 = rf(ctx, project)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]*aiven.Service)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(string) error); ok {
-		r1 = rf(project)
+	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = rf(ctx, project)
 	} else {
 		r1 = ret.Error(1)
 	}

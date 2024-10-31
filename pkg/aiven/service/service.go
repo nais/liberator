@@ -1,9 +1,13 @@
 package service
 
 import (
-	"github.com/aiven/aiven-go-client"
+	"context"
+
+	"github.com/aiven/aiven-go-client/v2"
 )
 
 type Interface interface {
-	List(project string) ([]*aiven.Service, error)
+	List(ctx context.Context, project string) ([]*aiven.Service, error)
 }
+
+var _ Interface = &aiven.ServicesHandler{}

@@ -1,9 +1,10 @@
 package service
 
 import (
+	"context"
 	"testing"
 
-	"github.com/aiven/aiven-go-client"
+	"github.com/aiven/aiven-go-client/v2"
 )
 
 const (
@@ -72,16 +73,17 @@ func TestCachedNameResolver_ResolveKafkaServiceName(t *testing.T) {
 			wantErr: true,
 		},
 	}
+	ctx := context.Background()
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			mockInterface := NewMockInterface(t)
 			mockInterface.
-				On("List", Project).
+				On("List", ctx, Project).
 				Times(tt.timesResolved).
 				Return(tt.returnValue.svcs, tt.returnValue.err)
 
 			r := NewCachedNameResolver(mockInterface)
-			got, err := r.ResolveKafkaServiceName(Project)
+			got, err := r.ResolveKafkaServiceName(ctx, Project)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ResolveKafkaServiceName() first call error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -89,7 +91,7 @@ func TestCachedNameResolver_ResolveKafkaServiceName(t *testing.T) {
 			if got != tt.want {
 				t.Errorf("ResolveKafkaServiceName() first call got = %v, want %v", got, tt.want)
 			}
-			got, err = r.ResolveKafkaServiceName(Project)
+			got, err = r.ResolveKafkaServiceName(ctx, Project)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ResolveKafkaServiceName() second call error = %v, wantErr %v", err, tt.wantErr)
 				return
