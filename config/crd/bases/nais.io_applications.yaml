@@ -1474,6 +1474,28 @@ spec:
                 maximum: 180
                 minimum: 0
                 type: integer
+              texas:
+                description: |-
+                  Enables token exchange as a service (Texas).
+                  Texas runs as a sidecar in your container.
+                  When enabled, credentials needed for OAuth2 are injected into the Texas sidecar
+                  instead of your application container.
+                properties:
+                  azure:
+                    description: Enables token service for Azure, also known as Entra
+                      ID.
+                    type: boolean
+                  maskinporten:
+                    description: Enables token service for Maskinporten.
+                    type: boolean
+                  tokenx:
+                    description: Enables token service for TokenX.
+                    type: boolean
+                required:
+                - azure
+                - maskinporten
+                - tokenx
+                type: object
               tokenx:
                 description: Provisions and configures a TokenX client for your application.
                 properties:

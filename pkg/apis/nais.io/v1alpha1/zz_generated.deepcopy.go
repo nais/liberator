@@ -205,6 +205,11 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = new(v1.Strategy)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Texas != nil {
+		in, out := &in.Texas, &out.Texas
+		*out = new(v1.Texas)
+		**out = **in
+	}
 	if in.TokenX != nil {
 		in, out := &in.TokenX, &out.TokenX
 		*out = new(v1.TokenX)

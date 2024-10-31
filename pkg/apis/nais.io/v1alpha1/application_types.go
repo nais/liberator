@@ -219,6 +219,14 @@ type ApplicationSpec struct {
 	// Specifies the strategy used to replace old Pods by new ones.
 	Strategy *nais_io_v1.Strategy `json:"strategy,omitempty"`
 
+	// Enables token exchange as a service (Texas).
+	// Texas runs as a sidecar in your container.
+	// When enabled, credentials needed for OAuth2 are injected into the Texas sidecar
+	// instead of your application container.
+	// +nais:doc:Link="https://doc.nais.io/auth/texas/"
+	// +nais:doc:Experimental=true
+	Texas *nais_io_v1.Texas `json:"texas,omitempty"`
+
 	// Provisions and configures a TokenX client for your application.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/tokenx/"
 	TokenX *nais_io_v1.TokenX `json:"tokenx,omitempty"`

@@ -125,6 +125,10 @@ func (in *Application) GetMaskinporten() *nais_io_v1.Maskinporten {
 	return in.Spec.Maskinporten
 }
 
+func (in *Application) GetTexas() *nais_io_v1.Texas {
+	return in.Spec.Texas
+}
+
 func (in *Application) GetTokenX() *nais_io_v1.TokenX {
 	return in.Spec.TokenX
 }
