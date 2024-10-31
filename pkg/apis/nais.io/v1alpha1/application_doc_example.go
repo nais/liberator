@@ -474,6 +474,11 @@ func ExampleApplicationForDocumentation() *Application {
 				},
 			},
 			TerminationGracePeriodSeconds: ptr(int64(60)),
+			Texas: &nais_io_v1.Texas{
+				Azure:        true,
+				Maskinporten: true,
+				TokenX:       true,
+			},
 			TokenX: &nais_io_v1.TokenX{
 				Enabled:                 true,
 				MountSecretsAsFilesOnly: true,
