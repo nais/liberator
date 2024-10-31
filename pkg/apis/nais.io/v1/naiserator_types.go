@@ -772,9 +772,9 @@ type LoginEnforce struct {
 
 type Texas struct {
 	// Enables token service for Azure, also known as Entra ID.
-	Azure bool `json:"azure"`
+	Azure bool `json:"azure,omitempty"`
 	// Enables token service for Maskinporten.
-	Maskinporten bool `json:"maskinporten"`
+	Maskinporten bool `json:"maskinporten,omitempty"`
 	// Enables token service for TokenX.
-	TokenX bool `json:"tokenx"`
+	TokenX bool `json:"tokenx,omitempty"`
 }

@@ -1491,10 +1491,6 @@ spec:
                   tokenx:
                     description: Enables token service for TokenX.
                     type: boolean
-                required:
-                - azure
-                - maskinporten
-                - tokenx
                 type: object
               tokenx:
                 description: Provisions and configures a TokenX client for your application.
