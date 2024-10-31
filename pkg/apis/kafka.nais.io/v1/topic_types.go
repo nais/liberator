@@ -89,8 +89,23 @@ type Config struct {
 	// The number of hours to keep a log file before deleting it.
 	// +nais:doc:Default="168"
 	// +nais:doc:Link="https://kafka.apache.org/33/documentation.html#topicconfigs_retention.ms"
-	// +kubebuilder:validation:Maximum=2562047788015
+	// +kubebuilder:validation:Maximum=2147483648
 	RetentionHours *int `json:"retentionHours,omitempty"`
+
+	// When set, remote storage will be used to store log segments.
+	// This value controls the size of the log that is kept before it is moved to remote storage.
+	// Must be less than RetentionBytes
+	// +nais:doc:Default="-2"
+	// +nais:doc:Link="https://kafka.apache.org/documentation.html#topicconfigs_local.retention.bytes"
+	LocalRetentionBytes *int `json:"localRetentionBytes,omitempty"`
+
+	// When set, remote storage will be used to store log segments.
+	// This value controls the number of hours to keep before it is moved to remote storage.
+	// Must be less than RetentionHours.
+	// +nais:doc:Default="-2"
+	// +nais:doc:Link="https://kafka.apache.org/documentation.html#topicconfigs_local.retention.ms"
+	// +kubebuilder:validation:Maximum=2147483648
+	LocalRetentionHours *int `json:"localRetentionHours,omitempty"`
 
 	// The number of hours after which Kafka will force the log to roll even if the segment file isn't full to ensure
 	// that retention can delete or compact old data.

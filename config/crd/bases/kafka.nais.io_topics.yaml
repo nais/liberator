@@ -85,6 +85,19 @@ spec:
                     - compact
                     - compact,delete
                     type: string
+                  localRetentionBytes:
+                    description: |-
+                      When set, remote storage will be used to store log segments.
+                      This value controls the size of the log that is kept before it is moved to remote storage.
+                      Must be less than RetentionBytes
+                    type: integer
+                  localRetentionHours:
+                    description: |-
+                      When set, remote storage will be used to store log segments.
+                      This value controls the number of hours to keep before it is moved to remote storage.
+                      Must be less than RetentionHours.
+                    maximum: 2147483648
+                    type: integer
                   maxCompactionLagMs:
                     description: MaxCompactionLagMs indicates the maximum time a message
                       will remain ineligible for compaction in the log
@@ -137,7 +150,7 @@ spec:
                   retentionHours:
                     description: The number of hours to keep a log file before deleting
                       it.
-                    maximum: 2562047788015
+                    maximum: 2147483648
                     type: integer
                   segmentHours:
                     description: |-

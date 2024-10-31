@@ -42,6 +42,16 @@ func (in *Config) DeepCopyInto(out *Config) {
 		*out = new(int)
 		**out = **in
 	}
+	if in.LocalRetentionBytes != nil {
+		in, out := &in.LocalRetentionBytes, &out.LocalRetentionBytes
+		*out = new(int)
+		**out = **in
+	}
+	if in.LocalRetentionHours != nil {
+		in, out := &in.LocalRetentionHours, &out.LocalRetentionHours
+		*out = new(int)
+		**out = **in
+	}
 	if in.SegmentHours != nil {
 		in, out := &in.SegmentHours, &out.SegmentHours
 		*out = new(int)
