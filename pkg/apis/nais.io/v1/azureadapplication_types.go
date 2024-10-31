@@ -47,6 +47,7 @@ type AzureAdApplicationList struct {
 }
 
 // AzureAdApplicationSpec defines the desired state of AzureAdApplication
+// +kubebuilder:validation:XValidation:rule="(has(oldSelf.tenant) && has(self.tenant)) || (!has(oldSelf.tenant) && !has(self.tenant))", message="tenant can only be set on creation; delete and recreate AzureAdApplication to set tenant"
 type AzureAdApplicationSpec struct {
 	// AllowAllUsers denotes whether all users within the tenant should be allowed to access this AzureAdApplication. Defaults to false.
 	AllowAllUsers *bool          `json:"allowAllUsers,omitempty"`
@@ -66,6 +67,9 @@ type AzureAdApplicationSpec struct {
 	SinglePageApplication *bool `json:"singlePageApplication,omitempty"`
 	// Tenant is an optional alias for targeting a tenant matching an instance of Azurerator that targets said tenant.
 	// Can be omitted if only running a single instance or targeting the default tenant.
+	// Immutable once set.
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="tenant is immutable once set; delete and recreate AzureAdApplication to change tenant"
 	Tenant string `json:"tenant,omitempty"`
 }
 
