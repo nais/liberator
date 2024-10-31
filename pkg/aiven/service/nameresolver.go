@@ -7,7 +7,7 @@ import (
 
 type NameResolver interface {
 	Interface
-	ResolveKafkaServiceName(project string) (string, error)
+	ResolveKafkaServiceName(ctx context.Context, project string) (string, error)
 }
 
 type CachedNameResolver struct {
