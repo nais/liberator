@@ -34,6 +34,7 @@ type AzureNaisJob struct {
 	Application *AzureApplication `json:"application"`
 }
 
+// +kubebuilder:validation:XValidation:rule="(has(oldSelf.tenant) && has(self.tenant)) || (!has(oldSelf.tenant) && !has(self.tenant))", message="tenant can only be set on creation; delete and recreate Application to set tenant"
 type AzureApplication struct {
 	// If enabled, provisions an Entra ID application.
 	Enabled bool `json:"enabled"`
@@ -45,7 +46,10 @@ type AzureApplication struct {
 	// Only works in the development clusters. Only use this if you have a specific reason to do so.
 	// Using this will _isolate_ your application from all other applications that are not using the same tenant.
 	// +nais:doc:Link="https://doc.nais.io/auth/entra-id/explanations/#tenants"
+	// +nais:doc:Immutable=true
+	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
+	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="tenant is immutable once set; delete and recreate Application to change tenant"
 	Tenant string         `json:"tenant,omitempty"`
 	Claims *AzureAdClaims `json:"claims,omitempty"`
 	// Deprecated, do not use.
