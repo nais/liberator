@@ -242,6 +242,12 @@ func (cfg *Config) ApplyDefaults() {
 	if cfg.RetentionHours == nil {
 		cfg.RetentionHours = intutil.Intp(168)
 	}
+	if cfg.LocalRetentionBytes == nil {
+		cfg.LocalRetentionBytes = intutil.Intp(-2)
+	}
+	if cfg.LocalRetentionHours == nil {
+		cfg.LocalRetentionHours = intutil.Intp(-2)
+	}
 	if cfg.SegmentHours == nil {
 		cfg.SegmentHours = intutil.Intp(168)
 	}

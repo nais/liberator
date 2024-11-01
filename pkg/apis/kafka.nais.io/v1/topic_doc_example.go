@@ -25,10 +25,14 @@ func ExampleTopicForDocumentation() *Topic {
 				MinimumInSyncReplicas: ptr.To(2),
 				Partitions:            ptr.To(1),
 				Replication:           ptr.To(3),
-				RetentionBytes:        ptr.To(-1),
+				RetentionBytes:        ptr.To(6000),
 				RetentionHours:        ptr.To(168),
+				LocalRetentionBytes:   ptr.To(1000),
+				LocalRetentionHours:   ptr.To(68),
 				SegmentHours:          ptr.To(168),
 				MaxMessageBytes:       ptr.To(1048588),
+				MaxCompactionLagMs:    ptr.To(60000),
+				MinCompactionLagMs:    ptr.To(10000),
 			},
 			ACL: TopicACLs{
 				{
