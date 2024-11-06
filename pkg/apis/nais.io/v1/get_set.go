@@ -43,6 +43,11 @@ func (in *Naisjob) GetIngress() []Ingress {
 	return nil
 }
 
+// As Jobs don't have ingresses, they also do not have redirects
+func (in *Naisjob) GetRedirects() []Redirect {
+	return nil
+}
+
 func (in *Naisjob) GetImage() string {
 	return in.Spec.Image
 }

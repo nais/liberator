@@ -97,6 +97,10 @@ func (in *Application) GetIngress() []nais_io_v1.Ingress {
 	return in.Spec.Ingresses
 }
 
+func (in *Application) GetRedirects() []nais_io_v1.Redirect {
+	return in.Spec.Redirects
+}
+
 func (in *Application) GetLeaderElection() bool {
 	return in.Spec.LeaderElection
 }

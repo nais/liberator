@@ -97,9 +97,9 @@ type fromRedirect string
 // +kubebuilder:validation:Pattern=`^https:\/\/.+$`
 type toRedirect string
 
-type Redirect {
+type Redirect struct {
 	From fromRedirect `json:"from"`
-        To toRedirect `json:"to"`
+	To   toRedirect   `json:"to"`
 }
 
 type IDPorten struct {
