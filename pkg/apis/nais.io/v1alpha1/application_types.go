@@ -187,6 +187,10 @@ type ApplicationSpec struct {
 	// Read more about this over at the [Kubernetes readiness documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
 	Readiness *nais_io_v1.Probe `json:"readiness,omitempty"`
 
+	// List of ingress redirects
+	// TODO: fix link
+	// +nais:doc:Link="https://doc.nais.io/persistence/redis/""
+	Redirects []nais_io_v1.Redirect
 	// List of redis instances this job needs credentials for.
 	// Must be owned by same team.
 	// +nais:doc:Link="https://doc.nais.io/persistence/redis/"

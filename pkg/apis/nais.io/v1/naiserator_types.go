@@ -91,6 +91,17 @@ type Influx struct {
 // +kubebuilder:validation:Pattern=`^https:\/\/.+$`
 type Ingress string
 
+// +kubebuilder:validation:Pattern=`^https:\/\/.+$`
+type fromRedirect string
+
+// +kubebuilder:validation:Pattern=`^https:\/\/.+$`
+type toRedirect string
+
+type Redirect {
+	From fromRedirect `json:"from"`
+        To toRedirect `json:"to"`
+}
+
 type IDPorten struct {
 	// Enable ID-porten authentication. Requires `.spec.idporten.sidecar.enabled=true`.
 	// +nais:doc:Availability="GCP"
