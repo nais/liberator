@@ -190,7 +190,7 @@ type ApplicationSpec struct {
 	// List of ingress redirects
 	// TODO: fix link
 	// +nais:doc:Link="https://doc.nais.io/persistence/redis/""
-	Redirects []nais_io_v1.Redirect
+	Redirects []nais_io_v1.Redirect `json:"redirects,omitempty"`
 	// List of redis instances this job needs credentials for.
 	// Must be owned by same team.
 	// +nais:doc:Link="https://doc.nais.io/persistence/redis/"
