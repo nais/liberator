@@ -170,6 +170,11 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = new(v1.Probe)
 		**out = **in
 	}
+	if in.Redirects != nil {
+		in, out := &in.Redirects, &out.Redirects
+		*out = make([]v1.Redirect, len(*in))
+		copy(*out, *in)
+	}
 	if in.Redis != nil {
 		in, out := &in.Redis, &out.Redis
 		*out = make([]v1.Redis, len(*in))
