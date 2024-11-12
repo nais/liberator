@@ -412,6 +412,12 @@ func ExampleApplicationForDocumentation() *Application {
 				Port:             8080,
 				Timeout:          1,
 			},
+			Redirects: []nais_io_v1.Redirect{
+				{
+					To:   "https://myapplication.nav.no",
+					From: "https://myapplication-old.nav.no",
+				},
+			},
 			Redis: []nais_io_v1.Redis{
 				{
 					Instance: "cache",
