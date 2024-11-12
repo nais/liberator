@@ -94,8 +94,16 @@ type Ingress string
 // +kubebuilder:validation:Pattern=`^https:\/\/.+$`
 type fromRedirect string
 
+/* - ^ These start with https because we are not using redirects to do redirects,
+   Instead we are using the rewrite-target annotation and that annotation
+does redirects with a 302 iff the parameters are full urls, scheme and all. */
+
 // +kubebuilder:validation:Pattern=`^https:\/\/.+$`
 type toRedirect string
+
+/* -^ These start with https because we are not using redirects to do redirects,
+Instead we are using the rewrite-target annotation and that annotation
+does redirects with a 302 iff the parameters are full urls, scheme and all. */
 
 type Redirect struct {
 	From fromRedirect `json:"from"`
