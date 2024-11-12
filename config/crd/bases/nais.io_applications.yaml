@@ -1247,6 +1247,21 @@ spec:
                 required:
                 - path
                 type: object
+              redirects:
+                description: List of ingress redirects
+                items:
+                  properties:
+                    from:
+                      pattern: ^https:\/\/.+$
+                      type: string
+                    to:
+                      pattern: ^https:\/\/.+$
+                      type: string
+                  required:
+                  - from
+                  - to
+                  type: object
+                type: array
               redis:
                 description: |-
                   List of redis instances this job needs credentials for.
