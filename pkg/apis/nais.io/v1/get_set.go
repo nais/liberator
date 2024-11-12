@@ -72,11 +72,6 @@ func (in *Naisjob) GetSecureLogs() *SecureLogs {
 	return in.Spec.SecureLogs
 }
 
-func (in *Naisjob) GetTexas() *Texas {
-	// TODO
-	return nil
-}
-
 func (in *Naisjob) GetMaskinporten() *Maskinporten {
 	return in.Spec.Maskinporten
 }

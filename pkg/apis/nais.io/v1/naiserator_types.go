@@ -788,12 +788,3 @@ type LoginEnforce struct {
 	// Absolute paths to ignore when enforcing login.
 	ExcludePaths []WonderwallIgnorePaths `json:"excludePaths,omitempty"`
 }
-
-type Texas struct {
-	// Enables token service for Azure, also known as Entra ID.
-	Azure bool `json:"azure,omitempty"`
-	// Enables token service for Maskinporten.
-	Maskinporten bool `json:"maskinporten,omitempty"`
-	// Enables token service for TokenX.
-	TokenX bool `json:"tokenx,omitempty"`
-}
