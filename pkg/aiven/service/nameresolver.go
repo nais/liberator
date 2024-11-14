@@ -21,7 +21,7 @@ func (r *CachedNameResolver) ResolveKafkaServiceName(ctx context.Context, projec
 	}
 	svcs, err := r.List(ctx, project)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("error listing services in project %s: %w", project, err)
 	}
 
 	candidates := []string{
