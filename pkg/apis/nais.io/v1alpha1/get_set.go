@@ -5,6 +5,8 @@ import nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 // TODO: replace manual getters with generated code
 // TODO: candidates are either `go generate` or a switch to Protobuf
 
+var _ nais_io_v1.AivenInterface = &Application{}
+
 func (in *Application) SetStatus(status *nais_io_v1.Status) {
 	in.Status = *status
 }

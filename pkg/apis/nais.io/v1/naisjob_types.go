@@ -253,8 +253,10 @@ func (in *Naisjob) GetOwnerReference() metav1.OwnerReference {
 	}
 }
 
-func (in *Naisjob) Hash() (string, error) {
-	return hash.Hash(in.Spec)
+func (in *Naisjob) Hash(aivenGeneration int) (string, error) {
+	h, err := hash.IntHash(in.Spec)
+	h = ApplyAivenGeneration(in, uint64(aivenGeneration), h)
+	return fmt.Sprintf("%x", h), err
 }
 
 func (in *Naisjob) LogFields() log.Fields {

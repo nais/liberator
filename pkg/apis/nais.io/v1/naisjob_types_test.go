@@ -9,7 +9,9 @@ import (
 )
 
 const (
-	naisjobHash = "9de7bf5df82dace9"
+	// Change this value to accept re-synchronization of ALL naisjob resources when deploying a new version.
+	naisjobHash     = "9de7bf5df82dace9"
+	aivenGeneration = 0
 )
 
 func TestNaisjobHash(t *testing.T) {
@@ -18,7 +20,7 @@ func TestNaisjobHash(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	hash, err := job.Hash()
+	hash, err := job.Hash(aivenGeneration)
 	assert.NoError(t, err)
 	assert.Equalf(t, naisjobHash, hash, "Your Naisjob default value changes will trigger a FULL REDEPLOY of ALL NAISJOBS in ALL NAMESPACES across ALL CLUSTERS. If this is what you really want, change the `naisjobHash` constant in this test file to `%s`.", hash)
 }

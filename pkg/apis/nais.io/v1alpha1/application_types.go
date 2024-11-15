@@ -1,12 +1,11 @@
 package nais_io_v1alpha1
 
 import (
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
 
-	hash "github.com/mitchellh/hashstructure"
+	"github.com/nais/liberator/pkg/hash"
 	log "github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -283,7 +282,7 @@ func (in *Application) GetOwnerReference() metav1.OwnerReference {
 	}
 }
 
-func (in Application) Hash() (string, error) {
+func (in Application) Hash(aivenGeneration int) (string, error) {
 	// struct including the relevant fields for
 	// creating a hash of an Application object
 	var changeCause string
@@ -313,11 +312,8 @@ func (in Application) Hash() (string, error) {
 		}
 	}
 
-	marshalled, err := json.Marshal(relevantValues)
-	if err != nil {
-		return "", err
-	}
-	h, err := hash.Hash(marshalled, nil)
+	h, err := hash.IntHash(relevantValues)
+	h = nais_io_v1.ApplyAivenGeneration(&in, uint64(aivenGeneration), h)
 	return fmt.Sprintf("%x", h), err
 }
 

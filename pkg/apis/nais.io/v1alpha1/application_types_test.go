@@ -2,10 +2,12 @@ package nais_io_v1alpha1_test
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 
 	"github.com/mitchellh/hashstructure"
 	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
+	"github.com/nais/liberator/pkg/hash"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -13,6 +15,7 @@ import (
 const (
 	// Change this value to accept re-synchronization of ALL application resources when deploying a new version.
 	applicationHash = "3a0653ec2d45d309"
+	aivenGeneration = 0
 )
 
 func TestApplication_Hash(t *testing.T) {
@@ -27,7 +30,7 @@ func TestApplication_Hash(t *testing.T) {
 		if err != nil {
 			panic(err)
 		}
-		hashes[i], err = apps[i].Hash()
+		hashes[i], err = apps[i].Hash(aivenGeneration)
 		if err != nil {
 			panic(err)
 		}
@@ -53,9 +56,9 @@ func TestHashJSONMarshalling(t *testing.T) {
 	old := &oldspec{}
 	neu := &newspec{}
 	oldMarshal, _ := json.Marshal(old)
-	newMarshal, _ := json.Marshal(neu)
-	oldHash, _ := hashstructure.Hash(oldMarshal, nil)
-	newHash, _ := hashstructure.Hash(newMarshal, nil)
+	oldHashI, _ := hashstructure.Hash(oldMarshal, nil)
+	oldHash := fmt.Sprintf("%x", oldHashI)
+	newHash, _ := hash.Hash(neu)
 	assert.Equal(t, newHash, oldHash)
 }
 
@@ -65,7 +68,7 @@ func TestNewCRD(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	hash, err := app.Hash()
+	hash, err := app.Hash(aivenGeneration)
 	assert.NoError(t, err)
 	assert.Equalf(t, applicationHash, hash, "Your Application default value changes will trigger a FULL REDEPLOY of ALL APPLICATIONS in ALL NAMESPACES across ALL CLUSTERS. If this is what you really want, change the `applicationHash` constant in this test file to `%s`.", hash)
 }

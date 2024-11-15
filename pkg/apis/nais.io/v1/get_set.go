@@ -10,6 +10,16 @@ type AzureInterface interface {
 	GetSidecar() *AzureSidecar
 }
 
+// +kubebuilder:object:generate=false
+type AivenInterface interface {
+	GetKafka() *Kafka
+	GetRedis() []Redis
+	GetInflux() *Influx
+	GetOpenSearch() *OpenSearch
+}
+
+var _ AivenInterface = &Naisjob{}
+
 func (in *Naisjob) GetPort() int {
 	return 0
 }
