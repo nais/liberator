@@ -3,10 +3,11 @@ package service
 import (
 	"context"
 	"fmt"
+
+	"github.com/aiven/aiven-go-client/v2"
 )
 
 type NameResolver interface {
-	Interface
 	ResolveKafkaServiceName(ctx context.Context, project string) (string, error)
 }
 
@@ -19,24 +20,27 @@ func (r *CachedNameResolver) ResolveKafkaServiceName(ctx context.Context, projec
 	if name, ok := r.cache[project]; ok {
 		return name, nil
 	}
-	svcs, err := r.List(ctx, project)
-	if err != nil {
-		return "", fmt.Errorf("error listing services in project %s: %w", project, err)
-	}
 
 	candidates := []string{
-		fmt.Sprintf("%s-kafka", project),
 		"kafka",
+		fmt.Sprintf("%s-kafka", project),
 	}
 
-	for _, svc := range svcs {
-		for _, candidate := range candidates {
-			if svc.Name == candidate {
-				r.cache[project] = svc.Name
-				return svc.Name, nil
-			}
+	lookupErrors := make([]error, 0, 2)
+	for _, candidate := range candidates {
+		svc, err := r.Get(ctx, project, candidate)
+		if err == nil {
+			r.cache[project] = svc.Name
+			return svc.Name, nil
+		} else if !aiven.IsNotFound(err) {
+			lookupErrors = append(lookupErrors, err)
 		}
 	}
+
+	if len(lookupErrors) > 0 {
+		return "", fmt.Errorf("failed to lookup kafka service in project %s: %w", project, lookupErrors[0])
+	}
+
 	return "", fmt.Errorf("no kafka service found in project %s", project)
 }
 
@@ -46,3 +50,5 @@ func NewCachedNameResolver(services Interface) *CachedNameResolver {
 		cache:     make(map[string]string, 0),
 	}
 }
+
+var _ NameResolver = &CachedNameResolver{}

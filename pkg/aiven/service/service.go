@@ -7,7 +7,7 @@ import (
 )
 
 type Interface interface {
-	List(ctx context.Context, project string) ([]*aiven.Service, error)
+	Get(ctx context.Context, project, service string) (*aiven.Service, error)
 }
 
 var _ Interface = &aiven.ServicesHandler{}

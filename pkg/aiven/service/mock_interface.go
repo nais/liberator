@@ -15,25 +15,25 @@ type MockInterface struct {
 	mock.Mock
 }
 
-// List provides a mock function with given fields: ctx, project
-func (_m *MockInterface) List(ctx context.Context, project string) ([]*aiven.Service, error) {
-	ret := _m.Called(ctx, project)
+// Get provides a mock function with given fields: ctx, project, service
+func (_m *MockInterface) Get(ctx context.Context, project string, service string) (*aiven.Service, error) {
+	ret := _m.Called(ctx, project, service)
 
-	var r0 []*aiven.Service
+	var r0 *aiven.Service
 	var r1 error
-	if rf, ok := ret.Get(0).(func(context.Context, string) ([]*aiven.Service, error)); ok {
-		return rf(ctx, project)
+	if rf, ok := ret.Get(0).(func(context.Context, string, string) (*aiven.Service, error)); ok {
+		return rf(ctx, project, service)
 	}
-	if rf, ok := ret.Get(0).(func(context.Context, string) []*aiven.Service); ok {
-		r0 = rf(ctx, project)
+	if rf, ok := ret.Get(0).(func(context.Context, string, string) *aiven.Service); ok {
+		r0 = rf(ctx, project, service)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]*aiven.Service)
+			r0 = ret.Get(0).(*aiven.Service)
 		}
 	}
 
-	if rf, ok := ret.Get(1).(func(context.Context, string) error); ok {
-		r1 = rf(ctx, project)
+	if rf, ok := ret.Get(1).(func(context.Context, string, string) error); ok {
+		r1 = rf(ctx, project, service)
 	} else {
 		r1 = ret.Error(1)
 	}

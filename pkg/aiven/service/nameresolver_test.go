@@ -22,65 +22,80 @@ func makeService(name string) *aiven.Service {
 
 func TestCachedNameResolver_ResolveKafkaServiceName(t *testing.T) {
 	type returnValue struct {
-		svcs []*aiven.Service
-		err  error
+		svc *aiven.Service
+		err error
 	}
 	tests := []struct {
-		name          string
-		timesResolved int
-		returnValue   returnValue
-		want          string
-		wantErr       bool
+		name                 string
+		shortNameLookup      bool
+		shortNameReturnValue returnValue
+		longNameLookup       bool
+		longNameReturnValue  returnValue
+		want                 string
+		wantErr              bool
 	}{
 		{
-			name:          "no such service",
-			timesResolved: 2,
-			returnValue: returnValue{
-				svcs: make([]*aiven.Service, 0),
-				err:  nil,
+			name:            "no such service",
+			shortNameLookup: true,
+			shortNameReturnValue: returnValue{
+				svc: nil,
+				err: aiven.Error{Message: "not found", Status: 404},
+			},
+			longNameLookup: true,
+			longNameReturnValue: returnValue{
+				svc: nil,
+				err: aiven.Error{Message: "not found", Status: 404},
 			},
 			want:    "",
 			wantErr: true,
 		},
 		{
-			name:          "long named service",
-			timesResolved: 1,
-			returnValue: returnValue{
-				svcs: []*aiven.Service{makeService(LongService)},
-				err:  nil,
+			name:            "long named service",
+			shortNameLookup: true,
+			shortNameReturnValue: returnValue{
+				svc: nil,
+				err: aiven.Error{Message: "not found", Status: 404},
+			},
+			longNameLookup: true,
+			longNameReturnValue: returnValue{
+				svc: makeService(LongService),
+				err: nil,
 			},
 			want:    LongService,
 			wantErr: false,
 		},
 		{
-			name:          "short named service",
-			timesResolved: 1,
-			returnValue: returnValue{
-				svcs: []*aiven.Service{makeService(ShortService)},
-				err:  nil,
+			name:            "short named service",
+			shortNameLookup: true,
+			shortNameReturnValue: returnValue{
+				svc: makeService(ShortService),
+				err: nil,
 			},
-			want:    ShortService,
-			wantErr: false,
-		},
-		{
-			name:          "unwanted kafka service",
-			timesResolved: 2,
-			returnValue: returnValue{
-				svcs: []*aiven.Service{makeService(NoMatchService)},
-				err:  nil,
-			},
-			want:    "",
-			wantErr: true,
+			longNameLookup: false,
+			want:           ShortService,
+			wantErr:        false,
 		},
 	}
 	ctx := context.Background()
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			times := 1
+			if tt.wantErr {
+				times = 2
+			}
 			mockInterface := NewMockInterface(t)
-			mockInterface.
-				On("List", ctx, Project).
-				Times(tt.timesResolved).
-				Return(tt.returnValue.svcs, tt.returnValue.err)
+			if tt.shortNameLookup {
+				mockInterface.
+					On("Get", ctx, Project, ShortService).
+					Times(times).
+					Return(tt.shortNameReturnValue.svc, tt.shortNameReturnValue.err)
+			}
+			if tt.longNameLookup {
+				mockInterface.
+					On("Get", ctx, Project, LongService).
+					Times(times).
+					Return(tt.longNameReturnValue.svc, tt.longNameReturnValue.err)
+			}
 
 			r := NewCachedNameResolver(mockInterface)
 			got, err := r.ResolveKafkaServiceName(ctx, Project)
