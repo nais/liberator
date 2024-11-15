@@ -143,7 +143,6 @@ type ApplicationSpec struct {
 
 	// Login configures a login proxy that sits in front of the application.
 	// +nais:doc:Link="https://doc.nais.io/auth/explanations/#login-proxy"
-	// +nais:doc:Availability="Tenant: SSB"
 	Login *nais_io_v1.Login `json:"login,omitempty"`
 
 	// Extra filters for modifying log content. This can e.g. be used for setting loglevel based on http status code.
