@@ -10,4 +10,7 @@ type ServiceCommonSpec struct {
 	// +kubebuilder:validation:MaxLength=128
 	// Subscription plan.
 	Plan string `json:"plan"`
+
+	// Tags are key-value pairs that allow you to categorize services.
+	Tags map[string]string `json:"tags,omitempty"`
 }
