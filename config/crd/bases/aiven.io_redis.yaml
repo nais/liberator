@@ -52,6 +52,12 @@ spec:
                 x-kubernetes-validations:
                 - message: Value is immutable
                   rule: self == oldSelf
+              tags:
+                additionalProperties:
+                  type: string
+                description: Tags are key-value pairs that allow you to categorize
+                  services.
+                type: object
             required:
             - plan
             - project
