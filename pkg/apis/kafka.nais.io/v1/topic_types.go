@@ -95,6 +95,7 @@ type Config struct {
 	// When set, remote storage will be used to store log segments.
 	// This value controls the size of the log that is kept before it is moved to remote storage.
 	// Must be less than RetentionBytes
+	// Not supported when CleanupPolicy is set to "compact"
 	// +nais:doc:Default="-2"
 	// +nais:doc:Link="https://kafka.apache.org/documentation.html#topicconfigs_local.retention.bytes"
 	LocalRetentionBytes *int `json:"localRetentionBytes,omitempty"`
@@ -102,6 +103,7 @@ type Config struct {
 	// When set, remote storage will be used to store log segments.
 	// This value controls the number of hours to keep before it is moved to remote storage.
 	// Must be less than RetentionHours.
+	// Not supported when CleanupPolicy is set to "compact"
 	// +nais:doc:Default="-2"
 	// +nais:doc:Link="https://kafka.apache.org/documentation.html#topicconfigs_local.retention.ms"
 	// +kubebuilder:validation:Maximum=2147483648

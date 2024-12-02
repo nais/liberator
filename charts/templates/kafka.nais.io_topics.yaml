@@ -90,12 +90,14 @@ spec:
                       When set, remote storage will be used to store log segments.
                       This value controls the size of the log that is kept before it is moved to remote storage.
                       Must be less than RetentionBytes
+                      Not supported when CleanupPolicy is set to "compact"
                     type: integer
                   localRetentionHours:
                     description: |-
                       When set, remote storage will be used to store log segments.
                       This value controls the number of hours to keep before it is moved to remote storage.
                       Must be less than RetentionHours.
+                      Not supported when CleanupPolicy is set to "compact"
                     maximum: 2147483648
                     type: integer
                   maxCompactionLagMs:
