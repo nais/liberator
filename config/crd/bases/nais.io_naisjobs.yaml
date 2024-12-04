@@ -694,6 +694,7 @@ spec:
                           - POSTGRES_14
                           - POSTGRES_15
                           - POSTGRES_16
+                          - POSTGRES_17
                           type: string
                       required:
                       - tier
