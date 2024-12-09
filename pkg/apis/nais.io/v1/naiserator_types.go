@@ -304,8 +304,6 @@ type Service struct {
 type TokenX struct {
 	// If enabled, will provision and configure a TokenX client and inject an accompanying secret.
 	Enabled bool `json:"enabled"`
-	// If enabled, secrets for TokenX will be mounted as files only, i.e. not as environment variables.
-	MountSecretsAsFilesOnly bool `json:"mountSecretsAsFilesOnly,omitempty"`
 }
 
 type Kafka struct {
