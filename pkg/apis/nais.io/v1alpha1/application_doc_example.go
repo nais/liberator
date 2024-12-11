@@ -380,6 +380,7 @@ func ExampleApplicationForDocumentation() *Application {
 							AccessibleForAll: ptr(true),
 							DelegationSource: ptr("delegation-source"),
 							Separator:        ptr(":"),
+							Visibility:       ptr("public"),
 						},
 					},
 				},

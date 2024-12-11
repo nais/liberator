@@ -159,6 +159,14 @@ type ExposedScope struct {
 	// +kubebuilder:validation:MaxLength=1
 	// +kubebuilder:validation:MinLength=1
 	Separator *string `json:"separator,omitempty"`
+	// Visibility controls the scope's visibility.
+	// Public scopes are visible for everyone.
+	// Private scopes are only visible for the organization that owns the scope as well as
+	// organizations that have been granted consumer access.
+	// +nais:doc:Default="public"
+	// +kubebuilder:validation:Optional
+	// +kubebuilder:validation:Enum=private;public
+	Visibility *string `json:"visibility,omitempty"`
 }
 
 type ExposedScopeConsumer struct {

@@ -900,6 +900,16 @@ spec:
                               minLength: 1
                               pattern: ^[\/:]$
                               type: string
+                            visibility:
+                              description: |-
+                                Visibility controls the scope's visibility.
+                                Public scopes are visible for everyone.
+                                Private scopes are only visible for the organization that owns the scope as well as
+                                organizations that have been granted consumer access.
+                              enum:
+                              - private
+                              - public
+                              type: string
                           required:
                           - enabled
                           - name

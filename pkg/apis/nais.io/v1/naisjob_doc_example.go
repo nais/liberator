@@ -318,6 +318,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 							AccessibleForAll: boolp(true),
 							DelegationSource: stringp("delegation-source"),
 							Separator:        stringp(":"),
+							Visibility:       stringp("public"),
 						},
 					},
 				},
