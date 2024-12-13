@@ -748,6 +748,11 @@ spec:
                   and remedy such situations. Read more about this over at the
                   [Kubernetes probes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
                 properties:
+                  commands:
+                    description: Commands to run for probes, instead of HTTP requests.
+                    items:
+                      type: string
+                    type: array
                   failureThreshold:
                     description: |-
                       When a Pod starts, and the probe fails, Kubernetes will try _failureThreshold_ times before giving up.
@@ -770,13 +775,6 @@ spec:
                   timeout:
                     description: Number of seconds after which the probe times out.
                     type: integer
-                  commands:
-                    description: |-
-                      Command to run for the liveness probe. The command is run inside the container.
-                      The command is considered successful if it exits with status code 0.
-                    items:
-                      type: string
-                    type: array
                 type: object
               logformat:
                 description: |-
@@ -1060,6 +1058,11 @@ spec:
                   reporting that they are not ready does not receive traffic through Kubernetes Services.
                   Read more about this over at the [Kubernetes readiness documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
                 properties:
+                  commands:
+                    description: Commands to run for probes, instead of HTTP requests.
+                    items:
+                      type: string
+                    type: array
                   failureThreshold:
                     description: |-
                       When a Pod starts, and the probe fails, Kubernetes will try _failureThreshold_ times before giving up.
@@ -1082,13 +1085,6 @@ spec:
                   timeout:
                     description: Number of seconds after which the probe times out.
                     type: integer
-                  commands:
-                    description: |-
-                      Command to run for the readiness probe. The command is run inside the container.
-                      The command is considered successful if it exits with status code 0.
-                    items:
-                      type: string
-                    type: array
                 type: object
               redis:
                 description: |-
@@ -1175,6 +1171,11 @@ spec:
                   application startup. This can be used to adopt liveness checks on slow starting containers, avoiding them getting
                   killed by Kubernetes before they are up and running.
                 properties:
+                  commands:
+                    description: Commands to run for probes, instead of HTTP requests.
+                    items:
+                      type: string
+                    type: array
                   failureThreshold:
                     description: |-
                       When a Pod starts, and the probe fails, Kubernetes will try _failureThreshold_ times before giving up.
@@ -1197,13 +1198,6 @@ spec:
                   timeout:
                     description: Number of seconds after which the probe times out.
                     type: integer
-                  commands:
-                    description: |-
-                      Command to run for the startup probe. The command is run inside the container.
-                      The command is considered successful if it exits with status code 0.
-                    items:
-                      type: string
-                    type: array
                 type: object
               successfulJobsHistoryLimit:
                 description: Specify how many completed Jobs should be kept.
