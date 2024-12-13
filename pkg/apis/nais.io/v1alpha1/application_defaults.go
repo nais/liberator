@@ -102,8 +102,7 @@ func getAppDefaults() *Application {
 				},
 			},
 			TokenX: &nais_io_v1.TokenX{
-				Enabled:                 false,
-				MountSecretsAsFilesOnly: false,
+				Enabled: false,
 			},
 		},
 	}

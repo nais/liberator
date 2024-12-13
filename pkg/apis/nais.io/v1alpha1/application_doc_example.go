@@ -481,8 +481,7 @@ func ExampleApplicationForDocumentation() *Application {
 			},
 			TerminationGracePeriodSeconds: ptr(int64(60)),
 			TokenX: &nais_io_v1.TokenX{
-				Enabled:                 true,
-				MountSecretsAsFilesOnly: true,
+				Enabled: true,
 			},
 			TTL: "1h",
 			Observability: &nais_io_v1.Observability{
