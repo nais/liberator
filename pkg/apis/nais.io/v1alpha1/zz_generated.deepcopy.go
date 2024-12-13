@@ -138,7 +138,7 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 	if in.Liveness != nil {
 		in, out := &in.Liveness, &out.Liveness
 		*out = new(v1.Probe)
-		(*in).DeepCopyInto(*out)
+		**out = **in
 	}
 	if in.Login != nil {
 		in, out := &in.Login, &out.Login
@@ -168,7 +168,7 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 	if in.Readiness != nil {
 		in, out := &in.Readiness, &out.Readiness
 		*out = new(v1.Probe)
-		(*in).DeepCopyInto(*out)
+		**out = **in
 	}
 	if in.Redirects != nil {
 		in, out := &in.Redirects, &out.Redirects
@@ -203,7 +203,7 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 	if in.Startup != nil {
 		in, out := &in.Startup, &out.Startup
 		*out = new(v1.Probe)
-		(*in).DeepCopyInto(*out)
+		**out = **in
 	}
 	if in.Strategy != nil {
 		in, out := &in.Strategy, &out.Strategy
