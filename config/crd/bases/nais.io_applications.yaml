@@ -902,8 +902,13 @@ spec:
                   timeout:
                     description: Number of seconds after which the probe times out.
                     type: integer
-                required:
-                - path
+                  commands:
+                    description: |-
+                      Command to run for the startup probe. The command is run inside the container.
+                      The command is considered successful if it exits with a status code of 0.
+                    items:
+                      type: string
+                    type: array
                 type: object
               logformat:
                 description: |-
@@ -1254,8 +1259,14 @@ spec:
                   timeout:
                     description: Number of seconds after which the probe times out.
                     type: integer
-                required:
-                - path
+                  commands:
+                    description: |-
+                      Command that should be run inside the main container to check if the application is ready to receive traffic.
+                      The command is not run inside a shell, so traditional shell instructions (pipes, redirects, etc.) won't work.
+                      To use a shell, you need to explicitly call out to that shell.
+                    items:
+                      type: string
+                    type: array
                 type: object
               redirects:
                 description: List of ingress redirects
@@ -1437,8 +1448,14 @@ spec:
                   timeout:
                     description: Number of seconds after which the probe times out.
                     type: integer
-                required:
-                - path
+                  commands:
+                    description: |-
+                      Command that should be run inside the main container to check if the application is ready to receive traffic.
+                      The command is not run inside a shell, so traditional shell instructions (pipes, redirects, etc.) won't work.
+                      To use a shell, you need to explicitly call out to that shell.
+                    items:
+                      type: string
+                    type: array
                 type: object
               strategy:
                 description: Specifies the strategy used to replace old Pods by new

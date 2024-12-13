@@ -770,8 +770,14 @@ spec:
                   timeout:
                     description: Number of seconds after which the probe times out.
                     type: integer
-                required:
-                - path
+                  commands:
+                    description: |-
+                      Command that should be run inside the main container to check if the application is ready to receive traffic.
+                      The command is not run inside a shell, so traditional shell instructions (pipes, redirects, etc.) won't work.
+                      To use a shell, you need to explicitly call out to that shell.
+                    items:
+                      type: string
+                    type: array
                 type: object
               logformat:
                 description: |-
@@ -1077,8 +1083,14 @@ spec:
                   timeout:
                     description: Number of seconds after which the probe times out.
                     type: integer
-                required:
-                - path
+                  commands:
+                    description: |-
+                      Command that should be run inside the main container to check if the application is ready to receive traffic.
+                      The command is not run inside a shell, so traditional shell instructions (pipes, redirects, etc.) won't work.
+                      To use a shell, you need to explicitly call out to that shell.
+                    items:
+                      type: string
+                    type: array
                 type: object
               redis:
                 description: |-
@@ -1187,8 +1199,14 @@ spec:
                   timeout:
                     description: Number of seconds after which the probe times out.
                     type: integer
-                required:
-                - path
+                  commands:
+                    description: |-
+                      Command that should be run inside the main container to check if the application is ready to receive traffic.
+                      The command is not run inside a shell, so traditional shell instructions (pipes, redirects, etc.) won't work.
+                      To use a shell, you need to explicitly call out to that shell.
+                    items:
+                      type: string
+                    type: array
                 type: object
               successfulJobsHistoryLimit:
                 description: Specify how many completed Jobs should be kept.

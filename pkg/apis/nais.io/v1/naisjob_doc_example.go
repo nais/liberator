@@ -291,6 +291,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				PeriodSeconds:    5,
 				Port:             8080,
 				Timeout:          1,
+				Commands:         []string{"command1", "command2"},
 			},
 			Logformat:    "accesslog_with_referer_useragent",
 			Logtransform: "http_loglevel",
@@ -343,6 +344,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				PeriodSeconds:    5,
 				Port:             8080,
 				Timeout:          1,
+				Commands:         []string{"command1", "command2"},
 			},
 			Resources: &ResourceRequirements{
 				Limits: &ResourceSpec{
@@ -367,6 +369,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				PeriodSeconds:    5,
 				Port:             8080,
 				Timeout:          1,
+				Commands:         []string{"command1", "command2"},
 			},
 			SuccessfulJobsHistoryLimit:    2,
 			TerminationGracePeriodSeconds: int64p(60),
