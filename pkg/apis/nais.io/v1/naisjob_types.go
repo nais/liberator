@@ -29,6 +29,7 @@ func init() {
 // +kubebuilder:printcolumn:name="Team",type="string",JSONPath=".metadata.labels.team"
 // +kubebuilder:printcolumn:name="State",type="string",JSONPath=".status.synchronizationState"
 // +kubebuilder:resource:path="naisjobs",shortName="nj",singular="naisjob"
+// +kubebuilder:validation:XValidation:rule="self.metadata.name.size() <= 63", message="metadata.name must be no more than 63 characters"
 type Naisjob struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
