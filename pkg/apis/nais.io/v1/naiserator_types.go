@@ -250,7 +250,7 @@ type PreStopHook struct {
 // Liveness probe and readiness probe definitions.
 type Probe struct {
 	// HTTP endpoint path that signals 200 OK if the application has started successfully.
-	Path string `json:"path"`
+	Path string `json:"path,omitempty"`
 	// Port for the startup probe.
 	Port int `json:"port,omitempty"`
 	// Number of seconds after the container has started before startup probes are initiated.
@@ -262,6 +262,8 @@ type Probe struct {
 	FailureThreshold int `json:"failureThreshold,omitempty"`
 	// Number of seconds after which the probe times out.
 	Timeout int `json:"timeout,omitempty"`
+	// Commands to run for probes, instead of HTTP requests.
+	Commands []string `json:"commands,omitempty"`
 }
 
 type SecretPath struct {
