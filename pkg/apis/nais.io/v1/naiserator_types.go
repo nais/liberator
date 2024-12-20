@@ -732,7 +732,7 @@ type AutoInstrumentation struct {
 	Enabled bool `json:"enabled,omitempty"`
 
 	// Application runtime. Supported runtimes are `java`, `nodejs`, `python`, `sdk`.
-	// +kubebuilder:validation:Enum=java;nodejs;python;sdk
+	// +kubebuilder:validation:Enum=java;nodejs;python;dotnet;sdk
 	Runtime string `json:"runtime,omitempty"`
 
 	// Destinations are where telemetry data should be stored.

@@ -956,6 +956,7 @@ spec:
                         - java
                         - nodejs
                         - python
+                        - dotnet
                         - sdk
                         type: string
                     type: object
