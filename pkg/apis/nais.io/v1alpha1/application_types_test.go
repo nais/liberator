@@ -14,7 +14,7 @@ import (
 
 const (
 	// Change this value to accept re-synchronization of ALL application resources when deploying a new version.
-	applicationHash = "3a0653ec2d45d309"
+	applicationHash = "729f638ff448a498"
 	aivenGeneration = 0
 )
 
