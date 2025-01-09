@@ -237,6 +237,7 @@ type HttpGetAction struct {
 	// Defaults to application port, as defined in `.spec.port`.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
+	// +nais:doc:Default=".spec.port"
 	Port *int `json:"port,omitempty"`
 }
 
@@ -252,6 +253,10 @@ type Probe struct {
 	// HTTP endpoint path that signals 200 OK if the application has started successfully.
 	Path string `json:"path"`
 	// Port for the startup probe.
+	// Defaults to application port, as defined in `.spec.port`.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	// +nais:doc:Default=".spec.port"
 	Port int `json:"port,omitempty"`
 	// Number of seconds after the container has started before startup probes are initiated.
 	InitialDelay int `json:"initialDelay,omitempty"`
@@ -302,6 +307,9 @@ type Service struct {
 	// Which protocol the backend service runs on. Default is `http`.
 	Protocol string `json:"protocol,omitempty"`
 	// Port for the default service. Default port is 80.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=65535
+	// +nais:doc:Default="80"
 	Port int32 `json:"port"`
 }
 
@@ -353,9 +361,11 @@ type SecureLogs struct {
 }
 
 type PrometheusConfig struct {
-	Enabled bool   `json:"enabled,omitempty"`
-	Port    string `json:"port,omitempty"`
-	Path    string `json:"path,omitempty"`
+	Enabled bool `json:"enabled,omitempty"`
+	// Defaults to application port, as defined in `.spec.port`.
+	// +nais:doc:Default=".spec.port"
+	Port string `json:"port,omitempty"`
+	Path string `json:"path,omitempty"`
 }
 
 type KafkaScaling struct {
@@ -632,6 +642,7 @@ type InsightsConfiguration struct {
 	// Maximum query length stored in bytes. Between 256 and 4500. Default to 1024.
 	// +kubebuilder:validation:Minimum=256
 	// +kubebuilder:validation:Maximum=4500
+	// +nais:doc:Default=1024
 	QueryStringLength int `json:"queryStringLength,omitempty"`
 	// True if Query Insights will record application tags from query when enabled.
 	RecordApplicationTags bool `json:"recordApplicationTags,omitempty"`

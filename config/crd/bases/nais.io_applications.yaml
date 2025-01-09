@@ -897,7 +897,11 @@ spec:
                     description: How often (in seconds) to perform the probe.
                     type: integer
                   port:
-                    description: Port for the startup probe.
+                    description: |-
+                      Port for the startup probe.
+                      Defaults to application port, as defined in `.spec.port`.
+                    maximum: 65535
+                    minimum: 1
                     type: integer
                   timeout:
                     description: Number of seconds after which the probe times out.
@@ -1232,6 +1236,7 @@ spec:
                   path:
                     type: string
                   port:
+                    description: Defaults to application port, as defined in `.spec.port`.
                     type: string
                 type: object
               readiness:
@@ -1260,7 +1265,11 @@ spec:
                     description: How often (in seconds) to perform the probe.
                     type: integer
                   port:
-                    description: Port for the startup probe.
+                    description: |-
+                      Port for the startup probe.
+                      Defaults to application port, as defined in `.spec.port`.
+                    maximum: 65535
+                    minimum: 1
                     type: integer
                   timeout:
                     description: Number of seconds after which the probe times out.
@@ -1402,6 +1411,8 @@ spec:
                   port:
                     description: Port for the default service. Default port is 80.
                     format: int32
+                    maximum: 65535
+                    minimum: 1
                     type: integer
                   protocol:
                     description: Which protocol the backend service runs on. Default
@@ -1443,7 +1454,11 @@ spec:
                     description: How often (in seconds) to perform the probe.
                     type: integer
                   port:
-                    description: Port for the startup probe.
+                    description: |-
+                      Port for the startup probe.
+                      Defaults to application port, as defined in `.spec.port`.
+                    maximum: 65535
+                    minimum: 1
                     type: integer
                   timeout:
                     description: Number of seconds after which the probe times out.
