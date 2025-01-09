@@ -133,13 +133,11 @@ type IDPorten struct {
 type IDPortenSidecar struct {
 	Wonderwall `json:",inline"`
 	// Default security level for all authentication requests.
-	// +kubebuilder:default="idporten-loa-high"
 	// +nais:doc:Default="idporten-loa-high"
 	// +nais:doc:Link="https://doc.nais.io/auth/idporten/reference/#security-levels"
 	// +kubebuilder:validation:Enum=Level3;Level4;idporten-loa-substantial;idporten-loa-high
 	Level string `json:"level,omitempty"`
 	// Default user interface locale for all authentication requests.
-	// +kubebuilder:default="nb"
 	// +nais:doc:Default="nb"
 	// +nais:doc:Link="https://doc.nais.io/auth/idporten/reference/#locales"
 	// +kubebuilder:validation:Enum=nb;nn;en;se
@@ -311,7 +309,6 @@ type Service struct {
 	// Port for the default service. Default port is 80.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=65535
-	// +kubebuilder:default="80"
 	// +nais:doc:Default="80"
 	Port int32 `json:"port"`
 }
@@ -605,14 +602,12 @@ type CloudSqlInstance struct {
 	// The number of retained backups must be greater or equal to TransactionLogRetentionDays.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=365
-	// +kubebuilder:default="7"
 	// +nais:doc:Default="7"
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/backup-recovery/backups"
 	RetainedBackups *int `json:"retainedBackups,omitempty"`
 	// The number of days of transaction logs gcp retains for point in time restores.
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=7
-	// +kubebuilder:default="7"
 	// +nais:doc:Default="7"
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/mysql/backup-recovery/backups#retention"
 	TransactionLogRetentionDays *int `json:"transactionLogRetentionDays,omitempty"`
@@ -647,7 +642,6 @@ type InsightsConfiguration struct {
 	// Maximum query length stored in bytes. Between 256 and 4500. Default to 1024.
 	// +kubebuilder:validation:Minimum=256
 	// +kubebuilder:validation:Maximum=4500
-	// +kubebuilder:default=1024
 	// +nais:doc:Default=1024
 	QueryStringLength int `json:"queryStringLength,omitempty"`
 	// True if Query Insights will record application tags from query when enabled.

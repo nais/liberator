@@ -638,7 +638,6 @@ spec:
                               description: True if Query Insights feature is enabled.
                               type: boolean
                             queryStringLength:
-                              default: 1024
                               description: Maximum query length stored in bytes. Between
                                 256 and 4500. Default to 1024.
                               maximum: 4500
@@ -674,7 +673,6 @@ spec:
                             using write-ahead logs.
                           type: boolean
                         retainedBackups:
-                          default: "7"
                           description: |-
                             Number of daily backups to retain. Defaults to 7 backups.
                             The number of retained backups must be greater or equal to TransactionLogRetentionDays.
@@ -691,7 +689,6 @@ spec:
                           pattern: db-.+
                           type: string
                         transactionLogRetentionDays:
-                          default: "7"
                           description: The number of days of transaction logs gcp
                             retains for point in time restores.
                           maximum: 7
@@ -771,6 +768,7 @@ spec:
                     description: |-
                       Port for the startup probe.
                       Defaults to application port, as defined in `.spec.port`.
+                    maximum: 65535
                     minimum: 1
                     type: integer
                   timeout:
@@ -1092,6 +1090,7 @@ spec:
                     description: |-
                       Port for the startup probe.
                       Defaults to application port, as defined in `.spec.port`.
+                    maximum: 65535
                     minimum: 1
                     type: integer
                   timeout:
@@ -1205,6 +1204,7 @@ spec:
                     description: |-
                       Port for the startup probe.
                       Defaults to application port, as defined in `.spec.port`.
+                    maximum: 65535
                     minimum: 1
                     type: integer
                   timeout:
