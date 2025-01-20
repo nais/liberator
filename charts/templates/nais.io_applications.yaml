@@ -1415,11 +1415,14 @@ spec:
                     minimum: 1
                     type: integer
                   protocol:
-                    description: Which protocol the backend service runs on. Default
-                      is `http`.
+                    description: |-
+                      At some point below valkey will start talking valkey protocol, they are
+                      currently the same.
+                      Which protocol the backend service runs on. Default is `http`.
                     enum:
                     - http
                     - redis
+                    - valkey
                     - tcp
                     - grpc
                     type: string
@@ -1538,6 +1541,26 @@ spec:
               ttl:
                 description: After the specified TTL, the application will be deleted.
                 type: string
+              valkey:
+                description: |-
+                  List of Valkey instances this application needs credentials for.
+                  Must be owned by same team.
+                items:
+                  properties:
+                    access:
+                      description: Access level for Valkey user
+                      enum:
+                      - read
+                      - write
+                      - readwrite
+                      - admin
+                      type: string
+                    instance:
+                      description: The last part of the name used when creating the
+                        instance (ie. valkey-{team}-{instance})
+                      type: string
+                  type: object
+                type: array
               vault:
                 description: |-
                   Provides secrets management, identity-based access, and encrypting application data for auditing of secrets

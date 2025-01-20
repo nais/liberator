@@ -86,6 +86,14 @@ type Redis struct {
 	Access string `json:"access,omitempty"`
 }
 
+type Valkey struct {
+	// The last part of the name used when creating the instance (ie. valkey-{team}-{instance})
+	Instance string `json:"instance,omitempty"`
+	// Access level for Valkey user
+	// +kubebuilder:validation:Enum=read;write;readwrite;admin
+	Access string `json:"access,omitempty"`
+}
+
 type Influx struct {
 	// Provisions an InfluxDB instance and configures your application to access it.
 	// Use the prefix: `influx-` + `team` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
@@ -303,7 +311,9 @@ type Strategy struct {
 }
 
 type Service struct {
-	// +kubebuilder:validation:Enum=http;redis;tcp;grpc
+	// At some point below valkey will start talking valkey protocol, they are
+	// currently the same.
+	// +kubebuilder:validation:Enum=http;redis;valkey;tcp;grpc
 	// Which protocol the backend service runs on. Default is `http`.
 	Protocol string `json:"protocol,omitempty"`
 	// Port for the default service. Default port is 80.
