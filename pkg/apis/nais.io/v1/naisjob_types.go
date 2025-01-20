@@ -210,6 +210,11 @@ type NaisjobSpec struct {
 	// +nais:doc:Link="https://doc.nais.io/observability/"
 	Observability *Observability `json:"observability,omitempty"`
 
+	// List of Valkey instances this job needs credentials for.
+	// Must be owned by same team.
+	// +nais:doc:Link="https://doc.nais.io/persistence/valkey/"
+	Valkey []Valkey `json:"valkey,omitempty"`
+
 	// Provides secrets management, identity-based access, and encrypting application data for auditing of secrets
 	// for applications, systems, and users.
 	// +nais:doc:Link="https://github.com/navikt/vault-iac/tree/master/doc"

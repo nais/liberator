@@ -191,7 +191,6 @@ type ApplicationSpec struct {
 	// Must be owned by same team.
 	// +nais:doc:Link="https://doc.nais.io/persistence/redis/"
 	Redis []nais_io_v1.Redis `json:"redis,omitempty"`
-
 	// The numbers of pods to run in parallel.
 	Replicas *nais_io_v1.Replicas `json:"replicas,omitempty"`
 
@@ -236,6 +235,11 @@ type ApplicationSpec struct {
 	// Configuration options related to application observability.
 	// +nais:doc:Link="https://doc.nais.io/observability/"
 	Observability *nais_io_v1.Observability `json:"observability,omitempty"`
+
+	// List of Valkey instances this application needs credentials for.
+	// Must be owned by same team.
+	// +nais:doc:Link="https://doc.nais.io/persistence/valkey/"
+	Valkey []nais_io_v1.Valkey `json:"valkey,omitempty"`
 
 	// Provides secrets management, identity-based access, and encrypting application data for auditing of secrets
 	// for applications, systems, and users.

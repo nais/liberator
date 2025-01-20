@@ -503,6 +503,13 @@ func ExampleApplicationForDocumentation() *Application {
 					},
 				},
 			},
+			Valkey: []nais_io_v1.Valkey{
+				{
+					Instance: "cache",
+					Access:   "readwrite",
+				},
+			},
+
 			Vault: &nais_io_v1.Vault{
 				Enabled: true,
 				Paths: []nais_io_v1.SecretPath{

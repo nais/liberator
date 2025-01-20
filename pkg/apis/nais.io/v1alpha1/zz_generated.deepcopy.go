@@ -225,6 +225,11 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = new(v1.Observability)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.Valkey != nil {
+		in, out := &in.Valkey, &out.Valkey
+		*out = make([]v1.Valkey, len(*in))
+		copy(*out, *in)
+	}
 	if in.Vault != nil {
 		in, out := &in.Vault, &out.Vault
 		*out = new(v1.Vault)
