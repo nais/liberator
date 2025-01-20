@@ -58,7 +58,7 @@ type RedisSpec struct {
 }
 
 type ValkeySpec struct {
-	// The last part of the name used when creating the instance (ie. valkey-<team>-<instance>)
+	// The last part of the name used when creating the instance (ie. Valkey-<team>-<instance>)
 	Instance string `json:"instance,omitempty"`
 	// Access level for Valkey user
 	// +kubebuilder:validation:Enum=read;write;readwrite;admin
