@@ -57,6 +57,14 @@ type RedisSpec struct {
 	Access string `json:"access,omitempty"`
 }
 
+type ValkeySpec struct {
+	// The last part of the name used when creating the instance (ie. Valkey-<team>-<instance>)
+	Instance string `json:"instance,omitempty"`
+	// Access level for Valkey user
+	// +kubebuilder:validation:Enum=read;write;readwrite;admin
+	Access string `json:"access,omitempty"`
+}
+
 type InfluxDBSpec struct {
 	// Name of the InfluxDB instance (`influx-<team>`)
 	Instance string `json:"instance,omitempty"`
@@ -78,6 +86,8 @@ type AivenApplicationSpec struct {
 	OpenSearch *OpenSearchSpec `json:"openSearch,omitempty"`
 	// Redis is a section configuring the Redis credentials to provision
 	Redis []*RedisSpec `json:"redis,omitempty"`
+	// Valkey is a section configuring the Valkey credentials to provision
+	Valkey []*ValkeySpec `json:"valkey,omitempty"`
 	// InfluxDB is a section configuring the InfluxDB credentials to provision
 	InfluxDB *InfluxDBSpec `json:"influxDB,omitempty"`
 }
