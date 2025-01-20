@@ -425,12 +425,6 @@ func ExampleApplicationForDocumentation() *Application {
 					Access:   "readwrite",
 				},
 			},
-			Valkey: []nais_io_v1.Valkey{
-				{
-					Instance: "cache",
-					Access:   "readwrite",
-				},
-			},
 			Replicas: &nais_io_v1.Replicas{
 				Min:                    intutil.Intp(2),
 				Max:                    intutil.Intp(4),
@@ -509,6 +503,13 @@ func ExampleApplicationForDocumentation() *Application {
 					},
 				},
 			},
+			Valkey: []nais_io_v1.Valkey{
+				{
+					Instance: "cache",
+					Access:   "readwrite",
+				},
+			},
+
 			Vault: &nais_io_v1.Vault{
 				Enabled: true,
 				Paths: []nais_io_v1.SecretPath{

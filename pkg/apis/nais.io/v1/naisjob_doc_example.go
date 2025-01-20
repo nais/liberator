@@ -391,6 +391,13 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					},
 				},
 			},
+			Valkey: []Valkey{
+				{
+					Instance: "cache",
+					Access:   "readwrite",
+				},
+			},
+
 			Vault: &Vault{
 				Enabled: true,
 				Paths: []SecretPath{
