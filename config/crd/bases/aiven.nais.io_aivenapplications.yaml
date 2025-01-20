@@ -139,7 +139,7 @@ spec:
                       type: string
                     instance:
                       description: The last part of the name used when creating the
-                        instance (ie. Valkey-<team>-<instance>)
+                        instance (ie. valkey-<team>-<instance>)
                       type: string
                   type: object
                 type: array

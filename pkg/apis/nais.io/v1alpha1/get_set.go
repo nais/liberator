@@ -151,6 +151,10 @@ func (in *Application) GetRedis() []nais_io_v1.Redis {
 	return in.Spec.Redis
 }
 
+func (in *Application) GetValkey() []nais_io_v1.Valkey {
+	return in.Spec.Valkey
+}
+
 func (in *Application) GetVault() *nais_io_v1.Vault {
 	return in.Spec.Vault
 }
