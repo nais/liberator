@@ -14,6 +14,7 @@ type AzureInterface interface {
 type AivenInterface interface {
 	GetKafka() *Kafka
 	GetRedis() []Redis
+	GetValkey() []Valkey
 	GetInflux() *Influx
 	GetOpenSearch() *OpenSearch
 }
@@ -100,6 +101,10 @@ func (in *Naisjob) GetOpenSearch() *OpenSearch {
 
 func (in *Naisjob) GetRedis() []Redis {
 	return in.Spec.Redis
+}
+
+func (in *Naisjob) GetValkey() []Valkey {
+	return in.Spec.Valkey
 }
 
 func (in *Naisjob) GetVault() *Vault {
