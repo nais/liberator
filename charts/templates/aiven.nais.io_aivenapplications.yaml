@@ -124,6 +124,25 @@ spec:
                 description: SecretName is the name of the secret containing Aiven
                   credentials
                 type: string
+              valkey:
+                description: Valkey is a section configuring the Valkey credentials
+                  to provision
+                items:
+                  properties:
+                    access:
+                      description: Access level for Valkey user
+                      enum:
+                      - read
+                      - write
+                      - readwrite
+                      - admin
+                      type: string
+                    instance:
+                      description: The last part of the name used when creating the
+                        instance (ie. Valkey-<team>-<instance>)
+                      type: string
+                  type: object
+                type: array
             required:
             - secretName
             type: object
