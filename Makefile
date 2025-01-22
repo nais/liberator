@@ -53,4 +53,4 @@ doc:
 		;
 
 mocks:
-	cd pkg/aiven/ && mockery --inpackage --all --case snake
+	go run github.com/vektra/mockery/v2@v2.51.1 --inpackage --all --case snake  --dir=pkg/aiven/
