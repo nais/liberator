@@ -1391,6 +1391,35 @@ spec:
                 type: string
               deploymentRolloutStatus:
                 type: string
+              problems:
+                items:
+                  description: |-
+                    Problems deal with errors, warnings and deprecations caused by invalid usage of the Application and NaisJob specs.
+                    They are user-facing and will be shown in various frontends, such as `kubectl describe app` and Nais console.
+                  properties:
+                    endOfLife:
+                      description: |-
+                        If the problem is related to deprecation of some system, this field
+                        MAY contain the end-of-life date for that particular system, formatted
+                        as a ISO8601 date.
+                      type: string
+                    message:
+                      description: |-
+                        Human-readable message describing the problem.
+                        The message will be visible in Nais console.
+                      type: string
+                    source:
+                      description: Full name of spec field that triggered the error,
+                        e.g. `.spec.image`.
+                      type: string
+                    type:
+                      description: Severity or kind of problem.
+                      type: string
+                  required:
+                  - message
+                  - type
+                  type: object
+                type: array
               rolloutCompleteTime:
                 format: int64
                 type: integer

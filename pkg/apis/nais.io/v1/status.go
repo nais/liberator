@@ -13,6 +13,7 @@ type Status struct {
 	DeploymentRolloutStatus string              `json:"deploymentRolloutStatus,omitempty"`
 	SynchronizationState    string              `json:"synchronizationState,omitempty"`
 	SynchronizationHash     string              `json:"synchronizationHash,omitempty"`
+	Problems                *[]Problem          `json:"problems,omitempty"`
 	Conditions              *[]metav1.Condition `json:"conditions,omitempty"`
 }
 

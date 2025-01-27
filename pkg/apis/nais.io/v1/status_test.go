@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	"github.com/stretchr/testify/assert"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 
@@ -77,4 +78,21 @@ func TestSetSynchronizationStateWithCondition(t *testing.T) {
 		LastTransitionTime: (*status.Conditions)[0].LastTransitionTime,
 	}
 	assert.Equal(t, []metav1.Condition{expected}, *status.Conditions)
+}
+
+func TestProblem(t *testing.T) {
+	var app nais_io_v1alpha1.Application
+	app.Status.SetError("error")
+	app.Status.AddWarning(".spec.image", "warning")
+	app.Status.AddDeprecation(".spec.image", "deprecation", time.Time{})
+
+	problems := *app.Status.Problems
+
+	assert.Equal(t, "error", problems[0].Message)
+	assert.Equal(t, "warning", problems[1].Message)
+	assert.Equal(t, "deprecation", problems[2].Message)
+
+	app.Status.ClearProblems()
+
+	assert.Nil(t, app.Status.Problems)
 }

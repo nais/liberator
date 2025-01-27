@@ -31,6 +31,7 @@ var ignoredApplicationFields = []string{
 	`.Status.Conditions`,
 	`.Status.CorrelationID`,
 	`.Status.DeploymentRolloutStatus`,
+	`.Status.Problems`,
 	`.Status.RolloutCompleteTime`,
 	`.Status.SynchronizationHash`,
 	`.Status.SynchronizationState`,
