@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.15.0
+    controller-gen.kubebuilder.io/version: v0.17.1
   name: applications.nais.io
 spec:
   group: nais.io
@@ -239,7 +239,6 @@ spec:
                       All requests to ingress + `/oauth2` will be processed only by the sidecar, whereas all other requests
                       will be proxied to the application.
 
-
                       If the user is authenticated with Entra ID, the `Authorization` header will be set to `Bearer <JWT>`.
                     properties:
                       autoLogin:
@@ -342,10 +341,8 @@ spec:
                   EnvFrom exposes all variables in the ConfigMap or Secret resources as environment variables.
                   One of `configMap` or `secret` is required.
 
-
                   Environment variables will take the form `KEY=VALUE`, where `key` is the ConfigMap or Secret key.
                   You can specify as many keys as you like in a single ConfigMap or Secret.
-
 
                   The ConfigMap and Secret resources must live in the same Kubernetes namespace as the Application resource.
                 items:
@@ -367,16 +364,13 @@ spec:
                   List of ConfigMap, Secret, or EmptyDir resources that will have their contents mounted into the containers.
                   Either `configMap`, `secret`, or `emptyDir` is required.
 
-
                   Files will take the path `<mountPath>/<key>`, where `key` is the ConfigMap or Secret key.
                   You can specify as many keys as you like in a single ConfigMap or Secret, and they will all
                   be mounted to the same directory.
 
-
                   If you reference an emptyDir you will just get an empty directory, backed
                   by your requested memory or the disk on the node where your pod is
                   running.
-
 
                   The ConfigMap and Secret resources must live in the same Kubernetes namespace as the Application resource.
                 items:
@@ -400,7 +394,6 @@ spec:
                         Filesystem path inside the pod where files are mounted.
                         The directory will be created if it does not exist. If the directory exists,
                         any files in the directory will be made unaccessible.
-
 
                         Defaults to `/var/run/configmaps/<NAME>`, `/var/run/secrets`, or `/var/run/pvc/<NAME>`, depending on which of them is specified.
                         For EmptyDir, MountPath must be set.
@@ -525,7 +518,6 @@ spec:
                             Allows you to uniformly control access to your Cloud Storage resources.
                             When you enable uniform bucket-level access on a bucket, Access Control Lists (ACLs) are disabled, and only bucket-level Identity
                             and Access Management (IAM) permissions grant access to that bucket and the objects it contains.
-
 
                             Uniform access control can not be reversed after 90 days! This is controlled by Google.
                           type: boolean
@@ -702,6 +694,9 @@ spec:
                               maximum: 23
                               minimum: 0
                               type: integer
+                          required:
+                          - day
+                          - hour
                           type: object
                         name:
                           description: The name of the instance, if omitted the application
@@ -764,7 +759,6 @@ spec:
                       Sidecar configures a sidecar that intercepts every HTTP request, and performs the OIDC flow if necessary.
                       All requests to ingress + `/oauth2` will be processed only by the sidecar, whereas all other requests
                       will be proxied to the application.
-
 
                       If the user is authenticated with ID-porten, the `Authorization` header will be set to `Bearer <JWT>`.
                     properties:
@@ -1197,7 +1191,6 @@ spec:
                           The command is not run inside a shell, so traditional shell instructions (pipes, redirects, etc.) won't work.
                           To use a shell, you need to explicitly call out to that shell.
 
-
                           If the exit status is non-zero, the pod will still be shut down, and marked as `Failed`.
                         items:
                           type: string
@@ -1575,13 +1568,10 @@ spec:
                       List of secret paths to be read from Vault and injected into the pod's filesystem.
                       Overriding the `paths` array is optional, and will give you fine-grained control over which Vault paths that will be mounted on the file system.
 
-
                       By default, the list will contain an entry with
-
 
                       `kvPath: /kv/<environment>/<zone>/<application>/<namespace>`
                       `mountPath: /var/run/secrets/nais.io/vault`
-
 
                       that will always be attempted to be mounted.
                     items:
@@ -1624,16 +1614,8 @@ spec:
             properties:
               conditions:
                 items:
-                  description: "Condition contains details for one aspect of the current
-                    state of this API Resource.\n---\nThis struct is intended for
-                    direct use as an array at the field path .status.conditions.  For
-                    example,\n\n\n\ttype FooStatus struct{\n\t    // Represents the
-                    observations of a foo's current state.\n\t    // Known .status.conditions.type
-                    are: \"Available\", \"Progressing\", and \"Degraded\"\n\t    //
-                    +patchMergeKey=type\n\t    // +patchStrategy=merge\n\t    // +listType=map\n\t
-                    \   // +listMapKey=type\n\t    Conditions []metav1.Condition `json:\"conditions,omitempty\"
-                    patchStrategy:\"merge\" patchMergeKey:\"type\" protobuf:\"bytes,1,rep,name=conditions\"`\n\n\n\t
-                    \   // other fields\n\t}"
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
                   properties:
                     lastTransitionTime:
                       description: |-
@@ -1674,12 +1656,7 @@ spec:
                       - Unknown
                       type: string
                     type:
-                      description: |-
-                        type of condition in CamelCase or in foo.example.com/CamelCase.
-                        ---
-                        Many .condition.type values are consistent across resources like Available, but because arbitrary conditions can be
-                        useful (see .node.status.conditions), the ability to deconflict is important.
-                        The regex it matches is (dns1123SubdomainFmt/)?(qualifiedNameFmt)
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
                       maxLength: 316
                       pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
                       type: string

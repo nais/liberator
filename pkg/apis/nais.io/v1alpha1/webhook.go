@@ -11,7 +11,6 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation"
 	"k8s.io/apimachinery/pkg/util/validation/field"
 	ctrl "sigs.k8s.io/controller-runtime"
-	"sigs.k8s.io/controller-runtime/pkg/webhook"
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 
 	"github.com/nais/liberator/pkg/webhookvalidator"
@@ -25,8 +24,6 @@ func (a *Application) SetupWebhookWithManager(mgr ctrl.Manager) error {
 
 // The generated manifest is invalid, so we use kubebuilder to make the initial manifest, and then update with annotations and correct name manually
 // DISABLE: +kubebuilder:webhook:verbs=create;update,path=/validate-nais-io-v1alpha1-applications,mutating=false,failurePolicy=fail,groups=nais.io,resources=applications,versions=v1alpha1,name=validation.applications.nais.io
-
-var _ webhook.Validator = &Application{}
 
 func (a *Application) ValidateCreate() (admission.Warnings, error) {
 	if len(a.GetName()) > validation.LabelValueMaxLength {
