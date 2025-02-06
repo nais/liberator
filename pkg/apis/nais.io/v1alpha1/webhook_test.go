@@ -1,6 +1,7 @@
 package nais_io_v1alpha1
 
 import (
+	"context"
 	"testing"
 
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -45,7 +46,7 @@ func oldApp() *Application {
 func TestWebhookValidateUpdateError(t *testing.T) {
 	input := inputApp()
 	old := oldApp()
-	_, err := input.ValidateUpdate(old)
+	_, err := input.ValidateUpdate(context.TODO(), old, input)
 	if err == nil {
 		t.Fatal("no error returned")
 	}
@@ -74,7 +75,7 @@ func TestWebhookValidateUpdateError(t *testing.T) {
 func TestWebhookValidateUpdate(t *testing.T) {
 	input := inputApp()
 	old := inputApp()
-	_, err := input.ValidateUpdate(old)
+	_, err := input.ValidateUpdate(context.TODO(), old, input)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
@@ -82,7 +83,7 @@ func TestWebhookValidateUpdate(t *testing.T) {
 
 func TestWebhookValidateCreate(t *testing.T) {
 	input := inputApp()
-	_, err := input.ValidateCreate()
+	_, err := input.ValidateCreate(context.TODO(), input)
 	if err != nil {
 		t.Fatal("unexpected error", err)
 	}
@@ -91,7 +92,7 @@ func TestWebhookValidateCreate(t *testing.T) {
 func TestWebhookValidateCreateTooLongName(t *testing.T) {
 	input := inputApp()
 	input.SetName("this-is-a-very-long-name-that-is-longer-than-63-characters-which-is-the-maximum-length-of-a-kubernetes-resource-name")
-	_, err := input.ValidateCreate()
+	_, err := input.ValidateCreate(context.TODO(), input)
 	if err.Error() != "Application name length must be no more than 63 characters" {
 		t.Errorf("unexpected error: %v", err)
 	}
@@ -101,7 +102,7 @@ func TestWebhookValidateTTL(t *testing.T) {
 	t.Run("valid", func(t *testing.T) {
 		input := inputApp()
 		input.Spec.TTL = "12h"
-		_, err := input.ValidateCreate()
+		_, err := input.ValidateCreate(context.TODO(), input)
 		if err != nil {
 			t.Errorf("unexpected error: %v", err)
 		}
@@ -110,7 +111,7 @@ func TestWebhookValidateTTL(t *testing.T) {
 	t.Run("invalid", func(t *testing.T) {
 		input := inputApp()
 		input.Spec.TTL = "invalid"
-		_, err := input.ValidateCreate()
+		_, err := input.ValidateCreate(context.TODO(), input)
 		want := "TTL is not a valid duration: \"invalid\". Example of valid duration is '12h'"
 		if err.Error() != want {
 			t.Errorf("got: %s, want: %s", err, want)
