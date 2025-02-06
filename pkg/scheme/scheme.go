@@ -6,6 +6,7 @@ import (
 	aiven_io_v1alpha1 "github.com/nais/liberator/pkg/apis/aiven.io/v1alpha1"
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	bigquery_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/bigquery.cnrm.cloud.google.com/v1beta1"
+	fdqnnetworkpolicies_networking_gke_io_v1alpha3 "github.com/nais/liberator/pkg/apis/fqdnnetworkpolicies.networking.gke.io/v1alpha3"
 	google_nais_io_v1 "github.com/nais/liberator/pkg/apis/google.nais.io/v1"
 	iam_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/iam.cnrm.cloud.google.com/v1beta1"
 	kafka_nais_io_v1 "github.com/nais/liberator/pkg/apis/kafka.nais.io/v1"
@@ -47,17 +48,18 @@ func All() (*runtime.Scheme, error) {
 // Add all native Kubernetes types and all CRDs supported by liberator to given scheme.
 func AddAll(scheme *runtime.Scheme) (*runtime.Scheme, error) {
 	return AddSchemes(scheme,
-		nais_io_v1alpha1.AddToScheme,
-		nais_io_v1.AddToScheme,
-		iam_cnrm_cloud_google_com_v1beta1.AddToScheme,
-		sql_cnrm_cloud_google_com_v1beta1.AddToScheme,
-		bigquery_cnrm_cloud_google_com_v1beta1.AddToScheme,
-		storage_cnrm_cloud_google_com_v1beta1.AddToScheme,
-		clientgoscheme.AddToScheme,
-		aiven_nais_io_v1.AddToScheme,
-		kafka_nais_io_v1.AddToScheme,
-		google_nais_io_v1.AddToScheme,
 		aiven_io_v1alpha1.AddToScheme,
+		aiven_nais_io_v1.AddToScheme,
+		bigquery_cnrm_cloud_google_com_v1beta1.AddToScheme,
+		clientgoscheme.AddToScheme,
+		fdqnnetworkpolicies_networking_gke_io_v1alpha3.AddToScheme,
+		google_nais_io_v1.AddToScheme,
+		iam_cnrm_cloud_google_com_v1beta1.AddToScheme,
+		kafka_nais_io_v1.AddToScheme,
+		nais_io_v1.AddToScheme,
+		nais_io_v1alpha1.AddToScheme,
+		sql_cnrm_cloud_google_com_v1beta1.AddToScheme,
+		storage_cnrm_cloud_google_com_v1beta1.AddToScheme,
 	)
 }
 
