@@ -59,6 +59,12 @@ type Config struct {
 	// +kubebuilder:validation:Enum=delete;compact;"compact,delete"
 	CleanupPolicy *string `json:"cleanupPolicy,omitempty"`
 
+	// The amount of time to retain delete tombstone markers for log compacted topics.
+	// This setting also gives a bound on the time in which a consumer must complete a read if they begin from offset 0 to ensure that they get a valid snapshot of the final stage (otherwise delete tombstones may be collected before they complete their scan).
+	// +nais:doc:Default="24"
+	// +nais:doc:Link="https://kafka.apache.org/documentation/#topicconfigs_delete.retention.ms"
+	DeleteRetentionHours *int `json:"deleteRetentionHours,omitempty"`
+
 	// When a producer sets acks to "all" (or "-1"), `min.insync.replicas` specifies the minimum number of replicas
 	// that must acknowledge a write for the write to be considered successful.
 	// +nais:doc:Default="2"

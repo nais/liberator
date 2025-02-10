@@ -17,6 +17,11 @@ func (in *Config) DeepCopyInto(out *Config) {
 		*out = new(string)
 		**out = **in
 	}
+	if in.DeleteRetentionHours != nil {
+		in, out := &in.DeleteRetentionHours, &out.DeleteRetentionHours
+		*out = new(int)
+		**out = **in
+	}
 	if in.MinimumInSyncReplicas != nil {
 		in, out := &in.MinimumInSyncReplicas, &out.MinimumInSyncReplicas
 		*out = new(int)

@@ -85,6 +85,11 @@ spec:
                     - compact
                     - compact,delete
                     type: string
+                  deleteRetentionHours:
+                    description: |-
+                      The amount of time to retain delete tombstone markers for log compacted topics.
+                      This setting also gives a bound on the time in which a consumer must complete a read if they begin from offset 0 to ensure that they get a valid snapshot of the final stage (otherwise delete tombstones may be collected before they complete their scan).
+                    type: integer
                   localRetentionBytes:
                     description: |-
                       When set, remote storage will be used to store log segments.

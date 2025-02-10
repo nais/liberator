@@ -22,6 +22,7 @@ func ExampleTopicForDocumentation() *Topic {
 			Pool: "dev-nais-dev",
 			Config: &Config{
 				CleanupPolicy:         ptr.To("delete"),
+				DeleteRetentionHours:  ptr.To(24),
 				MinimumInSyncReplicas: ptr.To(2),
 				Partitions:            ptr.To(1),
 				Replication:           ptr.To(3),
