@@ -55,14 +55,14 @@ type Config struct {
 	// CleanupPolicy is either "delete" or "compact" or both.
 	// This designates the retention policy to use on old log segments.
 	// +nais:doc:Default="delete"
-	// +nais:doc:Link="https://kafka.apache.org/33/documentation.html#topicconfigs_cleanup.policy"
+	// +nais:doc:Link="https://kafka.apache.org/documentation.html#topicconfigs_cleanup.policy"
 	// +kubebuilder:validation:Enum=delete;compact;"compact,delete"
 	CleanupPolicy *string `json:"cleanupPolicy,omitempty"`
 
 	// When a producer sets acks to "all" (or "-1"), `min.insync.replicas` specifies the minimum number of replicas
 	// that must acknowledge a write for the write to be considered successful.
 	// +nais:doc:Default="2"
-	// +nais:doc:Link="https://kafka.apache.org/33/documentation.html#topicconfigs_min.insync.replicas"
+	// +nais:doc:Link="https://kafka.apache.org/documentation.html#topicconfigs_min.insync.replicas"
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=7
 	MinimumInSyncReplicas *int `json:"minimumInSyncReplicas,omitempty"`
@@ -75,7 +75,7 @@ type Config struct {
 
 	// The default replication factor for created topics.
 	// +nais:doc:Default="3"
-	// +nais:doc:Link="https://kafka.apache.org/33/documentation.html#replication"
+	// +nais:doc:Link="https://kafka.apache.org/documentation.html#replication"
 	// +kubebuilder:validation:Minimum=2
 	Replication *int `json:"replication,omitempty"`
 
@@ -83,12 +83,12 @@ type Config struct {
 	// to free up space if we are using the "delete" retention policy. By default there is no size limit only a time limit.
 	// Since this limit is enforced at the partition level, multiply it by the number of partitions to compute the topic retention in bytes.
 	// +nais:doc:Default="-1"
-	// +nais:doc:Link="https://kafka.apache.org/33/documentation.html#topicconfigs_retention.bytes"
+	// +nais:doc:Link="https://kafka.apache.org/documentation.html#topicconfigs_retention.bytes"
 	RetentionBytes *int `json:"retentionBytes,omitempty"`
 
 	// The number of hours to keep a log file before deleting it.
 	// +nais:doc:Default="168"
-	// +nais:doc:Link="https://kafka.apache.org/33/documentation.html#topicconfigs_retention.ms"
+	// +nais:doc:Link="https://kafka.apache.org/documentation.html#topicconfigs_retention.ms"
 	// +kubebuilder:validation:Maximum=2147483648
 	RetentionHours *int `json:"retentionHours,omitempty"`
 
@@ -112,7 +112,7 @@ type Config struct {
 	// The number of hours after which Kafka will force the log to roll even if the segment file isn't full to ensure
 	// that retention can delete or compact old data.
 	// +nais:doc:Default="168"
-	// +nais:doc:Link="https://kafka.apache.org/33/documentation.html#topicconfigs_segment.ms"
+	// +nais:doc:Link="https://kafka.apache.org/documentation.html#topicconfigs_segment.ms"
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=8760
 	SegmentHours *int `json:"segmentHours,omitempty"`
@@ -123,26 +123,26 @@ type Config struct {
 	// into batches for efficiency. In previous message format versions, uncompressed records are not grouped into
 	// batches and this limit only applies to a single record in that case.
 	// +nais:doc:Default="1048588"
-	// +nais:doc:Link="https://kafka.apache.org/33/documentation.html#topicconfigs_max.message.bytes"
+	// +nais:doc:Link="https://kafka.apache.org/documentation.html#topicconfigs_max.message.bytes"
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=5242880
 	MaxMessageBytes *int `json:"maxMessageBytes,omitempty"`
 
 	// MinCompactionLagMs indicates the minimum time a message will remain uncompacted in the log
 	// +nais:doc:Default="0"
-	// +nais:doc:Link="https://kafka.apache.org/33/documentation.html#topicconfigs_min.compaction.lag.ms"
+	// +nais:doc:Link="https://kafka.apache.org/documentation.html#topicconfigs_min.compaction.lag.ms"
 	// +kubebuilder:validation:Minimum=0
 	MinCompactionLagMs *int `json:"minCompactionLagMs,omitempty"`
 
 	// MaxCompactionLagMs indicates the maximum time a message will remain ineligible for compaction in the log
 	// +nais:doc:Default="Inf"
-	// +nais:doc:Link="https://kafka.apache.org/33/documentation.html#topicconfigs_max.compaction.lag.ms"
+	// +nais:doc:Link="https://kafka.apache.org/documentation.html#topicconfigs_max.compaction.lag.ms"
 	// +kubebuilder:validation:Minimum=0
 	MaxCompactionLagMs *int `json:"maxCompactionLagMs,omitempty"`
 
 	// MinCleanableDirtyRatio indicates the minimum ratio of dirty log to retention size to initiate log compaction
 	// +nais:doc:Default="50%"
-	// +nais:doc:Link="https://kafka.apache.org/33/documentation.html#topicconfigs_min.cleanable.dirty.ratio"
+	// +nais:doc:Link="https://kafka.apache.org/documentation.html#topicconfigs_min.cleanable.dirty.ratio"
 	MinCleanableDirtyRatioPercent *intstr.IntOrString `json:"minCleanableDirtyRatioPercent,omitempty"`
 }
 
