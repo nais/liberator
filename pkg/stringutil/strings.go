@@ -3,7 +3,6 @@ package stringutil
 import (
 	"fmt"
 	"hash/crc32"
-	"math"
 	"math/rand"
 	"time"
 )
@@ -27,7 +26,7 @@ func StrTrimMiddle(s string, maxlen int) string {
 	if newlen < len(strTrimMiddleTruncate) {
 		return StrTrimRight(s, maxlen)
 	}
-	partlen := int(math.Floor(float64(newlen)) / 2)
+	partlen := int(float64(newlen) / 2)
 	return s[:partlen] + strTrimMiddleTruncate + s[len(s)-partlen:]
 }
 
