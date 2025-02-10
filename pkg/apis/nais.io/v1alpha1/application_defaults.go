@@ -3,7 +3,7 @@ package nais_io_v1alpha1
 import (
 	"github.com/imdario/mergo"
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
-	"github.com/nais/liberator/pkg/intutil"
+	"k8s.io/utils/ptr"
 )
 
 // Application spec default values
@@ -27,8 +27,8 @@ func (app *Application) ApplyDefaults() error {
 	}
 
 	if replicasIsZero {
-		app.Spec.Replicas.Min = intutil.Intp(0)
-		app.Spec.Replicas.Max = intutil.Intp(0)
+		app.Spec.Replicas.Min = ptr.To(0)
+		app.Spec.Replicas.Max = ptr.To(0)
 	}
 
 	return nil
@@ -54,8 +54,8 @@ func getAppDefaults() *Application {
 				},
 			},
 			Replicas: &nais_io_v1.Replicas{
-				Min:                    intutil.Intp(2),
-				Max:                    intutil.Intp(4),
+				Min:                    ptr.To(2),
+				Max:                    ptr.To(4),
 				CpuThresholdPercentage: 50,
 				DisableAutoScaling:     false,
 			},
