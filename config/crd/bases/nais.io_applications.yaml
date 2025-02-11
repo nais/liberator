@@ -874,6 +874,11 @@ spec:
                   and remedy such situations. Read more about this over at the
                   [Kubernetes probes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
                 properties:
+                  commands:
+                    description: Commands to run for probes, instead of HTTP requests.
+                    items:
+                      type: string
+                    type: array
                   failureThreshold:
                     description: |-
                       When a Pod starts, and the probe fails, Kubernetes will try _failureThreshold_ times before giving up.
@@ -900,8 +905,6 @@ spec:
                   timeout:
                     description: Number of seconds after which the probe times out.
                     type: integer
-                required:
-                - path
                 type: object
               logformat:
                 description: |-
@@ -1241,6 +1244,11 @@ spec:
                   reporting that they are not ready does not receive traffic through Kubernetes Services.
                   Read more about this over at the [Kubernetes readiness documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
                 properties:
+                  commands:
+                    description: Commands to run for probes, instead of HTTP requests.
+                    items:
+                      type: string
+                    type: array
                   failureThreshold:
                     description: |-
                       When a Pod starts, and the probe fails, Kubernetes will try _failureThreshold_ times before giving up.
@@ -1267,8 +1275,6 @@ spec:
                   timeout:
                     description: Number of seconds after which the probe times out.
                     type: integer
-                required:
-                - path
                 type: object
               redirects:
                 description: List of ingress redirects
@@ -1433,6 +1439,11 @@ spec:
                   application startup. This can be used to adopt liveness checks on slow starting containers, avoiding them getting
                   killed by Kubernetes before they are up and running.
                 properties:
+                  commands:
+                    description: Commands to run for probes, instead of HTTP requests.
+                    items:
+                      type: string
+                    type: array
                   failureThreshold:
                     description: |-
                       When a Pod starts, and the probe fails, Kubernetes will try _failureThreshold_ times before giving up.
@@ -1459,8 +1470,6 @@ spec:
                   timeout:
                     description: Number of seconds after which the probe times out.
                     type: integer
-                required:
-                - path
                 type: object
               strategy:
                 description: Specifies the strategy used to replace old Pods by new
