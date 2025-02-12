@@ -155,7 +155,7 @@ type ExposedScope struct {
 	// This overrides the default separator.
 	// The default separator is `:`. If `name` contains `/`, the default separator is instead `/`.
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`^[\/:]$`
+	// +kubebuilder:validation:Pattern=`^[\/:.]$`
 	// +kubebuilder:validation:MaxLength=1
 	// +kubebuilder:validation:MinLength=1
 	Separator *string `json:"separator,omitempty"`
