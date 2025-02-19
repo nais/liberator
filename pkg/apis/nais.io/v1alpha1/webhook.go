@@ -21,6 +21,7 @@ var _ webhook.CustomValidator = &Application{}
 
 func (a *Application) SetupWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).
+		WithValidator(&Application{}).
 		For(a).
 		Complete()
 }
