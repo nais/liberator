@@ -6,7 +6,7 @@ metadata:
     controller-gen.kubebuilder.io/version: v0.17.1
   name: fqdnnetworkpolicies.fqdnnetworkpolicies.networking.gke.io
 spec:
-  group: fqdnnetworkpolicies.networking.gke.io
+  group: networking.gke.io
   names:
     kind: FQDNNetworkPolicy
     listKind: FQDNNetworkPolicyList
