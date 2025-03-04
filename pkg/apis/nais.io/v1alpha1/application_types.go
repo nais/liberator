@@ -65,6 +65,7 @@ type ApplicationSpec struct {
 	AccessPolicy *nais_io_v1.AccessPolicy `json:"accessPolicy,omitempty"`
 
 	// Provisions and configures Azure resources.
+	// +nais:doc:Tenants="nav"
 	Azure *nais_io_v1.Azure `json:"azure,omitempty"`
 
 	// Override command when starting Docker image.
@@ -108,6 +109,7 @@ type ApplicationSpec struct {
 
 	// Configures ID-porten authentication for this application.
 	// See [ID-porten](https://doc.nais.io/security/auth/idporten/) for more details.
+	// +nais:doc:Tenants="nav"
 	IDPorten *nais_io_v1.IDPorten `json:"idporten,omitempty"`
 
 	// Your application's Docker image location and tag.
@@ -120,6 +122,7 @@ type ApplicationSpec struct {
 
 	// An InfluxDB via Aiven. A typical use case for influxdb is to store metrics from your application and visualize them in Grafana.
 	// +nais:doc:Availability="GCP"
+	// +nais:doc:Tenants="nav"
 	Influx *nais_io_v1.Influx `json:"influx,omitempty"`
 
 	// Set up Aiven Kafka for your application.
@@ -151,6 +154,7 @@ type ApplicationSpec struct {
 
 	// Configures a Maskinporten client for this application.
 	// See [Maskinporten](https://doc.nais.io/security/auth/maskinporten/) for more details.
+	// +nais:doc:Tenants="nav"
 	Maskinporten *nais_io_v1.Maskinporten `json:"maskinporten,omitempty"`
 
 	// OpenSearch instance to get credentials for.
@@ -200,6 +204,7 @@ type ApplicationSpec struct {
 	Resources *nais_io_v1.ResourceRequirements `json:"resources,omitempty"`
 
 	// Whether to enable a sidecar container for secure logging.
+	// +nais:doc:Tenants="nav"
 	SecureLogs *nais_io_v1.SecureLogs `json:"secureLogs,omitempty"`
 
 	// Specify which port and protocol is used to connect to the application in the container.
@@ -245,12 +250,14 @@ type ApplicationSpec struct {
 	// for applications, systems, and users.
 	// +nais:doc:Link="https://github.com/navikt/vault-iac/tree/master/doc"
 	// +nais:doc:Availability="on-premises"
+	// +nais:doc:Tenants="nav"
 	Vault *nais_io_v1.Vault `json:"vault,omitempty"`
 
 	// Inject on-premises web proxy configuration into the application pod.
 	// Most Linux applications should auto-detect these settings from the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables (and their lowercase counterparts).
 	// Java applications can start the JVM using parameters from the `$JAVA_PROXY_OPTIONS` environment variable.
 	// +nais:doc:Availability="on-premises"
+	// +nais:doc:Tenants="nav"
 	WebProxy bool `json:"webproxy,omitempty"`
 }
 

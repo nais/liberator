@@ -53,6 +53,7 @@ type AccessPolicyInboundRule struct {
 	// Permissions contains a set of permissions that are granted to the given application.
 	// Currently only applicable for Azure AD clients.
 	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration#fine-grained-access-control"
+	// +nais:doc:Tenants="nav"
 	Permissions *AccessPolicyPermissions `json:"permissions,omitempty"`
 }
 
