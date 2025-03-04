@@ -259,8 +259,7 @@ type IDPortenClientSpec struct {
 	//
 	// +nais:doc:Immutable=true
 	// +nais:doc:Default=idporten
-	// +nais:doc:Link="https://docs.digdir.no/docs/idporten/oidc_old/oidc_protocol_scope.html#scope-limitations"
-	// +nais:doc:Link="https://docs.digdir.no/docs/idporten/oidc/oidc_func_clientreg.html#integrasjonstyper"
+	// +nais:doc:Link="https://docs.digdir.no/docs/idporten/oidc_old/oidc_protocol_scope.html#scope-limitations";"https://docs.digdir.no/docs/idporten/oidc/oidc_func_clientreg.html#integrasjonstyper"
 	// +kubebuilder:default=idporten
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=krr;idporten;api_klient

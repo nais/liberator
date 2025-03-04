@@ -22,8 +22,7 @@ type Azure struct {
 	// will be proxied to the application.
 	//
 	// If the user is authenticated with Entra ID, the `Authorization` header will be set to `Bearer <JWT>`.
-	// +nais:doc:Link="https://doc.nais.io/auth/explanations/#login-proxy"
-	// +nais:doc:Link="https://doc.nais.io/auth/entra-id/how-to/login/"
+	// +nais:doc:Link="https://doc.nais.io/auth/explanations/#login-proxy";"https://doc.nais.io/auth/entra-id/how-to/login/"
 	// +nais:doc:Availability="GCP"
 	Sidecar *AzureSidecar `json:"sidecar,omitempty"`
 }
@@ -132,8 +131,7 @@ type IDPorten struct {
 	// will be proxied to the application.
 	//
 	// If the user is authenticated with ID-porten, the `Authorization` header will be set to `Bearer <JWT>`.
-	// +nais:doc:Link="https://doc.nais.io/auth/idporten/how-to/login/"
-	// +nais:doc:Link="https://doc.nais.io/auth/explanations/#login-proxy"
+	// +nais:doc:Link="https://doc.nais.io/auth/idporten/how-to/login/";"https://doc.nais.io/auth/explanations/#login-proxy"
 	// +nais:doc:Availability="GCP"
 	Sidecar *IDPortenSidecar `json:"sidecar,omitempty"`
 }
@@ -413,7 +411,7 @@ type Replicas struct {
 	// +nais:doc:Default="false"
 	DisableAutoScaling bool `json:"disableAutoScaling,omitempty"`
 	// ScalingStrategy configures how automatic scaling is performed.
-	// +nais:doc:link:https://doc.nais.io/workloads/application/reference/automatic-scaling/
+	// +nais:doc:Link="https://doc.nais.io/workloads/application/reference/automatic-scaling/"
 	ScalingStrategy *ScalingStrategy `json:"scalingStrategy,omitempty"`
 }
 
