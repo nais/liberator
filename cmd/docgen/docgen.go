@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"net/url"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -423,6 +424,13 @@ func (m ExtDoc) formatStraight(w io.Writer) {
 	if len(m.Link) > 0 {
 		io.WriteString(w, "Relevant information:\n\n")
 		for _, link := range m.Link {
+			u, err := url.Parse(link)
+			if err == nil {
+				if u.Host == "doc.nais.io" || u.Host == "docs.nais.io" {
+					u.Host = "doc.<<tenant()>>.cloud.nais.io"
+					link = u.String()
+				}
+			}
 			io.WriteString(w, fmt.Sprintf("* [%s](%s)\n", link, link))
 		}
 		io.WriteString(w, "\n")
