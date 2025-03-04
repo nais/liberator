@@ -80,23 +80,32 @@ type Doc struct {
 	Availability string `marker:"Availability,optional"`
 	// Adds Default values to documentation
 	Default string `marker:"Default,optional"`
-	// Links to documentation or other information
-	Link []string `marker:"Link,optional"`
-	// Immutable declares the field as immutable
-	Immutable bool `marker:"Immutable,optional"`
 	// Deprecated declares the field obsolete
 	Deprecated bool `marker:"Deprecated,optional"`
 	// Experimental declares the field as subject to instability, change, or removal
 	Experimental bool `marker:"Experimental,optional"`
 	// Hidden declares the field as hidden from reference and example documentation
 	Hidden bool `marker:"Hidden,optional"`
+	// Immutable declares the field as immutable
+	Immutable bool `marker:"Immutable,optional"`
+	// Links to documentation or other information
+	// Use semicolons to separate multiple marker values.
+	Link []string `marker:"Link,optional"`
+	// Tenants declares which tenants the field is available for.
+	// Empty means all tenants.
+	// Use semicolons to separate multiple marker values.
+	Tenants []string `marker:"Tenants,optional"`
 }
 
 type ExtDoc struct {
 	Availability string
 	Default      string
+	Deprecated   bool
 	Description  string
 	Enum         []string
+	Experimental bool
+	Hidden       bool
+	Immutable    bool
 	Level        int
 	Link         []string
 	Maximum      *float64
@@ -104,12 +113,9 @@ type ExtDoc struct {
 	Path         string
 	Pattern      string
 	Required     bool
+	Tenants      []string
 	Title        string
 	Type         string
-	Immutable    bool
-	Deprecated   bool
-	Experimental bool
-	Hidden       bool
 }
 
 // Hijack the "example" field for custom documentation fields
@@ -562,12 +568,13 @@ func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, pare
 		err := json.Unmarshal(node.Example.Raw, d)
 		if err == nil {
 			entry.Availability = d.Availability
-			entry.Link = d.Link
 			entry.Default = d.Default
 			entry.Deprecated = d.Deprecated
 			entry.Experimental = d.Experimental
-			entry.Immutable = d.Immutable
 			entry.Hidden = d.Hidden
+			entry.Immutable = d.Immutable
+			entry.Link = d.Link
+			entry.Tenants = d.Tenants
 		} else {
 			log.Errorf("unable to merge structs: %s", err)
 		}
@@ -575,6 +582,18 @@ func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, pare
 
 	if entry.Hidden {
 		return
+	}
+
+	isTenantSpecific := len(entry.Tenants) > 0
+	if isTenantSpecific {
+		if len(entry.Tenants) == 1 {
+			tenant := entry.Tenants[0]
+			io.WriteString(w, "{%- if tenant() == \""+tenant+"\" %}")
+		} else {
+			tenants := strings.Join(entry.Tenants, "\", \"")
+			io.WriteString(w, "{%- if tenant() in [\""+tenants+"\"] %}")
+		}
+		io.WriteString(w, "\n")
 	}
 
 	if len(jsonpath) > 0 {
@@ -597,6 +616,9 @@ func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, pare
 	}
 
 	if len(node.Properties) == 0 {
+		if isTenantSpecific {
+			io.WriteString(w, "{%- endif %}\n")
+		}
 		return
 	}
 
@@ -608,6 +630,10 @@ func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, pare
 
 	for _, k := range keys {
 		WriteReferenceDoc(w, level+1, jsonpath+"."+k, k, node, node.Properties[k])
+	}
+
+	if isTenantSpecific {
+		io.WriteString(w, "{%- endif %}\n")
 	}
 }
 
