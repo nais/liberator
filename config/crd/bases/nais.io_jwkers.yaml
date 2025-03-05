@@ -49,7 +49,7 @@ spec:
                     properties:
                       rules:
                         description: |-
-                          List of NAIS applications that may access your application.
+                          List of Nais applications that may access your application.
                           These settings apply both to Zero Trust network connectivity and token validity for Azure AD and TokenX tokens.
                         items:
                           properties:
@@ -128,7 +128,7 @@ spec:
                         type: array
                       rules:
                         description: |-
-                          List of NAIS applications that your application needs to access.
+                          List of Nais applications that your application needs to access.
                           These settings apply to Zero Trust network connectivity.
                         items:
                           properties:

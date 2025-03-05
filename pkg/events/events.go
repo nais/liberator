@@ -1,6 +1,6 @@
 package events
 
-// Machine readable status strings describing the current synchronization state of a NAIS application or job.
+// Machine readable status strings describing the current synchronization state of a Nais application or job.
 // These may be used both in the `.status.synchronizationState` and `.status.conditions[].reason` fields.
 
 const (

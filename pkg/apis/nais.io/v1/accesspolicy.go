@@ -70,13 +70,13 @@ type AccessPolicyPermissions struct {
 type AccessPolicyPermission string
 
 type AccessPolicyInbound struct {
-	// List of NAIS applications that may access your application.
+	// List of Nais applications that may access your application.
 	// These settings apply both to Zero Trust network connectivity and token validity for Azure AD and TokenX tokens.
 	Rules AccessPolicyInboundRules `json:"rules"`
 }
 
 type AccessPolicyOutbound struct {
-	// List of NAIS applications that your application needs to access.
+	// List of Nais applications that your application needs to access.
 	// These settings apply to Zero Trust network connectivity.
 	Rules AccessPolicyRules `json:"rules,omitempty"`
 	// List of external resources that your applications should be able to reach.

@@ -76,7 +76,7 @@ func (b BigQueryDataset) Hash() (string, error) {
 	}
 
 	// Exempt labels starting with 'nais.io/' from hash generation.
-	// This is neccessary to avoid app re-sync because of automated NAIS processes.
+	// This is neccessary to avoid app re-sync because of automated Nais processes.
 	for k, v := range b.Labels {
 		if !strings.HasPrefix(k, "nais.io/") {
 			if relevantValues.Labels == nil {
