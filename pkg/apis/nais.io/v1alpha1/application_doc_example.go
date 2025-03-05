@@ -339,6 +339,7 @@ func ExampleApplicationForDocumentation() *Application {
 				PeriodSeconds:    5,
 				Port:             8080,
 				Timeout:          1,
+				Commands:         []string{"command1", "command2"},
 			},
 			Logformat: "accesslog_with_referer_useragent",
 			Login: &nais_io_v1.Login{
@@ -408,6 +409,7 @@ func ExampleApplicationForDocumentation() *Application {
 				PeriodSeconds:    5,
 				Port:             8080,
 				Timeout:          1,
+				Commands:         []string{"command1", "command2"},
 			},
 			Redirects: []nais_io_v1.Redirect{
 				{
@@ -462,6 +464,7 @@ func ExampleApplicationForDocumentation() *Application {
 				PeriodSeconds:    5,
 				Port:             8080,
 				Timeout:          1,
+				Commands:         []string{"command1", "command2"},
 			},
 			Strategy: &nais_io_v1.Strategy{
 				Type: DeploymentStrategyRollingUpdate,
