@@ -20,7 +20,7 @@ func init() {
 	)
 }
 
-// Naisjob defines a NAIS Naisjob.
+// Naisjob defines a Nais Naisjob.
 //
 // +genclient
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -38,7 +38,7 @@ type Naisjob struct {
 	Status Status      `json:"status,omitempty"`
 }
 
-// NaisjobSpec contains the NAIS manifest.
+// NaisjobSpec contains the Nais manifest.
 // Please keep this list sorted for clarity.
 type NaisjobSpec struct {
 	// By default, no traffic is allowed between naisjobs inside the cluster.

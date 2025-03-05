@@ -166,7 +166,7 @@ type GCP struct {
 	// +nais:doc:Availability=GCP
 	// +kubebuilder:validation:MaxItems=1
 	SqlInstances []CloudSqlInstance `json:"sqlInstances,omitempty"`
-	// List of _additional_ permissions that should be granted to your application for accessing external GCP resources that have not been provisioned through NAIS.
+	// List of _additional_ permissions that should be granted to your application for accessing external GCP resources that have not been provisioned through Nais.
 	// +nais:doc:Availability=GCP
 	Permissions []CloudIAMPermission `json:"permissions,omitempty"`
 }
@@ -216,7 +216,7 @@ type FilesFrom struct {
 	EmptyDir *EmptyDir `json:"emptyDir,omitempty"`
 	// Name of the `PersistentVolumeClaim` that should be mounted into the container.
 	// Required unless `configMap` or `secret` is set.
-	// This feature requires coordination with the NAIS team.
+	// This feature requires coordination with the Nais team.
 	PersistentVolumeClaim string `json:"persistentVolumeClaim,omitempty"`
 	// Filesystem path inside the pod where files are mounted.
 	// The directory will be created if it does not exist. If the directory exists,
@@ -635,7 +635,7 @@ type CloudSqlInstance struct {
 	// Configures query insights which are now default for new sql instances.
 	Insights *InsightsConfiguration `json:"insights,omitempty"`
 	// Set flags to control the behavior of the instance.
-	// Be aware that NAIS _does not validate_ these flags, so take extra care
+	// Be aware that Nais _does not validate_ these flags, so take extra care
 	// to make sure the values match against the specification, otherwise your deployment
 	// will seemingly work OK, but the database flags will not function as expected.
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/flags#list-flags-postgres"

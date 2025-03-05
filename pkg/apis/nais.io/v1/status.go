@@ -5,7 +5,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// Status contains different NAIS status properties
+// Status contains different Nais status properties
 type Status struct {
 	SynchronizationTime     int64               `json:"synchronizationTime,omitempty"`
 	RolloutCompleteTime     int64               `json:"rolloutCompleteTime,omitempty"`

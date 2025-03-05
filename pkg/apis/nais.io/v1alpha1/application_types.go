@@ -39,7 +39,7 @@ func GetDefaultPVCMountPath(name string) string {
 	return fmt.Sprintf("/var/run/pvc/%s", name)
 }
 
-// Application defines a NAIS application.
+// Application defines a Nais application.
 //
 // +genclient
 // +kubebuilder:object:root=true
@@ -55,7 +55,7 @@ type Application struct {
 	Status nais_io_v1.Status `json:"status,omitempty"`
 }
 
-// ApplicationSpec contains the NAIS manifest.
+// ApplicationSpec contains the Nais manifest.
 // Please keep this list sorted for clarity.
 type ApplicationSpec struct {
 	// By default, no traffic is allowed between applications inside the cluster.
@@ -310,7 +310,7 @@ func (in Application) Hash(aivenGeneration int) (string, error) {
 	}
 
 	// Exempt labels starting with 'nais.io/' from hash generation.
-	// This is neccessary to avoid app re-sync because of automated NAIS processes.
+	// This is neccessary to avoid app re-sync because of automated Nais processes.
 	for k, v := range in.Labels {
 		if !strings.HasPrefix(k, "nais.io/") {
 			if relevantValues.Labels == nil {
