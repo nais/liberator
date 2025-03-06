@@ -352,6 +352,11 @@ func (in *AzureAdApplicationSpec) DeepCopyInto(out *AzureAdApplicationSpec) {
 		*out = new(AzureAdClaims)
 		(*in).DeepCopyInto(*out)
 	}
+	if in.GroupMembershipClaims != nil {
+		in, out := &in.GroupMembershipClaims, &out.GroupMembershipClaims
+		*out = new(string)
+		**out = **in
+	}
 	if in.PreAuthorizedApplications != nil {
 		in, out := &in.PreAuthorizedApplications, &out.PreAuthorizedApplications
 		*out = make([]AccessPolicyInboundRule, len(*in))

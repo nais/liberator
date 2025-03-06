@@ -101,6 +101,17 @@ spec:
                       type: object
                     type: array
                 type: object
+              groupMembershipClaims:
+                description: |-
+                  GroupMemberShipClaims controls the type of groups that are emitted in claims.
+                  See https://learn.microsoft.com/en-us/entra/identity-platform/reference-app-manifest#groupmembershipclaims-attribute
+                enum:
+                - None
+                - SecurityGroup
+                - ApplicationGroup
+                - DirectoryRole
+                - All
+                type: string
               logoutUrl:
                 description: |-
                   LogoutUrl is the URL where Azure AD sends a request to have the application clear the user's session data.

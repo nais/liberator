@@ -52,6 +52,10 @@ type AzureAdApplicationSpec struct {
 	// AllowAllUsers denotes whether all users within the tenant should be allowed to access this AzureAdApplication. Defaults to false.
 	AllowAllUsers *bool          `json:"allowAllUsers,omitempty"`
 	Claims        *AzureAdClaims `json:"claims,omitempty"`
+	// GroupMemberShipClaims controls the type of groups that are emitted in claims.
+	// See https://learn.microsoft.com/en-us/entra/identity-platform/reference-app-manifest#groupmembershipclaims-attribute
+	// +kubebuilder:validation:Enum=None;SecurityGroup;ApplicationGroup;DirectoryRole;All
+	GroupMembershipClaims *string `json:"groupMembershipClaims,omitempty"`
 	// LogoutUrl is the URL where Azure AD sends a request to have the application clear the user's session data.
 	// This is required if single sign-out should work correctly. Must start with 'https'
 	LogoutUrl                 string                    `json:"logoutUrl,omitempty"`
@@ -172,8 +176,9 @@ func (in *AzureAdApplication) Hash() (string, error) {
 		Tenant                    string
 		Claims                    *AzureAdClaims
 		SecretKeyPrefix           string
-		SinglePageApplication     *bool `json:"singlePageApplication,omitempty"`
-		AllowAllUsers             *bool `json:"allowAllUsers,omitempty"`
+		SinglePageApplication     *bool   `json:"singlePageApplication,omitempty"`
+		AllowAllUsers             *bool   `json:"allowAllUsers,omitempty"`
+		GroupMembershipClaims     *string `json:"groupMembershipClaims,omitempty"`
 	}{
 		ReplyUrls:                 in.Spec.ReplyUrls,
 		PreAuthorizedApplications: in.Spec.PreAuthorizedApplications,
@@ -183,6 +188,7 @@ func (in *AzureAdApplication) Hash() (string, error) {
 		SecretKeyPrefix:           in.Spec.SecretKeyPrefix,
 		SinglePageApplication:     in.Spec.SinglePageApplication,
 		AllowAllUsers:             in.Spec.AllowAllUsers,
+		GroupMembershipClaims:     in.Spec.GroupMembershipClaims,
 	}
 	return hash.Hash(relevantValues)
 }
