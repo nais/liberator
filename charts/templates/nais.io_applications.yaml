@@ -29,7 +29,7 @@ spec:
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Application defines a NAIS application.
+        description: Application defines a Nais application.
         properties:
           apiVersion:
             description: |-
@@ -50,7 +50,7 @@ spec:
             type: object
           spec:
             description: |-
-              ApplicationSpec contains the NAIS manifest.
+              ApplicationSpec contains the Nais manifest.
               Please keep this list sorted for clarity.
             properties:
               accessPolicy:
@@ -64,7 +64,7 @@ spec:
                     properties:
                       rules:
                         description: |-
-                          List of NAIS applications that may access your application.
+                          List of Nais applications that may access your application.
                           These settings apply both to Zero Trust network connectivity and token validity for Azure AD and TokenX tokens.
                         items:
                           properties:
@@ -143,7 +143,7 @@ spec:
                         type: array
                       rules:
                         description: |-
-                          List of NAIS applications that your application needs to access.
+                          List of Nais applications that your application needs to access.
                           These settings apply to Zero Trust network connectivity.
                         items:
                           properties:
@@ -402,7 +402,7 @@ spec:
                       description: |-
                         Name of the `PersistentVolumeClaim` that should be mounted into the container.
                         Required unless `configMap` or `secret` is set.
-                        This feature requires coordination with the NAIS team.
+                        This feature requires coordination with the Nais team.
                       type: string
                     secret:
                       description: |-
@@ -528,7 +528,7 @@ spec:
                   permissions:
                     description: List of _additional_ permissions that should be granted
                       to your application for accessing external GCP resources that
-                      have not been provisioned through NAIS.
+                      have not been provisioned through Nais.
                     items:
                       properties:
                         resource:
@@ -641,7 +641,7 @@ spec:
                         flags:
                           description: |-
                             Set flags to control the behavior of the instance.
-                            Be aware that NAIS _does not validate_ these flags, so take extra care
+                            Be aware that Nais _does not validate_ these flags, so take extra care
                             to make sure the values match against the specification, otherwise your deployment
                             will seemingly work OK, but the database flags will not function as expected.
                           items:
@@ -1610,7 +1610,7 @@ spec:
             - image
             type: object
           status:
-            description: Status contains different NAIS status properties
+            description: Status contains different Nais status properties
             properties:
               conditions:
                 items:

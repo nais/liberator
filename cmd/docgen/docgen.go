@@ -31,7 +31,7 @@ import (
 	"sigs.k8s.io/controller-tools/pkg/markers"
 )
 
-// Generate documentation for NAIS CRD's
+// Generate documentation for Nais CRD's
 
 var defaultResource interface{}
 
