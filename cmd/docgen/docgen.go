@@ -15,6 +15,8 @@ import (
 	"strings"
 	"text/template"
 
+	"slices"
+
 	yaml2 "github.com/ghodss/yaml"
 	"github.com/imdario/mergo"
 	kafka_nais_io_v1 "github.com/nais/liberator/pkg/apis/kafka.nais.io/v1"
@@ -33,9 +35,9 @@ import (
 
 // Generate documentation for Nais CRD's
 
-var defaultResource interface{}
+var defaultResource any
 
-var exampleResource interface{}
+var exampleResource any
 
 type DefaultableResource interface {
 	ApplyDefaults() error
@@ -43,21 +45,21 @@ type DefaultableResource interface {
 
 type DocumentableResource struct {
 	Resource      DefaultableResource
-	ExampleGetter func() interface{}
+	ExampleGetter func() any
 }
 
 var supportedResources = map[string]DocumentableResource{
 	"Application": {
 		Resource:      &nais_io_v1alpha1.Application{},
-		ExampleGetter: func() interface{} { return nais_io_v1alpha1.ExampleApplicationForDocumentation() },
+		ExampleGetter: func() any { return nais_io_v1alpha1.ExampleApplicationForDocumentation() },
 	},
 	"Naisjob": {
 		Resource:      &nais_io_v1.Naisjob{},
-		ExampleGetter: func() interface{} { return nais_io_v1.ExampleNaisjobForDocumentation() },
+		ExampleGetter: func() any { return nais_io_v1.ExampleNaisjobForDocumentation() },
 	},
 	"Topic": {
 		Resource:      &kafka_nais_io_v1.Topic{},
-		ExampleGetter: func() interface{} { return kafka_nais_io_v1.ExampleTopicForDocumentation() },
+		ExampleGetter: func() any { return kafka_nais_io_v1.ExampleTopicForDocumentation() },
 	},
 }
 
@@ -307,7 +309,7 @@ func writeJSONSchema(path, kind, group, apiVersion string, schemata apiext.JSONS
 
 	additionalPropertiesFalse(schemata.Properties)
 
-	inter := make(map[string]interface{})
+	inter := make(map[string]any)
 	b, err := json.Marshal(schemata)
 	if err != nil {
 		return err
@@ -328,7 +330,7 @@ func writeJSONSchema(path, kind, group, apiVersion string, schemata apiext.JSONS
 	return enc.Encode(inter)
 }
 
-func marshalToInterface(dst, src interface{}) error {
+func marshalToInterface(dst, src any) error {
 	data, err := json.Marshal(src)
 	if err != nil {
 		return err
@@ -382,7 +384,7 @@ func (m *multiwriter) Error() error {
 	return m.err
 }
 
-func linefmt(format string, args ...interface{}) string {
+func linefmt(format string, args ...any) string {
 	format = fmt.Sprintf(format, args...)
 	if len(format) == 0 {
 		format = "_no value_"
@@ -405,7 +407,7 @@ func writeList(w io.Writer, list []string) {
 		if len(item) > 0 {
 			io.WriteString(w, fmt.Sprintf("`%s`", item))
 		} else {
-			io.WriteString(w, fmt.Sprintf("_(empty string)_"))
+			io.WriteString(w, "_(empty string)_")
 		}
 		if i != max {
 			io.WriteString(w, ", ")
@@ -480,23 +482,15 @@ func (m ExtDoc) formatStraight(w io.Writer) {
 }
 
 func hasRequired(node apiext.JSONSchemaProps, key string) bool {
-	for _, k := range node.Required {
-		if k == key {
-			return true
-		}
+	if slices.Contains(node.Required, key) {
+		return true
 	}
 
 	if node.Items == nil {
 		return false
 	}
 
-	for _, k := range node.Items.Schema.Required {
-		if k == key {
-			return true
-		}
-	}
-
-	return false
+	return slices.Contains(node.Items.Schema.Required, key)
 }
 
 func WriteExampleDoc(w io.Writer, level int, jsonpath string, key string, parent, node apiext.JSONSchemaProps) {
@@ -504,10 +498,8 @@ func WriteExampleDoc(w io.Writer, level int, jsonpath string, key string, parent
 	ym, _ := yaml2.JSONToYAML(js)
 
 	io.WriteString(w, "``` yaml\n")
-	io.WriteString(w, string(ym))
+	io.Writer.Write(w, ym)
 	io.WriteString(w, "```\n")
-
-	return
 }
 
 func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, parent, node apiext.JSONSchemaProps) {
@@ -637,9 +629,9 @@ func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, pare
 	}
 }
 
-func getStructSubPath(keyWithDots string, object interface{}) (interface{}, error) {
-	structure := make(map[string]interface{})
-	var leaf interface{} = structure
+func getStructSubPath(keyWithDots string, object any) (any, error) {
+	structure := make(map[string]any)
+	var leaf any = structure
 
 	keySlice := strings.Split(keyWithDots, ".")
 	v := reflect.ValueOf(object)
@@ -661,7 +653,7 @@ func getStructSubPath(keyWithDots string, object interface{}) (interface{}, erro
 
 		v = resolve(v)
 
-		var added interface{}
+		var added any
 
 		switch v.Kind() {
 		case reflect.Map:
@@ -690,13 +682,13 @@ func getStructSubPath(keyWithDots string, object interface{}) (interface{}, erro
 			added = resolve(v).Interface()
 
 		case v.Kind() == reflect.Map:
-			added = make(map[string]interface{})
+			added = make(map[string]any)
 		}
 
 		switch typedleaf := leaf.(type) {
-		case map[string]interface{}:
+		case map[string]any:
 			typedleaf[key] = added
-		case []interface{}:
+		case []any:
 			typedleaf[0] = added
 		}
 
@@ -709,7 +701,7 @@ func getStructSubPath(keyWithDots string, object interface{}) (interface{}, erro
 	return structure, nil
 }
 
-func getValueFromStruct(keyWithDots string, object interface{}) (interface{}, error) {
+func getValueFromStruct(keyWithDots string, object any) (any, error) {
 	keySlice := strings.Split(keyWithDots, ".")
 	v := reflect.ValueOf(object)
 
@@ -775,14 +767,6 @@ func runOnJSONSchemaProperty(root apiext.JSONSchemaProps, path string, f func(*a
 	return root
 }
 
-func setJSONSchemaDefault(root apiext.JSONSchemaProps, path string, value string) apiext.JSONSchemaProps {
-	return runOnJSONSchemaProperty(root, path, func(obj *apiext.JSONSchemaProps) {
-		obj.Default = &apiext.JSON{
-			Raw: []byte(value),
-		}
-	})
-}
-
 func setJSONSchemaEnum(root apiext.JSONSchemaProps, path string, value string) apiext.JSONSchemaProps {
 	return runOnJSONSchemaProperty(root, path, func(obj *apiext.JSONSchemaProps) {
 		obj.Enum = append(obj.Enum, apiext.JSON{
@@ -805,15 +789,5 @@ func setJSONSchemaRequired(root apiext.JSONSchemaProps, path string, values ...s
 			}
 			obj.Required = append(obj.Required, val)
 		}
-	})
-}
-
-func addJSONSchemaProperty(root apiext.JSONSchemaProps, path string, prop apiext.JSONSchemaProps) apiext.JSONSchemaProps {
-	ps := strings.Split(path, ".")
-	return runOnJSONSchemaProperty(root, strings.Join(ps[:len(ps)-1], "."), func(obj *apiext.JSONSchemaProps) {
-		if obj.Properties == nil {
-			obj.Properties = make(map[string]apiext.JSONSchemaProps)
-		}
-		obj.Properties[ps[len(ps)-1]] = prop
 	})
 }
