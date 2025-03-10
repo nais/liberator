@@ -1,0 +1,11 @@
+inpackage: True
+dir: "{{.InterfaceDir}}"
+filename: "mock_{{ .InterfaceName | snakecase }}.go"
+all: True
+resolve-type-alias: False
+disable-version-string: True
+issue-845-fix: True # https://vektra.github.io/mockery/v2.53/deprecations/#issue-845-fix
+packages:
+  github.com/nais/liberator/pkg/aiven:
+    config:
+      recursive: True
