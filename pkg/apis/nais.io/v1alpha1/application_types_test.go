@@ -14,7 +14,7 @@ import (
 
 const (
 	// Change this value to accept re-synchronization of ALL application resources when deploying a new version.
-	applicationHash = "3a0653ec2d45d309"
+	applicationHash = "3b136519de70ef72"
 	aivenGeneration = 0
 )
 
@@ -63,7 +63,11 @@ func TestHashJSONMarshalling(t *testing.T) {
 }
 
 func TestNewCRD(t *testing.T) {
-	app := &nais_io_v1alpha1.Application{}
+	app := &nais_io_v1alpha1.Application{
+		Spec: nais_io_v1alpha1.ApplicationSpec{
+			Image: "example/image:tag",
+		},
+	}
 	err := app.ApplyDefaults()
 	if err != nil {
 		panic(err)

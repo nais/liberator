@@ -1304,8 +1304,6 @@ spec:
                   Most Linux applications should auto-detect these settings from the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables (and their lowercase counterparts).
                   Java applications can start the JVM using parameters from the `$JAVA_PROXY_OPTIONS` environment variable.
                 type: boolean
-            required:
-            - image
             type: object
           status:
             description: Status contains different Nais status properties
@@ -1409,6 +1407,8 @@ spec:
               synchronizationTime:
                 format: int64
                 type: integer
+              synchronizedImage:
+                type: string
             type: object
         required:
         - spec

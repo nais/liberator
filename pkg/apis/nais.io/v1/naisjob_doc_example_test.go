@@ -36,6 +36,7 @@ var ignoredApplicationFields = []string{
 	`.Status.SynchronizationHash`,
 	`.Status.SynchronizationState`,
 	`.Status.SynchronizationTime`,
+	`.Status.SynchronizedImage`,
 	`.Spec.AccessPolicy.Outbound.External.IPv4`,
 	`.Spec.Azure.Application.Claims.Extra`, // TODO: Remove when these deprecated Azure fields are removed.
 	`.Spec.Azure.Application.ReplyURLs`,

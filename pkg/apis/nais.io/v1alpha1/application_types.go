@@ -113,7 +113,7 @@ type ApplicationSpec struct {
 	IDPorten *nais_io_v1.IDPorten `json:"idporten,omitempty"`
 
 	// Your application's Docker image location and tag.
-	Image string `json:"image"`
+	Image string `json:"image,omitempty"`
 
 	// List of URLs that will route HTTPS traffic to the application.
 	// All URLs must start with `https://`. Domain availability differs according to which environment your application is running in.
