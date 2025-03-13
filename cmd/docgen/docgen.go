@@ -10,12 +10,11 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"slices"
 	"sort"
 	"strconv"
 	"strings"
 	"text/template"
-
-	"slices"
 
 	yaml2 "github.com/ghodss/yaml"
 	"github.com/imdario/mergo"
@@ -583,7 +582,7 @@ func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, pare
 			io.WriteString(w, "{%- if tenant() == \""+tenant+"\" %}")
 		} else {
 			tenants := strings.Join(entry.Tenants, "\", \"")
-			io.WriteString(w, "{%- if tenant() in [\""+tenants+"\"] %}")
+			io.WriteString(w, "{%- if tenant() in (\""+tenants+"\") %}")
 		}
 		io.WriteString(w, "\n")
 	}
