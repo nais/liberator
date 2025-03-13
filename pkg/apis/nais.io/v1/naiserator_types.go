@@ -516,7 +516,6 @@ type LifecycleCondition struct {
 type CloudSqlInstanceType string
 
 const (
-	CloudSqlInstanceTypePostgres11 CloudSqlInstanceType = "POSTGRES_11"
 	CloudSqlInstanceTypePostgres12 CloudSqlInstanceType = "POSTGRES_12"
 	CloudSqlInstanceTypePostgres13 CloudSqlInstanceType = "POSTGRES_13"
 	CloudSqlInstanceTypePostgres14 CloudSqlInstanceType = "POSTGRES_14"
@@ -566,7 +565,7 @@ type CloudSqlFlag struct {
 
 type CloudSqlInstance struct {
 	// PostgreSQL version.
-	// +kubebuilder:validation:Enum=POSTGRES_11;POSTGRES_12;POSTGRES_13;POSTGRES_14;POSTGRES_15;POSTGRES_16;POSTGRES_17
+	// +kubebuilder:validation:Enum=POSTGRES_12;POSTGRES_13;POSTGRES_14;POSTGRES_15;POSTGRES_16;POSTGRES_17
 	// +kubebuilder:validation:Required
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/instance-settings"
 	Type CloudSqlInstanceType `json:"type"`

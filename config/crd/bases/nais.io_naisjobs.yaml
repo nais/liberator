@@ -694,7 +694,6 @@ spec:
                         type:
                           description: PostgreSQL version.
                           enum:
-                          - POSTGRES_11
                           - POSTGRES_12
                           - POSTGRES_13
                           - POSTGRES_14
