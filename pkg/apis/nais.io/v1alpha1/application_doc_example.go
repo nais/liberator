@@ -241,7 +241,7 @@ func ExampleApplicationForDocumentation() *Application {
 				},
 				SqlInstances: []nais_io_v1.CloudSqlInstance{
 					{
-						Type:                        "POSTGRES_12",
+						Type:                        "POSTGRES_17",
 						Name:                        "myinstance",
 						Tier:                        "db-f1-micro",
 						DiskType:                    "SSD",
