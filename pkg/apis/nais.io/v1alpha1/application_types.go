@@ -65,7 +65,7 @@ type ApplicationSpec struct {
 	AccessPolicy *nais_io_v1.AccessPolicy `json:"accessPolicy,omitempty"`
 
 	// Provisions and configures Azure resources.
-	// +nais:doc:Tenants="nav"
+	// +nais:doc:Tenants="nav";"atil"
 	Azure *nais_io_v1.Azure `json:"azure,omitempty"`
 
 	// Override command when starting Docker image.
