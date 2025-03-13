@@ -44,7 +44,7 @@ var ignoredApplicationFields = []string{
 	`.Status.SynchronizationHash`,
 	`.Status.SynchronizationState`,
 	`.Status.SynchronizationTime`,
-	`.Status.SynchronizedImage`,
+	`.Status.EffectiveImage`,
 }
 
 // Test that the example Application contains examples for all fields encountered.

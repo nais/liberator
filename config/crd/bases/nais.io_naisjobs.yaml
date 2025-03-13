@@ -1368,6 +1368,8 @@ spec:
                 type: string
               deploymentRolloutStatus:
                 type: string
+              effectiveImage:
+                type: string
               problems:
                 items:
                   description: |-
@@ -1407,8 +1409,6 @@ spec:
               synchronizationTime:
                 format: int64
                 type: integer
-              synchronizedImage:
-                type: string
             type: object
         required:
         - spec

@@ -60,10 +60,11 @@ func (in *Application) GetEnv() nais_io_v1.EnvVars {
 }
 
 func (in *Application) GetImage() string {
-	if len(in.Spec.Image) == 0 {
-		return in.Status.SynchronizedImage
-	}
 	return in.Spec.Image
+}
+
+func (in *Application) GetEffectiveImage() string {
+	return in.Status.EffectiveImage
 }
 
 func (in *Application) GetCommand() []string {

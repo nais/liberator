@@ -60,10 +60,11 @@ func (in *Naisjob) GetRedirects() []Redirect {
 }
 
 func (in *Naisjob) GetImage() string {
-	if len(in.Spec.Image) == 0 {
-		return in.Status.SynchronizedImage
-	}
 	return in.Spec.Image
+}
+
+func (in *Naisjob) GetEffectiveImage() string {
+	return in.Status.EffectiveImage
 }
 
 func (in *Naisjob) GetEnv() EnvVars {

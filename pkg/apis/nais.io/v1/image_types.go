@@ -39,20 +39,4 @@ type ImageSpec struct {
 }
 
 type ImageStatus struct {
-	// ObservedGeneration represents the .metadata.generation that was last observed.
-	// For instance, if .metadata.generation is currently 12, but the .status.observedGeneration is 9,
-	// the dependent resources are out of date with respect to the current state of the instance.
-	// +optional
-	// +kubebuilder:validation:Minimum=0
-	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
-
-	// SynchronizationTime is the last time the image was synchronized.
-	// This should be when the dependent resource has been synchronized.
-	// +required
-	// +kubebuilder:validation:Type=string
-	// +kubebuilder:validation:Format=date-time
-	SynchronizationTime metav1.Time `json:"synchronizationTime"`
-
-	// Conditions represent the latest available observations of state
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
 }
