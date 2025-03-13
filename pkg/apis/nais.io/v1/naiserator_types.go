@@ -46,6 +46,7 @@ type AzureApplication struct {
 	// Using this will _isolate_ your application from all other applications that are not using the same tenant.
 	// +nais:doc:Link="https://doc.nais.io/auth/entra-id/explanations/#tenants"
 	// +nais:doc:Immutable=true
+	// +nais:doc:Tenants="nav"
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="tenant is immutable once set; delete and recreate Application to change tenant"
