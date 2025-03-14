@@ -99,7 +99,6 @@ jobs:
             gs://nais-json-schema-2c91
 
   build_and_push:
-    if: github.ref == 'refs/heads/main'
     needs: test
     permissions:
       contents: "read"
@@ -116,9 +115,13 @@ jobs:
         env:
           CHART_PATH: ./charts
         run: |
+          orig_version=$(yq '.version' < "${{ env.CHART_PATH }}/Chart.yaml")
           suffix="$(date +%Y%m%d%H%M%S)"
-          orig_version=$(yq '.version' < "${{ env.CHART_PATH}}/Chart.yaml")
-          chart_version="${orig_version}-$suffix"
+          if [[ '${{ github.ref }}' != 'refs/heads/main' ]]; then
+            suffix="${{ github.ref_name }}-${suffix}"
+          fi
+
+          chart_version="${orig_version}-${suffix}"
           
           yq eval \
             '.version="'"$chart_version"'"' \
@@ -132,6 +135,7 @@ jobs:
           echo "version=$chart_version" >> $GITHUB_OUTPUT
           echo "archive=$name-$chart_version.tgz" >> $GITHUB_OUTPUT
       - id: "auth"
+        if: ${{ github.actor != 'dependabot[bot]' }}
         name: "Authenticate to Google Cloud"
         uses: "google-github-actions/auth@v2"
         with:
@@ -139,9 +143,13 @@ jobs:
           service_account: "gh-liberator@nais-io.iam.gserviceaccount.com"
           token_format: "access_token"
       - name: "Log in to Google Artifact Registry"
+        if: ${{ github.actor != 'dependabot[bot]' }}
         run: |-
           echo '${{ steps.auth.outputs.access_token }}' | docker login -u oauth2accesstoken --password-stdin https://${{ env.GOOGLE_REGISTRY }}
       - name: Push Chart
+        # if: ${{ github.actor != 'dependabot[bot]' }}
+        # TODO: Replace with above once confirmed version is as expected
+        if: github.ref == 'refs/heads/main'
         run: |-
           chart="${{ steps.package_chart.outputs.archive }}"
           echo "Pushing: $chart"
