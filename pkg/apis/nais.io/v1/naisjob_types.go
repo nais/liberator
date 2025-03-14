@@ -103,7 +103,7 @@ type NaisjobSpec struct {
 	GCP *GCP `json:"gcp,omitempty"`
 
 	// Your Naisjob's Docker image location and tag.
-	Image string `json:"image"`
+	Image string `json:"image,omitempty"`
 
 	// An Influxdb via Aiven. A typical use case is to store metrics from your application and visualize them in Grafana.
 	// See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository

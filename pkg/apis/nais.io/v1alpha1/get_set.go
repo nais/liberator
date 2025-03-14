@@ -63,6 +63,10 @@ func (in *Application) GetImage() string {
 	return in.Spec.Image
 }
 
+func (in *Application) GetEffectiveImage() string {
+	return in.Status.EffectiveImage
+}
+
 func (in *Application) GetCommand() []string {
 	return in.Spec.Command
 }

@@ -4,19 +4,27 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.17.2
-  name: iampolicymembers.iam.cnrm.cloud.google.com
+  name: images.nais.io
 spec:
-  group: iam.cnrm.cloud.google.com
+  group: nais.io
   names:
-    kind: IAMPolicyMember
-    listKind: IAMPolicyMemberList
-    plural: iampolicymembers
-    singular: iampolicymember
+    kind: Image
+    listKind: ImageList
+    plural: images
+    singular: image
   scope: Namespaced
   versions:
-  - name: v1beta1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.image
+      name: Image
+      type: string
+    - jsonPath: .status.synchronizationTime
+      name: Last synchronization time
+      type: string
+    name: v1
     schema:
       openAPIV3Schema:
+        description: Image defines a Nais workload Image.
         properties:
           apiVersion:
             description: |-
@@ -37,31 +45,21 @@ spec:
             type: object
           spec:
             properties:
-              member:
-                type: string
-              resourceRef:
-                properties:
-                  apiVersion:
-                    type: string
-                  external:
-                    type: string
-                  kind:
-                    type: string
-                  name:
-                    type: string
-                required:
-                - apiVersion
-                - kind
-                type: object
-              role:
+              image:
+                description: Image is the Docker image to deploy.
+                pattern: ^.*/.*:.*$
                 type: string
             required:
-            - member
-            - resourceRef
-            - role
+            - image
+            type: object
+          status:
             type: object
         required:
         - spec
         type: object
+        x-kubernetes-validations:
+        - message: metadata.name must be no more than 63 characters
+          rule: self.metadata.name.size() <= 63
     served: true
     storage: true
+    subresources: {}

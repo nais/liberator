@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.17.1
+    controller-gen.kubebuilder.io/version: v0.17.2
   name: applications.nais.io
 spec:
   group: nais.io
@@ -1605,8 +1605,6 @@ spec:
                   Most Linux applications should auto-detect these settings from the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables (and their lowercase counterparts).
                   Java applications can start the JVM using parameters from the `$JAVA_PROXY_OPTIONS` environment variable.
                 type: boolean
-            required:
-            - image
             type: object
           status:
             description: Status contains different Nais status properties
@@ -1670,6 +1668,8 @@ spec:
               correlationID:
                 type: string
               deploymentRolloutStatus:
+                type: string
+              effectiveImage:
                 type: string
               problems:
                 items:

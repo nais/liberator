@@ -63,6 +63,10 @@ func (in *Naisjob) GetImage() string {
 	return in.Spec.Image
 }
 
+func (in *Naisjob) GetEffectiveImage() string {
+	return in.Status.EffectiveImage
+}
+
 func (in *Naisjob) GetEnv() EnvVars {
 	return in.Spec.Env
 }

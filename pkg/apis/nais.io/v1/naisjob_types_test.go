@@ -10,7 +10,7 @@ import (
 
 const (
 	// Change this value to accept re-synchronization of ALL naisjob resources when deploying a new version.
-	naisjobHash     = "9de7bf5df82dace9"
+	naisjobHash     = "bc64354f1c174f45"
 	aivenGeneration = 0
 )
 
@@ -33,6 +33,7 @@ func minimalNaisjob() *nais_io_v1.Naisjob {
 		},
 		Spec: nais_io_v1.NaisjobSpec{
 			Schedule: "test * * * * :)",
+			Image:    "example/image:tag",
 		},
 		Status: nais_io_v1.Status{
 			SynchronizationTime:     0,
