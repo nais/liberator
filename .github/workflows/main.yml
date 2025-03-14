@@ -147,9 +147,7 @@ jobs:
         run: |-
           echo '${{ steps.auth.outputs.access_token }}' | docker login -u oauth2accesstoken --password-stdin https://${{ env.GOOGLE_REGISTRY }}
       - name: Push Chart
-        # if: ${{ github.actor != 'dependabot[bot]' }}
-        # TODO: Replace with above once confirmed version is as expected
-        if: github.ref == 'refs/heads/main'
+        if: ${{ github.actor != 'dependabot[bot]' }}
         run: |-
           chart="${{ steps.package_chart.outputs.archive }}"
           echo "Pushing: $chart"
