@@ -55,7 +55,7 @@ type NaisjobSpec struct {
 	Azure *AzureNaisJob `json:"azure,omitempty"`
 
 	// Specify the number of retries before considering a Naisjob as failed
-	BackoffLimit int32 `json:"backoffLimit,omitempty"`
+	BackoffLimit *int32 `json:"backoffLimit,omitempty"`
 
 	// Override command when starting Docker image.
 	Command []string `json:"command,omitempty"`

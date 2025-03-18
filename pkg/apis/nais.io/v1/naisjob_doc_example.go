@@ -2,6 +2,7 @@ package nais_io_v1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/utils/ptr"
 )
 
 func ExampleNaisjobForDocumentation() *Naisjob {
@@ -138,7 +139,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					},
 				},
 			},
-			BackoffLimit: 5,
+			BackoffLimit: ptr.To(int32(5)),
 			Command: []string{
 				"/app/myapplication",
 				"--param",
