@@ -755,7 +755,7 @@ type AutoInstrumentation struct {
 	Runtime string `json:"runtime,omitempty"`
 
 	// Destinations are where telemetry data should be stored.
-	// +nais:doc:Link="https://doc.nais.io/observability/reference/auto-config/#destinations"
+	// +nais:doc:Link="https://docs.nais.io/observability/reference/auto-config/#destinations"
 	Destinations []AutoInstrumentationDestination `json:"destinations,omitempty"`
 }
 
@@ -771,7 +771,7 @@ type Logging struct {
 	Enabled bool `json:"enabled,omitempty"`
 
 	// Log destinations for where to forward application logs for persistent storage. Leave empty to use default destinations.
-	// +nais:doc:Link="https://doc.nais.io/observability/logging/#log-destinations"
+	// +nais:doc:Link="https://docs.nais.io/observability/logging/reference/destinations/#destinations"
 	Destinations []LogDestination `json:"destinations,omitempty"`
 }
 
