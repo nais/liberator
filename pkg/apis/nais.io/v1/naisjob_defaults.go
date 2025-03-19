@@ -17,7 +17,18 @@ const (
 
 // ApplyDefaults sets default values where they are missing from an Application spec.
 func (job *Naisjob) ApplyDefaults() error {
-	return mergo.Merge(job, getNaisjobDefaults())
+	noBackoffLimit := job.Spec.BackoffLimit != nil && *job.Spec.BackoffLimit == 0
+
+	err := mergo.Merge(job, getNaisjobDefaults())
+	if err != nil {
+		return err
+	}
+
+	if noBackoffLimit {
+		job.Spec.BackoffLimit = ptr.To(int32(0))
+	}
+
+	return nil
 }
 
 func getNaisjobDefaults() *Naisjob {
