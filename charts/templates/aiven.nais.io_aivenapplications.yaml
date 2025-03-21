@@ -145,6 +145,10 @@ spec:
                       description: The last part of the name used when creating the
                         instance (ie. valkey-<team>-<instance>)
                       type: string
+                    secretName:
+                      description: SecretName is the name of the secret containing
+                        Aiven credentials for the Valkey serviceuser
+                      type: string
                   type: object
                 type: array
             required:

@@ -65,6 +65,8 @@ type ValkeySpec struct {
 	// Access level for Valkey user
 	// +kubebuilder:validation:Enum=read;write;readwrite;admin
 	Access string `json:"access,omitempty"`
+	// SecretName is the name of the secret containing Aiven credentials for the Valkey serviceuser
+	SecretName string `json:"secretName,omitempty"`
 }
 
 type InfluxDBSpec struct {
