@@ -47,6 +47,8 @@ type OpenSearchSpec struct {
 	// Access level for opensearch user
 	// +kubebuilder:validation:Enum=read;write;readwrite;admin
 	Access string `json:"access,omitempty"`
+	// SecretName is the name of the secret containing Aiven credentials for the OpensSearch serviceuser
+	SecretName string `json:"secretName,omitempty"`
 }
 
 type RedisSpec struct {

@@ -12,9 +12,9 @@ const (
 )
 
 // Append the string's CRC32 hash to the string and truncate it to a maximum length.
-// Can be used to avoid collisions in the Kubernetes namespace.
+// Can be used to avoid collisions in the Kubernetes namespace. CRC is deterministic.
 //
-// e.g. ShortName("foobarbaz", 16) --> "foobarb-12345678"
+// e.g. ShortName("foobarbaz", 16) --> "foobarb-12345678", which is longer than the original name
 func ShortName(basename string, maxlen int) (string, error) {
 	maxlen -= SuffixLength
 	hasher := crc32.NewIEEE()

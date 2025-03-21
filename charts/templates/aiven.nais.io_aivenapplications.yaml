@@ -96,6 +96,10 @@ spec:
                     description: Use the `instance_name` that you specified in the
                       [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
                     type: string
+                  secretName:
+                    description: SecretName is the name of the secret containing Aiven
+                      credentials for the OpensSearch serviceuser
+                    type: string
                 type: object
               protected:
                 description: A Protected secret will not be deleted by the janitor
