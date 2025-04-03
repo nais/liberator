@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.17.2
+    controller-gen.kubebuilder.io/version: v0.17.3
   name: naisjobs.nais.io
 spec:
   group: nais.io
@@ -1094,26 +1094,6 @@ spec:
                 required:
                 - path
                 type: object
-              redis:
-                description: |-
-                  List of redis instances this job needs credentials for.
-                  Must be owned by same team.
-                items:
-                  properties:
-                    access:
-                      description: Access level for redis user
-                      enum:
-                      - read
-                      - write
-                      - readwrite
-                      - admin
-                      type: string
-                    instance:
-                      description: The last part of the name used when creating the
-                        instance (ie. redis-{team}-{instance})
-                      type: string
-                  type: object
-                type: array
               resources:
                 description: |-
                   When Containers have [resource requests](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) specified,

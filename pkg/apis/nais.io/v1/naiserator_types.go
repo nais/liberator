@@ -78,14 +78,6 @@ type OpenSearch struct {
 	Access string `json:"access,omitempty"`
 }
 
-type Redis struct {
-	// The last part of the name used when creating the instance (ie. redis-{team}-{instance})
-	Instance string `json:"instance,omitempty"`
-	// Access level for redis user
-	// +kubebuilder:validation:Enum=read;write;readwrite;admin
-	Access string `json:"access,omitempty"`
-}
-
 type Valkey struct {
 	// The last part of the name used when creating the instance (ie. valkey-{team}-{instance})
 	Instance string `json:"instance,omitempty"`

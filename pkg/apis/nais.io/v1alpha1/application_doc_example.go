@@ -415,12 +415,6 @@ func ExampleApplicationForDocumentation() *Application {
 					From: "https://myapplication-old.nav.no",
 				},
 			},
-			Redis: []nais_io_v1.Redis{
-				{
-					Instance: "cache",
-					Access:   "readwrite",
-				},
-			},
 			Replicas: &nais_io_v1.Replicas{
 				Min:                    ptr.To(2),
 				Max:                    ptr.To(4),

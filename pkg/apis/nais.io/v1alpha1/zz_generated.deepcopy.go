@@ -175,11 +175,6 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = make([]v1.Redirect, len(*in))
 		copy(*out, *in)
 	}
-	if in.Redis != nil {
-		in, out := &in.Redis, &out.Redis
-		*out = make([]v1.Redis, len(*in))
-		copy(*out, *in)
-	}
 	if in.Replicas != nil {
 		in, out := &in.Replicas, &out.Replicas
 		*out = new(v1.Replicas)

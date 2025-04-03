@@ -13,7 +13,6 @@ type AzureInterface interface {
 // +kubebuilder:object:generate=false
 type AivenInterface interface {
 	GetKafka() *Kafka
-	GetRedis() []Redis
 	GetValkey() []Valkey
 	GetInflux() *Influx
 	GetOpenSearch() *OpenSearch
@@ -101,10 +100,6 @@ func (in *Naisjob) GetKafka() *Kafka {
 
 func (in *Naisjob) GetOpenSearch() *OpenSearch {
 	return in.Spec.OpenSearch
-}
-
-func (in *Naisjob) GetRedis() []Redis {
-	return in.Spec.Redis
 }
 
 func (in *Naisjob) GetValkey() []Valkey {

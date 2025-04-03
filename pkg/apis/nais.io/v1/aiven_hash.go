@@ -8,5 +8,5 @@ func ApplyAivenGeneration(in AivenInterface, generation uint64, hash uint64) uin
 }
 
 func usesAiven(in AivenInterface) bool {
-	return in.GetKafka() != nil || len(in.GetRedis()) > 0 || in.GetInflux() != nil || in.GetOpenSearch() != nil
+	return in.GetKafka() != nil || in.GetInflux() != nil || in.GetOpenSearch() != nil
 }

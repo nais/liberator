@@ -191,10 +191,7 @@ type ApplicationSpec struct {
 
 	// List of ingress redirects
 	Redirects []nais_io_v1.Redirect `json:"redirects,omitempty"`
-	// List of redis instances this job needs credentials for.
-	// Must be owned by same team.
-	// +nais:doc:Link="https://doc.nais.io/persistence/redis/"
-	Redis []nais_io_v1.Redis `json:"redis,omitempty"`
+
 	// The numbers of pods to run in parallel.
 	Replicas *nais_io_v1.Replicas `json:"replicas,omitempty"`
 
