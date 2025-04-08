@@ -5,7 +5,9 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/mitchellh/mapstructure"
+	"slices"
+
+	"github.com/go-viper/mapstructure/v2"
 	flag "github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
@@ -33,7 +35,7 @@ func Initialize(appName string) {
 // The structured object must annotate its variables with `json:"name"`.
 // Nested objects are allowed, and names will be separated by underscore when reading from environment, e.g.
 // APPNAME_LEVEL1_LEVEL2_VARIABLE.
-func Load(cfg interface{}) error {
+func Load(cfg any) error {
 	var err error
 
 	err = viper.ReadInConfig()
@@ -65,25 +67,16 @@ func Load(cfg interface{}) error {
 
 // Return a human-readable printout of all configuration options, except secret stuff.
 func Format(disallowedKeys []string) []string {
-	ok := func(key string) bool {
-		for _, forbiddenKey := range disallowedKeys {
-			if forbiddenKey == key {
-				return false
-			}
-		}
-		return true
-	}
-
 	var keys sort.StringSlice = viper.AllKeys()
 
 	printed := make([]string, 0)
 
 	keys.Sort()
 	for _, key := range keys {
-		if ok(key) {
-			printed = append(printed, fmt.Sprintf("%s: %v", key, viper.Get(key)))
-		} else {
+		if slices.Contains(disallowedKeys, key) {
 			printed = append(printed, fmt.Sprintf("%s: ***REDACTED***", key))
+		} else {
+			printed = append(printed, fmt.Sprintf("%s: %v", key, viper.Get(key)))
 		}
 	}
 
