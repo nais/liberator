@@ -159,6 +159,7 @@ type ApplicationSpec struct {
 
 	// OpenSearch instance to get credentials for.
 	// Must be owned by same team.
+	// The team must themselves apply an `opensearch` resource, as specified in [how to create an OpenSearch Instance](https://doc.nais.io/persistence/opensearch/how-to/create)
 	// +nais:doc:Link="https://doc.nais.io/persistence/opensearch/"
 	OpenSearch *nais_io_v1.OpenSearch `json:"openSearch,omitempty"`
 
