@@ -89,6 +89,8 @@ type AivenApplicationSpec struct {
 type KafkaSpec struct {
 	// Pool is the Kafka pool (aka cluster) on Aiven this application uses
 	Pool string `json:"pool"`
+	// SecretName is the name of the secret for the Kafka pool
+	SecrtName string `json:"secretName,omitempty"`
 }
 
 type AivenApplicationConditionType string

@@ -77,6 +77,10 @@ spec:
                     description: Pool is the Kafka pool (aka cluster) on Aiven this
                       application uses
                     type: string
+                  secretName:
+                    description: SecretName is the name of the secret for the Kafka
+                      pool
+                    type: string
                 required:
                 - pool
                 type: object
