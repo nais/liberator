@@ -16,3 +16,7 @@
 
 # Generated documentation
 /doc/output
+
+# Nix stuffs
+.direnv/
+result*
