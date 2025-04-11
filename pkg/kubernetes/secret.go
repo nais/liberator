@@ -97,6 +97,17 @@ func secretInPodSpec(secret corev1.Secret, podSpec corev1.PodSpec) bool {
 	return secretRefInVolumes(secret, podSpec.Volumes) || secretRefInContainers(secret, podSpec.Containers)
 }
 
+func secretRefInEnvVars(secret corev1.Secret, envVars []corev1.EnvVar) bool {
+	for _, env := range envVars {
+		if env.ValueFrom != nil && env.ValueFrom.SecretKeyRef != nil {
+			if env.ValueFrom.SecretKeyRef.Name == secret.Name {
+				return true
+			}
+		}
+	}
+	return false
+}
+
 func secretRefInVolumes(secret corev1.Secret, volumes []corev1.Volume) bool {
 	for _, volume := range volumes {
 		if volume.Secret != nil && volume.Secret.SecretName == secret.Name {
@@ -108,7 +119,7 @@ func secretRefInVolumes(secret corev1.Secret, volumes []corev1.Volume) bool {
 
 func secretRefInContainers(secret corev1.Secret, containers []corev1.Container) bool {
 	for _, container := range containers {
-		if secretRefInEnvFromSource(secret, container.EnvFrom) {
+		if secretRefInEnvFromSource(secret, container.EnvFrom) || secretRefInEnvVars(secret, container.Env) {
 			return true
 		}
 	}
