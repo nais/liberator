@@ -29,10 +29,10 @@ type SecretLists struct {
 // ListSecretsForApplication is like ListUsedAndUnusedSecretsForPods, but lists secrets and pods based on the given
 // secret label selectors and the application object key, respectively.
 //
-// Pods are listed using the label "app".
-// ReplicaSets are also listed using the same labels to preserve rollback functionality.
+// Pods are listed using the label "app", which should equal the given application object name.
+// ReplicaSets are also listed to preserve rollback functionality, using the same labels.
 //
-// The predicate used to determine if a secret is used non-exhaustive. It currently checks for references in:
+// The predicates used to determine if a secret is used are non-exhaustive. We currently check for references in:
 // - Pod volumes
 // - For containers, init containers, and ephemeral containers:
 //   - Individual environment variables (env)
@@ -67,7 +67,7 @@ func ListSecretsForApplication(ctx context.Context, reader client.Reader, applic
 // ListUsedAndUnusedSecretsForPods partitions the given secrets into used and unused lists based
 // on whether they are referenced by the given pods.
 //
-// The predicate used to determine if a secret is used non-exhaustive. It currently checks for references in:
+// The predicates used to determine if a secret is used are non-exhaustive. We currently check for references in:
 // - Pod volumes
 // - For containers, init containers, and ephemeral containers:
 //   - Individual environment variables (env)
@@ -89,7 +89,7 @@ func partitionSecrets(secrets corev1.SecretList, podSpecs []corev1.PodSpec) Secr
 	}
 
 	for _, sec := range secrets.Items {
-		if secretInPodSpecs(sec, podSpecs) {
+		if secretInPodSpecs(sec.Name, podSpecs) {
 			lists.Used.Items = append(lists.Used.Items, sec)
 		} else {
 			lists.Unused.Items = append(lists.Unused.Items, sec)
@@ -99,14 +99,14 @@ func partitionSecrets(secrets corev1.SecretList, podSpecs []corev1.PodSpec) Secr
 	return lists
 }
 
-func secretInPodSpecs(secret corev1.Secret, podSpecs []corev1.PodSpec) bool {
+func secretInPodSpecs(secretName string, podSpecs []corev1.PodSpec) bool {
 	for _, podSpec := range podSpecs {
 		containers := slices.Concat(
 			podSpec.Containers,
 			podSpec.InitContainers,
 			asContainers(podSpec.EphemeralContainers),
 		)
-		if secretInVolumes(secret.Name, podSpec.Volumes) || secretInContainers(secret.Name, containers) {
+		if secretInVolumes(secretName, podSpec.Volumes) || secretInContainers(secretName, containers) {
 			return true
 		}
 	}
