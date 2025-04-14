@@ -2,6 +2,7 @@ package kubernetes
 
 import (
 	"context"
+	"slices"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -25,9 +26,19 @@ type SecretLists struct {
 	Unused corev1.SecretList
 }
 
-// ListSecretsForApplication finds all secrets matching the given labels and partitions them into SecretLists.
-// A secret is considered "used" if it is mounted or referred to by a pod or any replica set that matches the
-// given application.
+// ListSecretsForApplication is like ListUsedAndUnusedSecretsForPods, but lists secrets and pods based on the given
+// secret label selectors and the application object key, respectively.
+//
+// Pods are listed using the label "app".
+// ReplicaSets are also listed using the same labels to preserve rollback functionality.
+//
+// The predicate used to determine if a secret is used non-exhaustive. It currently checks for references in:
+// - Pod volumes
+// - For containers, init containers, and ephemeral containers:
+//   - Individual environment variables (env)
+//   - Sources for environment variables (envFrom)
+//
+// The caller should verify that secrets aren't referenced elsewhere, especially in custom resources.
 func ListSecretsForApplication(ctx context.Context, reader client.Reader, application client.ObjectKey, secretLabels client.MatchingLabels) (SecretLists, error) {
 	var lists SecretLists
 
@@ -53,12 +64,16 @@ func ListSecretsForApplication(ctx context.Context, reader client.Reader, applic
 	return partitionSecrets(secrets, podSpecs), nil
 }
 
-// ListUsedAndUnusedSecretsForPods finds intersect between list of secrets and list of pods
-// that uses (i.e. mounts or refers to the secret) these secrets,
-// and separates the secret list into two lists; used and unused.
+// ListUsedAndUnusedSecretsForPods partitions the given secrets into used and unused lists based
+// on whether they are referenced by the given pods.
 //
-// This is a low-level method that requires you to perform the list operations for the secrets and pod objects yourself.
-// In most cases, you should prefer using ListSecretsForApplication instead.
+// The predicate used to determine if a secret is used non-exhaustive. It currently checks for references in:
+// - Pod volumes
+// - For containers, init containers, and ephemeral containers:
+//   - Individual environment variables (env)
+//   - Sources for environment variables (envFrom)
+//
+// The caller should verify that secrets aren't referenced elsewhere, especially in custom resources.
 func ListUsedAndUnusedSecretsForPods(secrets corev1.SecretList, pods corev1.PodList) SecretLists {
 	return partitionSecrets(secrets, extractPodSpecs(&pods))
 }
@@ -86,21 +101,41 @@ func partitionSecrets(secrets corev1.SecretList, podSpecs []corev1.PodSpec) Secr
 
 func secretInPodSpecs(secret corev1.Secret, podSpecs []corev1.PodSpec) bool {
 	for _, podSpec := range podSpecs {
-		if secretInPodSpec(secret, podSpec) {
+		containers := slices.Concat(
+			podSpec.Containers,
+			podSpec.InitContainers,
+			asContainers(podSpec.EphemeralContainers),
+		)
+		if secretInVolumes(secret.Name, podSpec.Volumes) || secretInContainers(secret.Name, containers) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func secretInVolumes(secretName string, volumes []corev1.Volume) bool {
+	for _, volume := range volumes {
+		if volume.Secret != nil && volume.Secret.SecretName == secretName {
 			return true
 		}
 	}
 	return false
 }
 
-func secretInPodSpec(secret corev1.Secret, podSpec corev1.PodSpec) bool {
-	return secretRefInVolumes(secret, podSpec.Volumes) || secretRefInContainers(secret, podSpec.Containers)
+func secretInContainers(secretName string, containers []corev1.Container) bool {
+	for _, container := range containers {
+		if secretRefInEnvVars(secretName, container.Env) || secretRefInEnvFromSources(secretName, container.EnvFrom) {
+			return true
+		}
+	}
+	return false
 }
 
-func secretRefInEnvVars(secret corev1.Secret, envVars []corev1.EnvVar) bool {
+func secretRefInEnvVars(secretName string, envVars []corev1.EnvVar) bool {
 	for _, env := range envVars {
 		if env.ValueFrom != nil && env.ValueFrom.SecretKeyRef != nil {
-			if env.ValueFrom.SecretKeyRef.Name == secret.Name {
+			if env.ValueFrom.SecretKeyRef.Name == secretName {
 				return true
 			}
 		}
@@ -108,29 +143,19 @@ func secretRefInEnvVars(secret corev1.Secret, envVars []corev1.EnvVar) bool {
 	return false
 }
 
-func secretRefInVolumes(secret corev1.Secret, volumes []corev1.Volume) bool {
-	for _, volume := range volumes {
-		if volume.Secret != nil && volume.Secret.SecretName == secret.Name {
+func secretRefInEnvFromSources(secretName string, envFrom []corev1.EnvFromSource) bool {
+	for _, env := range envFrom {
+		if env.SecretRef != nil && env.SecretRef.Name == secretName {
 			return true
 		}
 	}
 	return false
 }
 
-func secretRefInContainers(secret corev1.Secret, containers []corev1.Container) bool {
-	for _, container := range containers {
-		if secretRefInEnvFromSource(secret, container.EnvFrom) || secretRefInEnvVars(secret, container.Env) {
-			return true
-		}
+func asContainers(ephemeral []corev1.EphemeralContainer) []corev1.Container {
+	containers := make([]corev1.Container, len(ephemeral))
+	for i, e := range ephemeral {
+		containers[i] = corev1.Container(e.EphemeralContainerCommon)
 	}
-	return false
-}
-
-func secretRefInEnvFromSource(secret corev1.Secret, envFromSource []corev1.EnvFromSource) bool {
-	for _, envFrom := range envFromSource {
-		if envFrom.SecretRef != nil && envFrom.SecretRef.Name == secret.Name {
-			return true
-		}
-	}
-	return false
+	return containers
 }
