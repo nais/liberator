@@ -2,7 +2,6 @@ package kubernetes
 
 import (
 	"context"
-	"slices"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -101,17 +100,18 @@ func partitionSecrets(secrets corev1.SecretList, podSpecs []corev1.PodSpec) Secr
 
 func secretInPodSpecs(secretName string, podSpecs []corev1.PodSpec) bool {
 	for _, podSpec := range podSpecs {
-		containers := slices.Concat(
-			podSpec.Containers,
-			podSpec.InitContainers,
-			asContainers(podSpec.EphemeralContainers),
-		)
-		if secretInVolumes(secretName, podSpec.Volumes) || secretInContainers(secretName, containers) {
+		if secretInPodSpec(secretName, podSpec) {
 			return true
 		}
 	}
-
 	return false
+}
+
+func secretInPodSpec(secretName string, podSpec corev1.PodSpec) bool {
+	return secretInVolumes(secretName, podSpec.Volumes) ||
+		secretInContainers(secretName, podSpec.Containers) ||
+		secretInContainers(secretName, podSpec.InitContainers) ||
+		secretInContainers(secretName, asContainers(podSpec.EphemeralContainers))
 }
 
 func secretInVolumes(secretName string, volumes []corev1.Volume) bool {
@@ -125,14 +125,14 @@ func secretInVolumes(secretName string, volumes []corev1.Volume) bool {
 
 func secretInContainers(secretName string, containers []corev1.Container) bool {
 	for _, container := range containers {
-		if secretRefInEnvVars(secretName, container.Env) || secretRefInEnvFromSources(secretName, container.EnvFrom) {
+		if secretInEnvVars(secretName, container.Env) || secretInEnvFromSources(secretName, container.EnvFrom) {
 			return true
 		}
 	}
 	return false
 }
 
-func secretRefInEnvVars(secretName string, envVars []corev1.EnvVar) bool {
+func secretInEnvVars(secretName string, envVars []corev1.EnvVar) bool {
 	for _, env := range envVars {
 		if env.ValueFrom != nil && env.ValueFrom.SecretKeyRef != nil {
 			if env.ValueFrom.SecretKeyRef.Name == secretName {
@@ -143,7 +143,7 @@ func secretRefInEnvVars(secretName string, envVars []corev1.EnvVar) bool {
 	return false
 }
 
-func secretRefInEnvFromSources(secretName string, envFrom []corev1.EnvFromSource) bool {
+func secretInEnvFromSources(secretName string, envFrom []corev1.EnvFromSource) bool {
 	for _, env := range envFrom {
 		if env.SecretRef != nil && env.SecretRef.Name == secretName {
 			return true
