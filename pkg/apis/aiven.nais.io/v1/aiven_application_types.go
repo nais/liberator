@@ -46,6 +46,7 @@ type OpenSearchSpec struct {
 	Instance string `json:"instance,omitempty"`
 	// Access level for opensearch user
 	// +kubebuilder:validation:Enum=read;write;readwrite;admin
+	// +nais:doc:Default="read"
 	Access string `json:"access,omitempty"`
 	// SecretName is the name of the secret containing Aiven credentials for the OpensSearch serviceuser
 	SecretName string `json:"secretName,omitempty"`
@@ -56,6 +57,7 @@ type ValkeySpec struct {
 	Instance string `json:"instance,omitempty"`
 	// Access level for Valkey user
 	// +kubebuilder:validation:Enum=read;write;readwrite;admin
+	// +nais:doc:Default="read"
 	Access string `json:"access,omitempty"`
 	// SecretName is the name of the secret containing Aiven credentials for the Valkey serviceuser
 	SecretName string `json:"secretName,omitempty"`
