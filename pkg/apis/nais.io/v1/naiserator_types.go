@@ -75,6 +75,7 @@ type OpenSearch struct {
 	Instance string `json:"instance"`
 	// Access level for OpenSearch user
 	// +kubebuilder:validation:Enum=read;write;readwrite;admin
+	// +nais:doc:Default="read"
 	Access string `json:"access,omitempty"`
 }
 
@@ -83,6 +84,7 @@ type Valkey struct {
 	Instance string `json:"instance,omitempty"`
 	// Access level for Valkey user
 	// +kubebuilder:validation:Enum=read;write;readwrite;admin
+	// +nais:doc:Default="read"
 	Access string `json:"access,omitempty"`
 }
 
