@@ -822,6 +822,7 @@ type PostgresResources struct {
 
 type PostgresCluster struct {
 	// Name of the Postgres cluster.
+	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Pattern=`^[a-z0-9][a-z0-9-]{1,62}$`
 	Name string `json:"name,omitempty"`
 
@@ -829,7 +830,7 @@ type PostgresCluster struct {
 
 	// Major version of Postgres to use.
 	// +kubebuilder:validation:required
-	// +kubebuilder:validation:Enum=17
+	// +kubebuilder:validation:Enum=17;16
 	MajorVersion string `json:"majorVersion"`
 
 	// High availability cluster.

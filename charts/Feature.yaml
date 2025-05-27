@@ -1,4 +1,3 @@
 environmentKinds:
   - tenant
   - onprem
-  - legacy

@@ -1193,6 +1193,7 @@ spec:
                         description: Major version of Postgres to use.
                         enum:
                         - 17
+                        - 16
                         type: string
                       name:
                         description: Name of the Postgres cluster.
