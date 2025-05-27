@@ -60,9 +60,11 @@ func observeMembers(seen map[string]bool, v reflect.Value, path string) {
 
 	case reflect.Struct:
 		for i := 0; i < v.NumField(); i++ {
-			f := v.Field(i)
-			childPath := path + "." + v.Type().Field(i).Name
-			observeMembers(seen, f, childPath)
+			if v.Type().Field(i).IsExported() {
+				f := v.Field(i)
+				childPath := path + "." + v.Type().Field(i).Name
+				observeMembers(seen, f, childPath)
+			}
 		}
 	case reflect.Map:
 		for _, k := range v.MapKeys() {
