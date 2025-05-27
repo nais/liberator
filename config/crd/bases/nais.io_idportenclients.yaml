@@ -63,6 +63,16 @@ spec:
                 maximum: 3600
                 minimum: 1
                 type: integer
+              applicationType:
+                default: web
+                description: ApplicationType specifies whether the client is a web
+                  client (web), single-page application in the end user's browser
+                  (browser), or mobile app (native).
+                enum:
+                - web
+                - browser
+                - native
+                type: string
               clientName:
                 description: |-
                   ClientName is the client name to be registered at DigDir.
