@@ -5,6 +5,7 @@ import (
 
 	v1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 )
 
 const (
@@ -803,4 +804,63 @@ type LoginEnforce struct {
 	Enabled bool `json:"enabled"`
 	// Absolute paths to ignore when enforcing login.
 	ExcludePaths []WonderwallIgnorePaths `json:"excludePaths,omitempty"`
+}
+
+type PostgresResources struct {
+	// Disk size for the Postgres cluster.
+	// +kubebuilder:validation:required
+	DiskSize resource.Quantity `json:"diskSize"`
+
+	// CPU resources for the Postgres cluster.
+	// +kubebuilder:validation:required
+	Cpu resource.Quantity `json:"cpu"`
+
+	// Memory resources for the Postgres cluster.
+	// +kubebuilder:validation:required
+	Memory resource.Quantity `json:"memory"`
+}
+
+type PostgresCluster struct {
+	// Name of the Postgres cluster.
+	// +kubebuilder:validation:Pattern=`^[a-z0-9][a-z0-9-]{1,62}$`
+	Name string `json:"name,omitempty"`
+
+	Resources PostgresResources `json:"resources"`
+
+	// Major version of Postgres to use.
+	// +kubebuilder:validation:required
+	// +kubebuilder:validation:Enum=17
+	MajorVersion string `json:"majorVersion"`
+
+	// High availability cluster.
+	HighAvailability bool `json:"highAvailability,omitempty"`
+
+	// Allow deletion of the Postgres cluster when the application is deleted.
+	AllowDeletion bool `json:"allowDeletion,omitempty"`
+}
+
+type PostgresExtension struct {
+	// Name of the Postgres extension to enable.
+	// +kubebuilder:validation:required
+	Name string `json:"name"`
+}
+
+type PostgresDatabase struct {
+	// Collation for the Postgres database.
+	// +kubebuilder:validation:Enum=nb_NO;en_US
+	Collation string `json:"collation,omitempty"`
+
+	// Extensions to enable in the Postgres database.
+	Extensions []PostgresExtension `json:"extensions,omitempty"`
+}
+
+type Postgres struct {
+	// Cluster configures the Postgres cluster
+	Cluster PostgresCluster `json:"cluster"`
+
+	// Database configures the Postgres database.
+	Database *PostgresDatabase `json:"database,omitempty"`
+
+	// MaintenanceWindow configures the maintenance window for the Postgres cluster.
+	MaintenanceWindow *Maintenance `json:"maintenanceWindow,omitempty"`
 }

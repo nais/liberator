@@ -171,3 +171,7 @@ func (in *CloudSqlInstance) Database() *CloudSqlDatabase {
 func (in *Naisjob) GetLogin() *Login {
 	return nil
 }
+
+func (in *Naisjob) GetPostgres() *Postgres {
+	return in.Spec.Postgres
+}

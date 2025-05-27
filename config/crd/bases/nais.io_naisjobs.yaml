@@ -1017,6 +1017,101 @@ spec:
                   If it is specified as 0, then the Job is effectively paused until it is increased.
                 format: int32
                 type: integer
+              postgres:
+                description: Postgres is used to provision and configure a Postgres
+                  database for your naisjob.
+                properties:
+                  cluster:
+                    description: Cluster configures the Postgres cluster
+                    properties:
+                      allowDeletion:
+                        description: Allow deletion of the Postgres cluster when the
+                          application is deleted.
+                        type: boolean
+                      highAvailability:
+                        description: High availability cluster.
+                        type: boolean
+                      majorVersion:
+                        description: Major version of Postgres to use.
+                        enum:
+                        - 17
+                        type: string
+                      name:
+                        description: Name of the Postgres cluster.
+                        pattern: ^[a-z0-9][a-z0-9-]{1,62}$
+                        type: string
+                      resources:
+                        properties:
+                          cpu:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            description: CPU resources for the Postgres cluster.
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          diskSize:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            description: Disk size for the Postgres cluster.
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                          memory:
+                            anyOf:
+                            - type: integer
+                            - type: string
+                            description: Memory resources for the Postgres cluster.
+                            pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
+                            x-kubernetes-int-or-string: true
+                        required:
+                        - cpu
+                        - diskSize
+                        - memory
+                        type: object
+                    required:
+                    - majorVersion
+                    - resources
+                    type: object
+                  database:
+                    description: Database configures the Postgres database.
+                    properties:
+                      collation:
+                        description: Collation for the Postgres database.
+                        enum:
+                        - nb_NO
+                        - en_US
+                        type: string
+                      extensions:
+                        description: Extensions to enable in the Postgres database.
+                        items:
+                          properties:
+                            name:
+                              description: Name of the Postgres extension to enable.
+                              type: string
+                          required:
+                          - name
+                          type: object
+                        type: array
+                    type: object
+                  maintenanceWindow:
+                    description: MaintenanceWindow configures the maintenance window
+                      for the Postgres cluster.
+                    properties:
+                      day:
+                        maximum: 7
+                        minimum: 1
+                        type: integer
+                      hour:
+                        maximum: 23
+                        minimum: 0
+                        type: integer
+                    required:
+                    - day
+                    - hour
+                    type: object
+                required:
+                - cluster
+                type: object
               preStopHook:
                 description: |-
                   PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.

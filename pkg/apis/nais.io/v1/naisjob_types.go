@@ -142,6 +142,10 @@ type NaisjobSpec struct {
 	// +nais:doc:Link="https://kubernetes.io/docs/concepts/workloads/controllers/job/#controlling-parallelism"
 	Parallelism *int32 `json:"parallelism,omitempty"`
 
+	// Postgres is used to provision and configure a Postgres database for your naisjob.
+	// +nais:doc:Hidden=true
+	Postgres *Postgres `json:"postgres,omitempty"`
+
 	// PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
 	// The handler is not called if the container crashes or exits by itself.
 	// The reason for termination is passed to the handler.

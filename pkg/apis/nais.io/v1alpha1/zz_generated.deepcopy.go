@@ -155,6 +155,11 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = new(v1.OpenSearch)
 		**out = **in
 	}
+	if in.Postgres != nil {
+		in, out := &in.Postgres, &out.Postgres
+		*out = new(v1.Postgres)
+		(*in).DeepCopyInto(*out)
+	}
 	if in.PreStopHook != nil {
 		in, out := &in.PreStopHook, &out.PreStopHook
 		*out = new(v1.PreStopHook)

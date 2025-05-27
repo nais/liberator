@@ -167,6 +167,10 @@ type ApplicationSpec struct {
 	// Note that ports under 1024 are unavailable.
 	Port int `json:"port,omitempty"`
 
+	// Postgres is used to provision and configure a Postgres database for your application.
+	// +nais:doc:Hidden=true
+	Postgres *nais_io_v1.Postgres `json:"postgres,omitempty"`
+
 	// PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
 	// The handler is not called if the container crashes or exits by itself.
 	// The reason for termination is passed to the handler.
