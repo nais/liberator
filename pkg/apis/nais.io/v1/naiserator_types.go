@@ -830,7 +830,7 @@ type PostgresCluster struct {
 
 	// Major version of Postgres to use.
 	// +kubebuilder:validation:required
-	// +kubebuilder:validation:Enum=17;16
+	// +kubebuilder:validation:Enum="17";"16"
 	MajorVersion string `json:"majorVersion"`
 
 	// High availability cluster.
