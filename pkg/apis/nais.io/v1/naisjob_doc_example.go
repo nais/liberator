@@ -1,6 +1,7 @@
 package nais_io_v1
 
 import (
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/ptr"
 )
@@ -329,6 +330,31 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				Access:   "readwrite",
 			},
 			Parallelism: int32p(1),
+			Postgres: &Postgres{
+				Cluster: PostgresCluster{
+					Name: "my-postgres-cluster",
+					Resources: PostgresResources{
+						DiskSize: resource.MustParse("100Mi"),
+						Cpu:      resource.MustParse("100m"),
+						Memory:   resource.MustParse("1Gi"),
+					},
+					MajorVersion:     "17",
+					HighAvailability: true,
+					AllowDeletion:    true,
+				},
+				Database: &PostgresDatabase{
+					Collation: "nb_NO",
+					Extensions: []PostgresExtension{
+						{
+							Name: "postgis",
+						},
+					},
+				},
+				MaintenanceWindow: &Maintenance{
+					Day:  3,
+					Hour: ptr.To(3),
+				},
+			},
 			PreStopHook: &PreStopHook{
 				Exec: &ExecAction{
 					Command: []string{"./my", "--shell", "script"},
