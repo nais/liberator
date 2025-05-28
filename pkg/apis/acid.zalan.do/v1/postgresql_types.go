@@ -1,16 +1,15 @@
-package v1
+package acid_zalan_do_v1
 
 import (
 	"time"
 
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
-// +genclient
-
 // Postgresql defines PostgreSQL Custom Resource Definition Object.
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
 type Postgresql struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -60,7 +59,7 @@ type PostgresSpec struct {
 }
 
 // PostgresqlList defines a list of PostgreSQL clusters.
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+// +kubebuilder:object:root=true
 type PostgresqlList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata"`
@@ -199,4 +198,13 @@ type ConnectionPooler struct {
 	MaxDBConnections  *int32 `json:"maxDBConnections,omitempty"`
 
 	*Resources `json:"resources,omitempty"`
+}
+
+func init() {
+	SchemeBuilder.SchemeBuilder.Register(func(scheme *runtime.Scheme) error {
+		scheme.AddKnownTypeWithName(GroupVersion.WithKind("postgresql"), &Postgresql{})
+		scheme.AddKnownTypeWithName(GroupVersion.WithKind("postgresqlList"), &PostgresqlList{})
+		metav1.AddToGroupVersion(scheme, GroupVersion)
+		return nil
+	})
 }
