@@ -70,7 +70,10 @@ type ApplicationSpec struct {
 
 	// Override command when starting Docker image.
 	Command []string `json:"command,omitempty"`
+
 	// Custom environment variables injected into your container.
+	// It is possible to use [Kubernetes Dependent Environment Variables](https://kubernetes.io/docs/tasks/inject-data-application/define-interdependent-environment-variables/), which allows you to use the value of one environment variable in another.
+	// Environment variables set by the platform are defined before the application variables, and can be referenced/overwritten in the application variables.
 	// Specify either `value` or `valueFrom`, but not both.
 	Env nais_io_v1.EnvVars `json:"env,omitempty"`
 
