@@ -225,7 +225,9 @@ type NaisjobSpec struct {
 	// Inject on-premises web proxy configuration into the job container.
 	// Most Linux applications should auto-detect these settings from the `$HTTP_PROXY`, `$HTTPS_PROXY` and `$NO_PROXY` environment variables (and their lowercase counterparts).
 	// Java applications can start the JVM using parameters from the `$JAVA_PROXY_OPTIONS` environment variable.
+	// +nais:doc:Link="https://doc.nais.io/workloads/reference/webproxy/"
 	// +nais:doc:Availability="on-premises"
+	// +nais:doc:Tenants="nav"
 	WebProxy bool `json:"webproxy,omitempty"`
 }
 
