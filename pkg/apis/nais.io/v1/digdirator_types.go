@@ -293,6 +293,10 @@ type IDPortenClientSpec struct {
 	// SSODisabled controls the SSO behavior for this client.
 	// +nais:doc:Link="https://docs.digdir.no/docs/idporten/oidc/oidc_func_nosso"
 	SSODisabled *bool `json:"ssoDisabled,omitempty"`
+	// ApplicationType specifies whether the client is a web client (web), single-page application in the end user's browser (browser), or mobile app (native).
+	// +kubebuilder:default=web
+	// +kubebuilder:validation:Enum=web;browser;native
+	ApplicationType string `json:"applicationType,omitempty"`
 }
 
 // +kubebuilder:validation:Pattern=`^(https:\/\/)|(http:\/\/localhost\:).+$`
