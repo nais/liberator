@@ -399,8 +399,8 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			SuccessfulJobsHistoryLimit:    2,
 			TerminationGracePeriodSeconds: int64p(60),
 			TimeZone:                      stringp("Europe/Oslo"),
-			TTLSecondsAfterFinished:       int32p(60),
 			TTL:                           "1h",
+			TTLSecondsAfterFinished:       int32p(60),
 			Observability: &Observability{
 				Tracing: &Tracing{
 					Enabled: true,

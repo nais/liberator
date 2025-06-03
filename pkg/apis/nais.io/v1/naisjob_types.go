@@ -203,12 +203,12 @@ type NaisjobSpec struct {
 	// Specify a valid [IANA timezone](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
 	TimeZone *string `json:"timeZone,omitempty"`
 
+	// After the specified TTL, the naisjob will be deleted.
+	TTL string `json:"ttl,omitempty"`
+
 	// Specify the number of seconds to wait before removing the Job after it has finished (either Completed or Failed).
 	// If the field is unset, this Job won't be cleaned up by the TTL controller after it finishes.
 	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty"`
-
-	// After the specified TTL, the naisjob will be deleted.
-	TTL string `json:"ttl,omitempty"`
 
 	// Configuration options related to application observability.
 	// +nais:doc:Link="https://doc.nais.io/observability/"
