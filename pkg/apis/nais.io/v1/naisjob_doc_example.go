@@ -400,6 +400,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			TerminationGracePeriodSeconds: int64p(60),
 			TimeZone:                      stringp("Europe/Oslo"),
 			TTLSecondsAfterFinished:       int32p(60),
+			TTL:                           "1h",
 			Observability: &Observability{
 				Tracing: &Tracing{
 					Enabled: true,

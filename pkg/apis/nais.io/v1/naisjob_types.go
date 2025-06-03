@@ -207,6 +207,9 @@ type NaisjobSpec struct {
 	// If the field is unset, this Job won't be cleaned up by the TTL controller after it finishes.
 	TTLSecondsAfterFinished *int32 `json:"ttlSecondsAfterFinished,omitempty"`
 
+	// After the specified TTL, the naisjob will be deleted.
+	TTL string `json:"ttl,omitempty"`
+
 	// Configuration options related to application observability.
 	// +nais:doc:Link="https://doc.nais.io/observability/"
 	Observability *Observability `json:"observability,omitempty"`
