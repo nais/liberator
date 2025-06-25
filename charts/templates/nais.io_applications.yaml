@@ -221,18 +221,9 @@ spec:
                         - nav.no
                         - trygdeetaten.no
                         type: string
-                        x-kubernetes-validations:
-                        - message: tenant is immutable once set; delete and recreate
-                            Application to change tenant
-                          rule: self == oldSelf
                     required:
                     - enabled
                     type: object
-                    x-kubernetes-validations:
-                    - message: tenant can only be set on creation; delete and recreate
-                        Application to set tenant
-                      rule: (has(oldSelf.tenant) && has(self.tenant)) || (!has(oldSelf.tenant)
-                        && !has(self.tenant))
                   sidecar:
                     description: |-
                       Sidecar configures a sidecar that intercepts every HTTP request, and performs the OIDC flow if necessary.

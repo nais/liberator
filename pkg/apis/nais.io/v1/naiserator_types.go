@@ -34,7 +34,6 @@ type AzureNaisJob struct {
 	Application *AzureApplication `json:"application"`
 }
 
-// +kubebuilder:validation:XValidation:rule="(has(oldSelf.tenant) && has(self.tenant)) || (!has(oldSelf.tenant) && !has(self.tenant))", message="tenant can only be set on creation; delete and recreate Application to set tenant"
 type AzureApplication struct {
 	// If enabled, provisions an Entra ID application.
 	Enabled bool `json:"enabled"`
@@ -50,7 +49,6 @@ type AzureApplication struct {
 	// +nais:doc:Tenants="nav"
 	// +kubebuilder:validation:Optional
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
-	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="tenant is immutable once set; delete and recreate Application to change tenant"
 	Tenant string         `json:"tenant,omitempty"`
 	Claims *AzureAdClaims `json:"claims,omitempty"`
 	// Deprecated, do not use.
