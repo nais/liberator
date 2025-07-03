@@ -820,19 +820,6 @@ spec:
               image:
                 description: Your application's Docker image location and tag.
                 type: string
-              influx:
-                description: An InfluxDB via Aiven. A typical use case for influxdb
-                  is to store metrics from your application and visualize them in
-                  Grafana.
-                properties:
-                  instance:
-                    description: |-
-                      Provisions an InfluxDB instance and configures your application to access it.
-                      Use the prefix: `influx-` + `team` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
-                    type: string
-                required:
-                - instance
-                type: object
               ingresses:
                 description: |-
                   List of URLs that will route HTTPS traffic to the application.

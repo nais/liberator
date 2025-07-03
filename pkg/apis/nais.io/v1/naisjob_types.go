@@ -107,11 +107,6 @@ type NaisjobSpec struct {
 	// Your Naisjob's Docker image location and tag.
 	Image string `json:"image,omitempty"`
 
-	// An Influxdb via Aiven. A typical use case is to store metrics from your application and visualize them in Grafana.
-	// See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository
-	// +nais:doc:Availability="GCP"
-	Influx *Influx `json:"influx,omitempty"`
-
 	// Enable Aiven Kafka for your Naisjob.
 	Kafka *Kafka `json:"kafka,omitempty"`
 
