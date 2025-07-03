@@ -139,10 +139,6 @@ func (in *Application) GetTokenX() *nais_io_v1.TokenX {
 	return in.Spec.TokenX
 }
 
-func (in *Application) GetInflux() *nais_io_v1.Influx {
-	return in.Spec.Influx
-}
-
 func (in *Application) GetKafka() *nais_io_v1.Kafka {
 	return in.Spec.Kafka
 }

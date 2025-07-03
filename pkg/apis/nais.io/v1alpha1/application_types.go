@@ -123,11 +123,6 @@ type ApplicationSpec struct {
 	// Check the available environments in the reference documentation.
 	Ingresses []nais_io_v1.Ingress `json:"ingresses,omitempty"`
 
-	// An InfluxDB via Aiven. A typical use case for influxdb is to store metrics from your application and visualize them in Grafana.
-	// +nais:doc:Availability="GCP"
-	// +nais:doc:Tenants="nav"
-	Influx *nais_io_v1.Influx `json:"influx,omitempty"`
-
 	// Set up Aiven Kafka for your application.
 	// +nais:doc:Link="https://doc.nais.io/persistence/kafka/"
 	Kafka *nais_io_v1.Kafka `json:"kafka,omitempty"`

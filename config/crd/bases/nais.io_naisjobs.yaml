@@ -704,19 +704,6 @@ spec:
               image:
                 description: Your Naisjob's Docker image location and tag.
                 type: string
-              influx:
-                description: |-
-                  An Influxdb via Aiven. A typical use case is to store metrics from your application and visualize them in Grafana.
-                  See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository
-                properties:
-                  instance:
-                    description: |-
-                      Provisions an InfluxDB instance and configures your application to access it.
-                      Use the prefix: `influx-` + `team` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
-                    type: string
-                required:
-                - instance
-                type: object
               kafka:
                 description: Enable Aiven Kafka for your Naisjob.
                 properties:

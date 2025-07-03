@@ -14,7 +14,6 @@ type AzureInterface interface {
 type AivenInterface interface {
 	GetKafka() *Kafka
 	GetValkey() []Valkey
-	GetInflux() *Influx
 	GetOpenSearch() *OpenSearch
 }
 
@@ -88,10 +87,6 @@ func (in *Naisjob) GetSecureLogs() *SecureLogs {
 
 func (in *Naisjob) GetMaskinporten() *Maskinporten {
 	return in.Spec.Maskinporten
-}
-
-func (in *Naisjob) GetInflux() *Influx {
-	return in.Spec.Influx
 }
 
 func (in *Naisjob) GetKafka() *Kafka {
