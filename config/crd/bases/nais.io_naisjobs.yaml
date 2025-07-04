@@ -230,18 +230,9 @@ spec:
                         - nav.no
                         - trygdeetaten.no
                         type: string
-                        x-kubernetes-validations:
-                        - message: tenant is immutable once set; delete and recreate
-                            Application to change tenant
-                          rule: self == oldSelf
                     required:
                     - enabled
                     type: object
-                    x-kubernetes-validations:
-                    - message: tenant can only be set on creation; delete and recreate
-                        Application to set tenant
-                      rule: (has(oldSelf.tenant) && has(self.tenant)) || (!has(oldSelf.tenant)
-                        && !has(self.tenant))
                 required:
                 - application
                 type: object
@@ -713,19 +704,6 @@ spec:
               image:
                 description: Your Naisjob's Docker image location and tag.
                 type: string
-              influx:
-                description: |-
-                  An Influxdb via Aiven. A typical use case is to store metrics from your application and visualize them in Grafana.
-                  See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository
-                properties:
-                  instance:
-                    description: |-
-                      Provisions an InfluxDB instance and configures your application to access it.
-                      Use the prefix: `influx-` + `team` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
-                    type: string
-                required:
-                - instance
-                type: object
               kafka:
                 description: Enable Aiven Kafka for your Naisjob.
                 properties:

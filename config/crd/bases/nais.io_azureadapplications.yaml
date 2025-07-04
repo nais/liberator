@@ -188,18 +188,9 @@ spec:
                   Can be omitted if only running a single instance or targeting the default tenant.
                   Immutable once set.
                 type: string
-                x-kubernetes-validations:
-                - message: tenant is immutable once set; delete and recreate AzureAdApplication
-                    to change tenant
-                  rule: self == oldSelf
             required:
             - secretName
             type: object
-            x-kubernetes-validations:
-            - message: tenant can only be set on creation; delete and recreate AzureAdApplication
-                to set tenant
-              rule: (has(oldSelf.tenant) && has(self.tenant)) || (!has(oldSelf.tenant)
-                && !has(self.tenant))
           status:
             description: AzureAdApplicationStatus defines the observed state of AzureAdApplication
             properties:

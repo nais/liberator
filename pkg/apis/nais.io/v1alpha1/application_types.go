@@ -123,11 +123,6 @@ type ApplicationSpec struct {
 	// Check the available environments in the reference documentation.
 	Ingresses []nais_io_v1.Ingress `json:"ingresses,omitempty"`
 
-	// An InfluxDB via Aiven. A typical use case for influxdb is to store metrics from your application and visualize them in Grafana.
-	// +nais:doc:Availability="GCP"
-	// +nais:doc:Tenants="nav"
-	Influx *nais_io_v1.Influx `json:"influx,omitempty"`
-
 	// Set up Aiven Kafka for your application.
 	// +nais:doc:Link="https://doc.nais.io/persistence/kafka/"
 	Kafka *nais_io_v1.Kafka `json:"kafka,omitempty"`
@@ -171,7 +166,7 @@ type ApplicationSpec struct {
 	Port int `json:"port,omitempty"`
 
 	// Postgres is used to provision and configure a Postgres database for your application.
-	// +nais:doc:Hidden=true
+	// +nais:doc:Experimental=true
 	Postgres *nais_io_v1.Postgres `json:"postgres,omitempty"`
 
 	// PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.

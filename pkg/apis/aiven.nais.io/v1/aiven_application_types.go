@@ -63,11 +63,6 @@ type ValkeySpec struct {
 	SecretName string `json:"secretName,omitempty"`
 }
 
-type InfluxDBSpec struct {
-	// Name of the InfluxDB instance (`influx-<team>`)
-	Instance string `json:"instance,omitempty"`
-}
-
 type AivenApplicationSpec struct {
 	// SecretName is the name of the secret containing Aiven credentials
 	SecretName string `json:"secretName"`
@@ -84,8 +79,6 @@ type AivenApplicationSpec struct {
 	OpenSearch *OpenSearchSpec `json:"openSearch,omitempty"`
 	// Valkey is a section configuring the Valkey credentials to provision
 	Valkey []*ValkeySpec `json:"valkey,omitempty"`
-	// InfluxDB is a section configuring the InfluxDB credentials to provision
-	InfluxDB *InfluxDBSpec `json:"influxDB,omitempty"`
 }
 
 type KafkaSpec struct {

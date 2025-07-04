@@ -107,11 +107,6 @@ type NaisjobSpec struct {
 	// Your Naisjob's Docker image location and tag.
 	Image string `json:"image,omitempty"`
 
-	// An Influxdb via Aiven. A typical use case is to store metrics from your application and visualize them in Grafana.
-	// See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository
-	// +nais:doc:Availability="GCP"
-	Influx *Influx `json:"influx,omitempty"`
-
 	// Enable Aiven Kafka for your Naisjob.
 	Kafka *Kafka `json:"kafka,omitempty"`
 
@@ -145,7 +140,7 @@ type NaisjobSpec struct {
 	Parallelism *int32 `json:"parallelism,omitempty"`
 
 	// Postgres is used to provision and configure a Postgres database for your naisjob.
-	// +nais:doc:Hidden=true
+	// +nais:doc:Experimental=true
 	Postgres *Postgres `json:"postgres,omitempty"`
 
 	// PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
