@@ -529,7 +529,7 @@ type CloudSqlDatabase struct {
 	// +kubebuilder:validation:Required
 	Name string `json:"name"`
 	// Prefix to add to environment variables made available for database connection.
-	// If switching to `EnvVarPrefix` you need to [reset database credentials](https://doc.nais.io/persistence/postgres/#reset-database-credentials).
+	// If switching to `envVarPrefix` you need to [reset database credentials](https://doc.nais.io/persistence/postgres/#reset-database-credentials).
 	EnvVarPrefix string `json:"envVarPrefix,omitempty"`
 	// Add extra users for database access. These users need to be manually given access to database tables.
 	Users []CloudSqlDatabaseUser `json:"users,omitempty"`
