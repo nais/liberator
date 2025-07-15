@@ -8,7 +8,7 @@ require (
 	github.com/aiven/aiven-go-client/v2 v2.34.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-logr/logr v1.4.3
-	github.com/go-viper/mapstructure/v2 v2.3.0
+	github.com/go-viper/mapstructure/v2 v2.4.0
 	github.com/google/uuid v1.6.0
 	github.com/imdario/mergo v0.3.16
 	github.com/mitchellh/hashstructure v1.1.0
