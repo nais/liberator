@@ -13,7 +13,7 @@ require (
 	github.com/imdario/mergo v0.3.16
 	github.com/mitchellh/hashstructure v1.1.0
 	github.com/sirupsen/logrus v1.9.3
-	github.com/spf13/pflag v1.0.6
+	github.com/spf13/pflag v1.0.7
 	github.com/spf13/viper v1.20.1
 	github.com/stretchr/testify v1.10.0
 	github.com/vektra/mockery/v2 v2.53.4
