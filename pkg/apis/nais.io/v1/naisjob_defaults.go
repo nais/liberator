@@ -48,7 +48,6 @@ func getNaisjobDefaults() *Naisjob {
 			},
 			Resources: &ResourceRequirements{
 				Limits: &ResourceSpec{
-					Cpu:    "500m",
 					Memory: "512Mi",
 				},
 				Requests: &ResourceSpec{
