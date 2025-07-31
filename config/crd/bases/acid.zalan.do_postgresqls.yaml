@@ -4005,6 +4005,15 @@ spec:
                       type: object
                   type: object
                 type: array
+              spiloFSGroup:
+                format: int64
+                type: integer
+              spiloRunAsGroup:
+                format: int64
+                type: integer
+              spiloRunAsUser:
+                format: int64
+                type: integer
               teamId:
                 type: string
               tls:

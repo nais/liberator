@@ -56,6 +56,9 @@ type PostgresSpec struct {
 	TLS                    *TLSDescription             `json:"tls,omitempty"`
 	AdditionalVolumes      []AdditionalVolume          `json:"additionalVolumes,omitempty"`
 	Env                    []v1.EnvVar                 `json:"env,omitempty"`
+	SpiloRunAsUser         *int64                      `json:"spiloRunAsUser,omitempty"`
+	SpiloRunAsGroup        *int64                      `json:"spiloRunAsGroup,omitempty"`
+	SpiloFSGroup           *int64                      `json:"spiloFSGroup,omitempty"`
 }
 
 // PostgresqlList defines a list of PostgreSQL clusters.
