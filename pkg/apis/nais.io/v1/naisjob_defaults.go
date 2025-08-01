@@ -16,16 +16,16 @@ const (
 )
 
 // ApplyDefaults sets default values where they are missing from an Application spec.
-func (job *Naisjob) ApplyDefaults() error {
-	noBackoffLimit := job.Spec.BackoffLimit != nil && *job.Spec.BackoffLimit == 0
+func (in *Naisjob) ApplyDefaults() error {
+	noBackoffLimit := in.Spec.BackoffLimit != nil && *in.Spec.BackoffLimit == 0
 
-	err := mergo.Merge(job, getNaisjobDefaults())
+	err := mergo.Merge(in, getNaisjobDefaults())
 	if err != nil {
 		return err
 	}
 
 	if noBackoffLimit {
-		job.Spec.BackoffLimit = ptr.To(int32(0))
+		in.Spec.BackoffLimit = ptr.To(int32(0))
 	}
 
 	return nil
