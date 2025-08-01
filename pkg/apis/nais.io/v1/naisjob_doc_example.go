@@ -149,6 +149,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				"other-value",
 			},
 			Completions:       int32p(1),
+			CompletionMode:    ptr.To("Indexed"),
 			ConcurrencyPolicy: "Allow",
 			Env: []EnvVar{
 				{
