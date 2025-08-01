@@ -65,9 +65,11 @@ type NaisjobSpec struct {
 	// +nais:doc:Link="https://kubernetes.io/docs/concepts/workloads/controllers/job/#job-patterns"
 	Completions *int32 `json:"completions,omitempty"`
 
-	// Jobs with fixed completion count - that is, jobs that have non null .spec.completions - can have a completion mode.
-	// NonIndexed: the Job is considered complete when there have been .spec.completions successfully completed Pods.
-	// Indexed: the Pods of a Job get an associated completion index from 0 to .spec.completions-1.
+	// Jobs with fixed completion count - that is, jobs that have non null `.spec.completions` - can have a completion mode.
+	//
+	// NonIndexed: the Job is considered complete when there have been `.spec.completions` successfully completed Pods.
+	//
+	// Indexed: the Pods of a Job get an associated completion index from 0 to `.spec.completions-1`.
 	// The Job is considered complete when there is one successfully completed Pod for each index.
 	// +kubebuilder:validation:Enum=NonIndexed;Indexed
 	// +nais:doc:Default="NonIndexed"
