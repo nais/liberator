@@ -1831,6 +1831,11 @@ func (in *NaisjobSpec) DeepCopyInto(out *NaisjobSpec) {
 		*out = new(int32)
 		**out = **in
 	}
+	if in.CompletionMode != nil {
+		in, out := &in.CompletionMode, &out.CompletionMode
+		*out = new(string)
+		**out = **in
+	}
 	if in.Env != nil {
 		in, out := &in.Env, &out.Env
 		*out = make(EnvVars, len(*in))
