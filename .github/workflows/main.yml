@@ -10,7 +10,7 @@ jobs:
     name: Run tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-go@v5
         with:
           go-version: "1.23"
@@ -26,7 +26,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           path: liberator
       - uses: navikt/github-app-token-generator@v1
@@ -35,7 +35,7 @@ jobs:
           private-key: ${{ secrets.NAIS_APP_PRIVATE_KEY }}
           app-id: ${{ secrets.NAIS_APP_ID }}
           repo: nais/doc
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           repository: nais/doc
           token: ${{ steps.get-token.outputs.token }}
@@ -74,7 +74,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-go@v5
         with:
           go-version: "1.23"
@@ -106,7 +106,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - uses: azure/setup-helm@v4
         with:
           version: "v3.12.2"
