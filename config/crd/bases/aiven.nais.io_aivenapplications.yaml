@@ -20,13 +20,21 @@ spec:
     - jsonPath: .spec.secretName
       name: Name of secret
       type: string
+    - jsonPath: .spec.protected
+      name: Protected
+      priority: 10
+      type: bool
+    - jsonPath: .spec.expiresAt
+      name: Expires
+      priority: 10
+      type: date
     - jsonPath: .status.synchronizationState
       name: State
-      priority: 10
+      priority: 20
       type: string
     - jsonPath: .status.synchronizationTime
       name: Synced
-      priority: 20
+      priority: 30
       type: date
     - jsonPath: .metadata.creationTimestamp
       name: Age
