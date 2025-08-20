@@ -395,6 +395,10 @@ func ExampleApplicationForDocumentation() *Application {
 					MajorVersion:     "17",
 					HighAvailability: true,
 					AllowDeletion:    true,
+					Audit: &nais_io_v1.PostgresAudit{
+						Enabled:          true,
+						StatementClasses: []nais_io_v1.PostgresAuditStatementClass{"misc", "ddl", "function"},
+					},
 				},
 				Database: &nais_io_v1.PostgresDatabase{
 					Collation: "nb_NO",

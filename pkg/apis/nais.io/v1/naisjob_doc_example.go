@@ -339,6 +339,10 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					MajorVersion:     "17",
 					HighAvailability: true,
 					AllowDeletion:    true,
+					Audit: &PostgresAudit{
+						Enabled:          true,
+						StatementClasses: []PostgresAuditStatementClass{"misc", "ddl", "function"},
+					},
 				},
 				Database: &PostgresDatabase{
 					Collation: "nb_NO",

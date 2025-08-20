@@ -1166,6 +1166,27 @@ spec:
                         description: Allow deletion of the Postgres cluster when the
                           application is deleted.
                         type: boolean
+                      audit:
+                        description: Configure audit logging for the Postgres cluster.
+                        properties:
+                          enabled:
+                            description: Enable audit logging for the Postgres cluster.
+                            type: boolean
+                          statementClasses:
+                            description: Statement classes to log.
+                            items:
+                              enum:
+                              - read
+                              - write
+                              - function
+                              - role
+                              - ddl
+                              - misc
+                              - misc_set
+                              - all
+                              type: string
+                            type: array
+                        type: object
                       highAvailability:
                         description: High availability cluster.
                         type: boolean

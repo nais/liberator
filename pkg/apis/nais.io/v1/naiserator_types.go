@@ -812,6 +812,18 @@ type PostgresResources struct {
 	Memory resource.Quantity `json:"memory"`
 }
 
+// +kubebuilder:validation:Enum=read;write;function;role;ddl;misc;misc_set;all
+type PostgresAuditStatementClass string
+
+type PostgresAudit struct {
+	// Enable audit logging for the Postgres cluster.
+	Enabled bool `json:"enabled,omitempty"`
+
+	// Statement classes to log.
+	// +nais:doc:Default="ddl,write"
+	StatementClasses []PostgresAuditStatementClass `json:"statementClasses,omitempty"`
+}
+
 type PostgresCluster struct {
 	// Name of the Postgres cluster.
 	// +kubebuilder:validation:Optional
@@ -830,6 +842,9 @@ type PostgresCluster struct {
 
 	// Allow deletion of the Postgres cluster when the application is deleted.
 	AllowDeletion bool `json:"allowDeletion,omitempty"`
+
+	// Configure audit logging for the Postgres cluster.
+	Audit *PostgresAudit `json:"audit,omitempty"`
 }
 
 type PostgresExtension struct {
