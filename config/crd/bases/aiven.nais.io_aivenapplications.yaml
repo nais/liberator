@@ -23,7 +23,7 @@ spec:
     - jsonPath: .spec.protected
       name: Protected
       priority: 10
-      type: bool
+      type: boolean
     - jsonPath: .spec.expiresAt
       name: Expires
       priority: 10

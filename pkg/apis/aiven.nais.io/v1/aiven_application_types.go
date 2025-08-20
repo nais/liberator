@@ -31,7 +31,7 @@ type AivenApplicationList struct {
 // +kubebuilder:resource:shortName={"aivenapp"}
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Name of secret",type=string,JSONPath=".spec.secretName"
-// +kubebuilder:printcolumn:name="Protected",type="bool",JSONPath=".spec.protected",priority=10
+// +kubebuilder:printcolumn:name="Protected",type="boolean",JSONPath=".spec.protected",priority=10
 // +kubebuilder:printcolumn:name="Expires",type="date",JSONPath=".spec.expiresAt",priority=10
 // +kubebuilder:printcolumn:name="State",type="string",JSONPath=".status.synchronizationState",priority=20
 // +kubebuilder:printcolumn:name="Synced",type="date",JSONPath=".status.synchronizationTime",priority=30
