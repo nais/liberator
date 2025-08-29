@@ -493,6 +493,11 @@ type LifecycleCondition struct {
 	Age int `json:"age,omitempty"`
 	// Condition is satisfied when the object is created before midnight on the specified date. These will be deleted.
 	CreatedBefore string `json:"createdBefore,omitempty"`
+	// Condition is satisfied when the specified number of days have passed since the date and time specified in an
+	// object's Custom-Time metadata field.
+	// +nais:doc:Link="https://cloud.google.com/storage/docs/lifecycle#dayssincecustomtime"
+	// +nais:doc:Link="https://cloud.google.com/storage/docs/metadata#custom-time"
+	DaysSinceCustomTime int `json:"daysSinceCustomTime,omitempty"`
 	// Condition is satisfied when the object has the specified number of newer versions.
 	// The older versions will be deleted.
 	NumNewerVersions int `json:"numNewerVersions,omitempty"`

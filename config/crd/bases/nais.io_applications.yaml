@@ -478,6 +478,11 @@ spec:
                                 is created before midnight on the specified date.
                                 These will be deleted.
                               type: string
+                            daysSinceCustomTime:
+                              description: |-
+                                Condition is satisfied when the specified number of days have passed since the date and time specified in an
+                                object's Custom-Time metadata field.
+                              type: integer
                             numNewerVersions:
                               description: |-
                                 Condition is satisfied when the object has the specified number of newer versions.
