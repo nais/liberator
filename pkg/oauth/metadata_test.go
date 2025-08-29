@@ -332,3 +332,210 @@ func TestMetadataOAuth_Validate(t *testing.T) {
 		})
 	}
 }
+
+func TestMetadataOpenID_WellKnownURL(t *testing.T) {
+	type test struct {
+		name     string
+		metadata oauth.MetadataOpenID
+		wantURL  string
+		wantErr  bool
+	}
+
+	tests := []test{
+		{
+			name: "valid issuer",
+			metadata: oauth.MetadataOpenID{
+				Issuer: "https://test.example.com",
+			},
+			wantURL: "https://test.example.com/.well-known/openid-configuration",
+		},
+		{
+			name: "valid issuer with trailing slash",
+			metadata: oauth.MetadataOpenID{
+				Issuer: "https://test.example.com/",
+			},
+			wantURL: "https://test.example.com/.well-known/openid-configuration",
+		},
+		{
+			name: "valid issuer with path",
+			metadata: oauth.MetadataOpenID{
+				Issuer: "https://test.example.com/some-issuer",
+			},
+			wantURL: "https://test.example.com/some-issuer/.well-known/openid-configuration",
+		},
+		{
+			name: "valid issuer with path and trailing slash",
+			metadata: oauth.MetadataOpenID{
+				Issuer: "https://test.example.com/some-issuer/",
+			},
+			wantURL: "https://test.example.com/some-issuer/.well-known/openid-configuration",
+		},
+		{
+			name: "invalid issuer, missing scheme",
+			metadata: oauth.MetadataOpenID{
+				Issuer: "test.example.com",
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid issuer, missing scheme with path",
+			metadata: oauth.MetadataOpenID{
+				Issuer: "test.example.com/some-issuer",
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid issuer, empty string",
+			metadata: oauth.MetadataOpenID{
+				Issuer: "",
+			},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotURL, err := tt.metadata.WellKnownURL()
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.wantURL, gotURL)
+			}
+		})
+	}
+}
+
+func TestMetadataOAuth_WellKnownURL(t *testing.T) {
+	type test struct {
+		name     string
+		metadata oauth.MetadataOAuth
+		wantURL  string
+		wantErr  bool
+	}
+
+	tests := []test{
+		{
+			name: "valid issuer",
+			metadata: oauth.MetadataOAuth{
+				Issuer: "https://test.example.com",
+			},
+			wantURL: "https://test.example.com/.well-known/oauth-authorization-server",
+		},
+		{
+			name: "valid issuer with trailing slash",
+			metadata: oauth.MetadataOAuth{
+				Issuer: "https://test.example.com/",
+			},
+			wantURL: "https://test.example.com/.well-known/oauth-authorization-server",
+		},
+		{
+			name: "valid issuer with path",
+			metadata: oauth.MetadataOAuth{
+				Issuer: "https://test.example.com/some-issuer",
+			},
+			wantURL: "https://test.example.com/some-issuer/.well-known/oauth-authorization-server",
+		},
+		{
+			name: "valid issuer with path and trailing slash",
+			metadata: oauth.MetadataOAuth{
+				Issuer: "https://test.example.com/some-issuer/",
+			},
+			wantURL: "https://test.example.com/some-issuer/.well-known/oauth-authorization-server",
+		},
+		{
+			name: "invalid issuer, missing scheme",
+			metadata: oauth.MetadataOAuth{
+				Issuer: "test.example.com",
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid issuer, missing scheme with path",
+			metadata: oauth.MetadataOAuth{
+				Issuer: "test.example.com/some-issuer",
+			},
+			wantErr: true,
+		},
+		{
+			name: "invalid issuer, empty string",
+			metadata: oauth.MetadataOAuth{
+				Issuer: "",
+			},
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotURL, err := tt.metadata.WellKnownURL()
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.wantURL, gotURL)
+			}
+		})
+	}
+}
+
+func TestMakeWellKnownURL(t *testing.T) {
+	type test struct {
+		name         string
+		issuer       string
+		wantURL      string
+		wantErr      bool
+		wellKnownURL string
+	}
+
+	tests := []test{
+		{
+			name:    "valid issuer",
+			issuer:  "https://test.example.com",
+			wantURL: "https://test.example.com/.well-known/openid-configuration",
+		},
+		{
+			name:    "valid issuer with trailing slash",
+			issuer:  "https://test.example.com/",
+			wantURL: "https://test.example.com/.well-known/openid-configuration",
+		},
+		{
+			name:    "valid issuer with path",
+			issuer:  "https://test.example.com/some-issuer",
+			wantURL: "https://test.example.com/some-issuer/.well-known/openid-configuration",
+		},
+		{
+			name:    "valid issuer with path and trailing slash",
+			issuer:  "https://test.example.com/some-issuer/",
+			wantURL: "https://test.example.com/some-issuer/.well-known/openid-configuration",
+		},
+		{
+			name:    "invalid issuer, missing scheme",
+			issuer:  "test.example.com",
+			wantErr: true,
+		},
+		{
+			name:    "invalid issuer, missing scheme with path",
+			issuer:  "test.example.com/some-issuer",
+			wantErr: true,
+		},
+		{
+			name:    "invalid issuer, empty string",
+			issuer:  "",
+			wantErr: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotURL, err := oauth.MakeWellKnownURL(tt.issuer, oauth.WellKnownOpenIDSuffix)
+			if tt.wantErr {
+				assert.Error(t, err)
+				assert.Empty(t, gotURL)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, tt.wantURL, gotURL)
+			}
+		})
+	}
+}

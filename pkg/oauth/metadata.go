@@ -92,6 +92,10 @@ func (m MetadataOpenID) Validate(wellKnownURL string) error {
 	return nil
 }
 
+func (m MetadataOpenID) WellKnownURL() (string, error) {
+	return MakeWellKnownURL(m.Issuer, WellKnownOpenIDSuffix)
+}
+
 type MetadataOAuth struct {
 	Issuer        string `json:"issuer"`
 	JwksURI       string `json:"jwks_uri"`
@@ -110,6 +114,10 @@ func (m MetadataOAuth) Validate(wellKnownURL string) error {
 	}
 
 	return nil
+}
+
+func (m MetadataOAuth) WellKnownURL() (string, error) {
+	return MakeWellKnownURL(m.Issuer, WellKnownOAuthSuffix)
 }
 
 type metadataFetcher struct {
@@ -153,21 +161,32 @@ func validateIssuer(issuer string, suffix WellKnownSuffix, wellKnownURL string) 
 	if wellKnownURL == "" {
 		return fmt.Errorf("well-known URL is empty")
 	}
-	if issuer == "" {
-		return fmt.Errorf("issuer is empty")
-	}
 
-	issuerUrl, err := url.Parse(issuer)
+	expected, err := MakeWellKnownURL(issuer, suffix)
 	if err != nil {
-		return fmt.Errorf("issuer is not a valid URL: %w", err)
+		return err
 	}
 
-	issuerUrl.Path = path.Join(issuerUrl.Path, string(suffix))
-	expectedWellKnownURL := issuerUrl.String()
-
-	if wellKnownURL != expectedWellKnownURL {
-		return fmt.Errorf("well-known URL does not match expected URL derived from issuer: expected '%s', got '%s'", expectedWellKnownURL, wellKnownURL)
+	if wellKnownURL != expected {
+		return fmt.Errorf("well-known URL does not match expected URL derived from issuer: expected '%s', got '%s'", expected, wellKnownURL)
 	}
 
 	return nil
+}
+
+// MakeWellKnownURL constructs the well-known URL by appending the given suffix to the issuer URL.
+func MakeWellKnownURL(issuerURL string, suffix WellKnownSuffix) (string, error) {
+	if issuerURL == "" {
+		return "", fmt.Errorf("issuer is empty")
+	}
+	u, err := url.Parse(issuerURL)
+	if err != nil {
+		return "", fmt.Errorf("issuer is not a valid URL: %w", err)
+	}
+	if u.Scheme == "" {
+		return "", fmt.Errorf("issuer URL does not contain a scheme")
+	}
+
+	u.Path = path.Join(u.Path, suffix)
+	return u.String(), nil
 }
