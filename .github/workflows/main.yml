@@ -79,7 +79,7 @@ jobs:
         with:
           go-version: "1.23"
       - id: 'auth'
-        uses: 'google-github-actions/auth@v2'
+        uses: 'google-github-actions/auth@v3'
         with:
           credentials_json: ${{ secrets.NAIS_JSON_SCHEMA_BUCKET_SA }}
       - name: 'Set up Cloud SDK'
@@ -137,7 +137,7 @@ jobs:
       - id: "auth"
         if: ${{ github.actor != 'dependabot[bot]' }}
         name: "Authenticate to Google Cloud"
-        uses: "google-github-actions/auth@v2"
+        uses: "google-github-actions/auth@v3"
         with:
           workload_identity_provider: ${{ secrets.NAIS_IO_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: "gh-liberator@nais-io.iam.gserviceaccount.com"
