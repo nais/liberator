@@ -1057,7 +1057,7 @@ spec:
                         type: string
                       name:
                         description: Name of the Postgres cluster.
-                        pattern: ^[a-z0-9][a-z0-9-]{1,62}$
+                        pattern: ^[a-z0-9][a-z0-9-]{1,55}$
                         type: string
                       resources:
                         properties:

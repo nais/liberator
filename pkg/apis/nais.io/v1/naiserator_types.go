@@ -831,7 +831,7 @@ type PostgresAudit struct {
 type PostgresCluster struct {
 	// Name of the Postgres cluster.
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`^[a-z0-9][a-z0-9-]{1,62}$`
+	// +kubebuilder:validation:Pattern=`^[a-z0-9][a-z0-9-]{1,55}$`
 	Name string `json:"name,omitempty"`
 
 	Resources PostgresResources `json:"resources"`
