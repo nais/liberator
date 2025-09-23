@@ -51,7 +51,7 @@ type OpenSearchSpec struct {
 	// +nais:doc:Default="read"
 	Access string `json:"access,omitempty"`
 	// SecretName is the name of the secret containing Aiven credentials for the OpensSearch serviceuser
-	SecretName string `json:"secretName,omitempty"`
+	SecretName string `json:"secretName"`
 }
 
 type ValkeySpec struct {
@@ -62,12 +62,12 @@ type ValkeySpec struct {
 	// +nais:doc:Default="read"
 	Access string `json:"access,omitempty"`
 	// SecretName is the name of the secret containing Aiven credentials for the Valkey serviceuser
-	SecretName string `json:"secretName,omitempty"`
+	SecretName string `json:"secretName"`
 }
 
 type AivenApplicationSpec struct {
 	// SecretName is the name of the secret containing Aiven credentials
-	SecretName string `json:"secretName"`
+	SecretName string `json:"secretName,omitempty"`
 	// A Protected secret will not be deleted by the janitor even when not in use
 	Protected bool `json:"protected,omitempty"`
 	// A timestamp that indicates time-to-expire-date for personal secrets.
@@ -87,7 +87,7 @@ type KafkaSpec struct {
 	// Pool is the Kafka pool (aka cluster) on Aiven this application uses
 	Pool string `json:"pool"`
 	// SecretName is the name of the secret for the Kafka pool
-	SecretName string `json:"secretName,omitempty"`
+	SecretName string `json:"secretName"`
 }
 
 type AivenApplicationConditionType string
