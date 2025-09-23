@@ -83,6 +83,7 @@ spec:
                     type: string
                 required:
                 - pool
+                - secretName
                 type: object
               openSearch:
                 description: OpenSearch is a section configuring the OpenSearch credentials
@@ -104,6 +105,8 @@ spec:
                     description: SecretName is the name of the secret containing Aiven
                       credentials for the OpensSearch serviceuser
                     type: string
+                required:
+                - secretName
                 type: object
               protected:
                 description: A Protected secret will not be deleted by the janitor
@@ -134,10 +137,10 @@ spec:
                       description: SecretName is the name of the secret containing
                         Aiven credentials for the Valkey serviceuser
                       type: string
+                  required:
+                  - secretName
                   type: object
                 type: array
-            required:
-            - secretName
             type: object
           status:
             properties:
