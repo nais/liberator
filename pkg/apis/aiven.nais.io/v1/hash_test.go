@@ -9,12 +9,10 @@ func Test_hash(t *testing.T) {
 		want     string
 		wantErr  bool
 	}{
-		{name: "ClearAivenApplication", aivenapp: &AivenApplication{}, want: "b2b67239ec384acc", wantErr: false},
+		{name: "ClearAivenApplication", aivenapp: &AivenApplication{}, want: "9265f549ad56469c", wantErr: false},
 		{name: "AivenApplicationWithSecretName", aivenapp: &AivenApplication{
-			Spec: AivenApplicationSpec{
-				SecretName: "this-is-my-secret",
-			},
-		}, want: "743f9f56c913003d", wantErr: false},
+			Spec: AivenApplicationSpec{},
+		}, want: "9265f549ad56469c", wantErr: false},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

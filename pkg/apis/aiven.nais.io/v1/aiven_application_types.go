@@ -43,8 +43,14 @@ type AivenApplication struct {
 	Status            AivenApplicationStatus `json:"status,omitempty"`
 }
 
+type KafkaSpec struct {
+	// Pool is the Kafka pool (aka cluster) on Aiven this application uses
+	Pool string `json:"pool"`
+	// SecretName is the name of the secret for the Kafka pool
+	SecretName string `json:"secretName,omitempty"`
+}
+
 type OpenSearchSpec struct {
-	// Use the `instance_name` that you specified in the [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
 	Instance string `json:"instance,omitempty"`
 	// Access level for opensearch user
 	// +kubebuilder:validation:Enum=read;write;readwrite;admin
@@ -67,7 +73,7 @@ type ValkeySpec struct {
 
 type AivenApplicationSpec struct {
 	// SecretName is the name of the secret containing Aiven credentials
-	SecretName string `json:"secretName"`
+	SecretName string `json:"secretName,omitempty"`
 	// A Protected secret will not be deleted by the janitor even when not in use
 	Protected bool `json:"protected,omitempty"`
 	// A timestamp that indicates time-to-expire-date for personal secrets.
@@ -81,13 +87,6 @@ type AivenApplicationSpec struct {
 	OpenSearch *OpenSearchSpec `json:"openSearch,omitempty"`
 	// Valkey is a section configuring the Valkey credentials to provision
 	Valkey []*ValkeySpec `json:"valkey,omitempty"`
-}
-
-type KafkaSpec struct {
-	// Pool is the Kafka pool (aka cluster) on Aiven this application uses
-	Pool string `json:"pool"`
-	// SecretName is the name of the secret for the Kafka pool
-	SecretName string `json:"secretName,omitempty"`
 }
 
 type AivenApplicationConditionType string
