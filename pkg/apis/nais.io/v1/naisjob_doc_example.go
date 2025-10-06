@@ -226,7 +226,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				},
 				SqlInstances: []CloudSqlInstance{
 					{
-						Type:                        "POSTGRES_17",
+						Type:                        "POSTGRES_18",
 						Name:                        "myinstance",
 						Tier:                        "db-f1-micro",
 						DiskType:                    "SSD",
