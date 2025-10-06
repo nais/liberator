@@ -514,6 +514,7 @@ const (
 	CloudSqlInstanceTypePostgres15 CloudSqlInstanceType = "POSTGRES_15"
 	CloudSqlInstanceTypePostgres16 CloudSqlInstanceType = "POSTGRES_16"
 	CloudSqlInstanceTypePostgres17 CloudSqlInstanceType = "POSTGRES_17"
+	CloudSqlInstanceTypePostgres18 CloudSqlInstanceType = "POSTGRES_18"
 )
 
 type CloudSqlInstanceDiskType string
@@ -557,7 +558,7 @@ type CloudSqlFlag struct {
 
 type CloudSqlInstance struct {
 	// PostgreSQL version.
-	// +kubebuilder:validation:Enum=POSTGRES_12;POSTGRES_13;POSTGRES_14;POSTGRES_15;POSTGRES_16;POSTGRES_17
+	// +kubebuilder:validation:Enum=POSTGRES_12;POSTGRES_13;POSTGRES_14;POSTGRES_15;POSTGRES_16;POSTGRES_17;POSTGRES_18
 	// +kubebuilder:validation:Required
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/instance-settings"
 	Type CloudSqlInstanceType `json:"type"`
