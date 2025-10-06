@@ -214,10 +214,11 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 						CascadingDelete:     true,
 						RetentionPeriodDays: intp(30),
 						LifecycleCondition: &LifecycleCondition{
-							Age:              10,
-							CreatedBefore:    "2020-01-01",
-							NumNewerVersions: 2,
-							WithState:        "ARCHIVED",
+							Age:                 10,
+							CreatedBefore:       "2020-01-01",
+							DaysSinceCustomTime: 5,
+							NumNewerVersions:    2,
+							WithState:           "ARCHIVED",
 						},
 						UniformBucketLevelAccess: true,
 						PublicAccessPrevention:   true,
@@ -225,7 +226,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				},
 				SqlInstances: []CloudSqlInstance{
 					{
-						Type:                        "POSTGRES_17",
+						Type:                        "POSTGRES_18",
 						Name:                        "myinstance",
 						Tier:                        "db-f1-micro",
 						DiskType:                    "SSD",
@@ -339,6 +340,10 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					MajorVersion:     "17",
 					HighAvailability: true,
 					AllowDeletion:    true,
+					Audit: &PostgresAudit{
+						Enabled:          true,
+						StatementClasses: []PostgresAuditStatementClass{"misc", "ddl", "function"},
+					},
 				},
 				Database: &PostgresDatabase{
 					Collation: "nb_NO",

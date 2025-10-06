@@ -231,10 +231,11 @@ func ExampleApplicationForDocumentation() *Application {
 						CascadingDelete:     true,
 						RetentionPeriodDays: ptr.To(30),
 						LifecycleCondition: &nais_io_v1.LifecycleCondition{
-							Age:              10,
-							CreatedBefore:    "2020-01-01",
-							NumNewerVersions: 2,
-							WithState:        "ARCHIVED",
+							Age:                 10,
+							CreatedBefore:       "2020-01-01",
+							DaysSinceCustomTime: 5,
+							NumNewerVersions:    2,
+							WithState:           "ARCHIVED",
 						},
 						UniformBucketLevelAccess: true,
 						PublicAccessPrevention:   true,
@@ -242,7 +243,7 @@ func ExampleApplicationForDocumentation() *Application {
 				},
 				SqlInstances: []nais_io_v1.CloudSqlInstance{
 					{
-						Type:                        "POSTGRES_17",
+						Type:                        "POSTGRES_18",
 						Name:                        "myinstance",
 						Tier:                        "db-f1-micro",
 						DiskType:                    "SSD",
@@ -395,6 +396,10 @@ func ExampleApplicationForDocumentation() *Application {
 					MajorVersion:     "17",
 					HighAvailability: true,
 					AllowDeletion:    true,
+					Audit: &nais_io_v1.PostgresAudit{
+						Enabled:          true,
+						StatementClasses: []nais_io_v1.PostgresAuditStatementClass{"misc", "ddl", "function"},
+					},
 				},
 				Database: &nais_io_v1.PostgresDatabase{
 					Collation: "nb_NO",

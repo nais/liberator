@@ -453,6 +453,11 @@ spec:
                                 is created before midnight on the specified date.
                                 These will be deleted.
                               type: string
+                            daysSinceCustomTime:
+                              description: |-
+                                Condition is satisfied when the specified number of days have passed since the date and time specified in an
+                                object's Custom-Time metadata field.
+                              type: integer
                             numNewerVersions:
                               description: |-
                                 Condition is satisfied when the object has the specified number of newer versions.
@@ -705,6 +710,7 @@ spec:
                           - POSTGRES_15
                           - POSTGRES_16
                           - POSTGRES_17
+                          - POSTGRES_18
                           type: string
                       required:
                       - tier
@@ -1020,6 +1026,27 @@ spec:
                         description: Allow deletion of the Postgres cluster when the
                           application is deleted.
                         type: boolean
+                      audit:
+                        description: Configure audit logging for the Postgres cluster.
+                        properties:
+                          enabled:
+                            description: Enable audit logging for the Postgres cluster.
+                            type: boolean
+                          statementClasses:
+                            description: Statement classes to log.
+                            items:
+                              enum:
+                              - read
+                              - write
+                              - function
+                              - role
+                              - ddl
+                              - misc
+                              - misc_set
+                              - all
+                              type: string
+                            type: array
+                        type: object
                       highAvailability:
                         description: High availability cluster.
                         type: boolean
@@ -1031,7 +1058,7 @@ spec:
                         type: string
                       name:
                         description: Name of the Postgres cluster.
-                        pattern: ^[a-z0-9][a-z0-9-]{1,62}$
+                        pattern: ^[a-z0-9][a-z0-9-]{1,49}$
                         type: string
                       resources:
                         properties:

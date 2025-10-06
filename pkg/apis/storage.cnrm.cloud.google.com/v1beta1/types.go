@@ -82,8 +82,9 @@ type Action struct {
 }
 
 type Condition struct {
-	Age              int    `json:"age,omitempty"`
-	CreatedBefore    string `json:"createdBefore,omitempty"`
-	NumNewerVersions int    `json:"numNewerVersions,omitempty"`
-	WithState        string `json:"withState,omitempty"`
+	Age                 int    `json:"age,omitempty"`
+	CreatedBefore       string `json:"createdBefore,omitempty"`
+	DaysSinceCustomTime int    `json:"daysSinceCustomTime,omitempty"`
+	NumNewerVersions    int    `json:"numNewerVersions,omitempty"`
+	WithState           string `json:"withState,omitempty"`
 }

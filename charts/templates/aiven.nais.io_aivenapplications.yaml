@@ -20,13 +20,21 @@ spec:
     - jsonPath: .spec.secretName
       name: Name of secret
       type: string
+    - jsonPath: .spec.protected
+      name: Protected
+      priority: 10
+      type: boolean
+    - jsonPath: .spec.expiresAt
+      name: Expires
+      priority: 10
+      type: date
     - jsonPath: .status.synchronizationState
       name: State
-      priority: 10
+      priority: 20
       type: string
     - jsonPath: .status.synchronizationTime
       name: Synced
-      priority: 20
+      priority: 30
       type: date
     - jsonPath: .metadata.creationTimestamp
       name: Age
@@ -89,8 +97,6 @@ spec:
                     - admin
                     type: string
                   instance:
-                    description: Use the `instance_name` that you specified in the
-                      [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
                     type: string
                   secretName:
                     description: SecretName is the name of the secret containing Aiven
@@ -128,8 +134,6 @@ spec:
                       type: string
                   type: object
                 type: array
-            required:
-            - secretName
             type: object
           status:
             properties:

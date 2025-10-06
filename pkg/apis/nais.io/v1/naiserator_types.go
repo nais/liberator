@@ -493,6 +493,10 @@ type LifecycleCondition struct {
 	Age int `json:"age,omitempty"`
 	// Condition is satisfied when the object is created before midnight on the specified date. These will be deleted.
 	CreatedBefore string `json:"createdBefore,omitempty"`
+	// Condition is satisfied when the specified number of days have passed since the date and time specified in an
+	// object's Custom-Time metadata field.
+	// +nais:doc:Link="https://cloud.google.com/storage/docs/lifecycle#dayssincecustomtime";"https://cloud.google.com/storage/docs/metadata#custom-time"
+	DaysSinceCustomTime int `json:"daysSinceCustomTime,omitempty"`
 	// Condition is satisfied when the object has the specified number of newer versions.
 	// The older versions will be deleted.
 	NumNewerVersions int `json:"numNewerVersions,omitempty"`
@@ -510,6 +514,7 @@ const (
 	CloudSqlInstanceTypePostgres15 CloudSqlInstanceType = "POSTGRES_15"
 	CloudSqlInstanceTypePostgres16 CloudSqlInstanceType = "POSTGRES_16"
 	CloudSqlInstanceTypePostgres17 CloudSqlInstanceType = "POSTGRES_17"
+	CloudSqlInstanceTypePostgres18 CloudSqlInstanceType = "POSTGRES_18"
 )
 
 type CloudSqlInstanceDiskType string
@@ -553,7 +558,7 @@ type CloudSqlFlag struct {
 
 type CloudSqlInstance struct {
 	// PostgreSQL version.
-	// +kubebuilder:validation:Enum=POSTGRES_12;POSTGRES_13;POSTGRES_14;POSTGRES_15;POSTGRES_16;POSTGRES_17
+	// +kubebuilder:validation:Enum=POSTGRES_12;POSTGRES_13;POSTGRES_14;POSTGRES_15;POSTGRES_16;POSTGRES_17;POSTGRES_18
 	// +kubebuilder:validation:Required
 	// +nais:doc:Link="https://cloud.google.com/sql/docs/postgres/instance-settings"
 	Type CloudSqlInstanceType `json:"type"`
@@ -812,10 +817,22 @@ type PostgresResources struct {
 	Memory resource.Quantity `json:"memory"`
 }
 
+// +kubebuilder:validation:Enum=read;write;function;role;ddl;misc;misc_set;all
+type PostgresAuditStatementClass string
+
+type PostgresAudit struct {
+	// Enable audit logging for the Postgres cluster.
+	Enabled bool `json:"enabled,omitempty"`
+
+	// Statement classes to log.
+	// +nais:doc:Default="ddl,write"
+	StatementClasses []PostgresAuditStatementClass `json:"statementClasses,omitempty"`
+}
+
 type PostgresCluster struct {
 	// Name of the Postgres cluster.
 	// +kubebuilder:validation:Optional
-	// +kubebuilder:validation:Pattern=`^[a-z0-9][a-z0-9-]{1,62}$`
+	// +kubebuilder:validation:Pattern=`^[a-z0-9][a-z0-9-]{1,49}$`
 	Name string `json:"name,omitempty"`
 
 	Resources PostgresResources `json:"resources"`
@@ -830,6 +847,9 @@ type PostgresCluster struct {
 
 	// Allow deletion of the Postgres cluster when the application is deleted.
 	AllowDeletion bool `json:"allowDeletion,omitempty"`
+
+	// Configure audit logging for the Postgres cluster.
+	Audit *PostgresAudit `json:"audit,omitempty"`
 }
 
 type PostgresExtension struct {
