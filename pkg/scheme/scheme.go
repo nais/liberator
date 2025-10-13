@@ -7,6 +7,7 @@ import (
 	aiven_io_v1alpha1 "github.com/nais/liberator/pkg/apis/aiven.io/v1alpha1"
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	bigquery_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/bigquery.cnrm.cloud.google.com/v1beta1"
+	data_nais_io_v1 "github.com/nais/liberator/pkg/apis/data.nais.io/v1"
 	fdqnnetworkpolicies_networking_gke_io_v1alpha3 "github.com/nais/liberator/pkg/apis/fqdnnetworkpolicies.networking.gke.io/v1alpha3"
 	google_nais_io_v1 "github.com/nais/liberator/pkg/apis/google.nais.io/v1"
 	iam_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/iam.cnrm.cloud.google.com/v1beta1"
@@ -54,6 +55,7 @@ func AddAll(scheme *runtime.Scheme) (*runtime.Scheme, error) {
 		acid_zalan_do_v1.AddToScheme,
 		bigquery_cnrm_cloud_google_com_v1beta1.AddToScheme,
 		clientgoscheme.AddToScheme,
+		data_nais_io_v1.AddToScheme,
 		fdqnnetworkpolicies_networking_gke_io_v1alpha3.AddToScheme,
 		google_nais_io_v1.AddToScheme,
 		iam_cnrm_cloud_google_com_v1beta1.AddToScheme,
