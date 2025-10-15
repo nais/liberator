@@ -228,6 +228,9 @@ spec:
                 type: string
               deploymentRolloutStatus:
                 type: string
+              observedGeneration:
+                format: int64
+                type: integer
               rolloutCompleteTime:
                 format: int64
                 type: integer

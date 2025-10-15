@@ -90,6 +90,7 @@ type PostgresStatus struct {
 	DeploymentRolloutStatus string `json:"deploymentRolloutStatus,omitempty"`
 	SynchronizationState    string `json:"synchronizationState,omitempty"`
 	SynchronizationHash     string `json:"synchronizationHash,omitempty"`
+	ObservedGeneration      int64  `json:"observedGeneration,omitempty"`
 
 	// conditions represent the current state of the Postgres resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
