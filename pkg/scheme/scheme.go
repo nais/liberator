@@ -83,20 +83,12 @@ func TypeName(resource runtime.Object) string {
 }
 
 func Webhooks(mgr ctrl.Manager) error {
-	type webhook interface {
-		SetupWebhookWithManager(ctrl.Manager) error
-	}
-
-	webhooks := []webhook{
-		// List of types that implements one or more webhook interfaces
-		&nais_io_v1alpha1.Application{},
-	}
-
 	errors := []error{}
-	for _, wh := range webhooks {
-		if err := wh.SetupWebhookWithManager(mgr); err != nil {
-			errors = append(errors, err)
-		}
+	if err := nais_io_v1alpha1.SetupWebhookWithManager(mgr); err != nil {
+		errors = append(errors, err)
+	}
+	if err := nais_io_v1.SetupWebhookWithManager(mgr); err != nil {
+		errors = append(errors, err)
 	}
 
 	if len(errors) > 0 {
