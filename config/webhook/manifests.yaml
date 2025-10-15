@@ -23,3 +23,20 @@ webhooks:
           - UPDATE
         resources:
           - applications
+  - clientConfig:
+      service:
+        name: naiserator
+        namespace: nais
+        path: /validate-nais-io-v1-naisjobs
+    failurePolicy: Fail
+    name: validation.naisjobs.nais.io
+    rules:
+      - apiGroups:
+          - nais.io
+        apiVersions:
+          - v1
+        operations:
+          - CREATE
+          - UPDATE
+        resources:
+          - naisjobs
