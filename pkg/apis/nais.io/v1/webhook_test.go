@@ -153,7 +153,7 @@ func TestJobValidator_ValidateCreate(t *testing.T) {
 
 		warnings, err := validator.ValidateCreate(t.Context(), nj)
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "referenced OpenSearch instance 'nonexistent-opensearch' not found")
+		assert.Contains(t, err.Error(), "OpenSearch 'nonexistent-opensearch' does not exist")
 		assert.Empty(t, warnings)
 	})
 
@@ -211,7 +211,7 @@ func TestJobValidator_ValidateCreate(t *testing.T) {
 
 		warnings, err := validator.ValidateCreate(t.Context(), nj)
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "referenced Valkey instance 'nonexistent-valkey' not found")
+		assert.Contains(t, err.Error(), "Valkey 'nonexistent-valkey' does not exist")
 		assert.Empty(t, warnings)
 	})
 
@@ -368,7 +368,7 @@ func TestJobValidator_ValidateUpdate(t *testing.T) {
 
 		warnings, err := validator.ValidateUpdate(t.Context(), oldNj, newNj)
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "referenced Valkey instance 'nonexistent-valkey' not found")
+		assert.Contains(t, err.Error(), "Valkey 'nonexistent-valkey' does not exist")
 		assert.Empty(t, warnings)
 	})
 
@@ -391,7 +391,7 @@ func TestJobValidator_ValidateUpdate(t *testing.T) {
 
 		warnings, err := validator.ValidateUpdate(t.Context(), oldNj, newNj)
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "referenced OpenSearch instance 'nonexistent-opensearch' not found")
+		assert.Contains(t, err.Error(), "OpenSearch 'nonexistent-opensearch' does not exist")
 		assert.Empty(t, warnings)
 	})
 

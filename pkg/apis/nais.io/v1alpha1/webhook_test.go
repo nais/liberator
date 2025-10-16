@@ -148,7 +148,7 @@ func TestApplicationValidator_ValidateCreate(t *testing.T) {
 
 		warnings, err := validator.ValidateCreate(t.Context(), app)
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "referenced OpenSearch instance 'nonexistent-opensearch' not found")
+		assert.Contains(t, err.Error(), "OpenSearch 'nonexistent-opensearch' does not exist")
 		assert.Empty(t, warnings)
 	})
 
@@ -204,7 +204,7 @@ func TestApplicationValidator_ValidateCreate(t *testing.T) {
 
 		warnings, err := validator.ValidateCreate(t.Context(), app)
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "referenced Valkey instance 'nonexistent-valkey' not found")
+		assert.Contains(t, err.Error(), "Valkey 'nonexistent-valkey' does not exist")
 		assert.Empty(t, warnings)
 	})
 
@@ -383,7 +383,7 @@ func TestApplicationValidator_ValidateUpdate(t *testing.T) {
 
 		warnings, err := validator.ValidateUpdate(t.Context(), oldApp, newApp)
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "referenced Valkey instance 'nonexistent-valkey' not found")
+		assert.Contains(t, err.Error(), "Valkey 'nonexistent-valkey' does not exist")
 		assert.Empty(t, warnings)
 	})
 
@@ -405,7 +405,7 @@ func TestApplicationValidator_ValidateUpdate(t *testing.T) {
 
 		warnings, err := validator.ValidateUpdate(t.Context(), oldApp, newApp)
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "referenced OpenSearch instance 'nonexistent-opensearch' not found")
+		assert.Contains(t, err.Error(), "OpenSearch 'nonexistent-opensearch' does not exist")
 		assert.Empty(t, warnings)
 	})
 

@@ -21,6 +21,7 @@ import (
 
 var _ webhook.CustomValidator = &ApplicationValidator{}
 
+// +kubebuilder:object:generate=false
 type ApplicationValidator struct {
 	client.Client
 }
@@ -99,7 +100,7 @@ func (v *ApplicationValidator) checkAivenReferences(ctx context.Context, app *Ap
 		opensearch := &aiven_io_v1alpha1.OpenSearch{}
 		if err := v.Get(ctx, client.ObjectKey{Name: fullyQualifiedName, Namespace: app.Namespace}, opensearch); err != nil {
 			if apierrors.IsNotFound(err) {
-				return apierrors.NewBadRequest(fmt.Sprintf("referenced OpenSearch instance '%s' not found in namespace '%s'", app.Spec.OpenSearch.Instance, app.Namespace))
+				return apierrors.NewBadRequest(fmt.Sprintf("OpenSearch '%s' does not exist. Create the OpenSearch instance first.", app.Spec.OpenSearch.Instance))
 			}
 			return apierrors.NewInternalError(fmt.Errorf("could not validate OpenSearch reference: %w", err))
 		}
@@ -110,7 +111,7 @@ func (v *ApplicationValidator) checkAivenReferences(ctx context.Context, app *Ap
 		valkeyObj := &aiven_io_v1alpha1.Valkey{}
 		if err := v.Get(ctx, client.ObjectKey{Name: fullyQualifiedName, Namespace: app.Namespace}, valkeyObj); err != nil {
 			if apierrors.IsNotFound(err) {
-				return apierrors.NewBadRequest(fmt.Sprintf("referenced Valkey instance '%s' not found in namespace '%s'", valkey.Instance, app.Namespace))
+				return apierrors.NewBadRequest(fmt.Sprintf("Valkey '%s' does not exist. Create the Valkey instance first.", valkey.Instance))
 			}
 			return apierrors.NewInternalError(fmt.Errorf("could not validate Valkey reference: %w", err))
 		}
