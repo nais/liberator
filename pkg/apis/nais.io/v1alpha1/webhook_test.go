@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	aiven_io_v1alpha1 "github.com/nais/liberator/pkg/apis/aiven.io/v1alpha1"
+	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -103,7 +104,7 @@ func TestApplicationValidator_ValidateCreate(t *testing.T) {
 	t.Run("opensearch reference exists", func(t *testing.T) {
 		namespace := "test-ns"
 		instance := "my-opensearch"
-		fullyQualifiedName := aiven_io_v1alpha1.OpenSearchFullyQualifiedName(instance, namespace)
+		fullyQualifiedName := aiven_nais_io_v1.OpenSearchFullyQualifiedName(instance, namespace)
 
 		opensearch := &aiven_io_v1alpha1.OpenSearch{
 			ObjectMeta: metav1.ObjectMeta{
@@ -155,7 +156,7 @@ func TestApplicationValidator_ValidateCreate(t *testing.T) {
 	t.Run("valkey reference exists", func(t *testing.T) {
 		namespace := "test-ns"
 		instance := "my-valkey"
-		fullyQualifiedName := aiven_io_v1alpha1.ValkeyFullyQualifiedName(instance, namespace)
+		fullyQualifiedName := aiven_nais_io_v1.ValkeyFullyQualifiedName(instance, namespace)
 
 		valkey := &aiven_io_v1alpha1.Valkey{
 			ObjectMeta: metav1.ObjectMeta{
@@ -215,13 +216,13 @@ func TestApplicationValidator_ValidateCreate(t *testing.T) {
 
 		valkey1 := &aiven_io_v1alpha1.Valkey{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      aiven_io_v1alpha1.ValkeyFullyQualifiedName(instance1, namespace),
+				Name:      aiven_nais_io_v1.ValkeyFullyQualifiedName(instance1, namespace),
 				Namespace: namespace,
 			},
 		}
 		valkey2 := &aiven_io_v1alpha1.Valkey{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      aiven_io_v1alpha1.ValkeyFullyQualifiedName(instance2, namespace),
+				Name:      aiven_nais_io_v1.ValkeyFullyQualifiedName(instance2, namespace),
 				Namespace: namespace,
 			},
 		}
@@ -253,13 +254,13 @@ func TestApplicationValidator_ValidateCreate(t *testing.T) {
 
 		opensearch := &aiven_io_v1alpha1.OpenSearch{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      aiven_io_v1alpha1.OpenSearchFullyQualifiedName(osInstance, namespace),
+				Name:      aiven_nais_io_v1.OpenSearchFullyQualifiedName(osInstance, namespace),
 				Namespace: namespace,
 			},
 		}
 		valkey := &aiven_io_v1alpha1.Valkey{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      aiven_io_v1alpha1.ValkeyFullyQualifiedName(vkInstance, namespace),
+				Name:      aiven_nais_io_v1.ValkeyFullyQualifiedName(vkInstance, namespace),
 				Namespace: namespace,
 			},
 		}
@@ -336,7 +337,7 @@ func TestApplicationValidator_ValidateUpdate(t *testing.T) {
 	t.Run("update with aiven references", func(t *testing.T) {
 		namespace := "test-ns"
 		instance := "my-opensearch"
-		fullyQualifiedName := aiven_io_v1alpha1.OpenSearchFullyQualifiedName(instance, namespace)
+		fullyQualifiedName := aiven_nais_io_v1.OpenSearchFullyQualifiedName(instance, namespace)
 
 		opensearch := &aiven_io_v1alpha1.OpenSearch{
 			ObjectMeta: metav1.ObjectMeta{

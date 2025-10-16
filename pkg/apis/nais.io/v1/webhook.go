@@ -6,6 +6,7 @@ import (
 	"time"
 
 	aiven_io_v1alpha1 "github.com/nais/liberator/pkg/apis/aiven.io/v1alpha1"
+	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	"github.com/nais/liberator/pkg/webhookvalidator"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -96,7 +97,7 @@ func (v *JobValidator) ValidateDelete(ctx context.Context, obj runtime.Object) (
 
 func (v *JobValidator) checkAivenReferences(ctx context.Context, nj *Naisjob) error {
 	if nj.Spec.OpenSearch != nil && nj.Spec.OpenSearch.Instance != "" {
-		fullyQualifiedName := aiven_io_v1alpha1.OpenSearchFullyQualifiedName(nj.Spec.OpenSearch.Instance, nj.Namespace)
+		fullyQualifiedName := aiven_nais_io_v1.OpenSearchFullyQualifiedName(nj.Spec.OpenSearch.Instance, nj.Namespace)
 		opensearch := &aiven_io_v1alpha1.OpenSearch{}
 		if err := v.Get(ctx, client.ObjectKey{Name: fullyQualifiedName, Namespace: nj.Namespace}, opensearch); err != nil {
 			if apierrors.IsNotFound(err) {
@@ -107,7 +108,7 @@ func (v *JobValidator) checkAivenReferences(ctx context.Context, nj *Naisjob) er
 	}
 
 	for _, valkey := range nj.Spec.Valkey {
-		fullyQualifiedName := aiven_io_v1alpha1.ValkeyFullyQualifiedName(valkey.Instance, nj.Namespace)
+		fullyQualifiedName := aiven_nais_io_v1.ValkeyFullyQualifiedName(valkey.Instance, nj.Namespace)
 		valkeyObj := &aiven_io_v1alpha1.Valkey{}
 		if err := v.Get(ctx, client.ObjectKey{Name: fullyQualifiedName, Namespace: nj.Namespace}, valkeyObj); err != nil {
 			if apierrors.IsNotFound(err) {
