@@ -1,11 +1,10 @@
-package nais_io_v1alpha1
+package nais_io_v1
 
 import (
 	"testing"
 
 	aiven_io_v1alpha1 "github.com/nais/liberator/pkg/apis/aiven.io/v1alpha1"
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
-	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -26,76 +25,80 @@ func fakeKubeClient(objs ...client.Object) client.Client {
 	return fake.NewClientBuilder().WithScheme(scheme).WithObjects(objs...).Build()
 }
 
-func TestApplicationValidator_ValidateCreate(t *testing.T) {
-	t.Run("valid application without aiven references", func(t *testing.T) {
-		validator := &ApplicationValidator{Client: fakeKubeClient()}
-		app := &Application{
+func TestJobValidator_ValidateCreate(t *testing.T) {
+	t.Run("valid naisjob without aiven references", func(t *testing.T) {
+		validator := &JobValidator{Client: fakeKubeClient()}
+		nj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: "test-ns",
 			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
 			},
 		}
 
-		warnings, err := validator.ValidateCreate(t.Context(), app)
+		warnings, err := validator.ValidateCreate(t.Context(), nj)
 		assert.NoError(t, err)
 		assert.Empty(t, warnings)
 	})
 
-	t.Run("application name too long", func(t *testing.T) {
-		validator := &ApplicationValidator{Client: fakeKubeClient()}
-		app := &Application{
+	t.Run("naisjob name too long", func(t *testing.T) {
+		validator := &JobValidator{Client: fakeKubeClient()}
+		nj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      "this-is-a-very-long-name-that-exceeds-the-maximum-allowed-length-for-kubernetes-label-values-which-is-63-characters",
 				Namespace: "test-ns",
 			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
 			},
 		}
 
-		warnings, err := validator.ValidateCreate(t.Context(), app)
+		warnings, err := validator.ValidateCreate(t.Context(), nj)
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "name length must be no more than 63 characters")
 		assert.Empty(t, warnings)
 	})
 
 	t.Run("valid TTL duration", func(t *testing.T) {
-		validator := &ApplicationValidator{Client: fakeKubeClient()}
+		validator := &JobValidator{Client: fakeKubeClient()}
 		ttl := "12h"
-		app := &Application{
+		nj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: "test-ns",
 			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
-				TTL:   ttl,
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
+				TTL:      ttl,
 			},
 		}
 
-		warnings, err := validator.ValidateCreate(t.Context(), app)
+		warnings, err := validator.ValidateCreate(t.Context(), nj)
 		assert.NoError(t, err)
 		assert.Empty(t, warnings)
 	})
 
 	t.Run("invalid TTL duration", func(t *testing.T) {
-		validator := &ApplicationValidator{Client: fakeKubeClient()}
+		validator := &JobValidator{Client: fakeKubeClient()}
 		ttl := "invalid-duration"
-		app := &Application{
+		nj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: "test-ns",
 			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
-				TTL:   ttl,
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
+				TTL:      ttl,
 			},
 		}
 
-		warnings, err := validator.ValidateCreate(t.Context(), app)
+		warnings, err := validator.ValidateCreate(t.Context(), nj)
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "TTL is not a valid duration")
 		assert.Empty(t, warnings)
@@ -113,41 +116,43 @@ func TestApplicationValidator_ValidateCreate(t *testing.T) {
 			},
 		}
 
-		validator := &ApplicationValidator{Client: fakeKubeClient(opensearch)}
-		app := &Application{
+		validator := &JobValidator{Client: fakeKubeClient(opensearch)}
+		nj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: namespace,
 			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
-				OpenSearch: &nais_io_v1.OpenSearch{
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
+				OpenSearch: &OpenSearch{
 					Instance: instance,
 				},
 			},
 		}
 
-		warnings, err := validator.ValidateCreate(t.Context(), app)
+		warnings, err := validator.ValidateCreate(t.Context(), nj)
 		assert.NoError(t, err)
 		assert.Empty(t, warnings)
 	})
 
 	t.Run("opensearch reference not found", func(t *testing.T) {
-		validator := &ApplicationValidator{Client: fakeKubeClient()}
-		app := &Application{
+		validator := &JobValidator{Client: fakeKubeClient()}
+		nj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: "test-ns",
 			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
-				OpenSearch: &nais_io_v1.OpenSearch{
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
+				OpenSearch: &OpenSearch{
 					Instance: "nonexistent-opensearch",
 				},
 			},
 		}
 
-		warnings, err := validator.ValidateCreate(t.Context(), app)
+		warnings, err := validator.ValidateCreate(t.Context(), nj)
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "OpenSearch 'nonexistent-opensearch' does not exist")
 		assert.Empty(t, warnings)
@@ -165,15 +170,16 @@ func TestApplicationValidator_ValidateCreate(t *testing.T) {
 			},
 		}
 
-		validator := &ApplicationValidator{Client: fakeKubeClient(valkey)}
-		app := &Application{
+		validator := &JobValidator{Client: fakeKubeClient(valkey)}
+		nj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: namespace,
 			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
-				Valkey: []nais_io_v1.Valkey{
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
+				Valkey: []Valkey{
 					{
 						Instance: instance,
 					},
@@ -181,21 +187,22 @@ func TestApplicationValidator_ValidateCreate(t *testing.T) {
 			},
 		}
 
-		warnings, err := validator.ValidateCreate(t.Context(), app)
+		warnings, err := validator.ValidateCreate(t.Context(), nj)
 		assert.NoError(t, err)
 		assert.Empty(t, warnings)
 	})
 
 	t.Run("valkey reference not found", func(t *testing.T) {
-		validator := &ApplicationValidator{Client: fakeKubeClient()}
-		app := &Application{
+		validator := &JobValidator{Client: fakeKubeClient()}
+		nj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: "test-ns",
 			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
-				Valkey: []nais_io_v1.Valkey{
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
+				Valkey: []Valkey{
 					{
 						Instance: "nonexistent-valkey",
 					},
@@ -203,7 +210,7 @@ func TestApplicationValidator_ValidateCreate(t *testing.T) {
 			},
 		}
 
-		warnings, err := validator.ValidateCreate(t.Context(), app)
+		warnings, err := validator.ValidateCreate(t.Context(), nj)
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "Valkey 'nonexistent-valkey' does not exist")
 		assert.Empty(t, warnings)
@@ -227,22 +234,23 @@ func TestApplicationValidator_ValidateCreate(t *testing.T) {
 			},
 		}
 
-		validator := &ApplicationValidator{Client: fakeKubeClient(valkey1, valkey2)}
-		app := &Application{
+		validator := &JobValidator{Client: fakeKubeClient(valkey1, valkey2)}
+		nj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: namespace,
 			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
-				Valkey: []nais_io_v1.Valkey{
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
+				Valkey: []Valkey{
 					{Instance: instance1},
 					{Instance: instance2},
 				},
 			},
 		}
 
-		warnings, err := validator.ValidateCreate(t.Context(), app)
+		warnings, err := validator.ValidateCreate(t.Context(), nj)
 		assert.NoError(t, err)
 		assert.Empty(t, warnings)
 	})
@@ -265,72 +273,47 @@ func TestApplicationValidator_ValidateCreate(t *testing.T) {
 			},
 		}
 
-		validator := &ApplicationValidator{Client: fakeKubeClient(opensearch, valkey)}
-		app := &Application{
+		validator := &JobValidator{Client: fakeKubeClient(opensearch, valkey)}
+		nj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: namespace,
 			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
-				OpenSearch: &nais_io_v1.OpenSearch{
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
+				OpenSearch: &OpenSearch{
 					Instance: osInstance,
 				},
-				Valkey: []nais_io_v1.Valkey{
+				Valkey: []Valkey{
 					{Instance: vkInstance},
 				},
 			},
 		}
 
-		warnings, err := validator.ValidateCreate(t.Context(), app)
+		warnings, err := validator.ValidateCreate(t.Context(), nj)
 		assert.NoError(t, err)
 		assert.Empty(t, warnings)
 	})
 }
 
-func TestApplicationValidator_ValidateUpdate(t *testing.T) {
+func TestJobValidator_ValidateUpdate(t *testing.T) {
 	t.Run("valid update without spec changes", func(t *testing.T) {
-		validator := &ApplicationValidator{Client: fakeKubeClient()}
-		oldApp := &Application{
+		validator := &JobValidator{Client: fakeKubeClient()}
+		oldNj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: "test-ns",
 			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
 			},
 		}
-		newApp := oldApp.DeepCopy()
+		newNj := oldNj.DeepCopy()
 
-		warnings, err := validator.ValidateUpdate(t.Context(), oldApp, newApp)
+		warnings, err := validator.ValidateUpdate(t.Context(), oldNj, newNj)
 		assert.NoError(t, err)
-		assert.Empty(t, warnings)
-	})
-
-	t.Run("update with spec changes that should fail validation", func(t *testing.T) {
-		validator := &ApplicationValidator{Client: fakeKubeClient()}
-		oldApp := &Application{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
-				Namespace: "test-ns",
-			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
-				GCP: &nais_io_v1.GCP{
-					BigQueryDatasets: []nais_io_v1.CloudBigQueryDataset{
-						{
-							Name:       "dataset1",
-							Permission: nais_io_v1.BigQueryPermissionReadWrite,
-						},
-					},
-				},
-			},
-		}
-		newApp := oldApp.DeepCopy()
-		newApp.Spec.GCP.BigQueryDatasets[0].Permission = nais_io_v1.BigQueryPermissionRead
-
-		warnings, err := validator.ValidateUpdate(t.Context(), oldApp, newApp)
-		assert.Error(t, err)
 		assert.Empty(t, warnings)
 	})
 
@@ -346,129 +329,133 @@ func TestApplicationValidator_ValidateUpdate(t *testing.T) {
 			},
 		}
 
-		validator := &ApplicationValidator{Client: fakeKubeClient(opensearch)}
-		oldApp := &Application{
+		validator := &JobValidator{Client: fakeKubeClient(opensearch)}
+		oldNj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: namespace,
 			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
 			},
 		}
-		newApp := oldApp.DeepCopy()
-		newApp.Spec.OpenSearch = &nais_io_v1.OpenSearch{
+		newNj := oldNj.DeepCopy()
+		newNj.Spec.OpenSearch = &OpenSearch{
 			Instance: instance,
 		}
 
-		warnings, err := validator.ValidateUpdate(t.Context(), oldApp, newApp)
+		warnings, err := validator.ValidateUpdate(t.Context(), oldNj, newNj)
 		assert.NoError(t, err)
 		assert.Empty(t, warnings)
 	})
 
 	t.Run("update with invalid aiven reference", func(t *testing.T) {
-		validator := &ApplicationValidator{Client: fakeKubeClient()}
-		oldApp := &Application{
+		validator := &JobValidator{Client: fakeKubeClient()}
+		oldNj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: "test-ns",
 			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
 			},
 		}
-		newApp := oldApp.DeepCopy()
-		newApp.Spec.Valkey = []nais_io_v1.Valkey{
+		newNj := oldNj.DeepCopy()
+		newNj.Spec.Valkey = []Valkey{
 			{Instance: "nonexistent-valkey"},
 		}
 
-		warnings, err := validator.ValidateUpdate(t.Context(), oldApp, newApp)
+		warnings, err := validator.ValidateUpdate(t.Context(), oldNj, newNj)
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "Valkey 'nonexistent-valkey' does not exist")
 		assert.Empty(t, warnings)
 	})
 
 	t.Run("update with invalid opensearch reference", func(t *testing.T) {
-		validator := &ApplicationValidator{Client: fakeKubeClient()}
-		oldApp := &Application{
+		validator := &JobValidator{Client: fakeKubeClient()}
+		oldNj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: "test-ns",
 			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
 			},
 		}
-		newApp := oldApp.DeepCopy()
-		newApp.Spec.OpenSearch = &nais_io_v1.OpenSearch{
+		newNj := oldNj.DeepCopy()
+		newNj.Spec.OpenSearch = &OpenSearch{
 			Instance: "nonexistent-opensearch",
 		}
 
-		warnings, err := validator.ValidateUpdate(t.Context(), oldApp, newApp)
+		warnings, err := validator.ValidateUpdate(t.Context(), oldNj, newNj)
 		assert.Error(t, err)
 		assert.Contains(t, err.Error(), "OpenSearch 'nonexistent-opensearch' does not exist")
 		assert.Empty(t, warnings)
 	})
 
 	t.Run("invalid old object type", func(t *testing.T) {
-		validator := &ApplicationValidator{Client: fakeKubeClient()}
-		oldApp := &nais_io_v1.Image{} // Wrong type
-		newApp := &Application{
+		validator := &JobValidator{Client: fakeKubeClient()}
+		oldNj := &Image{} // Wrong type
+		newNj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: "test-ns",
 			},
 		}
 
-		warnings, err := validator.ValidateUpdate(t.Context(), oldApp, newApp)
+		warnings, err := validator.ValidateUpdate(t.Context(), oldNj, newNj)
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "expected an Application")
+		assert.Contains(t, err.Error(), "expected a Naisjob")
 		assert.Empty(t, warnings)
 	})
 
 	t.Run("invalid new object type", func(t *testing.T) {
-		validator := &ApplicationValidator{Client: fakeKubeClient()}
-		oldApp := &Application{
+		validator := &JobValidator{Client: fakeKubeClient()}
+		oldNj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: "test-ns",
 			},
 		}
-		newApp := &nais_io_v1.Image{} // Wrong type
+		newNj := &Image{} // Wrong type
 
-		warnings, err := validator.ValidateUpdate(t.Context(), oldApp, newApp)
+		warnings, err := validator.ValidateUpdate(t.Context(), oldNj, newNj)
 		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "expected an Application")
+		assert.Contains(t, err.Error(), "expected a Naisjob")
 		assert.Empty(t, warnings)
 	})
 }
 
-func TestApplicationValidator_ValidateDelete(t *testing.T) {
+func TestJobValidator_ValidateDelete(t *testing.T) {
 	t.Run("delete always succeeds", func(t *testing.T) {
-		validator := &ApplicationValidator{Client: fakeKubeClient()}
-		app := &Application{
+		validator := &JobValidator{Client: fakeKubeClient()}
+		nj := &Naisjob{
 			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
+				Name:      "test-job",
 				Namespace: "test-ns",
 			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
 			},
 		}
 
-		warnings, err := validator.ValidateDelete(t.Context(), app)
+		warnings, err := validator.ValidateDelete(t.Context(), nj)
 		assert.NoError(t, err)
 		assert.Empty(t, warnings)
 	})
 }
 
-func TestApplicationValidator_ValidateCreate_InvalidObjectType(t *testing.T) {
-	validator := &ApplicationValidator{Client: fakeKubeClient()}
+func TestJobValidator_ValidateCreate_InvalidObjectType(t *testing.T) {
+	validator := &JobValidator{Client: fakeKubeClient()}
 
 	// Pass wrong object type
-	wrongObj := &nais_io_v1.Image{}
+	wrongObj := &Image{}
 	warnings, err := validator.ValidateCreate(t.Context(), wrongObj)
 	require.Error(t, err)
-	assert.Contains(t, err.Error(), "expected an Application")
+	assert.Contains(t, err.Error(), "expected a Naisjob")
 	assert.Empty(t, warnings)
 }
