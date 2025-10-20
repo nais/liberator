@@ -127,6 +127,10 @@ type Postgres struct {
 	Status PostgresStatus `json:"status,omitempty,omitzero"`
 }
 
+func (p *Postgres) GetCorrelationId() string {
+	return p.Annotations[nais_io_v1.DeploymentCorrelationIDAnnotation]
+}
+
 // +kubebuilder:object:root=true
 
 // PostgresList contains a list of Postgres
