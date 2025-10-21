@@ -76,10 +76,6 @@ spec:
                     - "17"
                     - "16"
                     type: string
-                  name:
-                    description: Name of the Postgres cluster.
-                    pattern: ^[a-z0-9][a-z0-9-]{1,49}$
-                    type: string
                   resources:
                     properties:
                       cpu:
