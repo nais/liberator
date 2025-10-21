@@ -3,7 +3,6 @@ package scheme
 import (
 	"fmt"
 
-	acid_zalan_do_v1 "github.com/nais/liberator/pkg/apis/acid.zalan.do/v1"
 	aiven_io_v1alpha1 "github.com/nais/liberator/pkg/apis/aiven.io/v1alpha1"
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	bigquery_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/bigquery.cnrm.cloud.google.com/v1beta1"
@@ -52,7 +51,6 @@ func AddAll(scheme *runtime.Scheme) (*runtime.Scheme, error) {
 	return AddSchemes(scheme,
 		aiven_io_v1alpha1.AddToScheme,
 		aiven_nais_io_v1.AddToScheme,
-		acid_zalan_do_v1.AddToScheme,
 		bigquery_cnrm_cloud_google_com_v1beta1.AddToScheme,
 		clientgoscheme.AddToScheme,
 		data_nais_io_v1.AddToScheme,
