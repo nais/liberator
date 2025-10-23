@@ -2,7 +2,6 @@ package nais_io_v1alpha1
 
 import (
 	v1 "k8s.io/api/apps/v1"
-	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/utils/ptr"
@@ -386,33 +385,7 @@ func ExampleApplicationForDocumentation() *Application {
 			},
 			Port: 8080,
 			Postgres: &nais_io_v1.Postgres{
-				Cluster: nais_io_v1.PostgresCluster{
-					Name: "my-postgres-cluster",
-					Resources: nais_io_v1.PostgresResources{
-						DiskSize: resource.MustParse("100Mi"),
-						Cpu:      resource.MustParse("100m"),
-						Memory:   resource.MustParse("1Gi"),
-					},
-					MajorVersion:     "17",
-					HighAvailability: true,
-					AllowDeletion:    true,
-					Audit: &nais_io_v1.PostgresAudit{
-						Enabled:          true,
-						StatementClasses: []nais_io_v1.PostgresAuditStatementClass{"misc", "ddl", "function"},
-					},
-				},
-				Database: &nais_io_v1.PostgresDatabase{
-					Collation: "nb_NO",
-					Extensions: []nais_io_v1.PostgresExtension{
-						{
-							Name: "postgis",
-						},
-					},
-				},
-				MaintenanceWindow: &nais_io_v1.Maintenance{
-					Day:  3,
-					Hour: ptr.To(3),
-				},
+				ClusterName: "my-postgres-cluster",
 			},
 			PreStopHook: &nais_io_v1.PreStopHook{
 				Exec: &nais_io_v1.ExecAction{

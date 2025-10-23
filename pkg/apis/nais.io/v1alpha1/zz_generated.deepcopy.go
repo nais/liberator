@@ -153,7 +153,7 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 	if in.Postgres != nil {
 		in, out := &in.Postgres, &out.Postgres
 		*out = new(v1.Postgres)
-		(*in).DeepCopyInto(*out)
+		**out = **in
 	}
 	if in.PreStopHook != nil {
 		in, out := &in.PreStopHook, &out.PreStopHook
