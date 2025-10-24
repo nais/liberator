@@ -14,7 +14,26 @@ spec:
     singular: postgres
   scope: Namespaced
   versions:
-  - name: v1
+  - additionalPrinterColumns:
+    - jsonPath: .spec.cluster.majorVersion
+      name: Major Version
+      type: string
+    - jsonPath: .spec.cluster.resources.diskSize
+      name: Disk Size
+      type: string
+    - jsonPath: .spec.cluster.resources.cpu
+      name: CPU
+      type: string
+    - jsonPath: .spec.cluster.resources.memory
+      name: Memory
+      type: string
+    - jsonPath: .status.reconcileTime
+      name: Last reconcile
+      type: string
+    - jsonPath: .status.rolloutCompleteTime
+      name: Last rollout
+      type: string
+    name: v1
     schema:
       openAPIV3Schema:
         description: Postgres is the Schema for the postgres API

@@ -103,6 +103,12 @@ type PostgresStatus struct {
 
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Major Version",type="string",JSONPath=".spec.cluster.majorVersion"
+// +kubebuilder:printcolumn:name="Disk Size",type="string",JSONPath=".spec.cluster.resources.diskSize"
+// +kubebuilder:printcolumn:name="CPU",type="string",JSONPath=".spec.cluster.resources.cpu"
+// +kubebuilder:printcolumn:name="Memory",type="string",JSONPath=".spec.cluster.resources.memory"
+// +kubebuilder:printcolumn:name="Last reconcile",type="string",JSONPath=".status.reconcileTime"
+// +kubebuilder:printcolumn:name="Last rollout",type="string",JSONPath=".status.rolloutCompleteTime"
 
 // Postgres is the Schema for the postgres API
 type Postgres struct {
