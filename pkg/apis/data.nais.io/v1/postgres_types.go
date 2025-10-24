@@ -79,13 +79,12 @@ type PostgresSpec struct {
 
 // PostgresStatus defines the observed state of Postgres.
 type PostgresStatus struct {
-	SynchronizationTime     int64  `json:"synchronizationTime,omitempty"`
-	RolloutCompleteTime     int64  `json:"rolloutCompleteTime,omitempty"`
-	CorrelationID           string `json:"correlationID,omitempty"`
-	DeploymentRolloutStatus string `json:"deploymentRolloutStatus,omitempty"`
-	SynchronizationState    string `json:"synchronizationState,omitempty"`
-	SynchronizationHash     string `json:"synchronizationHash,omitempty"`
-	ObservedGeneration      int64  `json:"observedGeneration,omitempty"`
+	CorrelationID       string       `json:"correlationID,omitempty"`
+	ObservedGeneration  int64        `json:"observedGeneration,omitempty"`
+	ReconcilePhase      string       `json:"reconcilePhase,omitempty"`
+	ReconcileTime       *metav1.Time `json:"reconcileTime,omitempty"`
+	RolloutCompleteTime *metav1.Time `json:"rolloutCompleteTime,omitempty"`
+	RolloutStatus       string       `json:"rolloutStatus,omitempty"`
 
 	// conditions represent the current state of the Postgres resource.
 	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
@@ -119,11 +118,17 @@ type Postgres struct {
 
 	// status defines the observed state of Postgres
 	// +optional
-	Status PostgresStatus `json:"status,omitempty,omitzero"`
+	Status *PostgresStatus `json:"status,omitempty,omitzero"`
 }
 
 func (p *Postgres) GetCorrelationId() string {
 	return p.Annotations[nais_io_v1.DeploymentCorrelationIDAnnotation]
+}
+func (p *Postgres) GetStatus() *PostgresStatus {
+	if p.Status == nil {
+		p.Status = &PostgresStatus{}
+	}
+	return p.Status
 }
 
 // +kubebuilder:object:root=true

@@ -222,21 +222,19 @@ spec:
                 x-kubernetes-list-type: map
               correlationID:
                 type: string
-              deploymentRolloutStatus:
-                type: string
               observedGeneration:
                 format: int64
                 type: integer
+              reconcilePhase:
+                type: string
+              reconcileTime:
+                format: date-time
+                type: string
               rolloutCompleteTime:
-                format: int64
-                type: integer
-              synchronizationHash:
+                format: date-time
                 type: string
-              synchronizationState:
+              rolloutStatus:
                 type: string
-              synchronizationTime:
-                format: int64
-                type: integer
             type: object
         required:
         - spec
