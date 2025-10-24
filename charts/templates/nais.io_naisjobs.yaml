@@ -1023,6 +1023,8 @@ spec:
                     description: ClusterName is the name of the Postgres cluster.
                     pattern: ^[a-z0-9][a-z0-9-]{1,49}$
                     type: string
+                required:
+                - clusterName
                 type: object
               preStopHook:
                 description: |-
