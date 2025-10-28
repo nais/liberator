@@ -68,13 +68,25 @@ type IAMPolicyList struct {
 type IAMPolicyMember struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              IAMPolicyMemberSpec `json:"spec"`
+	Spec              IAMPolicyMemberSpec   `json:"spec"`
+	Status            IAMPolicyMemberStatus `json:"status,omitempty"`
 }
 
 type IAMPolicyMemberSpec struct {
 	Member      string      `json:"member"`
 	Role        string      `json:"role"`
 	ResourceRef ResourceRef `json:"resourceRef"`
+}
+
+// IAMPolicyMemberStatus defines the observed state of IAMPolicyMember
+type IAMPolicyMemberStatus struct {
+	// Conditions represent the latest available observations of the IAM
+	// policy's current state.
+	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	// ObservedGeneration is the generation of the resource that was most recently observed by the Config Connector controller.
+	// If this is equal to metadata.generation, then that means that the current reported status reflects the most recent desired state of the resource.
+	// +optional
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 }
 
 // +kubebuilder:object:root=true
