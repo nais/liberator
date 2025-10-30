@@ -35,6 +35,12 @@ type StorageBucketSpec struct {
 	LifecycleRules           []LifecycleRules `json:"lifecycleRule,omitempty"`
 	// +kubebuilder:validation:Enum=inherited;enforced
 	PublicAccessPrevention PublicAccessPrevention `json:"publicAccessPrevention,omitempty"`
+	SoftDeletePolicy SoftDeletePolicy `json:"softDeletePolicy,omitempty"`
+}
+
+
+type SoftDeletePolicy struct {
+	RetentionDurationSeconds: int `json:"retentionDurationSeconds"`
 }
 
 // +kubebuilder:object:root=true
