@@ -77,6 +77,13 @@ spec:
                   retentionPeriod:
                     type: integer
                 type: object
+              softDeletePolicy:
+                properties:
+                  retentionDurationSeconds:
+                    type: integer
+                required:
+                - retentionDurationSeconds
+                type: object
               uniformBucketLevelAccess:
                 type: boolean
             required:
