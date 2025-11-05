@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"mime"
 	"net/http"
 	"net/url"
 	"path"
@@ -143,8 +144,13 @@ func (f *metadataFetcher) get(ctx context.Context, wellKnownURL string, v any) e
 	if response.StatusCode != http.StatusOK {
 		return fmt.Errorf("unexpected status code from server: %d", response.StatusCode)
 	}
-	if response.Header.Get("Content-Type") != "application/json" {
-		return fmt.Errorf("unexpected content type from server: %s", response.Header.Get("Content-Type"))
+
+	contentType, _, err := mime.ParseMediaType(response.Header.Get("Content-Type"))
+	if err != nil {
+		return fmt.Errorf("parsing content-type from server: %w", err)
+	}
+	if contentType != "application/json" {
+		return fmt.Errorf("unexpected content-type from server (want: %q, got: %q)", "application/json", response.Header.Get("Content-Type"))
 	}
 	if err := json.NewDecoder(response.Body).Decode(&v); err != nil {
 		return fmt.Errorf("decoding metadata: %w", err)
