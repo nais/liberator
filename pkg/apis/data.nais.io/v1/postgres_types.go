@@ -149,3 +149,7 @@ type PostgresList struct {
 func init() {
 	SchemeBuilder.Register(&Postgres{}, &PostgresList{})
 }
+
+func (p *Postgres) ApplyDefaults() error {
+	return nil
+}

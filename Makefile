@@ -20,6 +20,7 @@ doc:
 	mkdir -p doc/output/application
 	mkdir -p doc/output/naisjob
 	mkdir -p doc/output/topic
+	mkdir -p doc/output/postgres
 	mkdir -p doc/output/openapi/nais
 	go run cmd/docgen/docgen.go \
 		--dir ./pkg/apis/... \
@@ -50,6 +51,16 @@ doc:
 		--openapi-output doc/output/openapi/nais \
 		--reference-template doc/templates/reference/topic.md \
 		--example-template doc/templates/example/topic.md \
+		;
+	go run cmd/docgen/docgen.go \
+		--dir ./pkg/apis/... \
+		--group data.nais.io \
+		--kind Postgres \
+		--reference-output doc/output/postgres/reference.md \
+		--example-output doc/output/postgres/example.md \
+		--openapi-output doc/output/openapi/nais \
+		--reference-template doc/templates/reference/postgres.md \
+		--example-template doc/templates/example/postgres.md \
 		;
 
 mocks:
