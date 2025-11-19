@@ -32,6 +32,7 @@ type AivenApplicationList struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:shortName={"aivenapp"}
 // +kubebuilder:subresource:status
+// +kubebuilder:metadata:annotations="cert-manager.io/inject-ca-from=nais-system/aivenapp-conversion-webhooks-serving-cert"
 // +kubebuilder:printcolumn:name="Name of secret",type=string,JSONPath=".spec.secretName"
 // +kubebuilder:printcolumn:name="Protected",type="boolean",JSONPath=".spec.protected",priority=10
 // +kubebuilder:printcolumn:name="Expires",type="date",JSONPath=".spec.expiresAt",priority=10
