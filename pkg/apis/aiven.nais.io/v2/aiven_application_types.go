@@ -39,6 +39,7 @@ type AivenApplicationList struct {
 // +kubebuilder:printcolumn:name="State",type="string",JSONPath=".status.synchronizationState",priority=20
 // +kubebuilder:printcolumn:name="Synced",type="date",JSONPath=".status.synchronizationTime",priority=30
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",priority=30
+// +kubebuilder:storageversion
 type AivenApplication struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
