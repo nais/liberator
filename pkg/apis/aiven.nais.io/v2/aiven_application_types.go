@@ -1,6 +1,8 @@
-package aiven_nais_io_v1
+package aiven_nais_io_v2
 
 import (
+	"fmt"
+	"reflect"
 	"time"
 
 	"github.com/nais/liberator/pkg/strings"
@@ -30,14 +32,13 @@ type AivenApplicationList struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:resource:shortName={"aivenapp"}
 // +kubebuilder:subresource:status
+// +kubebuilder:metadata:annotations="cert-manager.io/inject-ca-from=nais-system/aivenapp-conversion-webhooks-serving-cert"
 // +kubebuilder:printcolumn:name="Name of secret",type=string,JSONPath=".spec.secretName"
 // +kubebuilder:printcolumn:name="Protected",type="boolean",JSONPath=".spec.protected",priority=10
 // +kubebuilder:printcolumn:name="Expires",type="date",JSONPath=".spec.expiresAt",priority=10
 // +kubebuilder:printcolumn:name="State",type="string",JSONPath=".status.synchronizationState",priority=20
 // +kubebuilder:printcolumn:name="Synced",type="date",JSONPath=".status.synchronizationTime",priority=30
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",priority=30
-// +kubebuilder:deprecatedversion:warning="deprecated, use v2"
-// +kubebuilder:storageversion
 type AivenApplication struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -49,7 +50,7 @@ type KafkaSpec struct {
 	// Pool is the Kafka pool (aka cluster) on Aiven this application uses
 	Pool string `json:"pool"`
 	// SecretName is the name of the secret for the Kafka pool
-	SecretName string `json:"secretName,omitempty"`
+	SecretName string `json:"secretName"`
 }
 
 type OpenSearchSpec struct {
@@ -59,7 +60,7 @@ type OpenSearchSpec struct {
 	// +nais:doc:Default="read"
 	Access string `json:"access,omitempty"`
 	// SecretName is the name of the secret containing Aiven credentials for the OpensSearch serviceuser
-	SecretName string `json:"secretName,omitempty"`
+	SecretName string `json:"secretName"`
 }
 
 type ValkeySpec struct {
@@ -70,12 +71,10 @@ type ValkeySpec struct {
 	// +nais:doc:Default="read"
 	Access string `json:"access,omitempty"`
 	// SecretName is the name of the secret containing Aiven credentials for the Valkey serviceuser
-	SecretName string `json:"secretName,omitempty"`
+	SecretName string `json:"secretName"`
 }
 
 type AivenApplicationSpec struct {
-	// SecretName is the name of the secret containing Aiven credentials
-	SecretName string `json:"secretName,omitempty"`
 	// A Protected secret will not be deleted by the janitor even when not in use
 	Protected bool `json:"protected,omitempty"`
 	// A timestamp that indicates time-to-expire-date for personal secrets.
@@ -171,9 +170,23 @@ func (in *AivenApplication) FormatExpiresAt() string {
 	return in.Spec.ExpiresAt.Format(time.RFC3339)
 }
 
-func (in *AivenApplication) SecretKey() client.ObjectKey {
-	return client.ObjectKey{
-		Namespace: in.GetNamespace(),
-		Name:      in.Spec.SecretName,
+func (in *AivenApplication) SecretKey(service string) (*client.ObjectKey, error) {
+
+	secret := reflect.ValueOf(in.Spec).FieldByName(service)
+
+	if !secret.IsValid() {
+		return nil, fmt.Errorf("invalid field: secret")
 	}
+
+	secretName := secret.FieldByName("SecretName")
+
+	if !secretName.IsValid() {
+		return nil, fmt.Errorf("invalid field: secretName")
+
+	}
+
+	return &client.ObjectKey{
+		Namespace: in.GetNamespace(),
+		Name:      secretName.String(),
+	}, nil
 }
