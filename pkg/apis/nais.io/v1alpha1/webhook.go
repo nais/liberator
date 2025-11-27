@@ -21,6 +21,9 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
+// TODO: Get this tested properly before enabling (removing this const)
+const postgresValidationEnabled = false
+
 var _ webhook.CustomValidator = &ApplicationValidator{}
 
 // +kubebuilder:object:generate=false
@@ -127,7 +130,7 @@ func (v *ApplicationValidator) checkAivenReferences(ctx context.Context, app *Ap
 }
 
 func (v *ApplicationValidator) checkPostgresReference(ctx context.Context, app *Application) error {
-	if app.Spec.Postgres != nil && app.Spec.Postgres.ClusterName != "" {
+	if postgresValidationEnabled && app.Spec.Postgres != nil && app.Spec.Postgres.ClusterName != "" {
 		pgNamespace := fmt.Sprintf("pg-%s", app.Namespace)
 		pgMetaData := &metav1.PartialObjectMetadata{
 			TypeMeta: metav1.TypeMeta{
