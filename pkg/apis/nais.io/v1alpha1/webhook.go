@@ -9,6 +9,7 @@ import (
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	"github.com/nais/liberator/pkg/webhookvalidator"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/errors"
@@ -89,6 +90,10 @@ func (v *ApplicationValidator) ValidateUpdate(ctx context.Context, oldObj runtim
 		return nil, err
 	}
 
+	if err := v.checkPostgresReference(ctx, a); err != nil {
+		return nil, err
+	}
+
 	return nil, nil
 }
 
@@ -116,6 +121,25 @@ func (v *ApplicationValidator) checkAivenReferences(ctx context.Context, app *Ap
 				return apierrors.NewBadRequest(fmt.Sprintf("Valkey '%s' does not exist. Create the Valkey instance first.", valkey.Instance))
 			}
 			return apierrors.NewInternalError(fmt.Errorf("could not validate Valkey reference: %w", err))
+		}
+	}
+	return nil
+}
+
+func (v *ApplicationValidator) checkPostgresReference(ctx context.Context, app *Application) error {
+	if app.Spec.Postgres != nil && app.Spec.Postgres.ClusterName != "" {
+		pgNamespace := fmt.Sprintf("pg-%s", app.Namespace)
+		pgMetaData := &metav1.PartialObjectMetadata{
+			TypeMeta: metav1.TypeMeta{
+				APIVersion: "data.nais.io/v1",
+				Kind:       "Postgres",
+			},
+		}
+		if err := v.Get(ctx, client.ObjectKey{Name: app.Spec.Postgres.ClusterName, Namespace: pgNamespace}, pgMetaData); err != nil {
+			if apierrors.IsNotFound(err) {
+				return apierrors.NewBadRequest(fmt.Sprintf("Postgres '%s' does not exist. Create the Postgres cluster first.", app.Spec.Postgres.ClusterName))
+			}
+			return apierrors.NewInternalError(fmt.Errorf("could not validate Postgres reference: %w", err))
 		}
 	}
 	return nil
