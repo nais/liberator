@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/go-logr/logr"
 	aiven_io_v1alpha1 "github.com/nais/liberator/pkg/apis/aiven.io/v1alpha1"
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	"github.com/nais/liberator/pkg/webhookvalidator"
@@ -21,19 +22,20 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
-// TODO: Get this tested properly before enabling (removing this const)
-const postgresValidationEnabled = false
-
 var _ webhook.CustomValidator = &ApplicationValidator{}
 
 // +kubebuilder:object:generate=false
 type ApplicationValidator struct {
 	client.Client
+	logger logr.Logger
 }
 
 func SetupWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).
-		WithValidator(&ApplicationValidator{Client: mgr.GetClient()}).
+		WithValidator(&ApplicationValidator{
+			Client: mgr.GetClient(),
+			logger: mgr.GetLogger().WithName("application-validator"),
+		}).
 		For(&Application{}).
 		Complete()
 }
@@ -134,7 +136,7 @@ func (v *ApplicationValidator) checkAivenReferences(ctx context.Context, app *Ap
 }
 
 func (v *ApplicationValidator) checkPostgresReference(ctx context.Context, app *Application) error {
-	if postgresValidationEnabled && app.Spec.Postgres != nil && app.Spec.Postgres.ClusterName != "" {
+	if app.Spec.Postgres != nil && app.Spec.Postgres.ClusterName != "" {
 		pgNamespace := fmt.Sprintf("pg-%s", app.Namespace)
 		pgMetaData := &metav1.PartialObjectMetadata{
 			TypeMeta: metav1.TypeMeta{
@@ -144,8 +146,14 @@ func (v *ApplicationValidator) checkPostgresReference(ctx context.Context, app *
 		}
 		if err := v.Get(ctx, client.ObjectKey{Name: app.Spec.Postgres.ClusterName, Namespace: pgNamespace}, pgMetaData); err != nil {
 			if apierrors.IsNotFound(err) {
+				v.logger.Info("Rejecting application because the Postgres cluster does not exist",
+					"application", app.GetName(),
+					"namespace", app.GetNamespace(),
+					"postgresCluster", app.Spec.Postgres.ClusterName,
+				)
 				return apierrors.NewBadRequest(fmt.Sprintf("Postgres '%s' does not exist. Create the Postgres cluster first.", app.Spec.Postgres.ClusterName))
 			}
+			v.logger.Error(err, "internal error when validating Postgres reference")
 			return apierrors.NewInternalError(fmt.Errorf("could not validate Postgres reference: %w", err))
 		}
 	}
