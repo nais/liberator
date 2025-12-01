@@ -62,6 +62,10 @@ func (v *ApplicationValidator) ValidateCreate(ctx context.Context, obj runtime.O
 		return nil, err
 	}
 
+	if err := v.checkPostgresReference(ctx, a); err != nil {
+		return nil, err
+	}
+
 	return nil, nil
 }
 

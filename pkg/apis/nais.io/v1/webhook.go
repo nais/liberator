@@ -62,6 +62,10 @@ func (v *JobValidator) ValidateCreate(ctx context.Context, obj runtime.Object) (
 		return nil, err
 	}
 
+	if err := v.checkPostgresReference(ctx, nj); err != nil {
+		return nil, err
+	}
+
 	return nil, nil
 }
 
