@@ -137,14 +137,13 @@ func (v *ApplicationValidator) checkAivenReferences(ctx context.Context, app *Ap
 
 func (v *ApplicationValidator) checkPostgresReference(ctx context.Context, app *Application) error {
 	if app.Spec.Postgres != nil && app.Spec.Postgres.ClusterName != "" {
-		pgNamespace := fmt.Sprintf("pg-%s", app.Namespace)
 		pgMetaData := &metav1.PartialObjectMetadata{
 			TypeMeta: metav1.TypeMeta{
 				APIVersion: "data.nais.io/v1",
 				Kind:       "Postgres",
 			},
 		}
-		if err := v.Get(ctx, client.ObjectKey{Name: app.Spec.Postgres.ClusterName, Namespace: pgNamespace}, pgMetaData); err != nil {
+		if err := v.Get(ctx, client.ObjectKey{Name: app.Spec.Postgres.ClusterName, Namespace: app.GetNamespace()}, pgMetaData); err != nil {
 			if apierrors.IsNotFound(err) {
 				v.logger.Info("Rejecting application because the Postgres cluster does not exist",
 					"application", app.GetName(),

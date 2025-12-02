@@ -1,7 +1,6 @@
 package v1
 
 import (
-	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/utils/ptr"
@@ -43,7 +42,7 @@ func ExamplePostgresForDocumentation() *Postgres {
 					},
 				},
 			},
-			MaintenanceWindow: &nais_io_v1.Maintenance{
+			MaintenanceWindow: &Maintenance{
 				Day:  4,
 				Hour: ptr.To(10),
 			},

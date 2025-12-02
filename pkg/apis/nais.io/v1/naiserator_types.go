@@ -3,14 +3,17 @@ package nais_io_v1
 import (
 	"fmt"
 
+	nais_io "github.com/nais/liberator/pkg/apis/nais.io"
 	v1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 )
 
 const (
-	DeploymentCorrelationIDAnnotation = "nais.io/deploymentCorrelationID"
-	SkipDeploymentMessageAnnotation   = "nais.io/skipDeploymentMessage"
-	DefaultVaultMountPath             = "/var/run/secrets/nais.io/vault"
+	SkipDeploymentMessageAnnotation = "nais.io/skipDeploymentMessage"
+	DefaultVaultMountPath           = "/var/run/secrets/nais.io/vault"
+
+	// Deprecated, use the definition in nais_io package
+	DeploymentCorrelationIDAnnotation = nais_io.DeploymentCorrelationIDAnnotation
 )
 
 type Azure struct {

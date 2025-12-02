@@ -137,14 +137,13 @@ func (v *JobValidator) checkAivenReferences(ctx context.Context, nj *Naisjob) er
 
 func (v *JobValidator) checkPostgresReference(ctx context.Context, nj *Naisjob) error {
 	if nj.Spec.Postgres != nil && nj.Spec.Postgres.ClusterName != "" {
-		pgNamespace := fmt.Sprintf("pg-%s", nj.Namespace)
 		pgMetaData := &metav1.PartialObjectMetadata{
 			TypeMeta: metav1.TypeMeta{
 				APIVersion: "data.nais.io/v1",
 				Kind:       "Postgres",
 			},
 		}
-		if err := v.Get(ctx, client.ObjectKey{Name: nj.Spec.Postgres.ClusterName, Namespace: pgNamespace}, pgMetaData); err != nil {
+		if err := v.Get(ctx, client.ObjectKey{Name: nj.Spec.Postgres.ClusterName, Namespace: nj.GetNamespace()}, pgMetaData); err != nil {
 			if apierrors.IsNotFound(err) {
 				v.logger.Info("Rejecting naisjob because the Postgres cluster does not exist",
 					"naisjob", nj.GetName(),

@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/google/uuid"
+	"github.com/nais/liberator/pkg/apis/nais.io"
 	log "github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -293,7 +294,7 @@ func (in *Naisjob) EnsureCorrelationID() error {
 		in.SetAnnotations(map[string]string{})
 	}
 
-	if len(in.Annotations[DeploymentCorrelationIDAnnotation]) != 0 {
+	if len(in.Annotations[nais_io.DeploymentCorrelationIDAnnotation]) != 0 {
 		return nil
 	}
 
@@ -302,13 +303,13 @@ func (in *Naisjob) EnsureCorrelationID() error {
 		return fmt.Errorf("generate deployment correlation ID: %s", err)
 	}
 
-	in.Annotations[DeploymentCorrelationIDAnnotation] = id.String()
+	in.Annotations[nais_io.DeploymentCorrelationIDAnnotation] = id.String()
 
 	return nil
 }
 
 func (in *Naisjob) CorrelationID() string {
-	return in.Annotations[DeploymentCorrelationIDAnnotation]
+	return in.Annotations[nais_io.DeploymentCorrelationIDAnnotation]
 }
 
 func (in *Naisjob) SetDeploymentRolloutStatus(rolloutStatus string) {

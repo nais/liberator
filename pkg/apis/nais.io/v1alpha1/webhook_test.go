@@ -5,6 +5,7 @@ import (
 
 	aiven_io_v1alpha1 "github.com/nais/liberator/pkg/apis/aiven.io/v1alpha1"
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
+	data_nais_io_v1 "github.com/nais/liberator/pkg/apis/data.nais.io/v1"
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -21,6 +22,7 @@ func fakeKubeClient(objs ...client.Object) client.Client {
 	// Add necessary schemes for the test
 	_ = clientgoscheme.AddToScheme(scheme)
 	_ = aiven_io_v1alpha1.AddToScheme(scheme)
+	_ = data_nais_io_v1.AddToScheme(scheme)
 	_ = AddToScheme(scheme)
 
 	return fake.NewClientBuilder().WithScheme(scheme).WithObjects(objs...).Build()
@@ -284,6 +286,57 @@ func TestApplicationValidator_ValidateCreate(t *testing.T) {
 
 		warnings, err := validator.ValidateCreate(t.Context(), app)
 		assert.NoError(t, err)
+		assert.Empty(t, warnings)
+	})
+
+	t.Run("postgres reference exists", func(t *testing.T) {
+		namespace := "test-ns"
+		clusterName := "my-postgres-cluster"
+
+		postgres := &data_nais_io_v1.Postgres{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      clusterName,
+				Namespace: namespace,
+			},
+		}
+
+		validator := &ApplicationValidator{Client: fakeKubeClient(postgres)}
+		app := &Application{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "test-app",
+				Namespace: namespace,
+			},
+			Spec: ApplicationSpec{
+				Image: "nginx:latest",
+				Postgres: &nais_io_v1.Postgres{
+					ClusterName: clusterName,
+				},
+			},
+		}
+
+		warnings, err := validator.ValidateCreate(t.Context(), app)
+		assert.NoError(t, err)
+		assert.Empty(t, warnings)
+	})
+
+	t.Run("postgres reference not found", func(t *testing.T) {
+		validator := &ApplicationValidator{Client: fakeKubeClient()}
+		app := &Application{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "test-app",
+				Namespace: "test-ns",
+			},
+			Spec: ApplicationSpec{
+				Image: "nginx:latest",
+				Postgres: &nais_io_v1.Postgres{
+					ClusterName: "no-such-postgres",
+				},
+			},
+		}
+
+		warnings, err := validator.ValidateCreate(t.Context(), app)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "Postgres 'no-such-postgres' does not exist")
 		assert.Empty(t, warnings)
 	})
 }
