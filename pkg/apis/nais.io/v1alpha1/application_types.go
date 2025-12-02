@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/nais/liberator/pkg/apis/nais.io"
 	"github.com/nais/liberator/pkg/hash"
 	log "github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
@@ -338,7 +339,7 @@ func (in *Application) LogFields() log.Fields {
 }
 
 func (in *Application) CorrelationID() string {
-	return in.Annotations[nais_io_v1.DeploymentCorrelationIDAnnotation]
+	return in.Annotations[nais_io.DeploymentCorrelationIDAnnotation]
 }
 
 func (in *Application) SetDeploymentRolloutStatus(rolloutStatus string) {

@@ -1,7 +1,7 @@
 package v1
 
 import (
-	"github.com/nais/liberator/pkg/apis/nais.io/v1"
+	"github.com/nais/liberator/pkg/apis/nais.io"
 	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -65,6 +65,17 @@ type PostgresDatabase struct {
 	Extensions []PostgresExtension `json:"extensions,omitempty"`
 }
 
+type Maintenance struct {
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=7
+	Day int `json:"day,omitempty"`
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=23
+	Hour *int `json:"hour,omitempty"` // must use pointer here to be able to distinguish between no value and value 0 from user.
+}
+
 // PostgresSpec defines the desired state of Postgres
 type PostgresSpec struct {
 	// Cluster configures the Postgres cluster
@@ -74,7 +85,7 @@ type PostgresSpec struct {
 	Database *PostgresDatabase `json:"database,omitempty"`
 
 	// MaintenanceWindow configures the maintenance window for the Postgres cluster.
-	MaintenanceWindow *nais_io_v1.Maintenance `json:"maintenanceWindow,omitempty"`
+	MaintenanceWindow *Maintenance `json:"maintenanceWindow,omitempty"`
 }
 
 // PostgresStatus defines the observed state of Postgres.
@@ -128,7 +139,7 @@ type Postgres struct {
 }
 
 func (p *Postgres) GetCorrelationId() string {
-	return p.Annotations[nais_io_v1.DeploymentCorrelationIDAnnotation]
+	return p.Annotations[nais_io.DeploymentCorrelationIDAnnotation]
 }
 func (p *Postgres) GetStatus() *PostgresStatus {
 	if p.Status == nil {
