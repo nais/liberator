@@ -172,7 +172,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					ConfigMap: "my-configmap-with-envs",
 				},
 			},
-			FailedJobsHistoryLimit: 2,
+			FailedJobsHistoryLimit: int32p(2),
 			FilesFrom: []FilesFrom{
 				{
 					ConfigMap: "example-files-configmap",
