@@ -15,7 +15,7 @@ generate:
 	$(CONTROLLER_GEN) object paths="./pkg/apis/..."
 	$(CONTROLLER_GEN) crd rbac:roleName=manager-role webhook paths="./pkg/apis/..." output:crd:artifacts:config=config/crd/bases
 	cp ./config/crd/bases/*nais.io_*.yaml ./charts/templates
-	kustomize build ./config/crd/bases > ./charts/templates/aiven.nais.io_aivenapplications.yaml
+	kubectl kustomize ./config/crd/bases > ./charts/templates/aiven.nais.io_aivenapplications.yaml
 
 doc:
 	mkdir -p doc/output/application
