@@ -1146,8 +1146,9 @@ spec:
                   If not specified, the Naisjob will be run as a one-shot Job. The timezone for Naisjobs defaults to UTC.
                 type: string
               secureLogs:
-                description: Whether or not to enable a sidecar container for secure
-                  logging.
+                description: |-
+                  Whether or not to enable a sidecar container for secure logging.
+                  Deprecated. Support for Secure Logs in Nais has been deprecated and will be removed.
                 properties:
                   enabled:
                     description: |-
