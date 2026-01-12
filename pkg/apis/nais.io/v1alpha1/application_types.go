@@ -205,6 +205,8 @@ type ApplicationSpec struct {
 	Resources *nais_io_v1.ResourceRequirements `json:"resources,omitempty"`
 
 	// Whether to enable a sidecar container for secure logging.
+	// Deprecated. Support for Secure Logs in Nais has been deprecated and will be removed.
+	// +nais:doc:Deprecated=true
 	// +nais:doc:Tenants="nav"
 	SecureLogs *nais_io_v1.SecureLogs `json:"secureLogs,omitempty"`
 
