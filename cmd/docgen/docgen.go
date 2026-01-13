@@ -18,10 +18,10 @@ import (
 
 	yaml2 "github.com/ghodss/yaml"
 	"github.com/imdario/mergo"
-	data_nais_io_v1 "github.com/nais/liberator/pkg/apis/data.nais.io/v1"
 	kafka_nais_io_v1 "github.com/nais/liberator/pkg/apis/kafka.nais.io/v1"
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
+	data_nais_io_v1 "github.com/nais/pgrator/pkg/api/datav1"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/pflag"
 	"gopkg.in/yaml.v3"
