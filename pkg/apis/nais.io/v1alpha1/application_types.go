@@ -138,18 +138,9 @@ type ApplicationSpec struct {
 	// [Kubernetes probes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
 	Liveness *nais_io_v1.Probe `json:"liveness,omitempty"`
 
-	// Format of the logs from the container. Use this if the container doesn't support
-	// JSON logging and the log is in a special format that need to be parsed.
-	// +kubebuilder:validation:Enum="";accesslog;accesslog_with_processing_time;accesslog_with_referer_useragent;capnslog;logrus;gokit;redis;glog;simple;influxdb;log15
-	Logformat string `json:"logformat,omitempty"`
-
 	// Login configures a login proxy that sits in front of the application.
 	// +nais:doc:Link="https://doc.nais.io/auth/explanations/#login-proxy"
 	Login *nais_io_v1.Login `json:"login,omitempty"`
-
-	// Extra filters for modifying log content. This can e.g. be used for setting loglevel based on http status code.
-	// +kubebuilder:validation:Enum=http_loglevel;dns_loglevel
-	Logtransform string `json:"logtransform,omitempty"`
 
 	// Configures a Maskinporten client for this application.
 	// See [Maskinporten](https://doc.nais.io/security/auth/maskinporten/) for more details.

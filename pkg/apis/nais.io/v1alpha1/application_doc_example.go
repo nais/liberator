@@ -338,7 +338,6 @@ func ExampleApplicationForDocumentation() *Application {
 				Port:             8080,
 				Timeout:          1,
 			},
-			Logformat: "accesslog_with_referer_useragent",
 			Login: &nais_io_v1.Login{
 				Provider: "openid",
 				Enforce: &nais_io_v1.LoginEnforce{
@@ -349,7 +348,6 @@ func ExampleApplicationForDocumentation() *Application {
 					},
 				},
 			},
-			Logtransform: "http_loglevel",
 			Maskinporten: &nais_io_v1.Maskinporten{
 				Enabled: true,
 				Scopes: nais_io_v1.MaskinportenScope{
