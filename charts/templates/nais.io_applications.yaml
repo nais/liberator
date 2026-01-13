@@ -888,24 +888,6 @@ spec:
                 required:
                 - path
                 type: object
-              logformat:
-                description: |-
-                  Format of the logs from the container. Use this if the container doesn't support
-                  JSON logging and the log is in a special format that need to be parsed.
-                enum:
-                - ""
-                - accesslog
-                - accesslog_with_processing_time
-                - accesslog_with_referer_useragent
-                - capnslog
-                - logrus
-                - gokit
-                - redis
-                - glog
-                - simple
-                - influxdb
-                - log15
-                type: string
               login:
                 description: Login configures a login proxy that sits in front of
                   the application.
@@ -935,13 +917,6 @@ spec:
                 required:
                 - provider
                 type: object
-              logtransform:
-                description: Extra filters for modifying log content. This can e.g.
-                  be used for setting loglevel based on http status code.
-                enum:
-                - http_loglevel
-                - dns_loglevel
-                type: string
               maskinporten:
                 description: |-
                   Configures a Maskinporten client for this application.

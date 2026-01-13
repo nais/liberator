@@ -292,8 +292,6 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				Port:             8080,
 				Timeout:          1,
 			},
-			Logformat:    "accesslog_with_referer_useragent",
-			Logtransform: "http_loglevel",
 			Maskinporten: &Maskinporten{
 				Enabled: true,
 				Scopes: MaskinportenScope{
