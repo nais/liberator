@@ -53,16 +53,6 @@ doc:
 		--reference-template doc/templates/reference/topic.md \
 		--example-template doc/templates/example/topic.md \
 		;
-	go run cmd/docgen/docgen.go \
-		--dir ./pkg/apis/... \
-		--group data.nais.io \
-		--kind Postgres \
-		--reference-output doc/output/postgres/reference.md \
-		--example-output doc/output/postgres/example.md \
-		--openapi-output doc/output/openapi/nais \
-		--reference-template doc/templates/reference/postgres.md \
-		--example-template doc/templates/example/postgres.md \
-		;
 
 mocks:
 	go run github.com/vektra/mockery/v2
