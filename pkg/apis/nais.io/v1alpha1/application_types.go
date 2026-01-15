@@ -195,12 +195,6 @@ type ApplicationSpec struct {
 	// +nais:doc:Link="https://doc.nais.io/workloads/explanations/good-practices/#set-reasonable-resource-requests-and-limits"
 	Resources *nais_io_v1.ResourceRequirements `json:"resources,omitempty"`
 
-	// Whether to enable a sidecar container for secure logging.
-	// Deprecated. Support for Secure Logs in Nais has been deprecated and will be removed.
-	// +nais:doc:Deprecated=true
-	// +nais:doc:Tenants="nav"
-	SecureLogs *nais_io_v1.SecureLogs `json:"secureLogs,omitempty"`
-
 	// Specify which port and protocol is used to connect to the application in the container.
 	// Defaults to HTTP on port 80.
 	Service *nais_io_v1.Service `json:"service,omitempty"`

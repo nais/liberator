@@ -61,9 +61,6 @@ func getNaisjobDefaults() *Naisjob {
 				Enabled: false,
 				Paths:   []SecretPath{},
 			},
-			SecureLogs: &SecureLogs{
-				Enabled: false,
-			},
 			AccessPolicy: &AccessPolicy{
 				Inbound: &AccessPolicyInbound{
 					Rules: []AccessPolicyInboundRule{},

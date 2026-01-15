@@ -119,10 +119,6 @@ func (in *Application) GetSkipCABundle() bool {
 	return in.Spec.SkipCaBundle
 }
 
-func (in *Application) GetSecureLogs() *nais_io_v1.SecureLogs {
-	return in.Spec.SecureLogs
-}
-
 func (in *Application) GetMaskinporten() *nais_io_v1.Maskinporten {
 	return in.Spec.Maskinporten
 }

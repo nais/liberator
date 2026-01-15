@@ -175,11 +175,6 @@ type NaisjobSpec struct {
 	// If not specified, the Naisjob will be run as a one-shot Job. The timezone for Naisjobs defaults to UTC.
 	Schedule string `json:"schedule,omitempty"`
 
-	// Whether or not to enable a sidecar container for secure logging.
-	// Deprecated. Support for Secure Logs in Nais has been deprecated and will be removed.
-	// +nais:doc:Deprecated=true
-	SecureLogs *SecureLogs `json:"secureLogs,omitempty"`
-
 	// Whether to skip injection of NAV certificate authority bundle or not. Defaults to false.
 	SkipCaBundle bool `json:"skipCaBundle,omitempty"`
 

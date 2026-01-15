@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.18.0
+    controller-gen.kubebuilder.io/version: v0.20.0
   name: applications.nais.io
 spec:
   group: nais.io
@@ -1336,19 +1336,6 @@ spec:
                         pattern: ^\d+[KMG]i$
                         type: string
                     type: object
-                type: object
-              secureLogs:
-                description: |-
-                  Whether to enable a sidecar container for secure logging.
-                  Deprecated. Support for Secure Logs in Nais has been deprecated and will be removed.
-                properties:
-                  enabled:
-                    description: |-
-                      Whether to enable a sidecar container for secure logging.
-                      If enabled, a volume is mounted in the pods where secure logs can be saved.
-                    type: boolean
-                required:
-                - enabled
                 type: object
               service:
                 description: |-
