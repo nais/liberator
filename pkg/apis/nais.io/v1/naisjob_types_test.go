@@ -10,7 +10,7 @@ import (
 
 const (
 	// Change this value to accept re-synchronization of ALL naisjob resources when deploying a new version.
-	naisjobHash     = "105c10c13a52742a"
+	naisjobHash     = "81c0356aed6b4cd8"
 	aivenGeneration = 0
 )
 
