@@ -3,6 +3,7 @@ package nais_io_v1alpha1
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -196,6 +197,6 @@ func (m *ApplicationMutator) Default(ctx context.Context, obj runtime.Object) er
 	if app.Labels == nil {
 		app.Labels = make(map[string]string)
 	}
-	app.Labels[LabelKillAfter] = time.Now().Add(d).Format(time.RFC3339)
+	app.Labels[LabelKillAfter] = strconv.FormatInt(time.Now().Add(d).Unix(), 10)
 	return nil
 }

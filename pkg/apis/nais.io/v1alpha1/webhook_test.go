@@ -1,6 +1,7 @@
 package nais_io_v1alpha1
 
 import (
+	"strconv"
 	"testing"
 	"time"
 
@@ -548,8 +549,9 @@ func TestApplicationMutator_Default(t *testing.T) {
 		killAfter, exists := app.Labels[LabelKillAfter]
 		require.True(t, exists, "kill-after label should be set")
 
-		_, err = time.Parse(time.RFC3339, killAfter)
-		require.NoError(t, err, "kill-after label should be valid RFC3339 timestamp")
+		killAfterUnix, err := strconv.ParseInt(killAfter, 10, 64)
+		require.NoError(t, err, "kill-after label should be valid Unix timestamp")
+		require.Greater(t, killAfterUnix, time.Now().Unix(), "kill-after should be in the future")
 	})
 
 	t.Run("does not set label when TTL is empty", func(t *testing.T) {
@@ -575,7 +577,7 @@ func TestApplicationMutator_Default(t *testing.T) {
 
 	t.Run("overwrites existing kill-after label", func(t *testing.T) {
 		mutator := &ApplicationMutator{}
-		existingTime := "2025-01-01T12:00:00Z"
+		existingTime := "1735729200" // 2025-01-01T12:00:00Z as Unix timestamp
 		app := &Application{
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      "test-app",
