@@ -188,20 +188,14 @@ func (m *JobMutator) Default(ctx context.Context, obj runtime.Object) error {
 		return nil
 	}
 
-	// Only set kill-after on create (when label doesn't exist)
-	if nj.Labels == nil {
-		nj.Labels = make(map[string]string)
-	}
-
-	if _, exists := nj.Labels[LabelKillAfter]; exists {
-		return nil
-	}
-
 	d, err := time.ParseDuration(nj.Spec.TTL)
 	if err != nil {
 		return nil // Validation webhook will catch this
 	}
 
+	if nj.Labels == nil {
+		nj.Labels = make(map[string]string)
+	}
 	nj.Labels[LabelKillAfter] = time.Now().Add(d).Format(time.RFC3339)
 	return nil
 }

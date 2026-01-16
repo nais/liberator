@@ -188,20 +188,14 @@ func (m *ApplicationMutator) Default(ctx context.Context, obj runtime.Object) er
 		return nil
 	}
 
-	// Only set kill-after on create (when label doesn't exist)
-	if app.Labels == nil {
-		app.Labels = make(map[string]string)
-	}
-
-	if _, exists := app.Labels[LabelKillAfter]; exists {
-		return nil
-	}
-
 	d, err := time.ParseDuration(app.Spec.TTL)
 	if err != nil {
 		return nil // Validation webhook will catch this
 	}
 
+	if app.Labels == nil {
+		app.Labels = make(map[string]string)
+	}
 	app.Labels[LabelKillAfter] = time.Now().Add(d).Format(time.RFC3339)
 	return nil
 }
