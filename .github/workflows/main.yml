@@ -42,7 +42,7 @@ jobs:
           path: naisdoc
       - uses: actions/setup-go@v6
         with:
-          go-version-file: "go.mod"
+          go-version-file: "liberator/go.mod"
       - name: Generate documentation
         run: |
           cd liberator
