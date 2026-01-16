@@ -352,12 +352,6 @@ type Maskinporten struct {
 	Scopes MaskinportenScope `json:"scopes,omitempty"`
 }
 
-type SecureLogs struct {
-	// Whether to enable a sidecar container for secure logging.
-	// If enabled, a volume is mounted in the pods where secure logs can be saved.
-	Enabled bool `json:"enabled"`
-}
-
 type PrometheusConfig struct {
 	Enabled bool `json:"enabled,omitempty"`
 	// Defaults to application port, as defined in `.spec.port`.

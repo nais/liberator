@@ -75,8 +75,6 @@ spec:
           maxLag: 123
   leaderElection:
     enabled: true
-  secureLogs:
-    enabled: false
   caBundle:
     enabled: false
   # Communication

@@ -185,11 +185,6 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = new(v1.ResourceRequirements)
 		(*in).DeepCopyInto(*out)
 	}
-	if in.SecureLogs != nil {
-		in, out := &in.SecureLogs, &out.SecureLogs
-		*out = new(v1.SecureLogs)
-		**out = **in
-	}
 	if in.Service != nil {
 		in, out := &in.Service, &out.Service
 		*out = new(v1.Service)
