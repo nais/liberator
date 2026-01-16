@@ -15,11 +15,13 @@ generate:
 	$(CONTROLLER_GEN) object paths="./pkg/apis/..."
 	$(CONTROLLER_GEN) crd rbac:roleName=manager-role webhook paths="./pkg/apis/..." output:crd:artifacts:config=config/crd/bases
 	cp ./config/crd/bases/*nais.io_*.yaml ./charts/templates
+	kubectl kustomize ./config/crd/bases > ./charts/templates/aiven.nais.io_aivenapplications.yaml
 
 doc:
 	mkdir -p doc/output/application
 	mkdir -p doc/output/naisjob
 	mkdir -p doc/output/topic
+	mkdir -p doc/output/postgres
 	mkdir -p doc/output/openapi/nais
 	go run cmd/docgen/docgen.go \
 		--dir ./pkg/apis/... \

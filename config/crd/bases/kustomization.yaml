@@ -1,0 +1,18 @@
+resources:
+    - ./aiven.nais.io_aivenapplications.yaml
+patches:
+    - patch: |-
+          apiVersion: apiextensions.k8s.io/v1
+          kind: CustomResourceDefinition
+          metadata:
+            name: aivenapplications.aiven.nais.io
+          spec:
+           conversion:
+             strategy: Webhook
+             webhook:
+               conversionReviewVersions: ["v1","v2"]
+               clientConfig:
+                 service:
+                   namespace: nais-system
+                   name: aivenapp-conversion-webhooks-webhook
+                   path: /convert

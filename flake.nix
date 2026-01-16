@@ -80,6 +80,7 @@
               gofumpt
               gopls
               gotools
+              kustomize
             ];
           };
         }

@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/go-logr/logr"
 	aiven_io_v1alpha1 "github.com/nais/liberator/pkg/apis/aiven.io/v1alpha1"
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	"github.com/nais/liberator/pkg/webhookvalidator"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/util/errors"
@@ -30,6 +32,7 @@ var _ webhook.CustomDefaulter = &JobMutator{}
 // +kubebuilder:object:generate=false
 type JobValidator struct {
 	client.Client
+	logger logr.Logger
 }
 
 // +kubebuilder:object:generate=false
@@ -37,7 +40,10 @@ type JobMutator struct{}
 
 func SetupWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).
-		WithValidator(&JobValidator{Client: mgr.GetClient()}).
+		WithValidator(&JobValidator{
+			Client: mgr.GetClient(),
+			logger: mgr.GetLogger().WithName("naisjob-validator"),
+		}).
 		WithDefaulter(&JobMutator{}).
 		For(&Naisjob{}).
 		Complete()
@@ -64,6 +70,10 @@ func (v *JobValidator) ValidateCreate(ctx context.Context, obj runtime.Object) (
 	}
 
 	if err := v.checkAivenReferences(ctx, nj); err != nil {
+		return nil, err
+	}
+
+	if err := v.checkPostgresReference(ctx, nj); err != nil {
 		return nil, err
 	}
 
@@ -98,6 +108,10 @@ func (v *JobValidator) ValidateUpdate(ctx context.Context, oldObj runtime.Object
 		return nil, err
 	}
 
+	if err := v.checkPostgresReference(ctx, nj); err != nil {
+		return nil, err
+	}
+
 	return nil, nil
 }
 
@@ -125,6 +139,30 @@ func (v *JobValidator) checkAivenReferences(ctx context.Context, nj *Naisjob) er
 				return apierrors.NewBadRequest(fmt.Sprintf("Valkey '%s' does not exist. Create the Valkey instance first.", valkey.Instance))
 			}
 			return apierrors.NewInternalError(fmt.Errorf("could not validate Valkey reference: %w", err))
+		}
+	}
+	return nil
+}
+
+func (v *JobValidator) checkPostgresReference(ctx context.Context, nj *Naisjob) error {
+	if nj.Spec.Postgres != nil && nj.Spec.Postgres.ClusterName != "" {
+		pgMetaData := &metav1.PartialObjectMetadata{
+			TypeMeta: metav1.TypeMeta{
+				APIVersion: "data.nais.io/v1",
+				Kind:       "Postgres",
+			},
+		}
+		if err := v.Get(ctx, client.ObjectKey{Name: nj.Spec.Postgres.ClusterName, Namespace: nj.GetNamespace()}, pgMetaData); err != nil {
+			if apierrors.IsNotFound(err) {
+				v.logger.Info("Rejecting naisjob because the Postgres cluster does not exist",
+					"naisjob", nj.GetName(),
+					"namespace", nj.GetNamespace(),
+					"postgresCluster", nj.Spec.Postgres.ClusterName,
+				)
+				return apierrors.NewBadRequest(fmt.Sprintf("Postgres '%s' does not exist. Create the Postgres cluster first.", nj.Spec.Postgres.ClusterName))
+			}
+			v.logger.Error(err, "internal error when validating Postgres reference")
+			return apierrors.NewInternalError(fmt.Errorf("could not validate Postgres reference: %w", err))
 		}
 	}
 	return nil

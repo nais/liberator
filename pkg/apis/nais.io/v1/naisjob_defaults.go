@@ -40,7 +40,7 @@ func getNaisjobDefaults() *Naisjob {
 				},
 			},
 			BackoffLimit:           ptr.To(int32(DefaultBackoffLimit)),
-			FailedJobsHistoryLimit: DefaultFailedJobsHistoryLimit,
+			FailedJobsHistoryLimit: ptr.To(int32(DefaultFailedJobsHistoryLimit)),
 			Liveness: &Probe{
 				PeriodSeconds:    DefaultProbePeriodSeconds,
 				Timeout:          DefaultProbeTimeoutSeconds,

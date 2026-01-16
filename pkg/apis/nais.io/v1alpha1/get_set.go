@@ -27,14 +27,6 @@ func (in *Application) GetPrometheus() *nais_io_v1.PrometheusConfig {
 	return in.Spec.Prometheus
 }
 
-func (in *Application) GetLogtransform() string {
-	return in.Spec.Logtransform
-}
-
-func (in *Application) GetLogformat() string {
-	return in.Spec.Logformat
-}
-
 func (in *Application) GetPort() int {
 	return in.Spec.Port
 }

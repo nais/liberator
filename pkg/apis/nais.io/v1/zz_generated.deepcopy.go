@@ -1848,6 +1848,11 @@ func (in *NaisjobSpec) DeepCopyInto(out *NaisjobSpec) {
 		*out = make([]EnvFrom, len(*in))
 		copy(*out, *in)
 	}
+	if in.FailedJobsHistoryLimit != nil {
+		in, out := &in.FailedJobsHistoryLimit, &out.FailedJobsHistoryLimit
+		*out = new(int32)
+		**out = **in
+	}
 	if in.FilesFrom != nil {
 		in, out := &in.FilesFrom, &out.FilesFrom
 		*out = make([]FilesFrom, len(*in))

@@ -172,7 +172,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					ConfigMap: "my-configmap-with-envs",
 				},
 			},
-			FailedJobsHistoryLimit: 2,
+			FailedJobsHistoryLimit: int32p(2),
 			FilesFrom: []FilesFrom{
 				{
 					ConfigMap: "example-files-configmap",
@@ -292,8 +292,6 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				Port:             8080,
 				Timeout:          1,
 			},
-			Logformat:    "accesslog_with_referer_useragent",
-			Logtransform: "http_loglevel",
 			Maskinporten: &Maskinporten{
 				Enabled: true,
 				Scopes: MaskinportenScope{

@@ -190,22 +190,6 @@ func (in *MaskinportenClient) SetStatus(new DigdiratorStatus) {
 	in.Status = new
 }
 
-func (in *MaskinportenClient) GetConsumedScopes() []string {
-	scopes := make([]string, 0)
-	for _, scope := range in.Spec.Scopes.ConsumedScopes {
-		scopes = append(scopes, scope.Name)
-	}
-	return scopes
-}
-
-func (in *MaskinportenClient) GetExposedScopes() map[string]ExposedScope {
-	scopes := make(map[string]ExposedScope)
-	for _, scope := range in.Spec.Scopes.ExposedScopes {
-		scopes[scope.Name] = scope
-	}
-	return scopes
-}
-
 func init() {
 	SchemeBuilder.Register(
 		&IDPortenClient{},

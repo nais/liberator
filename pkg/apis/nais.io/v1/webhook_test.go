@@ -5,6 +5,7 @@ import (
 
 	aiven_io_v1alpha1 "github.com/nais/liberator/pkg/apis/aiven.io/v1alpha1"
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
+	data_nais_io_v1 "github.com/nais/pgrator/pkg/api/datav1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -20,6 +21,7 @@ func fakeKubeClient(objs ...client.Object) client.Client {
 	// Add necessary schemes for the test
 	_ = clientgoscheme.AddToScheme(scheme)
 	_ = aiven_io_v1alpha1.AddToScheme(scheme)
+	_ = data_nais_io_v1.AddToScheme(scheme)
 	_ = AddToScheme(scheme)
 
 	return fake.NewClientBuilder().WithScheme(scheme).WithObjects(objs...).Build()
@@ -293,6 +295,59 @@ func TestJobValidator_ValidateCreate(t *testing.T) {
 
 		warnings, err := validator.ValidateCreate(t.Context(), nj)
 		assert.NoError(t, err)
+		assert.Empty(t, warnings)
+	})
+
+	t.Run("postgres reference exists", func(t *testing.T) {
+		namespace := "test-ns"
+		clusterName := "my-postgres-cluster"
+
+		postgres := &data_nais_io_v1.Postgres{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      clusterName,
+				Namespace: namespace,
+			},
+		}
+
+		validator := &JobValidator{Client: fakeKubeClient(postgres)}
+		nj := &Naisjob{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "test-job",
+				Namespace: namespace,
+			},
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
+				Postgres: &Postgres{
+					ClusterName: clusterName,
+				},
+			},
+		}
+
+		warnings, err := validator.ValidateCreate(t.Context(), nj)
+		assert.NoError(t, err)
+		assert.Empty(t, warnings)
+	})
+
+	t.Run("postgres reference not found", func(t *testing.T) {
+		validator := &JobValidator{Client: fakeKubeClient()}
+		nj := &Naisjob{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "test-job",
+				Namespace: "test-ns",
+			},
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
+				Postgres: &Postgres{
+					ClusterName: "no-such-postgres",
+				},
+			},
+		}
+
+		warnings, err := validator.ValidateCreate(t.Context(), nj)
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "Postgres 'no-such-postgres' does not exist")
 		assert.Empty(t, warnings)
 	})
 }

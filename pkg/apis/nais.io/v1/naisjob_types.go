@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/google/uuid"
+	"github.com/nais/liberator/pkg/apis/nais.io"
 	log "github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -99,7 +100,7 @@ type NaisjobSpec struct {
 	EnvFrom []EnvFrom `json:"envFrom,omitempty"`
 
 	// Specify how many failed Jobs should be kept.
-	FailedJobsHistoryLimit int32 `json:"failedJobsHistoryLimit,omitempty"`
+	FailedJobsHistoryLimit *int32 `json:"failedJobsHistoryLimit,omitempty"`
 
 	// List of ConfigMap or Secret resources that will have their contents mounted into the containers as files.
 	// Either `configMap` or `secret` is required.
@@ -126,15 +127,6 @@ type NaisjobSpec struct {
 	// and remedy such situations. Read more about this over at the
 	// [Kubernetes probes documentation](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/).
 	Liveness *Probe `json:"liveness,omitempty"`
-
-	// Format of the logs from the container. Use this if the container doesn't support
-	// JSON logging and the log is in a special format that need to be parsed.
-	// +kubebuilder:validation:Enum="";accesslog;accesslog_with_processing_time;accesslog_with_referer_useragent;capnslog;logrus;gokit;redis;glog;simple;influxdb;log15
-	Logformat string `json:"logformat,omitempty"`
-
-	// Extra filters for modifying log content. This can e.g. be used for setting loglevel based on http status code.
-	// +kubebuilder:validation:Enum=http_loglevel;dns_loglevel
-	Logtransform string `json:"logtransform,omitempty"`
 
 	// Configures a Maskinporten client for this Naisjob.
 	// See [Maskinporten](https://doc.nais.io/security/auth/maskinporten/) for more details.
@@ -184,6 +176,8 @@ type NaisjobSpec struct {
 	Schedule string `json:"schedule,omitempty"`
 
 	// Whether or not to enable a sidecar container for secure logging.
+	// Deprecated. Support for Secure Logs in Nais has been deprecated and will be removed.
+	// +nais:doc:Deprecated=true
 	SecureLogs *SecureLogs `json:"secureLogs,omitempty"`
 
 	// Whether to skip injection of NAV certificate authority bundle or not. Defaults to false.
@@ -293,7 +287,7 @@ func (in *Naisjob) EnsureCorrelationID() error {
 		in.SetAnnotations(map[string]string{})
 	}
 
-	if len(in.Annotations[DeploymentCorrelationIDAnnotation]) != 0 {
+	if len(in.Annotations[nais_io.DeploymentCorrelationIDAnnotation]) != 0 {
 		return nil
 	}
 
@@ -302,13 +296,13 @@ func (in *Naisjob) EnsureCorrelationID() error {
 		return fmt.Errorf("generate deployment correlation ID: %s", err)
 	}
 
-	in.Annotations[DeploymentCorrelationIDAnnotation] = id.String()
+	in.Annotations[nais_io.DeploymentCorrelationIDAnnotation] = id.String()
 
 	return nil
 }
 
 func (in *Naisjob) CorrelationID() string {
-	return in.Annotations[DeploymentCorrelationIDAnnotation]
+	return in.Annotations[nais_io.DeploymentCorrelationIDAnnotation]
 }
 
 func (in *Naisjob) SetDeploymentRolloutStatus(rolloutStatus string) {
