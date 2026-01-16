@@ -11,11 +11,13 @@ import (
 	data_nais_io_v1 "github.com/nais/pgrator/pkg/api/datav1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	admissionv1 "k8s.io/api/admission/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
+	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
 func fakeKubeClient(objs ...client.Object) client.Client {
@@ -627,5 +629,36 @@ func TestApplicationMutator_Default(t *testing.T) {
 		err := mutator.Default(t.Context(), wrongObj)
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "expected an Application")
+	})
+
+	t.Run("skips subresource updates", func(t *testing.T) {
+		mutator := &ApplicationMutator{}
+		app := &Application{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "test-app",
+				Namespace: "test-ns",
+			},
+			Spec: ApplicationSpec{
+				Image: "nginx:latest",
+				TTL:   "1h",
+			},
+		}
+
+		// Create context with admission request that has SubResource set (e.g. status update)
+		req := admission.Request{
+			AdmissionRequest: admissionv1.AdmissionRequest{
+				SubResource: "status",
+			},
+		}
+		ctx := admission.NewContextWithRequest(t.Context(), req)
+
+		err := mutator.Default(ctx, app)
+		require.NoError(t, err)
+
+		// Label should NOT be set because this is a subresource update
+		if app.Labels != nil {
+			_, exists := app.Labels[LabelKillAfter]
+			assert.False(t, exists, "kill-after label should not be set for subresource updates")
+		}
 	})
 }
