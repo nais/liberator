@@ -22,7 +22,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
+const (
+	LabelKillAfter = "euthanaisa.nais.io/kill-after"
+)
+
 var _ webhook.CustomValidator = &JobValidator{}
+var _ webhook.CustomDefaulter = &JobMutator{}
 
 // +kubebuilder:object:generate=false
 type JobValidator struct {
@@ -30,12 +35,16 @@ type JobValidator struct {
 	logger logr.Logger
 }
 
+// +kubebuilder:object:generate=false
+type JobMutator struct{}
+
 func SetupWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).
 		WithValidator(&JobValidator{
 			Client: mgr.GetClient(),
 			logger: mgr.GetLogger().WithName("naisjob-validator"),
 		}).
+		WithDefaulter(&JobMutator{}).
 		For(&Naisjob{}).
 		Complete()
 }
@@ -166,4 +175,27 @@ func fromAggregate(agg errors.Aggregate) field.ErrorList {
 		list[i] = errs[i].(*field.Error)
 	}
 	return list
+}
+
+// Default implements webhook.CustomDefaulter - sets kill-after label if TTL is specified
+func (m *JobMutator) Default(ctx context.Context, obj runtime.Object) error {
+	nj, ok := obj.(*Naisjob)
+	if !ok {
+		return fmt.Errorf("expected a Naisjob but got a %T", obj)
+	}
+
+	if nj.Spec.TTL == "" {
+		return nil
+	}
+
+	d, err := time.ParseDuration(nj.Spec.TTL)
+	if err != nil {
+		return nil // Validation webhook will catch this
+	}
+
+	if nj.Labels == nil {
+		nj.Labels = make(map[string]string)
+	}
+	nj.Labels[LabelKillAfter] = time.Now().Add(d).Format(time.RFC3339)
+	return nil
 }

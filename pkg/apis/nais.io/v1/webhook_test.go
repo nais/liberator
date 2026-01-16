@@ -2,6 +2,7 @@ package nais_io_v1
 
 import (
 	"testing"
+	"time"
 
 	aiven_io_v1alpha1 "github.com/nais/liberator/pkg/apis/aiven.io/v1alpha1"
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
@@ -513,4 +514,109 @@ func TestJobValidator_ValidateCreate_InvalidObjectType(t *testing.T) {
 	require.Error(t, err)
 	assert.Contains(t, err.Error(), "expected a Naisjob")
 	assert.Empty(t, warnings)
+}
+
+func TestJobMutator_Default(t *testing.T) {
+	t.Run("sets kill-after label when TTL is specified", func(t *testing.T) {
+		mutator := &JobMutator{}
+		nj := &Naisjob{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "test-job",
+				Namespace: "test-ns",
+			},
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
+				TTL:      "1h",
+			},
+		}
+
+		err := mutator.Default(t.Context(), nj)
+		require.NoError(t, err)
+		require.NotNil(t, nj.Labels)
+
+		killAfter, exists := nj.Labels[LabelKillAfter]
+		require.True(t, exists, "kill-after label should be set")
+
+		_, err = time.Parse(time.RFC3339, killAfter)
+		require.NoError(t, err, "kill-after label should be valid RFC3339 timestamp")
+	})
+
+	t.Run("does not set label when TTL is empty", func(t *testing.T) {
+		mutator := &JobMutator{}
+		nj := &Naisjob{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "test-job",
+				Namespace: "test-ns",
+			},
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
+			},
+		}
+
+		err := mutator.Default(t.Context(), nj)
+		require.NoError(t, err)
+
+		if nj.Labels != nil {
+			_, exists := nj.Labels[LabelKillAfter]
+			assert.False(t, exists, "kill-after label should not be set when TTL is empty")
+		}
+	})
+
+	t.Run("overwrites existing kill-after label", func(t *testing.T) {
+		mutator := &JobMutator{}
+		existingTime := "2025-01-01T12:00:00Z"
+		nj := &Naisjob{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "test-job",
+				Namespace: "test-ns",
+				Labels: map[string]string{
+					LabelKillAfter: existingTime,
+				},
+			},
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
+				TTL:      "1h",
+			},
+		}
+
+		err := mutator.Default(t.Context(), nj)
+		require.NoError(t, err)
+
+		assert.NotEqual(t, existingTime, nj.Labels[LabelKillAfter], "kill-after label should be overwritten")
+	})
+
+	t.Run("handles invalid TTL gracefully", func(t *testing.T) {
+		mutator := &JobMutator{}
+		nj := &Naisjob{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "test-job",
+				Namespace: "test-ns",
+			},
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
+				TTL:      "invalid",
+			},
+		}
+
+		err := mutator.Default(t.Context(), nj)
+		require.NoError(t, err)
+
+		if nj.Labels != nil {
+			_, exists := nj.Labels[LabelKillAfter]
+			assert.False(t, exists, "kill-after label should not be set for invalid TTL")
+		}
+	})
+
+	t.Run("returns error for wrong object type", func(t *testing.T) {
+		mutator := &JobMutator{}
+		wrongObj := &Image{}
+
+		err := mutator.Default(t.Context(), wrongObj)
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "expected a Naisjob")
+	})
 }

@@ -22,7 +22,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook/admission"
 )
 
+const (
+	LabelKillAfter = "euthanaisa.nais.io/kill-after"
+)
+
 var _ webhook.CustomValidator = &ApplicationValidator{}
+var _ webhook.CustomDefaulter = &ApplicationMutator{}
 
 // +kubebuilder:object:generate=false
 type ApplicationValidator struct {
@@ -30,12 +35,16 @@ type ApplicationValidator struct {
 	logger logr.Logger
 }
 
+// +kubebuilder:object:generate=false
+type ApplicationMutator struct{}
+
 func SetupWebhookWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewWebhookManagedBy(mgr).
 		WithValidator(&ApplicationValidator{
 			Client: mgr.GetClient(),
 			logger: mgr.GetLogger().WithName("application-validator"),
 		}).
+		WithDefaulter(&ApplicationMutator{}).
 		For(&Application{}).
 		Complete()
 }
@@ -166,4 +175,27 @@ func fromAggregate(agg errors.Aggregate) field.ErrorList {
 		list[i] = errs[i].(*field.Error)
 	}
 	return list
+}
+
+// Default implements webhook.CustomDefaulter - sets kill-after label if TTL is specified
+func (m *ApplicationMutator) Default(ctx context.Context, obj runtime.Object) error {
+	app, ok := obj.(*Application)
+	if !ok {
+		return fmt.Errorf("expected an Application but got a %T", obj)
+	}
+
+	if app.Spec.TTL == "" {
+		return nil
+	}
+
+	d, err := time.ParseDuration(app.Spec.TTL)
+	if err != nil {
+		return nil // Validation webhook will catch this
+	}
+
+	if app.Labels == nil {
+		app.Labels = make(map[string]string)
+	}
+	app.Labels[LabelKillAfter] = time.Now().Add(d).Format(time.RFC3339)
+	return nil
 }
