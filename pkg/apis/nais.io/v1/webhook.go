@@ -180,11 +180,6 @@ func fromAggregate(agg errors.Aggregate) field.ErrorList {
 
 // Default implements webhook.CustomDefaulter - sets kill-after label if TTL is specified
 func (m *JobMutator) Default(ctx context.Context, obj runtime.Object) error {
-	// Skip subresource updates (e.g. status updates from naiserator)
-	if req, err := admission.RequestFromContext(ctx); err == nil && req.SubResource != "" {
-		return nil
-	}
-
 	nj, ok := obj.(*Naisjob)
 	if !ok {
 		return fmt.Errorf("expected a Naisjob but got a %T", obj)

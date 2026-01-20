@@ -180,11 +180,6 @@ func fromAggregate(agg errors.Aggregate) field.ErrorList {
 
 // Default implements webhook.CustomDefaulter - sets kill-after label if TTL is specified
 func (m *ApplicationMutator) Default(ctx context.Context, obj runtime.Object) error {
-	// Skip subresource updates (e.g. status updates from naiserator)
-	if req, err := admission.RequestFromContext(ctx); err == nil && req.SubResource != "" {
-		return nil
-	}
-
 	app, ok := obj.(*Application)
 	if !ok {
 		return fmt.Errorf("expected an Application but got a %T", obj)

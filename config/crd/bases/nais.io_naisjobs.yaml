@@ -1386,4 +1386,5 @@ spec:
           rule: self.metadata.name.size() <= 63
     served: true
     storage: true
-    subresources: {}
+    subresources:
+      status: {}
