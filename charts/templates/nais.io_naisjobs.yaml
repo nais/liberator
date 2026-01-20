@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.18.0
+    controller-gen.kubebuilder.io/version: v0.20.0
   name: naisjobs.nais.io
 spec:
   group: nais.io
@@ -1386,4 +1386,5 @@ spec:
           rule: self.metadata.name.size() <= 63
     served: true
     storage: true
-    subresources: {}
+    subresources:
+      status: {}
