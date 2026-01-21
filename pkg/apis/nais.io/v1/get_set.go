@@ -81,10 +81,6 @@ func (in *Naisjob) GetSkipCABundle() bool {
 	return in.Spec.SkipCaBundle
 }
 
-func (in *Naisjob) GetSecureLogs() *SecureLogs {
-	return in.Spec.SecureLogs
-}
-
 func (in *Naisjob) GetMaskinporten() *Maskinporten {
 	return in.Spec.Maskinporten
 }

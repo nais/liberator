@@ -358,10 +358,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			},
 			RestartPolicy: "Never",
 			Schedule:      "*/15 0 0 0 0",
-			SecureLogs: &SecureLogs{
-				Enabled: true,
-			},
-			SkipCaBundle: true,
+			SkipCaBundle:  true,
 			Startup: &Probe{
 				FailureThreshold: 10,
 				InitialDelay:     20,

@@ -89,9 +89,6 @@ func getAppDefaults() *Application {
 				Port:     DefaultServicePort,
 				Protocol: DefaultPortName,
 			},
-			SecureLogs: &nais_io_v1.SecureLogs{
-				Enabled: false,
-			},
 			AccessPolicy: &nais_io_v1.AccessPolicy{
 				Inbound: &nais_io_v1.AccessPolicyInbound{
 					Rules: []nais_io_v1.AccessPolicyInboundRule{},
