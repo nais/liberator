@@ -25,7 +25,7 @@ const (
 // +kubebuilder:object:root=true
 type AivenApplicationList struct {
 	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
+	metav1.ListMeta `json:"metadata"`
 	Items           []AivenApplication `json:"items"`
 }
 
@@ -33,7 +33,6 @@ type AivenApplicationList struct {
 // +kubebuilder:resource:shortName={"aivenapp"}
 // +kubebuilder:subresource:status
 // +kubebuilder:metadata:annotations="cert-manager.io/inject-ca-from=nais-system/aivenapp-conversion-webhooks-serving-cert"
-// +kubebuilder:printcolumn:name="Name of secret",type=string,JSONPath=".spec.secretName"
 // +kubebuilder:printcolumn:name="Protected",type="boolean",JSONPath=".spec.protected",priority=10
 // +kubebuilder:printcolumn:name="Expires",type="date",JSONPath=".spec.expiresAt",priority=10
 // +kubebuilder:printcolumn:name="State",type="string",JSONPath=".status.synchronizationState",priority=20
@@ -41,9 +40,9 @@ type AivenApplicationList struct {
 // +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",priority=30
 type AivenApplication struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
-	Spec              AivenApplicationSpec   `json:"spec,omitempty"`
-	Status            AivenApplicationStatus `json:"status,omitempty"`
+	metav1.ObjectMeta `json:"metadata"`
+	Spec              AivenApplicationSpec   `json:"spec"`
+	Status            AivenApplicationStatus `json:"status"`
 }
 
 type KafkaSpec struct {
@@ -105,7 +104,7 @@ type AivenApplicationCondition struct {
 	// Status of the condition, one of True, False, Unknown.
 	Status corev1.ConditionStatus `json:"status"`
 	// The last time this condition was updated.
-	LastUpdateTime metav1.Time `json:"lastUpdateTime,omitempty"`
+	LastUpdateTime metav1.Time `json:"lastUpdateTime"`
 	// The reason for the condition's last transition.
 	Reason string `json:"reason,omitempty"`
 	// A human readable message indicating details about the transition.
