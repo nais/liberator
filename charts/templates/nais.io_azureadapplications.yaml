@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.20.0
+    controller-gen.kubebuilder.io/version: v0.20.1
   name: azureadapplications.nais.io
 spec:
   group: nais.io
@@ -81,7 +81,9 @@ spec:
                   claims in tokens returned to the Azure AD application.
                 properties:
                   extra:
-                    description: Deprecated, do not use.
+                    description: Deprecated. These claims are already included by
+                      default; this field is ignored and has no effect. It will be
+                      removed in a future release.
                     items:
                       enum:
                       - NAVident
