@@ -15,8 +15,22 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .spec.secretName
+    - jsonPath: .metadata.creationTimestamp
+      name: Created
+      type: date
+    - jsonPath: .status.synchronizationTimestamp
+      name: Synced
+      type: date
+    - jsonPath: .status.synchronizationState
+      name: State
+      type: string
+    - jsonPath: .status.clientID
+      name: Client ID
+      priority: 1
+      type: string
+    - jsonPath: .status.synchronizationSecretName
       name: Secret
+      priority: 1
       type: string
     name: v1
     schema:
@@ -158,17 +172,32 @@ spec:
           status:
             description: JwkerStatus defines the observed state of Jwker
             properties:
-              synchronizationHash:
+              clientID:
+                description: ClientID is the OAuth2 Client ID associated with this
+                  Jwker
                 type: string
+              keyIDs:
+                description: KeyIDs are the JWK Key IDs (kid) associated with this
+                  Jwker
+                items:
+                  type: string
+                type: array
+              observedGeneration:
+                description: |-
+                  ObservedGeneration is the most recent generation observed by the controller.
+                  If this is equal to metadata.generation, then that means that the current reported status reflects the most recent desired state of the resource.
+                format: int64
+                type: integer
               synchronizationSecretName:
                 type: string
               synchronizationState:
                 type: string
-              synchronizationTime:
-                format: int64
-                type: integer
+              synchronizationTimestamp:
+                format: date-time
+                type: string
             type: object
         type: object
     served: true
     storage: true
-    subresources: {}
+    subresources:
+      status: {}
