@@ -68,6 +68,12 @@ type StreamStatus struct {
 	FullyQualifiedTopicPrefix string   `json:"fullyQualifiedTopicPrefix,omitempty"`
 }
 
+type AdditionalStreamUser struct {
+	Username  string       `json:"username"`
+	ExpiresAt *metav1.Time `json:"expiresAt"`
+}
+
 type StreamSpec struct {
-	Pool string `json:"pool"`
+	Pool            string                 `json:"pool"`
+	AdditionalUsers []AdditionalStreamUser `json:"additionalUsers"`
 }

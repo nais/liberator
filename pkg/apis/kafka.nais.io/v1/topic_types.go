@@ -176,10 +176,12 @@ type TopicACL struct {
 	// Defaults to `readwrite`.
 	// +kubebuilder:validation:Enum=read;write;readwrite
 	Access string `json:"access"`
-	// The name of the specified application
+	// The name of the specified AivenApplication.aiven.nais.io
 	Application string `json:"application"`
 	// The team of the specified application
 	Team string `json:"team"`
+	// From when this ACL should automatically get removed from aiven
+	ExpiresAt *metav1.Time `json:"expiresAt"`
 }
 
 type User struct {
