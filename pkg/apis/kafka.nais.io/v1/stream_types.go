@@ -40,12 +40,24 @@ func (in *Stream) TopicWildcard() string {
 	return fmt.Sprintf("%s*", in.TopicPrefix())
 }
 
-func (in *Stream) ACL() TopicACL {
-	return TopicACL{
-		Access:      "admin",
-		Application: in.GetName(),
-		Team:        in.GetNamespace(),
+func (in *Stream) GetACLs() []TopicACL {
+	acls := []TopicACL{
+		{
+			Access:      "admin",
+			Application: in.GetName(),
+			Team:        in.GetNamespace(),
+		},
 	}
+
+	for _, user := range in.Spec.AdditionalUsers {
+		acls = append(acls, TopicACL{
+			Access:      "admin",
+			Application: user,
+			Team:        in.GetNamespace(),
+		})
+	}
+
+	return acls
 }
 
 func (in *Stream) Hash() (string, error) {
@@ -69,5 +81,6 @@ type StreamStatus struct {
 }
 
 type StreamSpec struct {
-	Pool string `json:"pool"`
+	Pool            string   `json:"pool"`
+	AdditionalUsers []string `json:"additionalUsers,omitempty"`
 }

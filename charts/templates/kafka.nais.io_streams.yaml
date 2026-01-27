@@ -41,6 +41,10 @@ spec:
             type: object
           spec:
             properties:
+              additionalUsers:
+                items:
+                  type: string
+                type: array
               pool:
                 type: string
             required:
