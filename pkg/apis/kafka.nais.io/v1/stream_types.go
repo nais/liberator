@@ -69,11 +69,10 @@ type StreamStatus struct {
 }
 
 type AdditionalStreamUser struct {
-	Username  string       `json:"username"`
-	ExpiresAt *metav1.Time `json:"expiresAt"`
+	Username string `json:"username"`
 }
 
 type StreamSpec struct {
 	Pool            string                 `json:"pool"`
-	AdditionalUsers []AdditionalStreamUser `json:"additionalUsers"`
+	AdditionalUsers []AdditionalStreamUser `json:"additionalUsers,omitempty"`
 }

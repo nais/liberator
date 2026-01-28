@@ -44,20 +44,15 @@ spec:
               additionalUsers:
                 items:
                   properties:
-                    expiresAt:
-                      format: date-time
-                      type: string
                     username:
                       type: string
                   required:
-                  - expiresAt
                   - username
                   type: object
                 type: array
               pool:
                 type: string
             required:
-            - additionalUsers
             - pool
             type: object
           status:

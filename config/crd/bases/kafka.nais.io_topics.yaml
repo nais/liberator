@@ -65,18 +65,12 @@ spec:
                     application:
                       description: The name of the specified AivenApplication.aiven.nais.io
                       type: string
-                    expiresAt:
-                      description: From when this ACL should automatically get removed
-                        from aiven
-                      format: date-time
-                      type: string
                     team:
                       description: The team of the specified application
                       type: string
                   required:
                   - access
                   - application
-                  - expiresAt
                   - team
                   type: object
                 type: array

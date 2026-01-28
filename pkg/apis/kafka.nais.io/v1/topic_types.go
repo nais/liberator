@@ -180,8 +180,6 @@ type TopicACL struct {
 	Application string `json:"application"`
 	// The team of the specified application
 	Team string `json:"team"`
-	// From when this ACL should automatically get removed from aiven
-	ExpiresAt *metav1.Time `json:"expiresAt"`
 }
 
 type User struct {
