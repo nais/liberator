@@ -63,7 +63,7 @@ spec:
                       - readwrite
                       type: string
                     application:
-                      description: The name of the specified application
+                      description: The name of the specified AivenApplication.aiven.nais.io
                       type: string
                     team:
                       description: The team of the specified application
