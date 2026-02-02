@@ -3,7 +3,7 @@ module github.com/nais/liberator
 go 1.25.3
 
 require (
-	github.com/aiven/aiven-go-client/v2 v2.37.0
+	github.com/aiven/aiven-go-client/v2 v2.38.0
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-logr/logr v1.4.3
 	github.com/go-viper/mapstructure/v2 v2.5.0
