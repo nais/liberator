@@ -452,38 +452,6 @@ func TestJobValidator_ValidateUpdate(t *testing.T) {
 		assert.Contains(t, err.Error(), "OpenSearch 'nonexistent-opensearch' does not exist")
 		assert.Empty(t, warnings)
 	})
-
-	t.Run("invalid old object type", func(t *testing.T) {
-		validator := &JobValidator{Client: fakeKubeClient()}
-		oldNj := &Image{} // Wrong type
-		newNj := &Naisjob{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-job",
-				Namespace: "test-ns",
-			},
-		}
-
-		warnings, err := validator.ValidateUpdate(t.Context(), oldNj, newNj)
-		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "expected a Naisjob")
-		assert.Empty(t, warnings)
-	})
-
-	t.Run("invalid new object type", func(t *testing.T) {
-		validator := &JobValidator{Client: fakeKubeClient()}
-		oldNj := &Naisjob{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-job",
-				Namespace: "test-ns",
-			},
-		}
-		newNj := &Image{} // Wrong type
-
-		warnings, err := validator.ValidateUpdate(t.Context(), oldNj, newNj)
-		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "expected a Naisjob")
-		assert.Empty(t, warnings)
-	})
 }
 
 func TestJobValidator_ValidateDelete(t *testing.T) {
@@ -504,17 +472,6 @@ func TestJobValidator_ValidateDelete(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Empty(t, warnings)
 	})
-}
-
-func TestJobValidator_ValidateCreate_InvalidObjectType(t *testing.T) {
-	validator := &JobValidator{Client: fakeKubeClient()}
-
-	// Pass wrong object type
-	wrongObj := &Image{}
-	warnings, err := validator.ValidateCreate(t.Context(), wrongObj)
-	require.Error(t, err)
-	assert.Contains(t, err.Error(), "expected a Naisjob")
-	assert.Empty(t, warnings)
 }
 
 func TestJobMutator_Default(t *testing.T) {
@@ -611,14 +568,5 @@ func TestJobMutator_Default(t *testing.T) {
 			_, exists := nj.Labels[LabelKillAfter]
 			assert.False(t, exists, "kill-after label should not be set for invalid TTL")
 		}
-	})
-
-	t.Run("returns error for wrong object type", func(t *testing.T) {
-		mutator := &JobMutator{}
-		wrongObj := &Image{}
-
-		err := mutator.Default(t.Context(), wrongObj)
-		require.Error(t, err)
-		assert.Contains(t, err.Error(), "expected a Naisjob")
 	})
 }

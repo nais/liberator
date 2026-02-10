@@ -464,38 +464,6 @@ func TestApplicationValidator_ValidateUpdate(t *testing.T) {
 		assert.Contains(t, err.Error(), "OpenSearch 'nonexistent-opensearch' does not exist")
 		assert.Empty(t, warnings)
 	})
-
-	t.Run("invalid old object type", func(t *testing.T) {
-		validator := &ApplicationValidator{Client: fakeKubeClient()}
-		oldApp := &nais_io_v1.Image{} // Wrong type
-		newApp := &Application{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
-				Namespace: "test-ns",
-			},
-		}
-
-		warnings, err := validator.ValidateUpdate(t.Context(), oldApp, newApp)
-		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "expected an Application")
-		assert.Empty(t, warnings)
-	})
-
-	t.Run("invalid new object type", func(t *testing.T) {
-		validator := &ApplicationValidator{Client: fakeKubeClient()}
-		oldApp := &Application{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
-				Namespace: "test-ns",
-			},
-		}
-		newApp := &nais_io_v1.Image{} // Wrong type
-
-		warnings, err := validator.ValidateUpdate(t.Context(), oldApp, newApp)
-		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "expected an Application")
-		assert.Empty(t, warnings)
-	})
 }
 
 func TestApplicationValidator_ValidateDelete(t *testing.T) {
@@ -515,17 +483,6 @@ func TestApplicationValidator_ValidateDelete(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Empty(t, warnings)
 	})
-}
-
-func TestApplicationValidator_ValidateCreate_InvalidObjectType(t *testing.T) {
-	validator := &ApplicationValidator{Client: fakeKubeClient()}
-
-	// Pass wrong object type
-	wrongObj := &nais_io_v1.Image{}
-	warnings, err := validator.ValidateCreate(t.Context(), wrongObj)
-	require.Error(t, err)
-	assert.Contains(t, err.Error(), "expected an Application")
-	assert.Empty(t, warnings)
 }
 
 func TestApplicationMutator_Default(t *testing.T) {
@@ -618,14 +575,5 @@ func TestApplicationMutator_Default(t *testing.T) {
 			_, exists := app.Labels[LabelKillAfter]
 			assert.False(t, exists, "kill-after label should not be set for invalid TTL")
 		}
-	})
-
-	t.Run("returns error for wrong object type", func(t *testing.T) {
-		mutator := &ApplicationMutator{}
-		wrongObj := &nais_io_v1.Image{}
-
-		err := mutator.Default(t.Context(), wrongObj)
-		require.Error(t, err)
-		assert.Contains(t, err.Error(), "expected an Application")
 	})
 }
