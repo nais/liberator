@@ -440,9 +440,6 @@ func ExampleApplicationForDocumentation() *Application {
 					Memory: "256Mi",
 				},
 			},
-			SecureLogs: &nais_io_v1.SecureLogs{
-				Enabled: true,
-			},
 			Service: &nais_io_v1.Service{
 				Port:     DefaultServicePort,
 				Protocol: DefaultPortName,
