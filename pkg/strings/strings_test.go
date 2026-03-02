@@ -1,9 +1,10 @@
 package strings_test
 
 import (
+	"testing"
+
 	"github.com/nais/liberator/pkg/strings"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestContainsString(t *testing.T) {

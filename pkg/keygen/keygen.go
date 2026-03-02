@@ -3,7 +3,6 @@ package keygen
 import (
 	"crypto/rand"
 	mathrand "math/rand"
-	"time"
 )
 
 // Generate a cryptographically secure random key of N length.
@@ -14,10 +13,6 @@ func Keygen(length int) ([]byte, error) {
 }
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyz0123456789"
-
-func init() {
-	mathrand.Seed(time.Now().UnixNano())
-}
 
 // Generate a string of random letters and numbers.
 // This function is NOT cryptographically secure.

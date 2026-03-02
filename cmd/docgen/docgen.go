@@ -279,7 +279,7 @@ func run() error {
 
 func writeJSONSchema(path, kind, group, apiVersion string, schemata apiext.JSONSchemaProps) error {
 	path = filepath.Join(path, strings.ReplaceAll(apiVersion+"_"+kind, "/", "_")+".json")
-	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
+	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0o644)
 	if err != nil {
 		return err
 	}
@@ -346,7 +346,7 @@ func Write(renderer Renderer, tpl string, outFile string, base apiext.JSONSchema
 	var err error
 	w := os.Stdout
 	if len(outFile) > 0 {
-		w, err = os.OpenFile(outFile, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)
+		w, err = os.OpenFile(outFile, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0o644)
 		if err != nil {
 			return err
 		}
@@ -641,7 +641,7 @@ func getStructSubPath(keyWithDots string, object any) (any, error) {
 	v := reflect.ValueOf(object)
 
 	resolve := func(v reflect.Value) reflect.Value {
-		if v.Kind() == reflect.Ptr {
+		if v.Kind() == reflect.Pointer {
 			return v.Elem()
 		}
 		return v
@@ -713,7 +713,7 @@ func getValueFromStruct(keyWithDots string, object any) (any, error) {
 		if len(key) == 0 {
 			break
 		}
-		for v.Kind() == reflect.Ptr {
+		for v.Kind() == reflect.Pointer {
 			v = v.Elem()
 		}
 		if v.Kind() != reflect.Map {
@@ -738,7 +738,7 @@ func getValueFromStruct(keyWithDots string, object any) (any, error) {
 		return nil, fmt.Errorf("no value")
 	}
 
-	if v.Kind() == reflect.Ptr {
+	if v.Kind() == reflect.Pointer {
 		v = v.Elem()
 	}
 

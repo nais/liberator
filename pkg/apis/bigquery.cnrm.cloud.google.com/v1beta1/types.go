@@ -19,7 +19,8 @@ type BigQueryDatasetAccess struct {
 }
 
 // This map (and its members) are inspired by output of (the resource existed in GCP clusters already):
-//   kubectl get crd bigquerydatasets.bigquery.cnrm.cloud.google.com -o yaml
+//
+//	kubectl get crd bigquerydatasets.bigquery.cnrm.cloud.google.com -o yaml
 type BigqueryDatasetSpec struct {
 	// The datasetId of the resource. Used for creation and acquisition.
 	ResourceID string `json:"resourceID"`

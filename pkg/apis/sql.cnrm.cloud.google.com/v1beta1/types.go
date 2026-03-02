@@ -34,8 +34,10 @@ type SQLDatabaseFlag struct {
 	Value string `json:"value"`
 }
 
-const SQLInstanceEditionEnterprise = "ENTERPRISE"
-const SQLInstanceEditionEnterprisePlus = "ENTERPRISE_PLUS"
+const (
+	SQLInstanceEditionEnterprise     = "ENTERPRISE"
+	SQLInstanceEditionEnterprisePlus = "ENTERPRISE_PLUS"
+)
 
 type SQLInstanceSettings struct {
 	AvailabilityType    string                           `json:"availabilityType"`
@@ -100,8 +102,10 @@ type InstanceRef struct {
 	External  string `json:"external,omitempty"`
 }
 
-const DeletionPolicyAbandon = "ABANDON"
-const DeletionPolicyDelete = "DELETE"
+const (
+	DeletionPolicyAbandon = "ABANDON"
+	DeletionPolicyDelete  = "DELETE"
+)
 
 type SQLDatabaseSpec struct {
 	ResourceID     string      `json:"resourceID,omitempty"`

@@ -1,9 +1,10 @@
 package aiven_nais_io_v2
 
 import (
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	corev1 "k8s.io/api/core/v1"
-	"testing"
 )
 
 var (
@@ -26,10 +27,6 @@ var (
 	aivenFailTrue = AivenApplicationCondition{
 		Type:   AivenApplicationAivenFailure,
 		Status: corev1.ConditionTrue,
-	}
-	aivenFailFalse = AivenApplicationCondition{
-		Type:   AivenApplicationAivenFailure,
-		Status: corev1.ConditionFalse,
 	}
 )
 

@@ -143,7 +143,7 @@ func (in *AivenApplicationStatus) AddCondition(condition AivenApplicationConditi
 	for _, dropType := range dropTypes {
 		dropTypeStrings = append(dropTypeStrings, string(dropType))
 	}
-	condition.LastUpdateTime = metav1.Time{time.Now()}
+	condition.LastUpdateTime = metav1.Time{Time: time.Now()}
 	conditions := make([]AivenApplicationCondition, 0, len(in.Conditions))
 	for _, c := range in.Conditions {
 		if strings.ContainsString(dropTypeStrings, string(c.Type)) {
@@ -171,7 +171,6 @@ func (in *AivenApplication) FormatExpiresAt() string {
 }
 
 func (in *AivenApplication) SecretKey(service string) (*client.ObjectKey, error) {
-
 	secret := reflect.ValueOf(in.Spec).FieldByName(service)
 
 	if !secret.IsValid() {
@@ -182,7 +181,6 @@ func (in *AivenApplication) SecretKey(service string) (*client.ObjectKey, error)
 
 	if !secretName.IsValid() {
 		return nil, fmt.Errorf("invalid field: secretName")
-
 	}
 
 	return &client.ObjectKey{

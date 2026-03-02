@@ -1,8 +1,9 @@
 package kafka_nais_io_v1
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTopicHash(t *testing.T) {

@@ -9,8 +9,8 @@ import (
 
 func TestDeepComparison(t *testing.T) {
 	tests := map[string]struct {
-		New        interface{}
-		Old        interface{}
+		New        any
+		Old        any
 		TestErrors []string
 	}{
 		"Ensure equal leaf-like object pass": {
@@ -66,18 +66,18 @@ func TestDeepComparison(t *testing.T) {
 		},
 		"Immutable pointer field pass if equal": {
 			New: ptrStructImmutable{
-				Pint: ptrInt(1),
+				Pint: new(1),
 			},
 			Old: ptrStructImmutable{
-				Pint: ptrInt(1),
+				Pint: new(1),
 			},
 		},
 		"Immutable pointer field fail if not equal": {
 			New: ptrStructImmutable{
-				Pint: ptrInt(1),
+				Pint: new(1),
 			},
 			Old: ptrStructImmutable{
-				Pint: ptrInt(3),
+				Pint: new(3),
 			},
 			TestErrors: []string{
 				"test.Pint",
@@ -85,13 +85,13 @@ func TestDeepComparison(t *testing.T) {
 		},
 		"Immutable struct pointer field fail if not equal": {
 			New: ptrStructImmutable{
-				Pint: ptrInt(1),
+				Pint: new(1),
 				PStruct: &SmallStruct{
 					A: 5,
 				},
 			},
 			Old: ptrStructImmutable{
-				Pint: ptrInt(1),
+				Pint: new(1),
 				PStruct: &SmallStruct{
 					A: 15,
 				},
@@ -102,13 +102,13 @@ func TestDeepComparison(t *testing.T) {
 		},
 		"Immutable struct pointer field pass if equal": {
 			New: ptrStructImmutable{
-				Pint: ptrInt(1),
+				Pint: new(1),
 				PStruct: &SmallStruct{
 					A: 5,
 				},
 			},
 			Old: ptrStructImmutable{
-				Pint: ptrInt(1),
+				Pint: new(1),
 				PStruct: &SmallStruct{
 					A: 5,
 				},
@@ -271,13 +271,4 @@ type inlineStruct struct {
 type ptrStructImmutable struct {
 	Pint    *int         `nais:"immutable"`
 	PStruct *SmallStruct `nais:"immutable"`
-}
-
-type ptrStruct struct {
-	Pint    *int
-	PStruct *SmallStruct
-}
-
-func ptrInt(i int) *int {
-	return &i
 }

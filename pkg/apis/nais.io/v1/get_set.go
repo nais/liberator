@@ -146,14 +146,14 @@ func (in *AzureNaisJob) GetSidecar() *AzureSidecar {
 }
 
 func (in *GCP) Instance() *CloudSqlInstance {
-	if in.SqlInstances == nil || len(in.SqlInstances) < 1 {
+	if len(in.SqlInstances) < 1 {
 		return nil
 	}
 	return &in.SqlInstances[0]
 }
 
 func (in *CloudSqlInstance) Database() *CloudSqlDatabase {
-	if in.Databases == nil || len(in.Databases) < 1 {
+	if len(in.Databases) < 1 {
 		return nil
 	}
 	return &in.Databases[0]

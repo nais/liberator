@@ -5,25 +5,25 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"io/ioutil"
+	"os"
 
 	"k8s.io/client-go/util/keyutil"
 )
 
 func tlsBytesFromFiles(certPath, keyPath, caPath string) (cert, key, ca []byte, err error) {
-	cert, err = ioutil.ReadFile(certPath)
+	cert, err = os.ReadFile(certPath)
 	if err != nil {
 		err = fmt.Errorf("read TLS certificate file %s: %s", certPath, err)
 		return
 	}
 
-	key, err = ioutil.ReadFile(keyPath)
+	key, err = os.ReadFile(keyPath)
 	if err != nil {
 		err = fmt.Errorf("read TLS key file %s: %s", keyPath, err)
 		return
 	}
 
-	ca, err = ioutil.ReadFile(caPath)
+	ca, err = os.ReadFile(caPath)
 	if err != nil {
 		err = fmt.Errorf("read TLS CA certificate file %s: %s", caPath, err)
 		return

@@ -2,10 +2,9 @@ package conftools
 
 import (
 	"fmt"
+	"slices"
 	"sort"
 	"strings"
-
-	"slices"
 
 	"github.com/go-viper/mapstructure/v2"
 	flag "github.com/spf13/pflag"

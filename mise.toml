@@ -1,1 +1,98 @@
 [tools]
+go = "1.26.0"
+
+
+[tasks."check"]
+description = "Run all static analysis tools"
+depends = [
+  'fmt',
+  'check:staticcheck',
+  'check:vulncheck',
+  'check:vet',
+]
+
+[tasks."check:gosec"]
+description = "Run gosec"
+run = "go tool github.com/securego/gosec/v2/cmd/gosec --exclude-generated -terse ./..."
+
+[tasks."check:staticcheck"]
+description = "Run staticcheck"
+run = "go tool honnef.co/go/tools/cmd/staticcheck ./..."
+
+[tasks."check:vulncheck"]
+description = "Run vulncheck"
+run = "go tool golang.org/x/vuln/cmd/govulncheck ./..."
+
+[tasks."check:vet"]
+description = "Run go vet"
+wait_for = ['fmt']
+run = "go vet ./..."
+
+[tasks."fmt"]
+description = "Format all code"
+depends = ['fmt:go', 'fmt:gofix']
+
+[tasks."fmt:go"]
+description = "Format go code using gofumpt"
+run = "go tool mvdan.cc/gofumpt -w ./"
+
+[tasks."fmt:gofix"]
+description = "Fix runs the Go fix tool (cmd/fix) on the named packages and applies suggested fixes."
+run = "go fix ./..."
+
+[tasks.test]
+description = "Run all tests"
+run = "go test ./... -count=1"
+
+[tasks.generate]
+description = "Generate all"
+depends = ['generate:doc', 'generate:mocks', 'generate:crd']
+
+[tasks."generate:crd"]
+description = "Generate deep copy functions and CRD files"
+run = """
+go tool sigs.k8s.io/controller-tools/cmd/controller-gen object paths="./pkg/apis/..."
+go tool sigs.k8s.io/controller-tools/cmd/controller-gen crd rbac:roleName=manager-role webhook paths="./pkg/apis/..." output:crd:artifacts:config=config/crd/bases
+cp ./config/crd/bases/*nais.io_*.yaml ./charts/templates
+kubectl kustomize ./config/crd/bases > ./charts/templates/aiven.nais.io_aivenapplications.yaml
+"""
+
+[tasks."generate:mocks"]
+description = "Generate mocks"
+run = "go tool github.com/vektra/mockery/v2"
+
+[tasks."generate:doc"]
+description = "Generate documentation"
+run = """
+mkdir -p doc/output/application
+mkdir -p doc/output/naisjob
+mkdir -p doc/output/topic
+mkdir -p doc/output/openapi/nais
+go run cmd/docgen/docgen.go \
+  --dir ./pkg/apis/... \
+  --group nais.io \
+  --kind Application \
+  --reference-output doc/output/application/reference.md \
+  --example-output doc/output/application/example.md \
+  --openapi-output doc/output/openapi/nais \
+  --reference-template doc/templates/reference/application.md \
+  --example-template doc/templates/example/application.md
+go run cmd/docgen/docgen.go \
+  --dir ./pkg/apis/... \
+  --group nais.io \
+  --kind Naisjob \
+  --reference-output doc/output/naisjob/reference.md \
+  --example-output doc/output/naisjob/example.md \
+  --openapi-output doc/output/openapi/nais \
+  --reference-template doc/templates/reference/naisjob.md \
+  --example-template doc/templates/example/naisjob.md
+go run cmd/docgen/docgen.go \
+  --dir ./pkg/apis/... \
+  --group kafka.nais.io \
+  --kind Topic \
+  --reference-output doc/output/topic/reference.md \
+  --example-output doc/output/topic/example.md \
+  --openapi-output doc/output/openapi/nais \
+  --reference-template doc/templates/reference/topic.md \
+  --example-template doc/templates/example/topic.md
+"""

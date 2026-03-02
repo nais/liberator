@@ -8,13 +8,13 @@ import (
 	"k8s.io/apimachinery/pkg/util/validation/field"
 )
 
-func NaisCompare(new, old interface{}, path *field.Path) error {
+func NaisCompare(new, old any, path *field.Path) error {
 	newValue := reflect.ValueOf(new)
 	oldValue := reflect.ValueOf(old)
-	if newValue.Kind() == reflect.Ptr {
+	if newValue.Kind() == reflect.Pointer {
 		newValue = newValue.Elem()
 	}
-	if oldValue.Kind() == reflect.Ptr {
+	if oldValue.Kind() == reflect.Pointer {
 		oldValue = oldValue.Elem()
 	}
 	if newValue.Kind() != oldValue.Kind() {
@@ -45,7 +45,7 @@ func compareObjects(new, old reflect.Value, path *field.Path) (allErrs field.Err
 		}
 
 		oldField := old.Field(i)
-		if newField.Kind() == reflect.Ptr {
+		if newField.Kind() == reflect.Pointer {
 			// Derefence pointer if this current field is a pointer
 			if newField.IsNil() || oldField.IsNil() {
 				// TODO(thokra): Ensure that we allow the removal and addition of fields in nais.yaml spec
@@ -102,6 +102,7 @@ func valuesDiffer(new, old reflect.Value) bool {
 }
 
 // sliceMutationError compares two slices, and returns errors if they differ
+//
 //	Does not support slices of pointers (pointers of any kind), potential future todo.
 func sliceMutationError(new, old reflect.Value, path *field.Path) (allErrs field.ErrorList) {
 	if new.Len() == 0 || old.Len() == 0 {
@@ -143,8 +144,7 @@ OUTER:
 }
 
 func keysToCheck(typ reflect.Type) (ret []string) {
-	for i := 0; i < typ.NumField(); i++ {
-		field := typ.Field(i)
+	for field := range typ.Fields() {
 		properties := propertyMap(field)
 		if properties["key"] {
 			ret = append(ret, field.Name)

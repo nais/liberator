@@ -38,7 +38,7 @@ func TestHasFinalizer(t *testing.T) {
 
 type someResource struct {
 	metav1.TypeMeta   `json:",inline"`
-	metav1.ObjectMeta `json:"metadata,omitempty"`
+	metav1.ObjectMeta `json:"metadata"`
 }
 
 func someResourceInstance() *someResource {

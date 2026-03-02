@@ -4,7 +4,6 @@ import (
 	v1 "k8s.io/api/apps/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/utils/ptr"
 
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 )
@@ -125,7 +124,7 @@ func ExampleApplicationForDocumentation() *Application {
 			Azure: &nais_io_v1.Azure{
 				Application: &nais_io_v1.AzureApplication{
 					Enabled:       true,
-					AllowAllUsers: ptr.To(true),
+					AllowAllUsers: new(true),
 					Claims: &nais_io_v1.AzureAdClaims{
 						Groups: []nais_io_v1.AzureAdGroup{
 							{
@@ -228,7 +227,7 @@ func ExampleApplicationForDocumentation() *Application {
 					{
 						Name:                "my-cloud-storage-bucket",
 						CascadingDelete:     true,
-						RetentionPeriodDays: ptr.To(30),
+						RetentionPeriodDays: new(30),
 						LifecycleCondition: &nais_io_v1.LifecycleCondition{
 							Age:                 10,
 							CreatedBefore:       "2020-01-01",
@@ -250,12 +249,12 @@ func ExampleApplicationForDocumentation() *Application {
 						DiskSize:                    30,
 						DiskAutoresize:              true,
 						DiskAutoresizeLimit:         60,
-						AutoBackupHour:              ptr.To(1),
-						RetainedBackups:             ptr.To(14),
-						TransactionLogRetentionDays: ptr.To(3),
+						AutoBackupHour:              new(1),
+						RetainedBackups:             new(14),
+						TransactionLogRetentionDays: new(3),
 						Maintenance: &nais_io_v1.Maintenance{
 							Day:  1,
-							Hour: ptr.To(4),
+							Hour: new(4),
 						},
 						Flags: []nais_io_v1.CloudSqlFlag{
 							{
@@ -278,7 +277,7 @@ func ExampleApplicationForDocumentation() *Application {
 						Collation:           "nb_NO.UTF8",
 						PointInTimeRecovery: true,
 						Insights: &nais_io_v1.InsightsConfiguration{
-							Enabled:               ptr.To(true),
+							Enabled:               new(true),
 							QueryStringLength:     4500,
 							RecordApplicationTags: true,
 							RecordClientAddress:   true,
@@ -362,17 +361,17 @@ func ExampleApplicationForDocumentation() *Application {
 							Name:                "scope.read",
 							Product:             "arbeid",
 							AllowedIntegrations: []string{"maskinporten"},
-							AtMaxAge:            ptr.To(30),
+							AtMaxAge:            new(30),
 							Consumers: []nais_io_v1.ExposedScopeConsumer{
 								{
 									Orgno: "123456789",
 									Name:  "KST",
 								},
 							},
-							AccessibleForAll: ptr.To(true),
-							DelegationSource: ptr.To("delegation-source"),
-							Separator:        ptr.To(":"),
-							Visibility:       ptr.To("public"),
+							AccessibleForAll: new(true),
+							DelegationSource: new("delegation-source"),
+							Separator:        new(":"),
+							Visibility:       new("public"),
 						},
 					},
 				},
@@ -391,7 +390,7 @@ func ExampleApplicationForDocumentation() *Application {
 				},
 				Http: &nais_io_v1.HttpGetAction{
 					Path: "/internal/stop",
-					Port: ptr.To(8080),
+					Port: new(8080),
 				},
 			},
 			PreStopHookPath: "/internal/stop",
@@ -415,8 +414,8 @@ func ExampleApplicationForDocumentation() *Application {
 				},
 			},
 			Replicas: &nais_io_v1.Replicas{
-				Min:                    ptr.To(2),
-				Max:                    ptr.To(4),
+				Min:                    new(2),
+				Max:                    new(4),
 				CpuThresholdPercentage: 50,
 				DisableAutoScaling:     true,
 				ScalingStrategy: &nais_io_v1.ScalingStrategy{
@@ -466,7 +465,7 @@ func ExampleApplicationForDocumentation() *Application {
 					},
 				},
 			},
-			TerminationGracePeriodSeconds: ptr.To(int64(60)),
+			TerminationGracePeriodSeconds: new(int64(60)),
 			TokenX: &nais_io_v1.TokenX{
 				Enabled: true,
 			},

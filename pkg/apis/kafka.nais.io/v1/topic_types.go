@@ -9,7 +9,6 @@ import (
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"k8s.io/utils/ptr"
 )
 
 const (
@@ -231,34 +230,34 @@ func (in *Topic) ApplyDefaults() error {
 // Apply default values to Topic Config where the nil-value is not what we want
 func (cfg *Config) ApplyDefaults() {
 	if cfg.CleanupPolicy == nil {
-		cfg.CleanupPolicy = ptr.To("delete")
+		cfg.CleanupPolicy = new("delete")
 	}
 	if cfg.MinimumInSyncReplicas == nil {
-		cfg.MinimumInSyncReplicas = ptr.To(2)
+		cfg.MinimumInSyncReplicas = new(2)
 	}
 	if cfg.Partitions == nil {
-		cfg.Partitions = ptr.To(1)
+		cfg.Partitions = new(1)
 	}
 	if cfg.Replication == nil {
-		cfg.Replication = ptr.To(3)
+		cfg.Replication = new(3)
 	}
 	if cfg.RetentionBytes == nil {
-		cfg.RetentionBytes = ptr.To(-1)
+		cfg.RetentionBytes = new(-1)
 	}
 	if cfg.RetentionHours == nil {
-		cfg.RetentionHours = ptr.To(168)
+		cfg.RetentionHours = new(168)
 	}
 	if cfg.LocalRetentionBytes == nil {
-		cfg.LocalRetentionBytes = ptr.To(-2)
+		cfg.LocalRetentionBytes = new(-2)
 	}
 	if cfg.LocalRetentionHours == nil {
-		cfg.LocalRetentionHours = ptr.To(-2)
+		cfg.LocalRetentionHours = new(-2)
 	}
 	if cfg.SegmentHours == nil {
-		cfg.SegmentHours = ptr.To(168)
+		cfg.SegmentHours = new(168)
 	}
 	if cfg.MaxMessageBytes == nil {
-		cfg.MaxMessageBytes = ptr.To(1048588)
+		cfg.MaxMessageBytes = new(1048588)
 	}
 }
 

@@ -528,11 +528,10 @@ func TestMetadataOAuth_WellKnownURL(t *testing.T) {
 
 func TestMakeWellKnownURL(t *testing.T) {
 	type test struct {
-		name         string
-		issuer       string
-		wantURL      string
-		wantErr      bool
-		wellKnownURL string
+		name    string
+		issuer  string
+		wantURL string
+		wantErr bool
 	}
 
 	tests := []test{

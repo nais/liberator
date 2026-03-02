@@ -2,7 +2,6 @@ package nais_io_v1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/utils/ptr"
 )
 
 func ExampleNaisjobForDocumentation() *Naisjob {
@@ -139,7 +138,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					},
 				},
 			},
-			BackoffLimit: ptr.To(int32(5)),
+			BackoffLimit: new(int32(5)),
 			Command: []string{
 				"/app/myapplication",
 				"--param",
@@ -148,7 +147,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				"other-value",
 			},
 			Completions:       int32p(1),
-			CompletionMode:    ptr.To("Indexed"),
+			CompletionMode:    new("Indexed"),
 			ConcurrencyPolicy: "Allow",
 			Env: []EnvVar{
 				{

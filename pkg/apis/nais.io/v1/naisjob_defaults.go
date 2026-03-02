@@ -2,7 +2,6 @@ package nais_io_v1
 
 import (
 	"github.com/imdario/mergo"
-	"k8s.io/utils/ptr"
 )
 
 // Application spec default values
@@ -25,7 +24,7 @@ func (in *Naisjob) ApplyDefaults() error {
 	}
 
 	if noBackoffLimit {
-		in.Spec.BackoffLimit = ptr.To(int32(0))
+		in.Spec.BackoffLimit = new(int32(0))
 	}
 
 	return nil
@@ -39,8 +38,8 @@ func getNaisjobDefaults() *Naisjob {
 					Enabled: false,
 				},
 			},
-			BackoffLimit:           ptr.To(int32(DefaultBackoffLimit)),
-			FailedJobsHistoryLimit: ptr.To(int32(DefaultFailedJobsHistoryLimit)),
+			BackoffLimit:           new(int32(DefaultBackoffLimit)),
+			FailedJobsHistoryLimit: new(int32(DefaultFailedJobsHistoryLimit)),
 			Liveness: &Probe{
 				PeriodSeconds:    DefaultProbePeriodSeconds,
 				Timeout:          DefaultProbeTimeoutSeconds,

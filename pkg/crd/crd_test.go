@@ -1,7 +1,7 @@
 package crd_test
 
 import (
-	"io/ioutil"
+	"os"
 	"strings"
 	"testing"
 
@@ -11,7 +11,7 @@ import (
 // Test for one or more YAML files in this directory
 func TestYamlDirectory(t *testing.T) {
 	dir := crd.YamlDirectory()
-	files, err := ioutil.ReadDir(dir)
+	files, err := os.ReadDir(dir)
 	if err != nil {
 		t.Error(err)
 		t.Fail()

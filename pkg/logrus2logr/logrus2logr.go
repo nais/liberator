@@ -24,7 +24,7 @@ func (l *Logrus2Logr) Enabled(_ int) bool {
 	return l.Logger != nil
 }
 
-func (l *Logrus2Logr) Info(level int, msg string, keysAndValues ...interface{}) {
+func (l *Logrus2Logr) Info(level int, msg string, keysAndValues ...any) {
 	fields := makeFields(keysAndValues)
 	entry := l.Logger.WithFields(fields)
 	if level >= LevelTrace {
@@ -36,12 +36,12 @@ func (l *Logrus2Logr) Info(level int, msg string, keysAndValues ...interface{}) 
 	}
 }
 
-func (l *Logrus2Logr) Error(err error, msg string, keysAndValues ...interface{}) {
+func (l *Logrus2Logr) Error(err error, msg string, keysAndValues ...any) {
 	fields := makeFields(keysAndValues)
 	l.Logger.WithFields(fields).Error(fmt.Errorf("%s: %w", msg, err))
 }
 
-func (l *Logrus2Logr) WithValues(keysAndValues ...interface{}) logr.LogSink {
+func (l *Logrus2Logr) WithValues(keysAndValues ...any) logr.LogSink {
 	fields := makeFields(keysAndValues)
 	return &Logrus2Logr{Logger: l.Logger.WithFields(fields)}
 }
@@ -53,7 +53,7 @@ func (l *Logrus2Logr) WithName(name string) logr.LogSink {
 	return &Logrus2Logr{Logger: l.Logger.WithField("logger_name", name), name: name}
 }
 
-func makeFields(keysAndValues []interface{}) logrus.Fields {
+func makeFields(keysAndValues []any) logrus.Fields {
 	fields := logrus.Fields{}
 	for i, value := range keysAndValues {
 		if i%2 == 1 {

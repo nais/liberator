@@ -38,5 +38,4 @@ type ImageSpec struct {
 	Image string `json:"image"`
 }
 
-type ImageStatus struct {
-}
+type ImageStatus struct{}

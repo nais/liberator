@@ -16,8 +16,9 @@ jobs:
           go-version-file: "go.mod"
       - name: go test
         run: go test ./...
-      - name: verify make tasks still working
-        run: make generate mocks
+      - uses: jdx/mise-action@v2
+      - name: verify mise tasks still working
+        run: mise run generate mocks
 
 
   documentation:
@@ -43,10 +44,13 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version-file: "liberator/go.mod"
+      - uses: jdx/mise-action@v2
+        with:
+          working_directory: liberator
       - name: Generate documentation
         run: |
           cd liberator
-          make doc
+          mise run doc
       - name: Commit documentation to nais/doc
         run: |
           cd naisdoc
@@ -78,6 +82,7 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version-file: "go.mod"
+      - uses: jdx/mise-action@v2
       - id: 'auth'
         uses: 'google-github-actions/auth@v3'
         with:
@@ -85,7 +90,7 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v3'
       - name: Generate json-spec
-        run: make doc && ./hack/build-json-spec.sh
+        run: mise run doc && ./hack/build-json-spec.sh
       - name: Upload spec
         run: |
           gsutil \

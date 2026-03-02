@@ -243,7 +243,6 @@ func Test_shortTeamName(t *testing.T) {
 			assert.Equalf(t, tt.want, shortTeamName(tt.args.team), "shortTeamName(%v)", tt.args.team)
 		})
 	}
-
 }
 
 func Test_aiven_sync_failed_long_time_ago(t *testing.T) {

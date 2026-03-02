@@ -2,6 +2,7 @@ package testutil
 
 import (
 	"reflect"
+	"slices"
 	"sort"
 )
 
@@ -11,7 +12,7 @@ import (
 // Return a list of JSON paths that have a default value, e.g. nil, zero-length slices,
 // empty strings, false booleans, or zero ints.
 // The function looks deeply within nested structures.
-func ZeroFields(input interface{}) []string {
+func ZeroFields(input any) []string {
 	seen := make(map[string]bool)
 
 	observeMembers(seen, reflect.ValueOf(input), "")
@@ -28,12 +29,7 @@ func ZeroFields(input interface{}) []string {
 }
 
 func StringSliceContains(slice []string, key string) bool {
-	for _, candidate := range slice {
-		if key == candidate {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(slice, key)
 }
 
 // Extra check for non-nil slices with zero elements.
@@ -48,14 +44,13 @@ func isZero(v reflect.Value) bool {
 // Recurse through a structure and record all members seen.
 // Sets seen[key] to true if a non-zero value is encountered.
 func observeMembers(seen map[string]bool, v reflect.Value, path string) {
-	if v.Kind() == reflect.Ptr {
+	if v.Kind() == reflect.Pointer {
 		v = v.Elem()
 	}
 
 	switch v.Kind() {
 	case reflect.Invalid:
 		// Nil pointer
-		seen[path] = seen[path]
 		return
 
 	case reflect.Struct:

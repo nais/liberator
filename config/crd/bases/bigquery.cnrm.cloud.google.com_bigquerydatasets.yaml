@@ -36,9 +36,9 @@ spec:
           metadata:
             type: object
           spec:
-            description: |-
-              This map (and its members) are inspired by output of (the resource existed in GCP clusters already):
-                kubectl get crd bigquerydatasets.bigquery.cnrm.cloud.google.com -o yaml
+            description: "This map (and its members) are inspired by output of (the
+              resource existed in GCP clusters already):\n\n\tkubectl get crd bigquerydatasets.bigquery.cnrm.cloud.google.com
+              -o yaml"
             properties:
               access:
                 description: Email and role for service user given access to dataset

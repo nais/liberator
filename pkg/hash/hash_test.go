@@ -1,9 +1,10 @@
 package hash_test
 
 import (
+	"testing"
+
 	"github.com/nais/liberator/pkg/hash"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 type someStruct struct {
