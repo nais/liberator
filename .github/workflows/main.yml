@@ -48,10 +48,11 @@ jobs:
         with:
           working_directory: liberator
       - name: Generate documentation
+        working-directory: liberator
         run: mise run generate:doc
       - name: Commit documentation to nais/doc
+        working-directory: naisdoc
         run: |
-          cd naisdoc
           cp -v ../liberator/doc/output/application/reference.md docs/workloads/application/reference/application-spec.md
           cp -v ../liberator/doc/output/application/example.md docs/workloads/application/reference/application-example.md
           cp -v ../liberator/doc/output/naisjob/reference.md docs/workloads/job/reference/naisjob-spec.md
