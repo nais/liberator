@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#MISE description="Build JSON Spec"
+#MISE alias="build-json-spec"
 
 set -e
 

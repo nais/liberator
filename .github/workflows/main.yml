@@ -18,7 +18,7 @@ jobs:
         run: go test ./...
       - uses: jdx/mise-action@v2
       - name: verify mise tasks still working
-        run: mise run generate mocks
+        run: mise run generate
 
 
   documentation:
@@ -48,9 +48,7 @@ jobs:
         with:
           working_directory: liberator
       - name: Generate documentation
-        run: |
-          cd liberator
-          mise run doc
+        run: mise run generate:doc
       - name: Commit documentation to nais/doc
         run: |
           cd naisdoc
@@ -90,7 +88,7 @@ jobs:
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v3'
       - name: Generate json-spec
-        run: mise run doc && ./hack/build-json-spec.sh
+        run: mise run generate:doc && mise run build-json-spec
       - name: Upload spec
         run: |
           gsutil \
