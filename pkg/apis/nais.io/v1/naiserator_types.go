@@ -39,9 +39,8 @@ type AzureNaisJob struct {
 type AzureApplication struct {
 	// If enabled, provisions an Entra ID application.
 	Enabled bool `json:"enabled"`
-	// Deprecated. Only use if you're implementing logins _without_ using sidecar.
+	// Deprecated, do not use. This is currently only needed if you're implementing logins _without_ using sidecar. This field will be removed in a future release.
 	// +nais:doc:Deprecated=true
-	// +nais:doc:Hidden=true
 	ReplyURLs []AzureAdReplyUrlString `json:"replyURLs,omitempty"`
 	// Tenant targets a specific tenant for the Entra ID application.
 	// Only works in the development clusters. Only use this if you have a specific reason to do so.
@@ -53,9 +52,9 @@ type AzureApplication struct {
 	// +kubebuilder:validation:Enum=nav.no;trygdeetaten.no
 	Tenant string         `json:"tenant,omitempty"`
 	Claims *AzureAdClaims `json:"claims,omitempty"`
-	// Deprecated, do not use.
+	// Deprecated, do not use. Use sidecar instead. This field is only used if you're implementing logins in a client-side
+	// frontend application, which we do not recommend. This field will be removed in a future release.
 	// +nais:doc:Deprecated=true
-	// +nais:doc:Hidden=true
 	SinglePageApplication *bool `json:"singlePageApplication,omitempty"`
 	// AllowAllUsers grants all users within the tenant access to this application.
 	// +nais:doc:Default="false"

@@ -131,9 +131,8 @@ type AzureAdPreAuthorizedApp struct {
 
 // Claims defines additional configuration of the emitted claims in tokens returned to the Azure AD application.
 type AzureAdClaims struct {
-	// Deprecated, do not use.
+	// Deprecated. These claims are already included by default; this field is ignored and has no effect. It will be removed in a future release.
 	// +nais:doc:Deprecated=true
-	// +nais:doc:Hidden=true
 	Extra []AzureAdExtraClaim `json:"extra,omitempty"`
 	// Groups is a list of Azure AD group IDs to be emitted in the `groups` claim in tokens issued by Azure AD.
 	// This also assigns groups to the application for access control. Only direct members of the groups are granted access.
