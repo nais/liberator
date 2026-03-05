@@ -43,8 +43,13 @@ type AzureApplication struct {
 	// +nais:doc:Deprecated=true
 	ReplyURLs []AzureAdReplyUrlString `json:"replyURLs,omitempty"`
 	// Tenant targets a specific tenant for the Entra ID application.
-	// Only works in the development clusters. Only use this if you have a specific reason to do so.
-	// Using this will _isolate_ your application from all other applications that are not using the same tenant.
+	//
+	// In production clusters, the value defaults to `nav.no` if unspecified; no other value is allowed.
+	// In development clusters, the value defaults to `trygdeetaten.no` if unspecified.
+	// Effectively, this means that the field only works in the development clusters.
+	//
+	// We do not recommend setting this field unless you understand the consequences and have a specific reason to do so.
+	// Changing tenants will _isolate_ your application from all other applications that are not using the same tenant.
 	// +nais:doc:Link="https://doc.nais.io/auth/entra-id/explanations/#tenants"
 	// +nais:doc:Immutable=true
 	// +nais:doc:Tenants="nav"
