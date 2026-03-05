@@ -1317,6 +1317,10 @@ spec:
                         - threshold
                         - topic
                         type: object
+                      scaleUpStabilizationWindowSeconds:
+                        description: Configure stabilization window for scaling up,
+                          to avoid cpu storms on startup. Defaults to 0 seconds.
+                        type: integer
                     type: object
                 type: object
               resources:

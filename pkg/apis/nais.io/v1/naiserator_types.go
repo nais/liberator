@@ -383,6 +383,9 @@ type ScalingStrategy struct {
 	Cpu *CpuScaling `json:"cpu,omitempty"`
 	// Configures HPA based on Kafka lag.
 	Kafka *KafkaScaling `json:"kafka,omitempty"`
+	// Configure stabilization window for scaling up, to avoid cpu storms on startup. Defaults to 0 seconds.
+	// +nais:doc:Default="0s"
+	ScaleUpStabilizationWindowSeconds int `json:"scaleUpStabilizationWindowSeconds,omitempty"`
 }
 
 type Replicas struct {
