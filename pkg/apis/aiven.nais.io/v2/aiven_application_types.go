@@ -33,12 +33,14 @@ type AivenApplicationList struct {
 // +kubebuilder:resource:shortName={"aivenapp"}
 // +kubebuilder:subresource:status
 // +kubebuilder:metadata:annotations="cert-manager.io/inject-ca-from=nais-system/aivenapp-conversion-webhooks-serving-cert"
-// +kubebuilder:printcolumn:name="Name of secret",type=string,JSONPath=".spec.secretName"
+// +kubebuilder:printcolumn:name="Kafka secret",type=string,JSONPath=".spec.kafka.secretName",priority=10
+// +kubebuilder:printcolumn:name="OpenSearch secret",type=string,JSONPath=".spec.openSearch.secretName",priority=10
+// +kubebuilder:printcolumn:name="Valkey secret(s)",type=string,JSONPath=".spec.valkey[*].secretName",priority=10
 // +kubebuilder:printcolumn:name="Protected",type="boolean",JSONPath=".spec.protected",priority=10
 // +kubebuilder:printcolumn:name="Expires",type="date",JSONPath=".spec.expiresAt",priority=10
-// +kubebuilder:printcolumn:name="State",type="string",JSONPath=".status.synchronizationState",priority=20
+// +kubebuilder:printcolumn:name="State",type="string",JSONPath=".status.synchronizationState"
 // +kubebuilder:printcolumn:name="Synced",type="date",JSONPath=".status.synchronizationTime",priority=30
-// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",priority=30
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
 type AivenApplication struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
