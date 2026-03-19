@@ -213,8 +213,17 @@ spec:
     subresources:
       status: {}
   - additionalPrinterColumns:
-    - jsonPath: .spec.secretName
-      name: Name of secret
+    - jsonPath: .spec.kafka.secretName
+      name: Kafka secret
+      priority: 10
+      type: string
+    - jsonPath: .spec.openSearch.secretName
+      name: OpenSearch secret
+      priority: 10
+      type: string
+    - jsonPath: .spec.valkey[*].secretName
+      name: Valkey secret(s)
+      priority: 10
       type: string
     - jsonPath: .spec.protected
       name: Protected
@@ -226,7 +235,6 @@ spec:
       type: date
     - jsonPath: .status.synchronizationState
       name: State
-      priority: 20
       type: string
     - jsonPath: .status.synchronizationTime
       name: Synced
@@ -234,7 +242,6 @@ spec:
       type: date
     - jsonPath: .metadata.creationTimestamp
       name: Age
-      priority: 30
       type: date
     name: v2
     schema:
