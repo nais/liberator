@@ -16,7 +16,7 @@ jobs:
           go-version-file: "go.mod"
       - name: go test
         run: go test ./...
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v4
       - name: verify mise tasks still working
         run: mise run generate
 
@@ -44,7 +44,7 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version-file: "liberator/go.mod"
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v4
         with:
           working_directory: liberator
       - name: Generate documentation
@@ -81,7 +81,7 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version-file: "go.mod"
-      - uses: jdx/mise-action@v2
+      - uses: jdx/mise-action@v4
       - id: 'auth'
         uses: 'google-github-actions/auth@v3'
         with:
