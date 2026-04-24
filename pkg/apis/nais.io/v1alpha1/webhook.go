@@ -71,7 +71,10 @@ func (v *ApplicationValidator) ValidateCreate(ctx context.Context, a *Applicatio
 }
 
 func (v *ApplicationValidator) ValidateUpdate(ctx context.Context, oldA *Application, a *Application) (warnings admission.Warnings, err error) {
-	// Perform actual comparison
+	if !a.GetDeletionTimestamp().IsZero() {
+		return nil, nil
+	}
+
 	if err := webhookvalidator.NaisCompare(a.Spec, oldA.Spec, field.NewPath("spec")); err != nil {
 		if allErrs, ok := err.(errors.Aggregate); ok {
 			return nil, apierrors.NewInvalid(

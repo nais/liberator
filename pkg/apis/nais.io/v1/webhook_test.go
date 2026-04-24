@@ -452,6 +452,39 @@ func TestJobValidator_ValidateUpdate(t *testing.T) {
 		assert.Contains(t, err.Error(), "OpenSearch 'nonexistent-opensearch' does not exist")
 		assert.Empty(t, warnings)
 	})
+
+	t.Run("update with deletion timestamp skips validation", func(t *testing.T) {
+		// Finalizer removal goes through the update admission path. Validation
+		// must short-circuit so missing references do not block deletion.
+		validator := &JobValidator{Client: fakeKubeClient()}
+		oldNj := &Naisjob{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "test-job",
+				Namespace: "test-ns",
+			},
+			Spec: NaisjobSpec{
+				Image:    "nginx:latest",
+				Schedule: "0 * * * *",
+			},
+		}
+		newNj := oldNj.DeepCopy()
+		now := metav1.Now()
+		newNj.DeletionTimestamp = &now
+		// Intentionally point to non-existent references; they must not trigger checks.
+		newNj.Spec.OpenSearch = &OpenSearch{
+			Instance: "nonexistent-opensearch",
+		}
+		newNj.Spec.Valkey = []Valkey{
+			{Instance: "nonexistent-valkey"},
+		}
+		newNj.Spec.Postgres = &Postgres{
+			ClusterName: "nonexistent-postgres",
+		}
+
+		warnings, err := validator.ValidateUpdate(t.Context(), oldNj, newNj)
+		assert.NoError(t, err)
+		assert.Empty(t, warnings)
+	})
 }
 
 func TestJobValidator_ValidateDelete(t *testing.T) {
