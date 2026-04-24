@@ -71,7 +71,10 @@ func (v *JobValidator) ValidateCreate(ctx context.Context, nj *Naisjob) (warning
 }
 
 func (v *JobValidator) ValidateUpdate(ctx context.Context, oldA *Naisjob, nj *Naisjob) (warnings admission.Warnings, err error) {
-	// Perform actual comparison
+	if !nj.GetDeletionTimestamp().IsZero() {
+		return nil, nil
+	}
+
 	if err := webhookvalidator.NaisCompare(nj.Spec, oldA.Spec, field.NewPath("spec")); err != nil {
 		if allErrs, ok := err.(errors.Aggregate); ok {
 			return nil, apierrors.NewInvalid(

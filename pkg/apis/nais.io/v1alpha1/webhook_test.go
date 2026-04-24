@@ -464,6 +464,44 @@ func TestApplicationValidator_ValidateUpdate(t *testing.T) {
 		assert.Contains(t, err.Error(), "OpenSearch 'nonexistent-opensearch' does not exist")
 		assert.Empty(t, warnings)
 	})
+
+	t.Run("update with deletion timestamp skips validation", func(t *testing.T) {
+		// Finalizer removal goes through the update admission path. Validation
+		// must short-circuit so missing references do not block deletion.
+		validator := &ApplicationValidator{Client: fakeKubeClient()}
+		oldApp := &Application{
+			ObjectMeta: metav1.ObjectMeta{
+				Name:      "test-app",
+				Namespace: "test-ns",
+			},
+			Spec: ApplicationSpec{
+				Image: "nginx:latest",
+			},
+		}
+		newApp := oldApp.DeepCopy()
+		now := metav1.Now()
+		newApp.DeletionTimestamp = &now
+		// Intentionally point to a non-existent reference; it must not trigger a check.
+		newApp.Spec.OpenSearch = &nais_io_v1.OpenSearch{
+			Instance: "nonexistent-opensearch",
+		}
+		newApp.Spec.Valkey = []nais_io_v1.Valkey{
+			{Instance: "nonexistent-valkey"},
+		}
+		newApp.Spec.Postgres = &nais_io_v1.Postgres{
+			ClusterName: "nonexistent-postgres",
+		}
+		// Also introduce an otherwise-disallowed spec change to verify NaisCompare is skipped.
+		newApp.Spec.GCP = &nais_io_v1.GCP{
+			BigQueryDatasets: []nais_io_v1.CloudBigQueryDataset{
+				{Name: "dataset1", Permission: nais_io_v1.BigQueryPermissionRead},
+			},
+		}
+
+		warnings, err := validator.ValidateUpdate(t.Context(), oldApp, newApp)
+		assert.NoError(t, err)
+		assert.Empty(t, warnings)
+	})
 }
 
 func TestApplicationValidator_ValidateDelete(t *testing.T) {
