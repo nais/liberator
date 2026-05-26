@@ -531,6 +531,10 @@ func WriteReferenceDoc(w io.Writer, level int, jsonpath string, key string, pare
 	if node.Type == "array" {
 		node.Properties = node.Items.Schema.Properties
 		jsonpath += "[]"
+		// Propagate enum from items schema for arrays of enum scalars
+		if len(node.Enum) == 0 && len(node.Items.Schema.Enum) > 0 {
+			node.Enum = node.Items.Schema.Enum
+		}
 	}
 
 	if node.XIntOrString {
