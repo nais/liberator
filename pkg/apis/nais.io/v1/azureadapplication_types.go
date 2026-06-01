@@ -64,8 +64,6 @@ type AzureAdApplicationSpec struct {
 	SecretName string `json:"secretName"`
 	// SecretKeyPrefix is an optional user-defined prefix applied to the keys in the secret output, replacing the default prefix.
 	SecretKeyPrefix string `json:"secretKeyPrefix,omitempty"`
-	// SecretProtected protects the secret's credentials from being revoked by the janitor even when not in use.
-	SecretProtected bool `json:"secretProtected,omitempty"`
 	// SinglePageApplication denotes whether or not this Azure AD application should be registered as a single-page-application for usage in client-side applications without access to secrets.
 	SinglePageApplication *bool `json:"singlePageApplication,omitempty"`
 	// Tenant is an optional alias for targeting a tenant matching an instance of Azurerator that targets said tenant.
