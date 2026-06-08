@@ -1,5 +1,5 @@
 [tools]
-go = "1.26.0"
+go = "1.26.4"
 
 
 [tasks."check"]
@@ -35,10 +35,12 @@ depends = ['fmt:go', 'fmt:gofix']
 [tasks."fmt:go"]
 description = "Format go code using gofumpt"
 run = "go tool mvdan.cc/gofumpt -w ./"
+wait_for = ["generate:mocks"]
 
 [tasks."fmt:gofix"]
 description = "Fix runs the Go fix tool (cmd/fix) on the named packages and applies suggested fixes."
 run = "go fix ./..."
+wait_for = ["generate:mocks"]
 
 [tasks.test]
 description = "Run all tests"
