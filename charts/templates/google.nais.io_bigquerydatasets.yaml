@@ -69,6 +69,8 @@ spec:
               name:
                 type: string
               project:
+                description: Deprecated, do not use. This is not used anymore, will
+                  be removed in future version.
                 type: string
             required:
             - location
