@@ -23,12 +23,9 @@ type BigQueryDatasetSpec struct {
 	Name        string `json:"name"`
 	Description string `json:"description,omitempty"`
 	// +kubebuilder:validation:Enum=europe-north1
-	Location string          `json:"location"`
-	Access   []DatasetAccess `json:"access,omitempty"`
-	// Deprecated, do not use. This is not used anymore, will be removed in future version.
-	// +nais:doc:Deprecated=true
-	Project         string `json:"project"`
-	CascadingDelete bool   `json:"cascadingDelete,omitempty"`
+	Location        string          `json:"location"`
+	Access          []DatasetAccess `json:"access,omitempty"`
+	CascadingDelete bool            `json:"cascadingDelete,omitempty"`
 }
 
 // BigQueryDatasetStatus defines the observed state of BigQueryDataset

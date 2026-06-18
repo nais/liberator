@@ -68,14 +68,9 @@ spec:
                 type: string
               name:
                 type: string
-              project:
-                description: Deprecated, do not use. This is not used anymore, will
-                  be removed in future version.
-                type: string
             required:
             - location
             - name
-            - project
             type: object
           status:
             description: BigQueryDatasetStatus defines the observed state of BigQueryDataset
