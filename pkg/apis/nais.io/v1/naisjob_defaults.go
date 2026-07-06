@@ -1,7 +1,7 @@
 package nais_io_v1
 
 import (
-	"github.com/imdario/mergo"
+	"dario.cat/mergo"
 )
 
 // Application spec default values

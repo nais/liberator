@@ -38,8 +38,8 @@
                 # See below:
               );
 
-          upstream.version = "1.23.0"; # Change us when above error is thrown
-          upstream.hash = "sha256-Qreo6A2AXaoDAi7T/eQyHUw78smQoUQWXQHu7Nb2mcY="; # Change us when above error is thrown
+          upstream.version = "1.26.4"; # Change us when above error is thrown
+          upstream.hash = ""; # Change us when above error is thrown
         in
         {
           go = projectGo;
