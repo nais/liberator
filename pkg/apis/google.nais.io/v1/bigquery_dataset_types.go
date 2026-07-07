@@ -25,6 +25,7 @@ type BigQueryDatasetSpec struct {
 	// +kubebuilder:validation:Enum=europe-north1
 	Location        string          `json:"location"`
 	Access          []DatasetAccess `json:"access,omitempty"`
+	Project         string          `json:"project"`
 	CascadingDelete bool            `json:"cascadingDelete,omitempty"`
 }
 

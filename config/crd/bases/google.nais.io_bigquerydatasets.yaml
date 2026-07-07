@@ -68,6 +68,8 @@ spec:
                 type: string
               name:
                 type: string
+              project:
+                type: string
             required:
             - location
             - name
