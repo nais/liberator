@@ -266,7 +266,7 @@ func ServiceUserNameWithSuffix(teamName, appName, suffix string) (string, error)
 	if err != nil {
 		return "", fmt.Errorf("unable to hash team and application names: %w", err)
 	}
-	return fmt.Sprintf("%s_%s_%s_%s", shortTeamName(teamName), shortAppName(teamName, appName), hash, suffix), nil
+	return fmt.Sprintf("%s.%s.%s.%s", shortTeamName(teamName), shortAppName(teamName, appName), hash, suffix), nil
 }
 
 func hashedName(teamName, appName string) (string, error) {

@@ -29,7 +29,7 @@ func TestAclNameFromTopicAcl(t *testing.T) {
 				},
 				suffix: "*",
 			},
-			want: "redundant-team_application_18515795_*",
+			want: "redundant-team.application.18515795.*",
 		},
 		{
 			name: "test max length",
@@ -41,7 +41,7 @@ func TestAclNameFromTopicAcl(t *testing.T) {
 				},
 				suffix: "99",
 			},
-			want: "superlong-team-name_a-very-long-application-name-t_aef7fe79_99",
+			want: "superlong-team-name.a-very-long-application-name-t.aef7fe79.99",
 		},
 		{
 			name: "wildcards",
@@ -53,7 +53,7 @@ func TestAclNameFromTopicAcl(t *testing.T) {
 				},
 				suffix: "00",
 			},
-			want: "*_*_*_00",
+			want: "*.*.*.00",
 		},
 		{
 			name: "wildcard app",
@@ -65,7 +65,7 @@ func TestAclNameFromTopicAcl(t *testing.T) {
 				},
 				suffix: "00",
 			},
-			want: "myteam_*_*_00",
+			want: "myteam.*.*.00",
 		},
 		{
 			name: "wildcards and patterns",
@@ -77,7 +77,7 @@ func TestAclNameFromTopicAcl(t *testing.T) {
 				},
 				suffix: "99",
 			},
-			want: "*_*-aivia_*_99",
+			want: "*.*-aivia.*.99",
 		},
 	}
 	for _, tt := range tests {
