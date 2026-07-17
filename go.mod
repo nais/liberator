@@ -1,6 +1,6 @@
 module github.com/nais/liberator
 
-go 1.26.4
+go 1.26.5
 
 tool (
 	github.com/securego/gosec/v2/cmd/gosec
