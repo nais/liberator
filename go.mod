@@ -16,7 +16,7 @@ require (
 	dario.cat/mergo v1.0.2
 	github.com/aiven/aiven-go-client/v2 v2.44.0
 	github.com/ghodss/yaml v1.0.0
-	github.com/go-logr/logr v1.4.3
+	github.com/go-logr/logr v1.4.4
 	github.com/go-viper/mapstructure/v2 v2.5.0
 	github.com/google/uuid v1.6.0
 	github.com/mitchellh/hashstructure v1.1.0
