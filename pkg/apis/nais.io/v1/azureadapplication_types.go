@@ -4,6 +4,7 @@ import (
 	"github.com/nais/liberator/pkg/hash"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 // Machine readable event "Reason" fields, used for determining synchronization state.
@@ -189,5 +190,8 @@ func (in *AzureAdApplication) Hash() (string, error) {
 }
 
 func init() {
-	SchemeBuilder.Register(&AzureAdApplication{}, &AzureAdApplicationList{})
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion, &AzureAdApplication{}, &AzureAdApplicationList{})
+		return nil
+	})
 }

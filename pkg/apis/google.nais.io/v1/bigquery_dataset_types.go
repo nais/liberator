@@ -7,6 +7,7 @@ import (
 
 	hash "github.com/mitchellh/hashstructure"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 type DatasetAccess struct {
@@ -96,5 +97,11 @@ func (b BigQueryDataset) Hash() (string, error) {
 }
 
 func init() {
-	SchemeBuilder.Register(&BigQueryDataset{}, &BigQueryDatasetList{})
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion,
+			&BigQueryDataset{},
+			&BigQueryDatasetList{},
+		)
+		return nil
+	})
 }

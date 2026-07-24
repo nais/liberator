@@ -8,6 +8,7 @@ import (
 	"time"
 
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/util/intstr"
 )
 
@@ -24,10 +25,10 @@ const (
 )
 
 func init() {
-	SchemeBuilder.Register(
-		&Topic{},
-		&TopicList{},
-	)
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion, &Topic{}, &TopicList{})
+		return nil
+	})
 }
 
 // +kubebuilder:object:root=true

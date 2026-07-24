@@ -2,15 +2,19 @@ package storage_cnrm_cloud_google_com_v1beta1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 func init() {
-	SchemeBuilder.Register(
-		&StorageBucket{},
-		&StorageBucketList{},
-		&StorageBucketAccessControl{},
-		&StorageBucketAccessControlList{},
-	)
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion,
+			&StorageBucket{},
+			&StorageBucketList{},
+			&StorageBucketAccessControl{},
+			&StorageBucketAccessControlList{},
+		)
+		return nil
+	})
 }
 
 // +kubebuilder:object:root=true

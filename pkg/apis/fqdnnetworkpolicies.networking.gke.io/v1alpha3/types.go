@@ -19,10 +19,17 @@ package fqdnnetworkpolicies_networking_gke_io_v1alpha3
 import (
 	networking "k8s.io/api/networking/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 func init() {
-	SchemeBuilder.Register(&FQDNNetworkPolicy{}, &FQDNNetworkPolicyList{})
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion,
+			&FQDNNetworkPolicy{},
+			&FQDNNetworkPolicyList{},
+		)
+		return nil
+	})
 }
 
 type State string

@@ -5,13 +5,14 @@ import (
 
 	"github.com/nais/liberator/pkg/hash"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 func init() {
-	SchemeBuilder.Register(
-		&Stream{},
-		&StreamList{},
-	)
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion, &Stream{}, &StreamList{})
+		return nil
+	})
 }
 
 // +kubebuilder:object:root=true

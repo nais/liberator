@@ -2,12 +2,17 @@ package aiven_io_v1alpha1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 func init() {
-	SchemeBuilder.Register(
-		&OpenSearchACLConfig{}, &OpenSearchACLConfigList{},
-	)
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion,
+			&OpenSearchACLConfig{},
+			&OpenSearchACLConfigList{},
+		)
+		return nil
+	})
 }
 
 // Types defined here because importing them directly from aiven-operator introduces dependency resolution hell

@@ -10,6 +10,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
@@ -26,10 +27,10 @@ const (
 )
 
 func init() {
-	SchemeBuilder.Register(
-		&Application{},
-		&ApplicationList{},
-	)
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion, &Application{}, &ApplicationList{})
+		return nil
+	})
 }
 
 func GetDefaultMountPath(name string) string {

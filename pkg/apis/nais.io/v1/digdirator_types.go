@@ -3,6 +3,7 @@ package nais_io_v1
 import (
 	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 
 	"github.com/nais/liberator/pkg/events"
 	"github.com/nais/liberator/pkg/hash"
@@ -49,10 +50,10 @@ func (in *DigdiratorStatus) SetCondition(condition metav1.Condition) {
 }
 
 func init() {
-	SchemeBuilder.Register(
-		&MaskinportenClient{},
-		&MaskinportenClientList{},
-	)
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion, &MaskinportenClient{}, &MaskinportenClientList{})
+		return nil
+	})
 }
 
 // +kubebuilder:object:root=true
@@ -191,10 +192,10 @@ func (in *MaskinportenClient) SetStatus(new DigdiratorStatus) {
 }
 
 func init() {
-	SchemeBuilder.Register(
-		&IDPortenClient{},
-		&IDPortenClientList{},
-	)
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion, &IDPortenClient{}, &IDPortenClientList{})
+		return nil
+	})
 }
 
 // +kubebuilder:object:root=true

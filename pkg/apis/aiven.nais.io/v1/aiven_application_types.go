@@ -6,14 +6,15 @@ import (
 	"github.com/nais/liberator/pkg/strings"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 func init() {
-	SchemeBuilder.Register(
-		&AivenApplicationList{},
-		&AivenApplication{},
-	)
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion, &AivenApplicationList{}, &AivenApplication{})
+		return nil
+	})
 }
 
 const (

@@ -2,13 +2,14 @@ package nais_io_v1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 func init() {
-	SchemeBuilder.Register(
-		&Jwker{},
-		&JwkerList{},
-	)
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion, &Jwker{}, &JwkerList{})
+		return nil
+	})
 }
 
 type JwkerSpec struct {

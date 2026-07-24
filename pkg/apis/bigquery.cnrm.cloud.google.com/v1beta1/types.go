@@ -2,13 +2,14 @@ package bigquery_cnrm_cloud_google_com_v1beta1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 func init() {
-	SchemeBuilder.Register(
-		&BigQueryDataset{},
-		&BigQueryDatasetList{},
-	)
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion, &BigQueryDataset{}, &BigQueryDatasetList{})
+		return nil
+	})
 }
 
 type BigQueryDatasetAccess struct {

@@ -2,17 +2,21 @@ package iam_cnrm_cloud_google_com_v1beta1
 
 import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 func init() {
-	SchemeBuilder.Register(
-		&IAMServiceAccount{},
-		&IAMServiceAccountList{},
-		&IAMPolicy{},
-		&IAMPolicyList{},
-		&IAMPolicyMember{},
-		&IAMPolicyMemberList{},
-	)
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion,
+			&IAMServiceAccount{},
+			&IAMServiceAccountList{},
+			&IAMPolicy{},
+			&IAMPolicyList{},
+			&IAMPolicyMember{},
+			&IAMPolicyMemberList{},
+		)
+		return nil
+	})
 }
 
 // +kubebuilder:object:root=true
