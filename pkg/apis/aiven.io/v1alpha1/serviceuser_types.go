@@ -34,6 +34,12 @@ type ServiceUserSpec struct {
 	// Specifies the name of the service that this resource belongs to
 	ServiceName string `json:"serviceName"`
 
+	// Username of the service user on Aiven. Defaults to the resource name.
+	// Set this to manage users whose names are not valid Kubernetes object names (e.g. containing underscores or uppercase).
+	// Immutable after creation: to change it, delete and recreate the resource.
+	// At most one resource may reference a given username.
+	Username string `json:"username,omitempty"`
+
 	// Secret configuration: where the operator publishes the user's connection details
 	ConnInfoSecretTarget ConnInfoSecretTarget `json:"connInfoSecretTarget,omitempty"`
 
