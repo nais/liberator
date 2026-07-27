@@ -60,12 +60,20 @@ jobs:
           cp -v ../liberator/doc/output/topic/reference.md docs/persistence/kafka/reference/kafka-topic-spec.md
           cp -v ../liberator/doc/output/topic/example.md docs/persistence/kafka/reference/kafka-topic-example.md
 
-          git config user.name "$GITHUB_ACTOR"
-          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
           git --no-pager diff --cached
           if [ ! -z "$(git diff --cached)" ]; then
-            git commit -a -m "Automatic update of nais application reference/example" -m "liberator commit sha: ${GITHUB_SHA}"
+            resources=()
+            changed_files="$(git diff --cached --name-only)"
+            grep -q '^docs/workloads/application/' <<< "$changed_files" && resources+=(workloads/application)
+            grep -q '^docs/workloads/job/' <<< "$changed_files" && resources+=(workloads/job)
+            grep -q '^docs/persistence/kafka/' <<< "$changed_files" && resources+=(persistence/kafka)
+            prefix=$(IFS=,; echo "${resources[*]}")
+            git commit -a --author "$GITHUB_ACTOR <$GITHUB_ACTOR@users.noreply.github.com>" \
+              -m "$prefix: automatic update of reference specs and examples" \
+              -m "Ref: https://github.com/nais/liberator/commit/${GITHUB_SHA}"
             git push
           else
             echo "No changes; skip commit"
