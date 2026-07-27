@@ -124,8 +124,12 @@ type ExtDoc struct {
 	Type         string
 }
 
+// Compile-time guard: Doc must satisfy controller-tools' SchemaMarker interface,
+// otherwise the nais:doc marker is silently ignored during schema generation.
+var _ crd.SchemaMarker = Doc{}
+
 // Hijack the "example" field for custom documentation fields
-func (m Doc) ApplyToSchema(schema *apiext.JSONSchemaProps) error {
+func (m Doc) ApplyToSchema(_ *crd_markers.SchemaContext, schema *apiext.JSONSchemaProps) error {
 	d := &Doc{}
 	if schema.Example != nil {
 		err := json.Unmarshal(schema.Example.Raw, d)
