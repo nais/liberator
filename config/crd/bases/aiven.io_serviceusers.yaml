@@ -88,6 +88,13 @@ spec:
                 description: Specifies the name of the service that this resource
                   belongs to
                 type: string
+              username:
+                description: |-
+                  Username of the service user on Aiven. Defaults to the resource name.
+                  Set this to manage users whose names are not valid Kubernetes object names (e.g. containing underscores or uppercase).
+                  Immutable after creation: to change it, delete and recreate the resource.
+                  At most one resource may reference a given username.
+                type: string
             required:
             - project
             - serviceName
