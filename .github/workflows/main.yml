@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-go@v6
+      - uses: actions/setup-go@v7
         with:
           go-version-file: "go.mod"
       - name: go test
@@ -41,7 +41,7 @@ jobs:
           repository: nais/doc
           token: ${{ steps.get-token.outputs.token }}
           path: naisdoc
-      - uses: actions/setup-go@v6
+      - uses: actions/setup-go@v7
         with:
           go-version-file: "liberator/go.mod"
       - uses: jdx/mise-action@v2
@@ -86,7 +86,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-go@v6
+      - uses: actions/setup-go@v7
         with:
           go-version-file: "go.mod"
       - uses: jdx/mise-action@v2
