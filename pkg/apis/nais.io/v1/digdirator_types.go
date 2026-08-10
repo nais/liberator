@@ -294,3 +294,84 @@ func (in *IDPortenClient) GetStatus() *DigdiratorStatus {
 func (in *IDPortenClient) SetStatus(new DigdiratorStatus) {
 	in.Status = new
 }
+
+func init() {
+	SchemeBuilder.Register(func(s *runtime.Scheme) error {
+		s.AddKnownTypes(GroupVersion, &AnsattportenClient{}, &AnsattportenClientList{})
+		return nil
+	})
+}
+
+// +kubebuilder:object:root=true
+// +kubebuilder:resource:shortName=ansattportenclient
+// +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Secret Ref",type=string,JSONPath=`.spec.secretName`
+// +kubebuilder:printcolumn:name="ClientID",type=string,JSONPath=`.status.clientID`
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp"
+// +kubebuilder:printcolumn:name="Created",type="date",JSONPath=".metadata.creationTimestamp"
+// +kubebuilder:printcolumn:name="Synchronized",type="date",JSONPath=".status.synchronizationTime"
+
+// AnsattportenClient is the Schema for the AnsattportenClient API
+// +genclient
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type AnsattportenClient struct {
+	metav1.TypeMeta   `json:",inline"`
+	metav1.ObjectMeta `json:"metadata,omitempty"`
+
+	Spec   AnsattportenClientSpec `json:"spec,omitempty"`
+	Status DigdiratorStatus       `json:"status,omitempty"`
+}
+
+// AnsattportenClientList contains a list of AnsattportenClient
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+type AnsattportenClientList struct {
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []AnsattportenClient `json:"items"`
+}
+
+// AnsattportenClientSpec defines the desired state of AnsattportenClient.
+// Ansattporten is a login service for employees acting on behalf of an organization.
+// A client is registered the same way as an ID-porten login client, with the following
+// exceptions:
+// - Integration type is fixed to `ansattporten`
+// - Scopes are fixed to ("openid", "profile")
+// - SSODisabled and FrontchannelLogoutURI are omitted because SSO is not supported for Ansattporten
+type AnsattportenClientSpec struct {
+	// AccessTokenLifetime is the maximum lifetime in seconds for the returned access_token from Ansattporten.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=3600
+	AccessTokenLifetime *int `json:"accessTokenLifetime,omitempty"`
+	// ClientURI is the URL to the client to be used at DigDir when displaying a 'back' button or on errors.
+	ClientURI AnsattportenURI `json:"clientURI,omitempty"`
+	// ClientName is the client name to be registered at DigDir.
+	// It is shown during login, and is otherwise a human-readable way to differentiate between clients at DigDir's self-service portal.
+	ClientName string `json:"clientName,omitempty"`
+	// PostLogoutRedirectURI is a list of valid URIs that Ansattporten may redirect to after logout
+	PostLogoutRedirectURIs []AnsattportenURI `json:"postLogoutRedirectURIs,omitempty"`
+	// RedirectURIs is the list of redirect URIs to be registered at DigDir.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinItems=1
+	RedirectURIs []AnsattportenURI `json:"redirectURIs"`
+	// SecretName is the name of the resulting Secret resource to be created.
+	SecretName string `json:"secretName"`
+	// SessionLifetime is the maximum session lifetime in seconds for a logged in end-user for this client.
+	// +kubebuilder:validation:Minimum=3600
+	// +kubebuilder:validation:Maximum=28800
+	SessionLifetime *int `json:"sessionLifetime,omitempty"`
+}
+
+// +kubebuilder:validation:Pattern=`^(https:\/\/)|(http:\/\/localhost\:).+$`
+type AnsattportenURI string
+
+func (in *AnsattportenClient) Hash() (string, error) {
+	return hash.Hash(in.Spec)
+}
+
+func (in *AnsattportenClient) GetStatus() *DigdiratorStatus {
+	return &in.Status
+}
+
+func (in *AnsattportenClient) SetStatus(new DigdiratorStatus) {
+	in.Status = new
+}
