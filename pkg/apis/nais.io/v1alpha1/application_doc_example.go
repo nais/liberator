@@ -427,7 +427,8 @@ func ExampleApplicationForDocumentation() *Application {
 						ConsumerGroup: "dev-gcp",
 						Threshold:     10,
 					},
-					ScaleUpStabilizationWindowSeconds: 30,
+					ScaleUpStabilizationWindowSeconds:   30,
+					ScaleDownStabilizationWindowSeconds: 30,
 				},
 			},
 			Resources: &nais_io_v1.ResourceRequirements{

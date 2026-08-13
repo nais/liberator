@@ -386,6 +386,9 @@ type ScalingStrategy struct {
 	// Configure stabilization window for scaling up, to avoid cpu storms on startup. Defaults to 0 seconds.
 	// +nais:doc:Default="0s"
 	ScaleUpStabilizationWindowSeconds int `json:"scaleUpStabilizationWindowSeconds,omitempty"`
+	// Configure stabilization window for scaling down, to avoid rapid scale down events. Defaults to 0 seconds.
+	// +nais:doc:Default="0s"
+	ScaleDownStabilizationWindowSeconds int `json:"scaleDownStabilizationWindowSeconds,omitempty"`
 }
 
 type Replicas struct {
