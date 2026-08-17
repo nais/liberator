@@ -24,7 +24,7 @@ require (
 	github.com/sirupsen/logrus v1.10.0
 	github.com/spf13/pflag v1.0.10
 	github.com/spf13/viper v1.21.0
-	github.com/stretchr/testify v1.11.1
+	github.com/stretchr/testify v1.12.0
 	github.com/vektra/mockery/v2 v2.53.6
 	gopkg.in/yaml.v3 v3.0.1
 	k8s.io/api v0.36.2
