@@ -103,10 +103,57 @@ spec:
                       type: object
                     type: array
                 type: object
+              federatedCredentials:
+                description: |-
+                  FederatedCredentials defines an authorative set of trust relationships with external identity providers.
+                  Each combination of (issuer, subject) must be unique.
+                items:
+                  description: |-
+                    AzureAdFederatedCredential defines a trust relationship with an external identity provider.
+                    See https://learn.microsoft.com/en-us/graph/api/resources/federatedidentitycredential.
+                  properties:
+                    audience:
+                      description: |-
+                        Audience is the audience that can appear in the external token.
+                        It maps to the single value supported by Microsoft Graph's audiences field.
+                      maxLength: 600
+                      minLength: 1
+                      type: string
+                    issuer:
+                      description: Issuer is the URL of the external identity provider.
+                      maxLength: 600
+                      minLength: 1
+                      type: string
+                    name:
+                      description: Name is the unique identifier for the federated
+                        identity credential.
+                      maxLength: 120
+                      minLength: 1
+                      type: string
+                    subject:
+                      description: Subject is the identifier of the external workload.
+                      maxLength: 600
+                      minLength: 1
+                      type: string
+                  required:
+                  - audience
+                  - issuer
+                  - name
+                  - subject
+                  type: object
+                maxItems: 20
+                type: array
+                x-kubernetes-list-map-keys:
+                - name
+                x-kubernetes-list-type: map
+                x-kubernetes-validations:
+                - message: each combination of (issuer, subject) must be unique
+                  rule: self.all(x, self.filter(y, x.issuer == y.issuer && x.subject
+                    == y.subject).size() == 1)
               groupMembershipClaims:
                 description: |-
                   GroupMemberShipClaims controls the type of groups that are emitted in claims.
-                  See https://learn.microsoft.com/en-us/entra/identity-platform/reference-app-manifest#groupmembershipclaims-attribute
+                  See https://learn.microsoft.com/en-us/entra/identity-platform/reference-microsoft-graph-app-manifest#groupmembershipclaims
                 enum:
                 - None
                 - SecurityGroup
