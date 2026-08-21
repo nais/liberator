@@ -205,9 +205,10 @@ func (in *AzureAdApplication) Hash() (string, error) {
 		Tenant                    string
 		Claims                    *AzureAdClaims
 		SecretKeyPrefix           string
-		SinglePageApplication     *bool   `json:"singlePageApplication,omitempty"`
-		AllowAllUsers             *bool   `json:"allowAllUsers,omitempty"`
-		GroupMembershipClaims     *string `json:"groupMembershipClaims,omitempty"`
+		SinglePageApplication     *bool                        `json:"singlePageApplication,omitempty"`
+		AllowAllUsers             *bool                        `json:"allowAllUsers,omitempty"`
+		GroupMembershipClaims     *string                      `json:"groupMembershipClaims,omitempty"`
+		FederatedCredentials      []AzureAdFederatedCredential `json:"federatedCredentials,omitempty"`
 	}{
 		ReplyUrls:                 in.Spec.ReplyUrls,
 		PreAuthorizedApplications: in.Spec.PreAuthorizedApplications,
@@ -218,6 +219,7 @@ func (in *AzureAdApplication) Hash() (string, error) {
 		SinglePageApplication:     in.Spec.SinglePageApplication,
 		AllowAllUsers:             in.Spec.AllowAllUsers,
 		GroupMembershipClaims:     in.Spec.GroupMembershipClaims,
+		FederatedCredentials:      in.Spec.FederatedCredentials,
 	}
 	return hash.Hash(relevantValues)
 }
