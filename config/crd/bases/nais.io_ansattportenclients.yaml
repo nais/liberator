@@ -62,7 +62,7 @@ spec:
               exceptions:
               - Integration type is fixed to `ansattporten`
               - Scopes are fixed to ("openid", "profile")
-              - SSODisabled and FrontchannelLogoutURI are omitted because SSO is not supported for Ansattporten
+              - SSODisabled is omitted because Ansattporten enforced sso_disabled=true for all clients
             properties:
               accessTokenLifetime:
                 description: AccessTokenLifetime is the maximum lifetime in seconds
@@ -78,6 +78,12 @@ spec:
               clientURI:
                 description: ClientURI is the URL to the client to be used at DigDir
                   when displaying a 'back' button or on errors.
+                pattern: ^(https:\/\/)|(http:\/\/localhost\:).+$
+                type: string
+              frontchannelLogoutURI:
+                description: FrontchannelLogoutURI is the URL that Ansattporten sends
+                  a requests to whenever a logout is triggered by another application
+                  using the same session
                 pattern: ^(https:\/\/)|(http:\/\/localhost\:).+$
                 type: string
               postLogoutRedirectURIs:
@@ -106,6 +112,7 @@ spec:
                 minimum: 3600
                 type: integer
             required:
+            - frontchannelLogoutURI
             - redirectURIs
             - secretName
             type: object

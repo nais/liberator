@@ -336,7 +336,7 @@ type AnsattportenClientList struct {
 // exceptions:
 // - Integration type is fixed to `ansattporten`
 // - Scopes are fixed to ("openid", "profile")
-// - SSODisabled and FrontchannelLogoutURI are omitted because SSO is not supported for Ansattporten
+// - SSODisabled is omitted because Ansattporten enforced sso_disabled=true for all clients
 type AnsattportenClientSpec struct {
 	// AccessTokenLifetime is the maximum lifetime in seconds for the returned access_token from Ansattporten.
 	// +kubebuilder:validation:Minimum=1
@@ -347,6 +347,8 @@ type AnsattportenClientSpec struct {
 	// ClientName is the client name to be registered at DigDir.
 	// It is shown during login, and is otherwise a human-readable way to differentiate between clients at DigDir's self-service portal.
 	ClientName string `json:"clientName,omitempty"`
+	// FrontchannelLogoutURI is the URL that Ansattporten sends a requests to whenever a logout is triggered by another application using the same session
+	FrontchannelLogoutURI AnsattportenURI `json:"frontchannelLogoutURI"`
 	// PostLogoutRedirectURI is a list of valid URIs that Ansattporten may redirect to after logout
 	PostLogoutRedirectURIs []AnsattportenURI `json:"postLogoutRedirectURIs,omitempty"`
 	// RedirectURIs is the list of redirect URIs to be registered at DigDir.
