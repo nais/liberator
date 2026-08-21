@@ -52,8 +52,15 @@ type AzureAdApplicationSpec struct {
 	// AllowAllUsers denotes whether all users within the tenant should be allowed to access this AzureAdApplication. Defaults to false.
 	AllowAllUsers *bool          `json:"allowAllUsers,omitempty"`
 	Claims        *AzureAdClaims `json:"claims,omitempty"`
+	// FederatedCredentials defines an authoritative set of trust relationships with external identity providers.
+	// Each combination of (issuer, subject) must be unique.
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=20
+	// +kubebuilder:validation:XValidation:rule="self.all(x, self.filter(y, x.issuer == y.issuer && x.subject == y.subject).size() == 1)",message="each combination of (issuer, subject) must be unique"
+	FederatedCredentials []AzureAdFederatedCredential `json:"federatedCredentials,omitempty"`
 	// GroupMemberShipClaims controls the type of groups that are emitted in claims.
-	// See https://learn.microsoft.com/en-us/entra/identity-platform/reference-app-manifest#groupmembershipclaims-attribute
+	// See https://learn.microsoft.com/en-us/entra/identity-platform/reference-microsoft-graph-app-manifest#groupmembershipclaims
 	// +kubebuilder:validation:Enum=None;SecurityGroup;ApplicationGroup;DirectoryRole;All
 	GroupMembershipClaims *string `json:"groupMembershipClaims,omitempty"`
 	// LogoutUrl is the URL where Azure AD sends a request to have the application clear the user's session data.
@@ -135,7 +142,7 @@ type AzureAdClaims struct {
 	Extra []AzureAdExtraClaim `json:"extra,omitempty"`
 	// Groups is a list of Azure AD group IDs to be emitted in the `groups` claim in tokens issued by Azure AD.
 	// This also assigns groups to the application for access control. Only direct members of the groups are granted access.
-	// +nais:doc:Link="https://doc.nais.io/security/auth/azure-ad/configuration/#groups"
+	// +nais:doc:Link="https://doc.nais.io/auth/entra-id/reference/#groups"
 	Groups []AzureAdGroup `json:"groups,omitempty"`
 }
 
@@ -145,6 +152,32 @@ type AzureAdExtraClaim string
 type AzureAdGroup struct {
 	// ID is the actual `object ID` associated with the given group in Azure AD.
 	ID string `json:"id,omitempty"`
+}
+
+// AzureAdFederatedCredential defines a trust relationship with an external identity provider.
+// See https://learn.microsoft.com/en-us/graph/api/resources/federatedidentitycredential.
+type AzureAdFederatedCredential struct {
+	// Audience is the audience that can appear in the external token.
+	// It maps to the single value supported by Microsoft Graph's audiences field.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=600
+	Audience string `json:"audience"`
+	// Issuer is the URL of the external identity provider.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=600
+	Issuer string `json:"issuer"`
+	// Name is the unique identifier for the federated identity credential.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=120
+	Name string `json:"name"`
+	// Subject is the identifier of the external workload.
+	// +kubebuilder:validation:Required
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=600
+	Subject string `json:"subject"`
 }
 
 // AzureAdReplyUrl defines the valid reply URLs for callbacks after OIDC flows for this application
@@ -172,9 +205,10 @@ func (in *AzureAdApplication) Hash() (string, error) {
 		Tenant                    string
 		Claims                    *AzureAdClaims
 		SecretKeyPrefix           string
-		SinglePageApplication     *bool   `json:"singlePageApplication,omitempty"`
-		AllowAllUsers             *bool   `json:"allowAllUsers,omitempty"`
-		GroupMembershipClaims     *string `json:"groupMembershipClaims,omitempty"`
+		SinglePageApplication     *bool                        `json:"singlePageApplication,omitempty"`
+		AllowAllUsers             *bool                        `json:"allowAllUsers,omitempty"`
+		GroupMembershipClaims     *string                      `json:"groupMembershipClaims,omitempty"`
+		FederatedCredentials      []AzureAdFederatedCredential `json:"federatedCredentials,omitempty"`
 	}{
 		ReplyUrls:                 in.Spec.ReplyUrls,
 		PreAuthorizedApplications: in.Spec.PreAuthorizedApplications,
@@ -185,6 +219,7 @@ func (in *AzureAdApplication) Hash() (string, error) {
 		SinglePageApplication:     in.Spec.SinglePageApplication,
 		AllowAllUsers:             in.Spec.AllowAllUsers,
 		GroupMembershipClaims:     in.Spec.GroupMembershipClaims,
+		FederatedCredentials:      in.Spec.FederatedCredentials,
 	}
 	return hash.Hash(relevantValues)
 }
