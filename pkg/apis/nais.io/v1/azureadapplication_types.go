@@ -52,7 +52,7 @@ type AzureAdApplicationSpec struct {
 	// AllowAllUsers denotes whether all users within the tenant should be allowed to access this AzureAdApplication. Defaults to false.
 	AllowAllUsers *bool          `json:"allowAllUsers,omitempty"`
 	Claims        *AzureAdClaims `json:"claims,omitempty"`
-	// FederatedCredentials defines an authorative set of trust relationships with external identity providers.
+	// FederatedCredentials defines an authoritative set of trust relationships with external identity providers.
 	// Each combination of (issuer, subject) must be unique.
 	// +listType=map
 	// +listMapKey=name

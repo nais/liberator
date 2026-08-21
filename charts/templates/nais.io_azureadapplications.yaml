@@ -105,7 +105,7 @@ spec:
                 type: object
               federatedCredentials:
                 description: |-
-                  FederatedCredentials defines an authorative set of trust relationships with external identity providers.
+                  FederatedCredentials defines an authoritative set of trust relationships with external identity providers.
                   Each combination of (issuer, subject) must be unique.
                 items:
                   description: |-
