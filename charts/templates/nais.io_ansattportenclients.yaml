@@ -1,0 +1,220 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.21.0
+  name: ansattportenclients.nais.io
+spec:
+  group: nais.io
+  names:
+    kind: AnsattportenClient
+    listKind: AnsattportenClientList
+    plural: ansattportenclients
+    shortNames:
+    - ansattportenclient
+    singular: ansattportenclient
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.secretName
+      name: Secret Ref
+      type: string
+    - jsonPath: .status.clientID
+      name: ClientID
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    - jsonPath: .metadata.creationTimestamp
+      name: Created
+      type: date
+    - jsonPath: .status.synchronizationTime
+      name: Synchronized
+      type: date
+    name: v1
+    schema:
+      openAPIV3Schema:
+        description: AnsattportenClient is the Schema for the AnsattportenClient API
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: |-
+              AnsattportenClientSpec defines the desired state of AnsattportenClient.
+              Ansattporten is a login service for employees acting on behalf of an organization.
+              A client is registered the same way as an ID-porten login client, with the following
+              exceptions:
+              - Integration type is fixed to `ansattporten`
+              - Scopes are fixed to ("openid", "profile")
+              - SSODisabled is omitted because Ansattporten enforced sso_disabled=true for all clients
+            properties:
+              accessTokenLifetime:
+                description: AccessTokenLifetime is the maximum lifetime in seconds
+                  for the returned access_token from Ansattporten.
+                maximum: 3600
+                minimum: 1
+                type: integer
+              clientName:
+                description: |-
+                  ClientName is the client name to be registered at DigDir.
+                  It is shown during login, and is otherwise a human-readable way to differentiate between clients at DigDir's self-service portal.
+                type: string
+              clientURI:
+                description: ClientURI is the URL to the client to be used at DigDir
+                  when displaying a 'back' button or on errors.
+                pattern: ^(https:\/\/)|(http:\/\/localhost\:).+$
+                type: string
+              frontchannelLogoutURI:
+                description: FrontchannelLogoutURI is the URL that Ansattporten sends
+                  a requests to whenever a logout is triggered by another application
+                  using the same session
+                pattern: ^(https:\/\/)|(http:\/\/localhost\:).+$
+                type: string
+              postLogoutRedirectURIs:
+                description: PostLogoutRedirectURI is a list of valid URIs that Ansattporten
+                  may redirect to after logout
+                items:
+                  pattern: ^(https:\/\/)|(http:\/\/localhost\:).+$
+                  type: string
+                type: array
+              redirectURIs:
+                description: RedirectURIs is the list of redirect URIs to be registered
+                  at DigDir.
+                items:
+                  pattern: ^(https:\/\/)|(http:\/\/localhost\:).+$
+                  type: string
+                minItems: 1
+                type: array
+              secretName:
+                description: SecretName is the name of the resulting Secret resource
+                  to be created.
+                type: string
+              sessionLifetime:
+                description: SessionLifetime is the maximum session lifetime in seconds
+                  for a logged in end-user for this client.
+                maximum: 28800
+                minimum: 3600
+                type: integer
+            required:
+            - frontchannelLogoutURI
+            - redirectURIs
+            - secretName
+            type: object
+          status:
+            description: DigdiratorStatus defines the observed state of Current Client
+            properties:
+              clientID:
+                description: ClientID is the corresponding client ID for this client
+                  at Digdir
+                type: string
+              conditions:
+                description: Conditions is the list of details for the current state
+                  of this API Resource.
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+              correlationID:
+                description: CorrelationID is the ID referencing the processing transaction
+                  last performed on this resource
+                type: string
+              keyIDs:
+                description: KeyIDs is the list of key IDs for valid JWKs registered
+                  for the client at Digdir
+                items:
+                  type: string
+                type: array
+              observedGeneration:
+                description: ObservedGeneration is the generation most recently observed
+                  by Digdirator.
+                format: int64
+                type: integer
+              synchronizationHash:
+                description: SynchronizationHash is the hash of the Instance object
+                type: string
+              synchronizationSecretName:
+                description: SynchronizationSecretName is the SecretName set in the
+                  last successful synchronization
+                type: string
+              synchronizationState:
+                description: SynchronizationState denotes the last known state of
+                  the Instance during synchronization
+                type: string
+              synchronizationTime:
+                description: SynchronizationTime is the last time the Status subresource
+                  was updated
+                format: date-time
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
