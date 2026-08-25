@@ -355,7 +355,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				},
 			},
 			RestartPolicy: "Never",
-			Schedule:      "*/15 0 0 0 0",
+			Schedule:      "*/5 4 3 2 1",
 			SkipCaBundle:  true,
 			Startup: &Probe{
 				FailureThreshold: 10,
