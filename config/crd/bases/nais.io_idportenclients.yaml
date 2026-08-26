@@ -141,6 +141,8 @@ spec:
                 description: SSODisabled controls the SSO behavior for this client.
                 type: boolean
             required:
+            - frontchannelLogoutURI
+            - redirectURIs
             - secretName
             type: object
           status:

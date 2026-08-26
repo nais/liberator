@@ -251,14 +251,14 @@ type IDPortenClientSpec struct {
 	// +kubebuilder:validation:XValidation:rule="self == oldSelf",message="integrationType is immutable; delete and recreate the IDPortenClient to change integrationType"
 	IntegrationType string `json:"integrationType,omitempty" nais:"immutable"`
 	// FrontchannelLogoutURI is the URL that ID-porten sends a requests to whenever a logout is triggered by another application using the same session
-	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI,omitempty"`
+	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI"`
 	// PostLogoutRedirectURI is a list of valid URIs that ID-porten may redirect to after logout
 	PostLogoutRedirectURIs []IDPortenURI `json:"postLogoutRedirectURIs,omitempty"`
 	// RedirectURI is the redirect URI to be registered at DigDir.
 	// Deprecated, prefer RedirectURIs.
 	RedirectURI IDPortenURI `json:"redirectURI,omitempty"`
 	// RedirectURIs is the list of redirect URIs to be registered at DigDir.
-	RedirectURIs []IDPortenURI `json:"redirectURIs,omitempty"`
+	RedirectURIs []IDPortenURI `json:"redirectURIs"`
 	// SecretName is the name of the resulting Secret resource to be created
 	SecretName string `json:"secretName"`
 	// Register different oauth2 Scopes on your client.
