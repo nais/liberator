@@ -18,7 +18,7 @@ func TestMaskinportenClient_CalculateHash(t *testing.T) {
 func TestIDPortenClient_Hash(t *testing.T) {
 	actual, err := minimalIDPortenClient().Hash()
 	assert.NoError(t, err)
-	assert.Equal(t, "de6ecbc3b6cb148b", actual)
+	assert.Equal(t, "e9c2fb6176d0c7f3", actual)
 }
 
 func TestMaskinportenClientScopeSpec_Hash(t *testing.T) {
@@ -49,8 +49,9 @@ func minimalIDPortenClient() *nais_io_v1.IDPortenClient {
 			Namespace: "test-namespace",
 		},
 		Spec: nais_io_v1.IDPortenClientSpec{
+			FrontchannelLogoutURI: "https://some.example/logout",
 			RedirectURIs: []nais_io_v1.IDPortenURI{
-				"https://test.com",
+				"https://some.example/callback",
 			},
 			SecretName: "test",
 		},
