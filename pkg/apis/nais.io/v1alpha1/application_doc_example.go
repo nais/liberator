@@ -380,9 +380,6 @@ func ExampleApplicationForDocumentation() *Application {
 				Access:   "readwrite",
 			},
 			Port: 8080,
-			Postgres: &nais_io_v1.Postgres{
-				ClusterName: "my-postgres-cluster",
-			},
 			PreStopHook: &nais_io_v1.PreStopHook{
 				Exec: &nais_io_v1.ExecAction{
 					Command: []string{"./my", "--shell", "script"},
@@ -471,6 +468,9 @@ func ExampleApplicationForDocumentation() *Application {
 				Enabled: true,
 			},
 			TTL: "1h",
+			Uses: &nais_io_v1.Uses{
+				Postgres: []nais_io_v1.PostgresUse{{Name: "my-postgres", Role: "readwrite", EnvPrefix: "MYDB_"}},
+			},
 			Observability: &nais_io_v1.Observability{
 				Tracing: &nais_io_v1.Tracing{
 					Enabled: true,

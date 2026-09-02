@@ -150,11 +150,6 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 		*out = new(v1.OpenSearch)
 		**out = **in
 	}
-	if in.Postgres != nil {
-		in, out := &in.Postgres, &out.Postgres
-		*out = new(v1.Postgres)
-		**out = **in
-	}
 	if in.PreStopHook != nil {
 		in, out := &in.PreStopHook, &out.PreStopHook
 		*out = new(v1.PreStopHook)
@@ -213,6 +208,11 @@ func (in *ApplicationSpec) DeepCopyInto(out *ApplicationSpec) {
 	if in.Observability != nil {
 		in, out := &in.Observability, &out.Observability
 		*out = new(v1.Observability)
+		(*in).DeepCopyInto(*out)
+	}
+	if in.Uses != nil {
+		in, out := &in.Uses, &out.Uses
+		*out = new(v1.Uses)
 		(*in).DeepCopyInto(*out)
 	}
 	if in.Valkey != nil {

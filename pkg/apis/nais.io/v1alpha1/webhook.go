@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-logr/logr"
@@ -67,6 +68,10 @@ func (v *ApplicationValidator) ValidateCreate(ctx context.Context, a *Applicatio
 		return nil, err
 	}
 
+	if err := v.checkPostgresCAReferences(ctx, a); err != nil {
+		return nil, err
+	}
+
 	return nil, nil
 }
 
@@ -92,6 +97,10 @@ func (v *ApplicationValidator) ValidateUpdate(ctx context.Context, oldA *Applica
 	}
 
 	if err := v.checkPostgresReference(ctx, a); err != nil {
+		return nil, err
+	}
+
+	if err := v.checkPostgresCAReferences(ctx, a); err != nil {
 		return nil, err
 	}
 
@@ -128,24 +137,57 @@ func (v *ApplicationValidator) checkAivenReferences(ctx context.Context, app *Ap
 }
 
 func (v *ApplicationValidator) checkPostgresReference(ctx context.Context, app *Application) error {
-	if app.Spec.Postgres != nil && app.Spec.Postgres.ClusterName != "" {
-		pgMetaData := &metav1.PartialObjectMetadata{
-			TypeMeta: metav1.TypeMeta{
-				APIVersion: "data.nais.io/v1",
-				Kind:       "Postgres",
-			},
-		}
-		if err := v.Get(ctx, client.ObjectKey{Name: app.Spec.Postgres.ClusterName, Namespace: app.GetNamespace()}, pgMetaData); err != nil {
-			if apierrors.IsNotFound(err) {
-				v.logger.Info("Rejecting application because the Postgres cluster does not exist",
-					"application", app.GetName(),
-					"namespace", app.GetNamespace(),
-					"postgresCluster", app.Spec.Postgres.ClusterName,
-				)
-				return apierrors.NewBadRequest(fmt.Sprintf("Postgres '%s' does not exist. Create the Postgres cluster first.", app.Spec.Postgres.ClusterName))
+	if app.Spec.Uses != nil {
+		for _, postgres := range app.Spec.Uses.Postgres {
+			if err := v.getPostgres(ctx, app.Namespace, postgres.Name, "nais.io/v1"); err != nil {
+				return v.postgresReferenceError(err, app, postgres.Name)
 			}
-			v.logger.Error(err, "internal error when validating Postgres reference")
-			return apierrors.NewInternalError(fmt.Errorf("could not validate Postgres reference: %w", err))
+		}
+	}
+
+	return nil
+}
+
+func (v *ApplicationValidator) getPostgres(ctx context.Context, namespace, name, apiVersion string) error {
+	postgres := &metav1.PartialObjectMetadata{
+		TypeMeta: metav1.TypeMeta{APIVersion: apiVersion, Kind: "Postgres"},
+	}
+	return v.Get(ctx, client.ObjectKey{Name: name, Namespace: namespace}, postgres)
+}
+
+func (v *ApplicationValidator) postgresReferenceError(err error, app *Application, name string) error {
+	if apierrors.IsNotFound(err) {
+		v.logger.Info("Rejecting application because the Postgres cluster does not exist",
+			"application", app.Name,
+			"namespace", app.Namespace,
+			"postgresCluster", name,
+		)
+		return apierrors.NewBadRequest(fmt.Sprintf("Postgres '%s' does not exist. Create the Postgres cluster first.", name))
+	}
+	v.logger.Error(err, "internal error when validating Postgres reference")
+	return apierrors.NewInternalError(fmt.Errorf("could not validate Postgres reference: %w", err))
+}
+
+func (v *ApplicationValidator) checkPostgresCAReferences(ctx context.Context, app *Application) error {
+	secretNames := make([]string, 0, len(app.Spec.EnvFrom)+len(app.Spec.FilesFrom))
+	for _, envFrom := range app.Spec.EnvFrom {
+		secretNames = append(secretNames, envFrom.Secret)
+	}
+	for _, filesFrom := range app.Spec.FilesFrom {
+		secretNames = append(secretNames, filesFrom.Secret)
+	}
+
+	for _, secretName := range secretNames {
+		if !strings.HasSuffix(secretName, "-ca") {
+			continue
+		}
+		postgresName := strings.TrimSuffix(secretName, "-ca")
+		err := v.getPostgres(ctx, app.Namespace, postgresName, "nais.io/v1")
+		if err == nil {
+			return apierrors.NewBadRequest(fmt.Sprintf("Secret '%s' is a Postgres CA Secret and cannot be referenced directly", secretName))
+		}
+		if !apierrors.IsNotFound(err) {
+			return apierrors.NewInternalError(fmt.Errorf("could not validate Postgres CA Secret reference: %w", err))
 		}
 	}
 	return nil

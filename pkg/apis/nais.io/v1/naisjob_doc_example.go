@@ -324,9 +324,6 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				Access:   "readwrite",
 			},
 			Parallelism: int32p(1),
-			Postgres: &Postgres{
-				ClusterName: "my-postgres-cluster",
-			},
 			PreStopHook: &PreStopHook{
 				Exec: &ExecAction{
 					Command: []string{"./my", "--shell", "script"},
@@ -370,6 +367,9 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			TimeZone:                      stringp("Europe/Oslo"),
 			TTL:                           "1h",
 			TTLSecondsAfterFinished:       int32p(60),
+			Uses: &Uses{
+				Postgres: []PostgresUse{{Name: "my-postgres", Role: "readwrite", EnvPrefix: "MYDB_"}},
+			},
 			Observability: &Observability{
 				Tracing: &Tracing{
 					Enabled: true,

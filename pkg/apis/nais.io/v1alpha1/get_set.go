@@ -163,6 +163,6 @@ func (in *Application) GetLogin() *nais_io_v1.Login {
 	return in.Spec.Login
 }
 
-func (in *Application) GetPostgres() *nais_io_v1.Postgres {
-	return in.Spec.Postgres
+func (in *Application) GetUses() *nais_io_v1.Uses {
+	return in.Spec.Uses
 }

@@ -8,10 +8,10 @@ import (
 	aiven_io_v1alpha1 "github.com/nais/liberator/pkg/apis/aiven.io/v1alpha1"
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
 	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
-	data_nais_io_v1 "github.com/nais/pgrator/pkg/api/datav1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -24,7 +24,6 @@ func fakeKubeClient(objs ...client.Object) client.Client {
 	// Add necessary schemes for the test
 	_ = clientgoscheme.AddToScheme(scheme)
 	_ = aiven_io_v1alpha1.AddToScheme(scheme)
-	_ = data_nais_io_v1.AddToScheme(scheme)
 	_ = AddToScheme(scheme)
 
 	return fake.NewClientBuilder().WithScheme(scheme).WithObjects(objs...).Build()
@@ -290,57 +289,55 @@ func TestApplicationValidator_ValidateCreate(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Empty(t, warnings)
 	})
+}
 
-	t.Run("postgres reference exists", func(t *testing.T) {
-		namespace := "test-ns"
-		clusterName := "my-postgres-cluster"
+func TestApplicationValidator_PostgresUses(t *testing.T) {
+	postgres := &unstructured.Unstructured{}
+	postgres.SetAPIVersion("nais.io/v1")
+	postgres.SetKind("Postgres")
+	postgres.SetName("mydb")
+	postgres.SetNamespace("test-ns")
 
-		postgres := &data_nais_io_v1.Postgres{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      clusterName,
-				Namespace: namespace,
-			},
-		}
-
+	t.Run("accepts existing Postgres", func(t *testing.T) {
 		validator := &ApplicationValidator{Client: fakeKubeClient(postgres)}
 		app := &Application{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
-				Namespace: namespace,
-			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
-				Postgres: &nais_io_v1.Postgres{
-					ClusterName: clusterName,
-				},
-			},
+			ObjectMeta: metav1.ObjectMeta{Name: "test-app", Namespace: "test-ns"},
+			Spec:       ApplicationSpec{Uses: &nais_io_v1.Uses{Postgres: []nais_io_v1.PostgresUse{{Name: "mydb"}}}},
 		}
 
-		warnings, err := validator.ValidateCreate(t.Context(), app)
-		assert.NoError(t, err)
-		assert.Empty(t, warnings)
+		_, err := validator.ValidateCreate(t.Context(), app)
+		require.NoError(t, err)
 	})
 
-	t.Run("postgres reference not found", func(t *testing.T) {
+	t.Run("rejects missing Postgres", func(t *testing.T) {
 		validator := &ApplicationValidator{Client: fakeKubeClient()}
 		app := &Application{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-app",
-				Namespace: "test-ns",
-			},
-			Spec: ApplicationSpec{
-				Image: "nginx:latest",
-				Postgres: &nais_io_v1.Postgres{
-					ClusterName: "no-such-postgres",
-				},
-			},
+			ObjectMeta: metav1.ObjectMeta{Name: "test-app", Namespace: "test-ns"},
+			Spec:       ApplicationSpec{Uses: &nais_io_v1.Uses{Postgres: []nais_io_v1.PostgresUse{{Name: "missing"}}}},
 		}
 
-		warnings, err := validator.ValidateCreate(t.Context(), app)
-		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "Postgres 'no-such-postgres' does not exist")
-		assert.Empty(t, warnings)
+		_, err := validator.ValidateCreate(t.Context(), app)
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "Postgres 'missing' does not exist")
 	})
+
+	for _, field := range []string{"envFrom", "filesFrom"} {
+		t.Run("rejects direct CA Secret through "+field, func(t *testing.T) {
+			validator := &ApplicationValidator{Client: fakeKubeClient(postgres)}
+			app := &Application{
+				ObjectMeta: metav1.ObjectMeta{Name: "test-app", Namespace: "test-ns"},
+			}
+			if field == "envFrom" {
+				app.Spec.EnvFrom = []nais_io_v1.EnvFrom{{Secret: "mydb-ca"}}
+			} else {
+				app.Spec.FilesFrom = []nais_io_v1.FilesFrom{{Secret: "mydb-ca"}}
+			}
+
+			_, err := validator.ValidateCreate(t.Context(), app)
+			require.Error(t, err)
+			assert.Contains(t, err.Error(), "cannot be referenced directly")
+		})
+	}
 }
 
 func TestApplicationValidator_ValidateUpdate(t *testing.T) {
@@ -487,9 +484,6 @@ func TestApplicationValidator_ValidateUpdate(t *testing.T) {
 		}
 		newApp.Spec.Valkey = []nais_io_v1.Valkey{
 			{Instance: "nonexistent-valkey"},
-		}
-		newApp.Spec.Postgres = &nais_io_v1.Postgres{
-			ClusterName: "nonexistent-postgres",
 		}
 		// Also introduce an otherwise-disallowed spec change to verify NaisCompare is skipped.
 		newApp.Spec.GCP = &nais_io_v1.GCP{
