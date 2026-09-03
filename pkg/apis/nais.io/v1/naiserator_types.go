@@ -834,3 +834,11 @@ type LoginEnforce struct {
 	// Absolute paths to ignore when enforcing login.
 	ExcludePaths []WonderwallIgnorePaths `json:"excludePaths,omitempty"`
 }
+
+// Postgres is the deprecated configuration for a single legacy Postgres cluster.
+// Use Uses.Postgres for new integrations.
+type Postgres struct {
+	// ClusterName is the name of the Postgres cluster.
+	// +kubebuilder:validation:Pattern=`^[a-z0-9][a-z0-9-]{1,49}$`
+	ClusterName string `json:"clusterName"`
+}

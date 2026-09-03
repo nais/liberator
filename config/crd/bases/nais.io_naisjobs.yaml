@@ -992,6 +992,18 @@ spec:
                   If it is specified as 0, then the Job is effectively paused until it is increased.
                 format: int32
                 type: integer
+              postgres:
+                description: |-
+                  Postgres is the deprecated integration with a single legacy Postgres cluster.
+                  Use uses.postgres for new integrations.
+                properties:
+                  clusterName:
+                    description: ClusterName is the name of the Postgres cluster.
+                    pattern: ^[a-z0-9][a-z0-9-]{1,49}$
+                    type: string
+                required:
+                - clusterName
+                type: object
               preStopHook:
                 description: |-
                   PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
@@ -1315,6 +1327,10 @@ spec:
                   Java applications can start the JVM using parameters from the `$JAVA_PROXY_OPTIONS` environment variable.
                 type: boolean
             type: object
+            x-kubernetes-validations:
+            - message: postgres and uses.postgres are mutually exclusive
+              rule: '!has(self.postgres) || !has(self.uses) || !has(self.uses.postgres)
+                || self.uses.postgres.size() == 0'
           status:
             description: Status contains different Nais status properties
             properties:

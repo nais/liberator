@@ -298,6 +298,23 @@ func TestApplicationValidator_PostgresUses(t *testing.T) {
 	postgres.SetName("mydb")
 	postgres.SetNamespace("test-ns")
 
+	legacyPostgres := &unstructured.Unstructured{}
+	legacyPostgres.SetAPIVersion("data.nais.io/v1")
+	legacyPostgres.SetKind("Postgres")
+	legacyPostgres.SetName("legacy-db")
+	legacyPostgres.SetNamespace("test-ns")
+
+	t.Run("accepts existing legacy Postgres", func(t *testing.T) {
+		validator := &ApplicationValidator{Client: fakeKubeClient(legacyPostgres)}
+		app := &Application{
+			ObjectMeta: metav1.ObjectMeta{Name: "test-app", Namespace: "test-ns"},
+			Spec:       ApplicationSpec{Postgres: &nais_io_v1.Postgres{ClusterName: "legacy-db"}},
+		}
+
+		_, err := validator.ValidateCreate(t.Context(), app)
+		require.NoError(t, err)
+	})
+
 	t.Run("accepts existing Postgres", func(t *testing.T) {
 		validator := &ApplicationValidator{Client: fakeKubeClient(postgres)}
 		app := &Application{

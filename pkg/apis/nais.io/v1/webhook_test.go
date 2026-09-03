@@ -307,6 +307,23 @@ func TestJobValidator_PostgresUses(t *testing.T) {
 	postgres.SetName("mydb")
 	postgres.SetNamespace("test-ns")
 
+	legacyPostgres := &unstructured.Unstructured{}
+	legacyPostgres.SetAPIVersion("data.nais.io/v1")
+	legacyPostgres.SetKind("Postgres")
+	legacyPostgres.SetName("legacy-db")
+	legacyPostgres.SetNamespace("test-ns")
+
+	t.Run("accepts existing legacy Postgres", func(t *testing.T) {
+		validator := &JobValidator{Client: fakeKubeClient(legacyPostgres)}
+		job := &Naisjob{
+			ObjectMeta: metav1.ObjectMeta{Name: "test-job", Namespace: "test-ns"},
+			Spec:       NaisjobSpec{Postgres: &Postgres{ClusterName: "legacy-db"}},
+		}
+
+		_, err := validator.ValidateCreate(t.Context(), job)
+		require.NoError(t, err)
+	})
+
 	t.Run("accepts existing Postgres", func(t *testing.T) {
 		validator := &JobValidator{Client: fakeKubeClient(postgres)}
 		job := &Naisjob{
