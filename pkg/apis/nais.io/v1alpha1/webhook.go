@@ -188,6 +188,9 @@ func (v *ApplicationValidator) checkPostgresCAReferences(ctx context.Context, ap
 		if !strings.HasSuffix(secretName, "-ca") {
 			continue
 		}
+		if strings.HasPrefix(secretName, "pg-") {
+			return apierrors.NewBadRequest(fmt.Sprintf("Secret '%s' is a Postgres CA Secret and cannot be referenced directly", secretName))
+		}
 		postgresName := strings.TrimSuffix(secretName, "-ca")
 		err := v.getPostgres(ctx, app.Namespace, postgresName, "nais.io/v1")
 		if err == nil {

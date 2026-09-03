@@ -347,22 +347,24 @@ func TestJobValidator_PostgresUses(t *testing.T) {
 		assert.Contains(t, err.Error(), "Postgres 'missing' does not exist")
 	})
 
-	for _, field := range []string{"envFrom", "filesFrom"} {
-		t.Run("rejects direct CA Secret through "+field, func(t *testing.T) {
-			validator := &JobValidator{Client: fakeKubeClient(postgres)}
-			job := &Naisjob{
-				ObjectMeta: metav1.ObjectMeta{Name: "test-job", Namespace: "test-ns"},
-			}
-			if field == "envFrom" {
-				job.Spec.EnvFrom = []EnvFrom{{Secret: "mydb-ca"}}
-			} else {
-				job.Spec.FilesFrom = []FilesFrom{{Secret: "mydb-ca"}}
-			}
+	for _, secretName := range []string{"mydb-ca", "pg-mydb-ca"} {
+		for _, field := range []string{"envFrom", "filesFrom"} {
+			t.Run("rejects direct "+secretName+" Secret through "+field, func(t *testing.T) {
+				validator := &JobValidator{Client: fakeKubeClient(postgres)}
+				job := &Naisjob{
+					ObjectMeta: metav1.ObjectMeta{Name: "test-job", Namespace: "test-ns"},
+				}
+				if field == "envFrom" {
+					job.Spec.EnvFrom = []EnvFrom{{Secret: secretName}}
+				} else {
+					job.Spec.FilesFrom = []FilesFrom{{Secret: secretName}}
+				}
 
-			_, err := validator.ValidateCreate(t.Context(), job)
-			require.Error(t, err)
-			assert.Contains(t, err.Error(), "cannot be referenced directly")
-		})
+				_, err := validator.ValidateCreate(t.Context(), job)
+				require.Error(t, err)
+				assert.Contains(t, err.Error(), "cannot be referenced directly")
+			})
+		}
 	}
 }
 
