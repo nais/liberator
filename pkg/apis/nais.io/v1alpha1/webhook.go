@@ -137,6 +137,13 @@ func (v *ApplicationValidator) checkAivenReferences(ctx context.Context, app *Ap
 }
 
 func (v *ApplicationValidator) checkPostgresReference(ctx context.Context, app *Application) error {
+	if app.Spec.Postgres != nil && app.Spec.Postgres.ClusterName != "" {
+		name := app.Spec.Postgres.ClusterName
+		if err := v.getPostgres(ctx, app.Namespace, name, "data.nais.io/v1"); err != nil {
+			return v.postgresReferenceError(err, app, name)
+		}
+	}
+
 	if app.Spec.Uses != nil {
 		for _, postgres := range app.Spec.Uses.Postgres {
 			if err := v.getPostgres(ctx, app.Namespace, postgres.Name, "nais.io/v1"); err != nil {

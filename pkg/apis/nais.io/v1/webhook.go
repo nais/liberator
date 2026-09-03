@@ -137,6 +137,13 @@ func (v *JobValidator) checkAivenReferences(ctx context.Context, nj *Naisjob) er
 }
 
 func (v *JobValidator) checkPostgresReference(ctx context.Context, nj *Naisjob) error {
+	if nj.Spec.Postgres != nil && nj.Spec.Postgres.ClusterName != "" {
+		name := nj.Spec.Postgres.ClusterName
+		if err := v.getPostgres(ctx, nj.Namespace, name, "data.nais.io/v1"); err != nil {
+			return v.postgresReferenceError(err, nj, name)
+		}
+	}
+
 	if nj.Spec.Uses != nil {
 		for _, postgres := range nj.Spec.Uses.Postgres {
 			if err := v.getPostgres(ctx, nj.Namespace, postgres.Name, "nais.io/v1"); err != nil {

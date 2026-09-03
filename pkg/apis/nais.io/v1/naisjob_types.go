@@ -43,6 +43,7 @@ type Naisjob struct {
 
 // NaisjobSpec contains the Nais manifest.
 // Please keep this list sorted for clarity.
+// +kubebuilder:validation:XValidation:rule="!has(self.postgres) || !has(self.uses) || !has(self.uses.postgres) || self.uses.postgres.size() == 0",message="postgres and uses.postgres are mutually exclusive"
 type NaisjobSpec struct {
 	// By default, no traffic is allowed between naisjobs inside the cluster.
 	// Configure access policies to explicitly allow communication between naisjobs.
@@ -143,6 +144,11 @@ type NaisjobSpec struct {
 	// +nais:doc:Default="1"
 	// +nais:doc:Link="https://kubernetes.io/docs/concepts/workloads/controllers/job/#controlling-parallelism"
 	Parallelism *int32 `json:"parallelism,omitempty"`
+
+	// Postgres is the deprecated integration with a single legacy Postgres cluster.
+	// Use uses.postgres for new integrations.
+	// +nais:doc:Experimental=true
+	Postgres *Postgres `json:"postgres,omitempty"`
 
 	// PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
 	// The handler is not called if the container crashes or exits by itself.
