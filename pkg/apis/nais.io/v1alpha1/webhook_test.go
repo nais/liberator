@@ -338,22 +338,24 @@ func TestApplicationValidator_PostgresUses(t *testing.T) {
 		assert.Contains(t, err.Error(), "Postgres 'missing' does not exist")
 	})
 
-	for _, field := range []string{"envFrom", "filesFrom"} {
-		t.Run("rejects direct CA Secret through "+field, func(t *testing.T) {
-			validator := &ApplicationValidator{Client: fakeKubeClient(postgres)}
-			app := &Application{
-				ObjectMeta: metav1.ObjectMeta{Name: "test-app", Namespace: "test-ns"},
-			}
-			if field == "envFrom" {
-				app.Spec.EnvFrom = []nais_io_v1.EnvFrom{{Secret: "mydb-ca"}}
-			} else {
-				app.Spec.FilesFrom = []nais_io_v1.FilesFrom{{Secret: "mydb-ca"}}
-			}
+	for _, secretName := range []string{"mydb-ca", "pg-mydb-ca"} {
+		for _, field := range []string{"envFrom", "filesFrom"} {
+			t.Run("rejects direct "+secretName+" Secret through "+field, func(t *testing.T) {
+				validator := &ApplicationValidator{Client: fakeKubeClient(postgres)}
+				app := &Application{
+					ObjectMeta: metav1.ObjectMeta{Name: "test-app", Namespace: "test-ns"},
+				}
+				if field == "envFrom" {
+					app.Spec.EnvFrom = []nais_io_v1.EnvFrom{{Secret: secretName}}
+				} else {
+					app.Spec.FilesFrom = []nais_io_v1.FilesFrom{{Secret: secretName}}
+				}
 
-			_, err := validator.ValidateCreate(t.Context(), app)
-			require.Error(t, err)
-			assert.Contains(t, err.Error(), "cannot be referenced directly")
-		})
+				_, err := validator.ValidateCreate(t.Context(), app)
+				require.Error(t, err)
+				assert.Contains(t, err.Error(), "cannot be referenced directly")
+			})
+		}
 	}
 }
 
