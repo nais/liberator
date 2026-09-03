@@ -7,10 +7,10 @@ import (
 
 	aiven_io_v1alpha1 "github.com/nais/liberator/pkg/apis/aiven.io/v1alpha1"
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
-	data_nais_io_v1 "github.com/nais/pgrator/pkg/api/datav1"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -23,7 +23,6 @@ func fakeKubeClient(objs ...client.Object) client.Client {
 	// Add necessary schemes for the test
 	_ = clientgoscheme.AddToScheme(scheme)
 	_ = aiven_io_v1alpha1.AddToScheme(scheme)
-	_ = data_nais_io_v1.AddToScheme(scheme)
 	_ = AddToScheme(scheme)
 
 	return fake.NewClientBuilder().WithScheme(scheme).WithObjects(objs...).Build()
@@ -299,59 +298,55 @@ func TestJobValidator_ValidateCreate(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Empty(t, warnings)
 	})
+}
 
-	t.Run("postgres reference exists", func(t *testing.T) {
-		namespace := "test-ns"
-		clusterName := "my-postgres-cluster"
+func TestJobValidator_PostgresUses(t *testing.T) {
+	postgres := &unstructured.Unstructured{}
+	postgres.SetAPIVersion("nais.io/v1")
+	postgres.SetKind("Postgres")
+	postgres.SetName("mydb")
+	postgres.SetNamespace("test-ns")
 
-		postgres := &data_nais_io_v1.Postgres{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      clusterName,
-				Namespace: namespace,
-			},
-		}
-
+	t.Run("accepts existing Postgres", func(t *testing.T) {
 		validator := &JobValidator{Client: fakeKubeClient(postgres)}
-		nj := &Naisjob{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-job",
-				Namespace: namespace,
-			},
-			Spec: NaisjobSpec{
-				Image:    "nginx:latest",
-				Schedule: "0 * * * *",
-				Postgres: &Postgres{
-					ClusterName: clusterName,
-				},
-			},
+		job := &Naisjob{
+			ObjectMeta: metav1.ObjectMeta{Name: "test-job", Namespace: "test-ns"},
+			Spec:       NaisjobSpec{Uses: &Uses{Postgres: []PostgresUse{{Name: "mydb"}}}},
 		}
 
-		warnings, err := validator.ValidateCreate(t.Context(), nj)
-		assert.NoError(t, err)
-		assert.Empty(t, warnings)
+		_, err := validator.ValidateCreate(t.Context(), job)
+		require.NoError(t, err)
 	})
 
-	t.Run("postgres reference not found", func(t *testing.T) {
+	t.Run("rejects missing Postgres", func(t *testing.T) {
 		validator := &JobValidator{Client: fakeKubeClient()}
-		nj := &Naisjob{
-			ObjectMeta: metav1.ObjectMeta{
-				Name:      "test-job",
-				Namespace: "test-ns",
-			},
-			Spec: NaisjobSpec{
-				Image:    "nginx:latest",
-				Schedule: "0 * * * *",
-				Postgres: &Postgres{
-					ClusterName: "no-such-postgres",
-				},
-			},
+		job := &Naisjob{
+			ObjectMeta: metav1.ObjectMeta{Name: "test-job", Namespace: "test-ns"},
+			Spec:       NaisjobSpec{Uses: &Uses{Postgres: []PostgresUse{{Name: "missing"}}}},
 		}
 
-		warnings, err := validator.ValidateCreate(t.Context(), nj)
-		assert.Error(t, err)
-		assert.Contains(t, err.Error(), "Postgres 'no-such-postgres' does not exist")
-		assert.Empty(t, warnings)
+		_, err := validator.ValidateCreate(t.Context(), job)
+		require.Error(t, err)
+		assert.Contains(t, err.Error(), "Postgres 'missing' does not exist")
 	})
+
+	for _, field := range []string{"envFrom", "filesFrom"} {
+		t.Run("rejects direct CA Secret through "+field, func(t *testing.T) {
+			validator := &JobValidator{Client: fakeKubeClient(postgres)}
+			job := &Naisjob{
+				ObjectMeta: metav1.ObjectMeta{Name: "test-job", Namespace: "test-ns"},
+			}
+			if field == "envFrom" {
+				job.Spec.EnvFrom = []EnvFrom{{Secret: "mydb-ca"}}
+			} else {
+				job.Spec.FilesFrom = []FilesFrom{{Secret: "mydb-ca"}}
+			}
+
+			_, err := validator.ValidateCreate(t.Context(), job)
+			require.Error(t, err)
+			assert.Contains(t, err.Error(), "cannot be referenced directly")
+		})
+	}
 }
 
 func TestJobValidator_ValidateUpdate(t *testing.T) {
@@ -476,9 +471,6 @@ func TestJobValidator_ValidateUpdate(t *testing.T) {
 		}
 		newNj.Spec.Valkey = []Valkey{
 			{Instance: "nonexistent-valkey"},
-		}
-		newNj.Spec.Postgres = &Postgres{
-			ClusterName: "nonexistent-postgres",
 		}
 
 		warnings, err := validator.ValidateUpdate(t.Context(), oldNj, newNj)

@@ -992,17 +992,6 @@ spec:
                   If it is specified as 0, then the Job is effectively paused until it is increased.
                 format: int32
                 type: integer
-              postgres:
-                description: Postgres is used to provision and configure a Postgres
-                  database for your naisjob.
-                properties:
-                  clusterName:
-                    description: ClusterName is the name of the Postgres cluster.
-                    pattern: ^[a-z0-9][a-z0-9-]{1,49}$
-                    type: string
-                required:
-                - clusterName
-                type: object
               preStopHook:
                 description: |-
                   PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
@@ -1189,6 +1178,70 @@ spec:
                   If the field is unset, this Job won't be cleaned up by the TTL controller after it finishes.
                 format: int32
                 type: integer
+              uses:
+                description: Uses configures resources used by this Naisjob.
+                properties:
+                  postgres:
+                    description: |-
+                      Postgres configures access to CloudNativePG Postgres instances in the workload namespace.
+                      Each Postgres instance may occur only once. When more than one instance is configured,
+                      all but one entry must set a unique envPrefix.
+                    items:
+                      description: PostgresUse configures a workload's access to a
+                        Postgres instance.
+                      properties:
+                        envPrefix:
+                          description: |-
+                            EnvPrefix is prepended verbatim to every environment variable for this Postgres instance.
+                            Include a separator such as a trailing underscore when desired.
+                          maxLength: 64
+                          pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                          type: string
+                        name:
+                          description: Name of the Postgres resource in the workload
+                            namespace.
+                          maxLength: 63
+                          minLength: 1
+                          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                          type: string
+                        role:
+                          description: |-
+                            Role controls the database privileges granted to the workload. Admin access also provisions
+                            a separate readwrite credential for ordinary application traffic.
+                          enum:
+                          - read
+                          - readwrite
+                          - admin
+                          type: string
+                      required:
+                      - name
+                      type: object
+                    maxItems: 5
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
+                    x-kubernetes-validations:
+                    - message: envPrefix is required for all but one Postgres entry
+                      rule: self.filter(x, !has(x.envPrefix) || x.envPrefix == '').size()
+                        <= 1
+                    - message: each non-empty envPrefix must be unique
+                      rule: self.filter(x, has(x.envPrefix) && x.envPrefix != '').all(x,
+                        self.filter(y, has(y.envPrefix) && y.envPrefix == x.envPrefix).size()
+                        == 1)
+                    - message: Postgres entries must produce unique environment variable
+                        names
+                      rule: 'self.all(x, self.all(y, x.name == y.name || (((!has(x.role)
+                        || x.role == '''' || x.role == ''admin'') ? [(has(x.envPrefix)
+                        ? x.envPrefix : ''''), (has(x.envPrefix) ? x.envPrefix : '''')
+                        + ''READWRITE_''] : [(has(x.envPrefix) ? x.envPrefix : '''')
+                        + (x.role == ''read'' ? ''READ_'' : ''READWRITE_'')]).all(a,
+                        (((!has(y.role) || y.role == '''' || y.role == ''admin'')
+                        ? [(has(y.envPrefix) ? y.envPrefix : ''''), (has(y.envPrefix)
+                        ? y.envPrefix : '''') + ''READWRITE_''] : [(has(y.envPrefix)
+                        ? y.envPrefix : '''') + (y.role == ''read'' ? ''READ_'' :
+                        ''READWRITE_'')]).all(b, a != b))))))'
+                type: object
               valkey:
                 description: |-
                   List of Valkey instances this job needs credentials for.

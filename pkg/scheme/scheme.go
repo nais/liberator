@@ -14,7 +14,6 @@ import (
 	nais_io_v1alpha1 "github.com/nais/liberator/pkg/apis/nais.io/v1alpha1"
 	sql_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/sql.cnrm.cloud.google.com/v1beta1"
 	storage_cnrm_cloud_google_com_v1beta1 "github.com/nais/liberator/pkg/apis/storage.cnrm.cloud.google.com/v1beta1"
-	data_nais_io_v1 "github.com/nais/pgrator/pkg/api/datav1"
 	"k8s.io/apimachinery/pkg/api/meta"
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
@@ -53,7 +52,6 @@ func AddAll(scheme *runtime.Scheme) (*runtime.Scheme, error) {
 		aiven_nais_io_v1.AddToScheme,
 		bigquery_cnrm_cloud_google_com_v1beta1.AddToScheme,
 		clientgoscheme.AddToScheme,
-		data_nais_io_v1.AddToScheme,
 		fdqnnetworkpolicies_networking_gke_io_v1alpha3.AddToScheme,
 		google_nais_io_v1.AddToScheme,
 		iam_cnrm_cloud_google_com_v1beta1.AddToScheme,

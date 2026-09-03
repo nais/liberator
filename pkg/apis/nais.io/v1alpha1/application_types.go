@@ -159,10 +159,6 @@ type ApplicationSpec struct {
 	// Note that ports under 1024 are unavailable.
 	Port int `json:"port,omitempty"`
 
-	// Postgres is used to provision and configure a Postgres database for your application.
-	// +nais:doc:Experimental=true
-	Postgres *nais_io_v1.Postgres `json:"postgres,omitempty"`
-
 	// PreStopHook is called immediately before a container is terminated due to an API request or management event such as liveness/startup probe failure, preemption, resource contention, etc.
 	// The handler is not called if the container crashes or exits by itself.
 	// The reason for termination is passed to the handler.
@@ -230,6 +226,9 @@ type ApplicationSpec struct {
 	// Configuration options related to application observability.
 	// +nais:doc:Link="https://doc.nais.io/observability/"
 	Observability *nais_io_v1.Observability `json:"observability,omitempty"`
+
+	// Uses configures resources used by this application.
+	Uses *nais_io_v1.Uses `json:"uses,omitempty"`
 
 	// List of Valkey instances this application needs credentials for.
 	// Must be owned by same team.

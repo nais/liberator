@@ -93,6 +93,41 @@ type Valkey struct {
 	Access string `json:"access,omitempty"`
 }
 
+// Uses configures resources used by a workload.
+type Uses struct {
+	// Postgres configures access to CloudNativePG Postgres instances in the workload namespace.
+	// Each Postgres instance may occur only once. When more than one instance is configured,
+	// all but one entry must set a unique envPrefix.
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=5
+	// +kubebuilder:validation:XValidation:rule="self.filter(x, !has(x.envPrefix) || x.envPrefix == '').size() <= 1",message="envPrefix is required for all but one Postgres entry"
+	// +kubebuilder:validation:XValidation:rule="self.filter(x, has(x.envPrefix) && x.envPrefix != '').all(x, self.filter(y, has(y.envPrefix) && y.envPrefix == x.envPrefix).size() == 1)",message="each non-empty envPrefix must be unique"
+	// +kubebuilder:validation:XValidation:rule="self.all(x, self.all(y, x.name == y.name || (((!has(x.role) || x.role == '' || x.role == 'admin') ? [(has(x.envPrefix) ? x.envPrefix : ''), (has(x.envPrefix) ? x.envPrefix : '') + 'READWRITE_'] : [(has(x.envPrefix) ? x.envPrefix : '') + (x.role == 'read' ? 'READ_' : 'READWRITE_')]).all(a, (((!has(y.role) || y.role == '' || y.role == 'admin') ? [(has(y.envPrefix) ? y.envPrefix : ''), (has(y.envPrefix) ? y.envPrefix : '') + 'READWRITE_'] : [(has(y.envPrefix) ? y.envPrefix : '') + (y.role == 'read' ? 'READ_' : 'READWRITE_')]).all(b, a != b))))))",message="Postgres entries must produce unique environment variable names"
+	Postgres []PostgresUse `json:"postgres,omitempty"`
+}
+
+// PostgresUse configures a workload's access to a Postgres instance.
+type PostgresUse struct {
+	// Name of the Postgres resource in the workload namespace.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`
+	Name string `json:"name"`
+
+	// Role controls the database privileges granted to the workload. Admin access also provisions
+	// a separate readwrite credential for ordinary application traffic.
+	// +kubebuilder:validation:Enum=read;readwrite;admin
+	// +nais:doc:Default="admin"
+	Role string `json:"role,omitempty"`
+
+	// EnvPrefix is prepended verbatim to every environment variable for this Postgres instance.
+	// Include a separator such as a trailing underscore when desired.
+	// +kubebuilder:validation:MaxLength=64
+	// +kubebuilder:validation:Pattern=`^[A-Za-z_][A-Za-z0-9_]*$`
+	EnvPrefix string `json:"envPrefix,omitempty"`
+}
+
 // +kubebuilder:validation:Pattern=`^https:\/\/.+$`
 type Ingress string
 
@@ -798,10 +833,4 @@ type LoginEnforce struct {
 	Enabled bool `json:"enabled"`
 	// Absolute paths to ignore when enforcing login.
 	ExcludePaths []WonderwallIgnorePaths `json:"excludePaths,omitempty"`
-}
-
-type Postgres struct {
-	// ClusterName is the name of the Postgres cluster.
-	// +kubebuilder:validation:Pattern=`^[a-z0-9][a-z0-9-]{1,49}$`
-	ClusterName string `json:"clusterName"`
 }
