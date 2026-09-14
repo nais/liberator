@@ -13,4 +13,4 @@ tags: [job, reference]
 
 This is a complete example of an `Naisjob` resource.
 
-For an in-depth explanation of each field, head over to the [reference documentation](./naisjob-spec.md).
+For an in-depth explanation of each field, head over to the [reference documentation](./spec.md).

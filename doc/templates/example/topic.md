@@ -13,4 +13,4 @@ tags: [kafka, reference]
 
 This is a complete example of an `Topic` resource, commonly known as the `topic.yaml` file.
 
-For an in-depth explanation of each field, head over to the [reference documentation](./kafka-topic-spec.md).
+For an in-depth explanation of each field, head over to the [reference documentation](./topic-spec.md).
