@@ -469,7 +469,7 @@ func ExampleApplicationForDocumentation() *Application {
 			},
 			TTL: "1h",
 			Uses: &nais_io_v1.Uses{
-				Postgres: []nais_io_v1.PostgresUse{{Name: "my-postgres", Role: "readwrite", EnvPrefix: "MYDB_"}},
+				Postgres: []nais_io_v1.PostgresUse{{Name: "my-postgres", Branch: "main", Role: "readwrite", EnvPrefix: "MYDB_"}},
 			},
 			Observability: &nais_io_v1.Observability{
 				Tracing: &nais_io_v1.Tracing{
