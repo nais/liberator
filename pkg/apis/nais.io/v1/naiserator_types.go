@@ -115,6 +115,15 @@ type PostgresUse struct {
 	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`
 	Name string `json:"name"`
 
+	// Branch selects an existing local branch of this Postgres. When omitted,
+	// access follows the observed active branch. An explicit branch never falls
+	// back to another branch when the selected branch is unavailable.
+	// +optional
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`
+	Branch string `json:"branch,omitempty"`
+
 	// Role controls the database privileges granted to the workload. Admin access also provisions
 	// a separate readwrite credential for ordinary application traffic.
 	// +kubebuilder:validation:Enum=read;readwrite;admin

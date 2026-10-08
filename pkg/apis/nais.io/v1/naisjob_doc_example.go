@@ -368,7 +368,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			TTL:                           "1h",
 			TTLSecondsAfterFinished:       int32p(60),
 			Uses: &Uses{
-				Postgres: []PostgresUse{{Name: "my-postgres", Role: "readwrite", EnvPrefix: "MYDB_"}},
+				Postgres: []PostgresUse{{Name: "my-postgres", Branch: "main", Role: "readwrite", EnvPrefix: "MYDB_"}},
 			},
 			Observability: &Observability{
 				Tracing: &Tracing{

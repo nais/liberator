@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.21.0
+    controller-gen.kubebuilder.io/version: v0.22.0
   name: applications.nais.io
 spec:
   group: nais.io
@@ -1115,7 +1115,7 @@ spec:
                 description: |-
                   OpenSearch instance to get credentials for.
                   Must be owned by same team.
-                  The team must themselves apply an `opensearch` resource, as specified in [how to create an OpenSearch Instance](https://doc.nais.io/persistence/opensearch/how-to/create)
+                  Create the instance separately using [Nais Console](https://doc.nais.io/persistence/opensearch/how-to/create/).
                 properties:
                   access:
                     description: Access level for OpenSearch user
@@ -1498,6 +1498,15 @@ spec:
                       description: PostgresUse configures a workload's access to a
                         Postgres instance.
                       properties:
+                        branch:
+                          description: |-
+                            Branch selects an existing local branch of this Postgres. When omitted,
+                            access follows the observed active branch. An explicit branch never falls
+                            back to another branch when the selected branch is unavailable.
+                          maxLength: 63
+                          minLength: 1
+                          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                          type: string
                         envPrefix:
                           description: |-
                             EnvPrefix is prepended verbatim to every environment variable for this Postgres instance.
