@@ -263,6 +263,12 @@ type FilesFrom struct {
 	// Defaults to `/var/run/configmaps/<NAME>`, `/var/run/secrets`, or `/var/run/pvc/<NAME>`, depending on which of them is specified.
 	// For EmptyDir, MountPath must be set.
 	MountPath string `json:"mountPath,omitempty"`
+	// File permissions for files mounted from a Secret or ConfigMap, e.g. `0640` (`416` in JSON).
+	// Defaults to `0644`.
+	// +kubebuilder:validation:Minimum=0
+	// +kubebuilder:validation:Maximum=511
+	// +nais:doc:Default="0644"
+	Mode *int32 `json:"mode,omitempty"`
 }
 
 type ExecAction struct {

@@ -382,6 +382,14 @@ spec:
                           - Disk
                           type: string
                       type: object
+                    mode:
+                      description: |-
+                        File permissions for files mounted from a Secret or ConfigMap, e.g. `0640` (`416` in JSON).
+                        Defaults to `0644`.
+                      format: int32
+                      maximum: 511
+                      minimum: 0
+                      type: integer
                     mountPath:
                       description: |-
                         Filesystem path inside the pod where files are mounted.
