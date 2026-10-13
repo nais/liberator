@@ -382,6 +382,16 @@ spec:
                           - Disk
                           type: string
                       type: object
+                    mode:
+                      description: |-
+                        File permissions for files mounted from a Secret or ConfigMap. Does not apply to EmptyDir or PersistentVolumeClaim.
+                        Defaults to 0644. Use 0640 (decimal 416) for root-owned PostgreSQL client keys.
+                        Specify an integer between 0 and 511: YAML accepts octal notation (e.g. 0640), while JSON requires decimal notation (e.g. 416).
+                        Kubernetes may add group permissions based on the pod's fsGroup.
+                      format: int32
+                      maximum: 511
+                      minimum: 0
+                      type: integer
                     mountPath:
                       description: |-
                         Filesystem path inside the pod where files are mounted.
