@@ -263,10 +263,8 @@ type FilesFrom struct {
 	// Defaults to `/var/run/configmaps/<NAME>`, `/var/run/secrets`, or `/var/run/pvc/<NAME>`, depending on which of them is specified.
 	// For EmptyDir, MountPath must be set.
 	MountPath string `json:"mountPath,omitempty"`
-	// File permissions for files mounted from a Secret or ConfigMap. Does not apply to EmptyDir or PersistentVolumeClaim.
-	// Defaults to 0644. Use 0640 (decimal 416) for root-owned PostgreSQL client keys.
-	// Specify an integer between 0 and 511: YAML accepts octal notation (e.g. 0640), while JSON requires decimal notation (e.g. 416).
-	// Kubernetes may add group permissions based on the pod's fsGroup.
+	// File permissions for files mounted from a Secret or ConfigMap, e.g. `0640` (`416` in JSON).
+	// Defaults to `0644`.
 	// +kubebuilder:validation:Minimum=0
 	// +kubebuilder:validation:Maximum=511
 	// +nais:doc:Default="0644"
