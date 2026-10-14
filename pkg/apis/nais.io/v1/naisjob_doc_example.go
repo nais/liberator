@@ -180,6 +180,7 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 				{
 					Secret:    "my-secret-file",
 					MountPath: "/var/run/secrets",
+					Mode:      new(int32(0o640)),
 				},
 				{
 					EmptyDir: &EmptyDir{
