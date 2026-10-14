@@ -192,6 +192,7 @@ func ExampleApplicationForDocumentation() *Application {
 				{
 					Secret:    "my-secret-file",
 					MountPath: "/var/run/secrets",
+					Mode:      new(int32(0o640)),
 				},
 				{
 					EmptyDir: &nais_io_v1.EmptyDir{
