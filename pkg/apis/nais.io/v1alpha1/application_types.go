@@ -2,7 +2,6 @@ package nais_io_v1alpha1
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 
 	"github.com/nais/liberator/pkg/apis/nais.io"
@@ -345,14 +344,6 @@ func (in *Application) DefaultSecretPath(base string) nais_io_v1.SecretPath {
 		MountPath: nais_io_v1.DefaultVaultMountPath,
 		KvPath:    fmt.Sprintf("%s/%s/%s", base, in.Name, in.Namespace),
 	}
-}
-
-func (in *Application) SkipDeploymentMessage() bool {
-	if in.Annotations == nil {
-		return false
-	}
-	skip, _ := strconv.ParseBool(in.Annotations[nais_io_v1.SkipDeploymentMessageAnnotation])
-	return skip
 }
 
 func (in *Application) ClientID(cluster string) string {

@@ -9,8 +9,7 @@ import (
 )
 
 const (
-	SkipDeploymentMessageAnnotation = "nais.io/skipDeploymentMessage"
-	DefaultVaultMountPath           = "/var/run/secrets/nais.io/vault"
+	DefaultVaultMountPath = "/var/run/secrets/nais.io/vault"
 
 	// Deprecated, use the definition in nais_io package
 	DeploymentCorrelationIDAnnotation = nais_io.DeploymentCorrelationIDAnnotation

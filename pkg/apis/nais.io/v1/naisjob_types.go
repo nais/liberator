@@ -2,7 +2,6 @@ package nais_io_v1
 
 import (
 	"fmt"
-	"strconv"
 
 	"github.com/google/uuid"
 	"github.com/nais/liberator/pkg/apis/nais.io"
@@ -316,14 +315,6 @@ func (in *Naisjob) DefaultSecretPath(base string) SecretPath {
 		MountPath: DefaultVaultMountPath,
 		KvPath:    fmt.Sprintf("%s/%s/%s", base, in.Name, in.Namespace),
 	}
-}
-
-func (in *Naisjob) SkipDeploymentMessage() bool {
-	if in.Annotations == nil {
-		return false
-	}
-	skip, _ := strconv.ParseBool(in.Annotations[SkipDeploymentMessageAnnotation])
-	return skip
 }
 
 func (in *Naisjob) ClientID(cluster string) string {
