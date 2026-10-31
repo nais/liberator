@@ -254,6 +254,10 @@ type IDPortenClientSpec struct {
 	IntegrationType string `json:"integrationType,omitempty" nais:"immutable"`
 	// FrontchannelLogoutURI is the URL that ID-porten sends a requests to whenever a logout is triggered by another application using the same session
 	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI"`
+	// BackchannelLogoutURI is the URL that ID-porten sends a logout token to (server-to-server) whenever the user logs out of a session that the client participates in.
+	// The domain must match the domain of one of the client's redirect URIs.
+	// +kubebuilder:validation:Pattern=`^https://.+$`
+	BackchannelLogoutURI string `json:"backchannelLogoutURI,omitempty"`
 	// PostLogoutRedirectURI is a list of valid URIs that ID-porten may redirect to after logout
 	PostLogoutRedirectURIs []IDPortenURI `json:"postLogoutRedirectURIs,omitempty"`
 	// RedirectURI is the redirect URI to be registered at DigDir.
