@@ -362,6 +362,10 @@ type AnsattportenClientSpec struct {
 	ClientName string `json:"clientName,omitempty"`
 	// FrontchannelLogoutURI is the URL that Ansattporten sends a requests to whenever a logout is triggered by another application using the same session
 	FrontchannelLogoutURI AnsattportenURI `json:"frontchannelLogoutURI"`
+	// BackchannelLogoutURI is the URL that Ansattporten sends a logout token to (server-to-server) whenever the user logs out of a session that the client participates in.
+	// The domain must match the domain of one of the client's redirect URIs.
+	// +kubebuilder:validation:Pattern=`^https://.+$`
+	BackchannelLogoutURI string `json:"backchannelLogoutURI,omitempty"`
 	// PostLogoutRedirectURI is a list of valid URIs that Ansattporten may redirect to after logout
 	PostLogoutRedirectURIs []AnsattportenURI `json:"postLogoutRedirectURIs,omitempty"`
 	// RedirectURIs is the list of redirect URIs to be registered at DigDir.
