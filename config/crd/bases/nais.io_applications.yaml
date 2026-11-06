@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.22.0
+    controller-gen.kubebuilder.io/version: v0.23.0
   name: applications.nais.io
 spec:
   group: nais.io
@@ -1508,9 +1508,9 @@ spec:
                       properties:
                         branch:
                           description: |-
-                            Branch selects an existing local branch of this Postgres. When omitted,
-                            access follows the observed active branch. An explicit branch never falls
-                            back to another branch when the selected branch is unavailable.
+                            Branch is deprecated. Omit it to access the Postgres database.
+                            The legacy value main is accepted for compatibility; other branch
+                            selections are no longer supported.
                           maxLength: 63
                           minLength: 1
                           pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
