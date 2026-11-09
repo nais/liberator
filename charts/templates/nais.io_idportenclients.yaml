@@ -115,6 +115,13 @@ spec:
                   pattern: ^(https:\/\/)|(http:\/\/localhost\:).+$
                   type: string
                 type: array
+              refreshTokenLifetime:
+                description: |-
+                  RefreshTokenLifetime is the lifetime in seconds for the returned refresh_token from ID-porten.
+                  Must be greater than AccessTokenLifetime, and less than or equal to SessionLifetime.
+                maximum: 28800
+                minimum: 1
+                type: integer
               scopes:
                 description: |-
                   Register different oauth2 Scopes on your client.
@@ -145,6 +152,13 @@ spec:
             - redirectURIs
             - secretName
             type: object
+            x-kubernetes-validations:
+            - message: accessTokenLifetime must be less than refreshTokenLifetime
+              rule: '!has(self.refreshTokenLifetime) || !has(self.accessTokenLifetime)
+                || self.accessTokenLifetime < self.refreshTokenLifetime'
+            - message: refreshTokenLifetime must be less than or equal to sessionLifetime
+              rule: '!has(self.refreshTokenLifetime) || !has(self.sessionLifetime)
+                || self.refreshTokenLifetime <= self.sessionLifetime'
           status:
             description: DigdiratorStatus defines the observed state of Current Client
             properties:
