@@ -21,6 +21,12 @@ func TestIDPortenClient_Hash(t *testing.T) {
 	assert.Equal(t, "e9c2fb6176d0c7f3", actual)
 }
 
+func TestAnsattportenClient_Hash(t *testing.T) {
+	actual, err := minimalAnsattportenClient().Hash()
+	assert.NoError(t, err)
+	assert.Equal(t, "e9c2fb6176d0c7f3", actual)
+}
+
 func TestMaskinportenClientScopeSpec_Hash(t *testing.T) {
 	actual, err := minimalMaskinportenExtendedClient().Hash()
 	assert.NoError(t, err)
@@ -69,6 +75,22 @@ func minimalMaskinportenExtendedClient() *nais_io_v1.MaskinportenClient {
 				ConsumedScopes: nil,
 				ExposedScopes:  nil,
 			},
+		},
+	}
+}
+
+func minimalAnsattportenClient() *nais_io_v1.AnsattportenClient {
+	return &nais_io_v1.AnsattportenClient{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "test-app",
+			Namespace: "test-namespace",
+		},
+		Spec: nais_io_v1.AnsattportenClientSpec{
+			FrontchannelLogoutURI: "https://some.example/logout",
+			RedirectURIs: []nais_io_v1.AnsattportenURI{
+				"https://some.example/callback",
+			},
+			SecretName: "test",
 		},
 	}
 }

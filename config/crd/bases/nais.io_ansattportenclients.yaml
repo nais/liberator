@@ -70,6 +70,12 @@ spec:
                 maximum: 3600
                 minimum: 1
                 type: integer
+              backchannelLogoutURI:
+                description: |-
+                  BackchannelLogoutURI is the URL that Ansattporten sends a logout token to (server-to-server) whenever the user logs out of a session that the client participates in.
+                  The domain must match the domain of one of the client's redirect URIs.
+                pattern: ^https://.+$
+                type: string
               clientName:
                 description: |-
                   ClientName is the client name to be registered at DigDir.
