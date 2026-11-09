@@ -297,6 +297,11 @@ func (in *AnsattportenClientSpec) DeepCopyInto(out *AnsattportenClientSpec) {
 		*out = make([]AnsattportenURI, len(*in))
 		copy(*out, *in)
 	}
+	if in.RefreshTokenLifetime != nil {
+		in, out := &in.RefreshTokenLifetime, &out.RefreshTokenLifetime
+		*out = new(int)
+		**out = **in
+	}
 	if in.SessionLifetime != nil {
 		in, out := &in.SessionLifetime, &out.SessionLifetime
 		*out = new(int)
@@ -1353,6 +1358,11 @@ func (in *IDPortenClientSpec) DeepCopyInto(out *IDPortenClientSpec) {
 		in, out := &in.RedirectURIs, &out.RedirectURIs
 		*out = make([]IDPortenURI, len(*in))
 		copy(*out, *in)
+	}
+	if in.RefreshTokenLifetime != nil {
+		in, out := &in.RefreshTokenLifetime, &out.RefreshTokenLifetime
+		*out = new(int)
+		**out = **in
 	}
 	if in.Scopes != nil {
 		in, out := &in.Scopes, &out.Scopes
