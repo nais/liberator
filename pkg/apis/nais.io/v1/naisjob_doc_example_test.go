@@ -42,7 +42,8 @@ var ignoredApplicationFields = []string{
 	`.Spec.Azure.Application.ReplyURLs`,
 	`.Spec.Azure.Application.SinglePageApplication`,
 	`.Spec.Azure.Application.Tenant`,
-	`.Spec.Valkey`, // TODO: Add to example when feature is ready
+	`.Spec.Valkey`,               // TODO: Add to example when feature is ready
+	`.Spec.Uses.Postgres.Branch`, // Deprecated; examples must not recommend branch selection.
 }
 
 // Test that the example NaisJob contains examples for all fields encountered.

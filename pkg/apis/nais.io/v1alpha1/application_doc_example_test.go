@@ -45,6 +45,7 @@ var ignoredApplicationFields = []string{
 	`.Status.SynchronizationState`,
 	`.Status.SynchronizationTime`,
 	`.Status.EffectiveImage`,
+	`.Spec.Uses.Postgres.Branch`, // Deprecated; examples must not recommend branch selection.
 }
 
 // Test that the example Application contains examples for all fields encountered.

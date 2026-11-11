@@ -114,9 +114,9 @@ type PostgresUse struct {
 	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`
 	Name string `json:"name"`
 
-	// Branch selects an existing local branch of this Postgres. When omitted,
-	// access follows the observed active branch. An explicit branch never falls
-	// back to another branch when the selected branch is unavailable.
+	// Branch is deprecated. Omit it to access the Postgres database.
+	// The legacy value main is accepted for compatibility; other branch
+	// selections are no longer supported.
 	// +optional
 	// +kubebuilder:validation:MinLength=1
 	// +kubebuilder:validation:MaxLength=63
