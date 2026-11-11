@@ -78,6 +78,11 @@ type MaskinportenClient struct {
 
 // MaskinportenClientSpec defines the desired state of MaskinportenClient
 type MaskinportenClientSpec struct {
+	// AccessTokenLifetime is the maximum lifetime in seconds for access tokens issued to this client.
+	// The actual lifetime is also limited by the requested scopes.
+	// +kubebuilder:default=3600
+	// +kubebuilder:validation:Minimum=1
+	AccessTokenLifetime *int `json:"accessTokenLifetime,omitempty"`
 	// ClientName is the client name to be registered at DigDir.
 	// It is shown during login for user-centric flows, and is otherwise a human-readable way to differentiate between clients at DigDir's self-service portal.
 	ClientName string `json:"clientName,omitempty"`
@@ -227,10 +232,11 @@ type IDPortenClientList struct {
 }
 
 // IDPortenClientSpec defines the desired state of IDPortenClient
-// +kubebuilder:validation:XValidation:rule="!has(self.refreshTokenLifetime) || !has(self.accessTokenLifetime) || self.accessTokenLifetime < self.refreshTokenLifetime",message="accessTokenLifetime must be less than refreshTokenLifetime"
-// +kubebuilder:validation:XValidation:rule="!has(self.refreshTokenLifetime) || !has(self.sessionLifetime) || self.refreshTokenLifetime <= self.sessionLifetime",message="refreshTokenLifetime must be less than or equal to sessionLifetime"
+// +kubebuilder:validation:XValidation:rule="self.accessTokenLifetime < self.refreshTokenLifetime",message="accessTokenLifetime must be less than refreshTokenLifetime"
+// +kubebuilder:validation:XValidation:rule="self.refreshTokenLifetime <= self.sessionLifetime",message="refreshTokenLifetime must be less than or equal to sessionLifetime"
 type IDPortenClientSpec struct {
 	// AccessTokenLifetime is the maximum lifetime in seconds for the returned access_token from ID-porten.
+	// +kubebuilder:default=3600
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=3600
 	AccessTokenLifetime *int `json:"accessTokenLifetime,omitempty"`
@@ -267,6 +273,8 @@ type IDPortenClientSpec struct {
 	RedirectURIs []IDPortenURI `json:"redirectURIs"`
 	// RefreshTokenLifetime is the lifetime in seconds for the returned refresh_token from ID-porten.
 	// Must be greater than AccessTokenLifetime, and less than or equal to SessionLifetime.
+	// Defaults to 7200 seconds independently of SessionLifetime.
+	// +kubebuilder:default=7200
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=28800
 	RefreshTokenLifetime *int `json:"refreshTokenLifetime,omitempty"`
@@ -283,6 +291,7 @@ type IDPortenClientSpec struct {
 	// +nais:doc:Link="https://docs.digdir.no/oidc_func_clientreg.html?h=api_klient#scopes"
 	Scopes []string `json:"scopes,omitempty"`
 	// SessionLifetime is the maximum session lifetime in seconds for a logged in end-user for this client.
+	// +kubebuilder:default=7200
 	// +kubebuilder:validation:Minimum=3600
 	// +kubebuilder:validation:Maximum=28800
 	SessionLifetime *int `json:"sessionLifetime,omitempty"`
@@ -348,10 +357,11 @@ type AnsattportenClientList struct {
 // - Integration type is fixed to `ansattporten`
 // - Scopes are fixed to ("openid", "profile")
 // - SSODisabled is omitted because Ansattporten enforced sso_disabled=true for all clients
-// +kubebuilder:validation:XValidation:rule="!has(self.refreshTokenLifetime) || !has(self.accessTokenLifetime) || self.accessTokenLifetime < self.refreshTokenLifetime",message="accessTokenLifetime must be less than refreshTokenLifetime"
-// +kubebuilder:validation:XValidation:rule="!has(self.refreshTokenLifetime) || !has(self.sessionLifetime) || self.refreshTokenLifetime <= self.sessionLifetime",message="refreshTokenLifetime must be less than or equal to sessionLifetime"
+// +kubebuilder:validation:XValidation:rule="self.accessTokenLifetime < self.refreshTokenLifetime",message="accessTokenLifetime must be less than refreshTokenLifetime"
+// +kubebuilder:validation:XValidation:rule="self.refreshTokenLifetime <= self.sessionLifetime",message="refreshTokenLifetime must be less than or equal to sessionLifetime"
 type AnsattportenClientSpec struct {
 	// AccessTokenLifetime is the maximum lifetime in seconds for the returned access_token from Ansattporten.
+	// +kubebuilder:default=3600
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=3600
 	AccessTokenLifetime *int `json:"accessTokenLifetime,omitempty"`
@@ -374,12 +384,15 @@ type AnsattportenClientSpec struct {
 	RedirectURIs []AnsattportenURI `json:"redirectURIs"`
 	// RefreshTokenLifetime is the lifetime in seconds for the returned refresh_token from Ansattporten.
 	// Must be greater than AccessTokenLifetime, and less than or equal to SessionLifetime.
+	// Defaults to 7200 seconds independently of SessionLifetime.
+	// +kubebuilder:default=7200
 	// +kubebuilder:validation:Minimum=1
 	// +kubebuilder:validation:Maximum=28800
 	RefreshTokenLifetime *int `json:"refreshTokenLifetime,omitempty"`
 	// SecretName is the name of the resulting Secret resource to be created.
 	SecretName string `json:"secretName"`
 	// SessionLifetime is the maximum session lifetime in seconds for a logged in end-user for this client.
+	// +kubebuilder:default=7200
 	// +kubebuilder:validation:Minimum=3600
 	// +kubebuilder:validation:Maximum=28800
 	SessionLifetime *int `json:"sessionLifetime,omitempty"`
