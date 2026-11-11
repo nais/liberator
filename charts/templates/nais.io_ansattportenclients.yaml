@@ -70,6 +70,12 @@ spec:
                 maximum: 3600
                 minimum: 1
                 type: integer
+              backchannelLogoutURI:
+                description: |-
+                  BackchannelLogoutURI is the URL that Ansattporten sends a logout token to (server-to-server) whenever the user logs out of a session that the client participates in.
+                  The domain must match the domain of one of the client's redirect URIs.
+                pattern: ^https://.+$
+                type: string
               clientName:
                 description: |-
                   ClientName is the client name to be registered at DigDir.
@@ -101,6 +107,13 @@ spec:
                   type: string
                 minItems: 1
                 type: array
+              refreshTokenLifetime:
+                description: |-
+                  RefreshTokenLifetime is the lifetime in seconds for the returned refresh_token from Ansattporten.
+                  Must be greater than AccessTokenLifetime, and less than or equal to SessionLifetime.
+                maximum: 28800
+                minimum: 1
+                type: integer
               secretName:
                 description: SecretName is the name of the resulting Secret resource
                   to be created.
@@ -116,6 +129,13 @@ spec:
             - redirectURIs
             - secretName
             type: object
+            x-kubernetes-validations:
+            - message: accessTokenLifetime must be less than refreshTokenLifetime
+              rule: '!has(self.refreshTokenLifetime) || !has(self.accessTokenLifetime)
+                || self.accessTokenLifetime < self.refreshTokenLifetime'
+            - message: refreshTokenLifetime must be less than or equal to sessionLifetime
+              rule: '!has(self.refreshTokenLifetime) || !has(self.sessionLifetime)
+                || self.refreshTokenLifetime <= self.sessionLifetime'
           status:
             description: DigdiratorStatus defines the observed state of Current Client
             properties:

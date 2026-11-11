@@ -227,6 +227,8 @@ type IDPortenClientList struct {
 }
 
 // IDPortenClientSpec defines the desired state of IDPortenClient
+// +kubebuilder:validation:XValidation:rule="!has(self.refreshTokenLifetime) || !has(self.accessTokenLifetime) || self.accessTokenLifetime < self.refreshTokenLifetime",message="accessTokenLifetime must be less than refreshTokenLifetime"
+// +kubebuilder:validation:XValidation:rule="!has(self.refreshTokenLifetime) || !has(self.sessionLifetime) || self.refreshTokenLifetime <= self.sessionLifetime",message="refreshTokenLifetime must be less than or equal to sessionLifetime"
 type IDPortenClientSpec struct {
 	// AccessTokenLifetime is the maximum lifetime in seconds for the returned access_token from ID-porten.
 	// +kubebuilder:validation:Minimum=1
@@ -252,6 +254,10 @@ type IDPortenClientSpec struct {
 	IntegrationType string `json:"integrationType,omitempty" nais:"immutable"`
 	// FrontchannelLogoutURI is the URL that ID-porten sends a requests to whenever a logout is triggered by another application using the same session
 	FrontchannelLogoutURI IDPortenURI `json:"frontchannelLogoutURI"`
+	// BackchannelLogoutURI is the URL that ID-porten sends a logout token to (server-to-server) whenever the user logs out of a session that the client participates in.
+	// The domain must match the domain of one of the client's redirect URIs.
+	// +kubebuilder:validation:Pattern=`^https://.+$`
+	BackchannelLogoutURI string `json:"backchannelLogoutURI,omitempty"`
 	// PostLogoutRedirectURI is a list of valid URIs that ID-porten may redirect to after logout
 	PostLogoutRedirectURIs []IDPortenURI `json:"postLogoutRedirectURIs,omitempty"`
 	// RedirectURI is the redirect URI to be registered at DigDir.
@@ -259,6 +265,11 @@ type IDPortenClientSpec struct {
 	RedirectURI IDPortenURI `json:"redirectURI,omitempty"`
 	// RedirectURIs is the list of redirect URIs to be registered at DigDir.
 	RedirectURIs []IDPortenURI `json:"redirectURIs"`
+	// RefreshTokenLifetime is the lifetime in seconds for the returned refresh_token from ID-porten.
+	// Must be greater than AccessTokenLifetime, and less than or equal to SessionLifetime.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=28800
+	RefreshTokenLifetime *int `json:"refreshTokenLifetime,omitempty"`
 	// SecretName is the name of the resulting Secret resource to be created
 	SecretName string `json:"secretName"`
 	// Register different oauth2 Scopes on your client.
@@ -337,6 +348,8 @@ type AnsattportenClientList struct {
 // - Integration type is fixed to `ansattporten`
 // - Scopes are fixed to ("openid", "profile")
 // - SSODisabled is omitted because Ansattporten enforced sso_disabled=true for all clients
+// +kubebuilder:validation:XValidation:rule="!has(self.refreshTokenLifetime) || !has(self.accessTokenLifetime) || self.accessTokenLifetime < self.refreshTokenLifetime",message="accessTokenLifetime must be less than refreshTokenLifetime"
+// +kubebuilder:validation:XValidation:rule="!has(self.refreshTokenLifetime) || !has(self.sessionLifetime) || self.refreshTokenLifetime <= self.sessionLifetime",message="refreshTokenLifetime must be less than or equal to sessionLifetime"
 type AnsattportenClientSpec struct {
 	// AccessTokenLifetime is the maximum lifetime in seconds for the returned access_token from Ansattporten.
 	// +kubebuilder:validation:Minimum=1
@@ -349,12 +362,21 @@ type AnsattportenClientSpec struct {
 	ClientName string `json:"clientName,omitempty"`
 	// FrontchannelLogoutURI is the URL that Ansattporten sends a requests to whenever a logout is triggered by another application using the same session
 	FrontchannelLogoutURI AnsattportenURI `json:"frontchannelLogoutURI"`
+	// BackchannelLogoutURI is the URL that Ansattporten sends a logout token to (server-to-server) whenever the user logs out of a session that the client participates in.
+	// The domain must match the domain of one of the client's redirect URIs.
+	// +kubebuilder:validation:Pattern=`^https://.+$`
+	BackchannelLogoutURI string `json:"backchannelLogoutURI,omitempty"`
 	// PostLogoutRedirectURI is a list of valid URIs that Ansattporten may redirect to after logout
 	PostLogoutRedirectURIs []AnsattportenURI `json:"postLogoutRedirectURIs,omitempty"`
 	// RedirectURIs is the list of redirect URIs to be registered at DigDir.
 	// +kubebuilder:validation:Required
 	// +kubebuilder:validation:MinItems=1
 	RedirectURIs []AnsattportenURI `json:"redirectURIs"`
+	// RefreshTokenLifetime is the lifetime in seconds for the returned refresh_token from Ansattporten.
+	// Must be greater than AccessTokenLifetime, and less than or equal to SessionLifetime.
+	// +kubebuilder:validation:Minimum=1
+	// +kubebuilder:validation:Maximum=28800
+	RefreshTokenLifetime *int `json:"refreshTokenLifetime,omitempty"`
 	// SecretName is the name of the resulting Secret resource to be created.
 	SecretName string `json:"secretName"`
 	// SessionLifetime is the maximum session lifetime in seconds for a logged in end-user for this client.
