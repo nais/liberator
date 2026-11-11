@@ -58,6 +58,7 @@ spec:
             description: IDPortenClientSpec defines the desired state of IDPortenClient
             properties:
               accessTokenLifetime:
+                default: 3600
                 description: AccessTokenLifetime is the maximum lifetime in seconds
                   for the returned access_token from ID-porten.
                 maximum: 3600
@@ -122,9 +123,11 @@ spec:
                   type: string
                 type: array
               refreshTokenLifetime:
+                default: 7200
                 description: |-
                   RefreshTokenLifetime is the lifetime in seconds for the returned refresh_token from ID-porten.
                   Must be greater than AccessTokenLifetime, and less than or equal to SessionLifetime.
+                  Defaults to 7200 seconds independently of SessionLifetime.
                 maximum: 28800
                 minimum: 1
                 type: integer
@@ -145,6 +148,7 @@ spec:
                   to be created
                 type: string
               sessionLifetime:
+                default: 7200
                 description: SessionLifetime is the maximum session lifetime in seconds
                   for a logged in end-user for this client.
                 maximum: 28800
@@ -160,11 +164,9 @@ spec:
             type: object
             x-kubernetes-validations:
             - message: accessTokenLifetime must be less than refreshTokenLifetime
-              rule: '!has(self.refreshTokenLifetime) || !has(self.accessTokenLifetime)
-                || self.accessTokenLifetime < self.refreshTokenLifetime'
+              rule: self.accessTokenLifetime < self.refreshTokenLifetime
             - message: refreshTokenLifetime must be less than or equal to sessionLifetime
-              rule: '!has(self.refreshTokenLifetime) || !has(self.sessionLifetime)
-                || self.refreshTokenLifetime <= self.sessionLifetime'
+              rule: self.refreshTokenLifetime <= self.sessionLifetime
           status:
             description: DigdiratorStatus defines the observed state of Current Client
             properties:

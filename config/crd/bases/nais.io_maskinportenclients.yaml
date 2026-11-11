@@ -57,6 +57,13 @@ spec:
           spec:
             description: MaskinportenClientSpec defines the desired state of MaskinportenClient
             properties:
+              accessTokenLifetime:
+                default: 3600
+                description: |-
+                  AccessTokenLifetime is the maximum lifetime in seconds for access tokens issued to this client.
+                  The actual lifetime is also limited by the requested scopes.
+                minimum: 1
+                type: integer
               clientName:
                 description: |-
                   ClientName is the client name to be registered at DigDir.
