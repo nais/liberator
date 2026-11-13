@@ -60,6 +60,8 @@ type Application struct {
 // ApplicationSpec contains the Nais manifest.
 // Please keep this list sorted for clarity.
 // +kubebuilder:validation:XValidation:rule="!has(self.postgres) || !has(self.uses) || !has(self.uses.postgres) || self.uses.postgres.size() == 0",message="postgres and uses.postgres are mutually exclusive"
+// +kubebuilder:validation:XValidation:rule="!has(self.openSearch) || !has(self.uses) || !has(self.uses.opensearch) || self.uses.opensearch.size() == 0",message="openSearch and uses.opensearch are mutually exclusive"
+// +kubebuilder:validation:XValidation:rule="!has(self.valkey) || self.valkey.size() == 0 || !has(self.uses) || !has(self.uses.valkey) || self.uses.valkey.size() == 0",message="valkey and uses.valkey are mutually exclusive"
 type ApplicationSpec struct {
 	// By default, no traffic is allowed between applications inside the cluster.
 	// Configure access policies to explicitly allow communication between applications.
@@ -152,6 +154,9 @@ type ApplicationSpec struct {
 	// OpenSearch instance to get credentials for.
 	// Must be owned by same team.
 	// Create the instance separately using [Nais Console](https://doc.nais.io/persistence/opensearch/how-to/create/).
+	// Mutually exclusive with `spec.uses.opensearch`.
+	// This field is deprecated. Use uses.opensearch for new integrations.
+	// +nais:doc:Deprecated=true
 	// +nais:doc:Link="https://doc.nais.io/persistence/opensearch/"
 	OpenSearch *nais_io_v1.OpenSearch `json:"openSearch,omitempty"`
 
@@ -237,6 +242,9 @@ type ApplicationSpec struct {
 
 	// List of Valkey instances this application needs credentials for.
 	// Must be owned by same team.
+	// Mutually exclusive with `spec.uses.valkey`.
+	// This field is deprecated. Use uses.valkey for new integrations.
+	// +nais:doc:Deprecated=true
 	// +nais:doc:Link="https://doc.nais.io/persistence/valkey/"
 	Valkey []nais_io_v1.Valkey `json:"valkey,omitempty"`
 

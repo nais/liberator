@@ -1124,6 +1124,8 @@ spec:
                   OpenSearch instance to get credentials for.
                   Must be owned by same team.
                   Create the instance separately using [Nais Console](https://doc.nais.io/persistence/opensearch/how-to/create/).
+                  Mutually exclusive with `spec.uses.opensearch`.
+                  This field is deprecated. Use uses.opensearch for new integrations.
                 properties:
                   access:
                     description: Access level for OpenSearch user
@@ -1497,6 +1499,47 @@ spec:
               uses:
                 description: Uses configures resources used by this application.
                 properties:
+                  opensearch:
+                    description: |-
+                      OpenSearch configures access to OpenSearch instances in the workload namespace.
+                      Each OpenSearch instance may occur only once.
+                      With more than one entry, environment variable names get a `_<NAME>` suffix, where `<NAME>` is the uppercased instance name with `-` replaced by `_`.
+                      Mutually exclusive with `spec.openSearch`.
+                    items:
+                      description: OpenSearchUse configures a workload's access to
+                        an OpenSearch resource.
+                      properties:
+                        envPrefix:
+                          description: |-
+                            EnvPrefix is prepended verbatim to every environment variable for this OpenSearch instance.
+                            Include a separator such as a trailing underscore when desired.
+                          maxLength: 64
+                          pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                          type: string
+                        name:
+                          description: Name of the OpenSearch resource in the workload
+                            namespace.
+                          maxLength: 63
+                          minLength: 1
+                          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                          type: string
+                        permission:
+                          description: Permission granted to the workload.
+                          enum:
+                          - read
+                          - write
+                          - readwrite
+                          - admin
+                          type: string
+                      required:
+                      - name
+                      - permission
+                      type: object
+                    maxItems: 20
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
                   postgres:
                     description: |-
                       Postgres configures access to CloudNativePG Postgres instances in the workload namespace.
@@ -1566,11 +1609,54 @@ spec:
                         ? y.envPrefix : '''') + ''READWRITE_''] : [(has(y.envPrefix)
                         ? y.envPrefix : '''') + (y.role == ''read'' ? ''READ_'' :
                         ''READWRITE_'')]).all(b, a != b))))))'
+                  valkey:
+                    description: |-
+                      Valkey configures access to Valkey instances in the workload namespace.
+                      Each Valkey instance may occur only once.
+                      Environment variable names always end with `_<NAME>`, where `<NAME>` is the uppercased instance name with `-` replaced by `_`.
+                      Mutually exclusive with `spec.valkey`.
+                    items:
+                      description: ValkeyUse configures a workload's access to a Valkey
+                        resource.
+                      properties:
+                        envPrefix:
+                          description: |-
+                            EnvPrefix is prepended verbatim to every environment variable for this Valkey instance.
+                            Include a separator such as a trailing underscore when desired.
+                          maxLength: 64
+                          pattern: ^[A-Za-z_][A-Za-z0-9_]*$
+                          type: string
+                        name:
+                          description: Name of the Valkey resource in the workload
+                            namespace.
+                          maxLength: 63
+                          minLength: 1
+                          pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?$
+                          type: string
+                        permission:
+                          description: Permission granted to the workload.
+                          enum:
+                          - read
+                          - write
+                          - readwrite
+                          - admin
+                          type: string
+                      required:
+                      - name
+                      - permission
+                      type: object
+                    maxItems: 50
+                    type: array
+                    x-kubernetes-list-map-keys:
+                    - name
+                    x-kubernetes-list-type: map
                 type: object
               valkey:
                 description: |-
                   List of Valkey instances this application needs credentials for.
                   Must be owned by same team.
+                  Mutually exclusive with `spec.uses.valkey`.
+                  This field is deprecated. Use uses.valkey for new integrations.
                 items:
                   properties:
                     access:
@@ -1644,6 +1730,12 @@ spec:
             - message: postgres and uses.postgres are mutually exclusive
               rule: '!has(self.postgres) || !has(self.uses) || !has(self.uses.postgres)
                 || self.uses.postgres.size() == 0'
+            - message: openSearch and uses.opensearch are mutually exclusive
+              rule: '!has(self.openSearch) || !has(self.uses) || !has(self.uses.opensearch)
+                || self.uses.opensearch.size() == 0'
+            - message: valkey and uses.valkey are mutually exclusive
+              rule: '!has(self.valkey) || self.valkey.size() == 0 || !has(self.uses)
+                || !has(self.uses.valkey) || self.uses.valkey.size() == 0'
           status:
             description: Status contains different Nais status properties
             properties:

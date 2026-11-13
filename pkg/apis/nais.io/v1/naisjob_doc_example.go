@@ -320,10 +320,6 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					},
 				},
 			},
-			OpenSearch: &OpenSearch{
-				Instance: "my-open-search-instance",
-				Access:   "readwrite",
-			},
 			Parallelism: int32p(1),
 			PreStopHook: &PreStopHook{
 				Exec: &ExecAction{
@@ -369,7 +365,9 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 			TTL:                           "1h",
 			TTLSecondsAfterFinished:       int32p(60),
 			Uses: &Uses{
-				Postgres: []PostgresUse{{Name: "my-postgres", Role: "readwrite", EnvPrefix: "MYDB_"}},
+				Postgres:   []PostgresUse{{Name: "my-postgres", Role: "readwrite", EnvPrefix: "MYDB_"}},
+				OpenSearch: []OpenSearchUse{{Name: "my-open-search-instance", Permission: "readwrite", EnvPrefix: "MY_DIFFERENTIATING_PREFIX_"}},
+				Valkey:     []ValkeyUse{{Name: "cache", Permission: "readwrite", EnvPrefix: "MY_DIFFERENTIATING_PREFIX_"}},
 			},
 			Observability: &Observability{
 				Tracing: &Tracing{
@@ -389,13 +387,6 @@ func ExampleNaisjobForDocumentation() *Naisjob {
 					},
 				},
 			},
-			Valkey: []Valkey{
-				{
-					Instance: "cache",
-					Access:   "readwrite",
-				},
-			},
-
 			Vault: &Vault{
 				Enabled: true,
 				Paths: []SecretPath{

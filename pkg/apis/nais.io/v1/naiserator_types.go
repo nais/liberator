@@ -94,6 +94,16 @@ type Valkey struct {
 
 // Uses configures resources used by a workload.
 type Uses struct {
+	// OpenSearch configures access to OpenSearch instances in the workload namespace.
+	// Each OpenSearch instance may occur only once.
+	// With more than one entry, environment variable names get a `_<NAME>` suffix, where `<NAME>` is the uppercased instance name with `-` replaced by `_`.
+	// Mutually exclusive with `spec.openSearch`.
+	// +nais:doc:Link="https://doc.nais.io/persistence/opensearch/"
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=20
+	OpenSearch []OpenSearchUse `json:"opensearch,omitempty"`
+
 	// Postgres configures access to CloudNativePG Postgres instances in the workload namespace.
 	// Each Postgres instance may occur only once. When more than one instance is configured,
 	// all but one entry must set a unique envPrefix.
@@ -104,6 +114,55 @@ type Uses struct {
 	// +kubebuilder:validation:XValidation:rule="self.filter(x, has(x.envPrefix) && x.envPrefix != '').all(x, self.filter(y, has(y.envPrefix) && y.envPrefix == x.envPrefix).size() == 1)",message="each non-empty envPrefix must be unique"
 	// +kubebuilder:validation:XValidation:rule="self.all(x, self.all(y, x.name == y.name || (((!has(x.role) || x.role == '' || x.role == 'admin') ? [(has(x.envPrefix) ? x.envPrefix : ''), (has(x.envPrefix) ? x.envPrefix : '') + 'READWRITE_'] : [(has(x.envPrefix) ? x.envPrefix : '') + (x.role == 'read' ? 'READ_' : 'READWRITE_')]).all(a, (((!has(y.role) || y.role == '' || y.role == 'admin') ? [(has(y.envPrefix) ? y.envPrefix : ''), (has(y.envPrefix) ? y.envPrefix : '') + 'READWRITE_'] : [(has(y.envPrefix) ? y.envPrefix : '') + (y.role == 'read' ? 'READ_' : 'READWRITE_')]).all(b, a != b))))))",message="Postgres entries must produce unique environment variable names"
 	Postgres []PostgresUse `json:"postgres,omitempty"`
+
+	// Valkey configures access to Valkey instances in the workload namespace.
+	// Each Valkey instance may occur only once.
+	// Environment variable names always end with `_<NAME>`, where `<NAME>` is the uppercased instance name with `-` replaced by `_`.
+	// Mutually exclusive with `spec.valkey`.
+	// +nais:doc:Link="https://doc.nais.io/persistence/valkey/"
+	// +listType=map
+	// +listMapKey=name
+	// +kubebuilder:validation:MaxItems=50
+	Valkey []ValkeyUse `json:"valkey,omitempty"`
+}
+
+// +kubebuilder:validation:Enum=read;write;readwrite;admin
+type ServicePermission string
+
+// OpenSearchUse configures a workload's access to an OpenSearch resource.
+type OpenSearchUse struct {
+	// Name of the OpenSearch resource in the workload namespace.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`
+	Name string `json:"name"`
+
+	// Permission granted to the workload.
+	Permission ServicePermission `json:"permission"`
+
+	// EnvPrefix is prepended verbatim to every environment variable for this OpenSearch instance.
+	// Include a separator such as a trailing underscore when desired.
+	// +kubebuilder:validation:MaxLength=64
+	// +kubebuilder:validation:Pattern=`^[A-Za-z_][A-Za-z0-9_]*$`
+	EnvPrefix string `json:"envPrefix,omitempty"`
+}
+
+// ValkeyUse configures a workload's access to a Valkey resource.
+type ValkeyUse struct {
+	// Name of the Valkey resource in the workload namespace.
+	// +kubebuilder:validation:MinLength=1
+	// +kubebuilder:validation:MaxLength=63
+	// +kubebuilder:validation:Pattern=`^[a-z0-9]([-a-z0-9]*[a-z0-9])?$`
+	Name string `json:"name"`
+
+	// Permission granted to the workload.
+	Permission ServicePermission `json:"permission"`
+
+	// EnvPrefix is prepended verbatim to every environment variable for this Valkey instance.
+	// Include a separator such as a trailing underscore when desired.
+	// +kubebuilder:validation:MaxLength=64
+	// +kubebuilder:validation:Pattern=`^[A-Za-z_][A-Za-z0-9_]*$`
+	EnvPrefix string `json:"envPrefix,omitempty"`
 }
 
 // PostgresUse configures a workload's access to a Postgres instance.

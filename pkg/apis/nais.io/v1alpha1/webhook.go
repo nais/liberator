@@ -10,6 +10,7 @@ import (
 	"github.com/go-logr/logr"
 	aiven_io_v1alpha1 "github.com/nais/liberator/pkg/apis/aiven.io/v1alpha1"
 	aiven_nais_io_v1 "github.com/nais/liberator/pkg/apis/aiven.nais.io/v1"
+	nais_io_v1 "github.com/nais/liberator/pkg/apis/nais.io/v1"
 	"github.com/nais/liberator/pkg/webhookvalidator"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -67,6 +68,12 @@ func (v *ApplicationValidator) ValidateCreate(ctx context.Context, a *Applicatio
 	if err := v.checkPostgresReference(ctx, a); err != nil {
 		return nil, err
 	}
+	if err := v.checkValkeyReferences(ctx, a); err != nil {
+		return nil, err
+	}
+	if err := v.checkOpenSearchReferences(ctx, a); err != nil {
+		return nil, err
+	}
 
 	if err := v.checkPostgresCAReferences(ctx, a); err != nil {
 		return nil, err
@@ -97,6 +104,12 @@ func (v *ApplicationValidator) ValidateUpdate(ctx context.Context, oldA *Applica
 	}
 
 	if err := v.checkPostgresReference(ctx, a); err != nil {
+		return nil, err
+	}
+	if err := v.checkValkeyReferences(ctx, a); err != nil {
+		return nil, err
+	}
+	if err := v.checkOpenSearchReferences(ctx, a); err != nil {
 		return nil, err
 	}
 
@@ -146,12 +159,57 @@ func (v *ApplicationValidator) checkPostgresReference(ctx context.Context, app *
 
 	if app.Spec.Uses != nil {
 		for _, postgres := range app.Spec.Uses.Postgres {
-			if err := v.getPostgres(ctx, app.Namespace, postgres.Name, "nais.io/v1"); err != nil {
+			if err := v.getPostgres(ctx, app.Namespace, postgres.Name, nais_io_v1.GroupVersion.String()); err != nil {
 				return v.postgresReferenceError(err, app, postgres.Name)
 			}
 		}
 	}
 
+	return nil
+}
+
+func (v *ApplicationValidator) checkValkeyReferences(ctx context.Context, app *Application) error {
+	if app.Spec.Uses == nil {
+		return nil
+	}
+	for _, valkey := range app.Spec.Uses.Valkey {
+		if err := v.checkUsesReference(ctx, app, "Valkey", valkey.Name); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (v *ApplicationValidator) checkOpenSearchReferences(ctx context.Context, app *Application) error {
+	if app.Spec.Uses == nil {
+		return nil
+	}
+	for _, openSearch := range app.Spec.Uses.OpenSearch {
+		if err := v.checkUsesReference(ctx, app, "OpenSearch", openSearch.Name); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (v *ApplicationValidator) checkUsesReference(ctx context.Context, app *Application, kind, name string) error {
+	resource := &metav1.PartialObjectMetadata{
+		TypeMeta: metav1.TypeMeta{APIVersion: nais_io_v1.GroupVersion.String(), Kind: kind},
+	}
+	err := v.Get(ctx, client.ObjectKey{Name: name, Namespace: app.Namespace}, resource)
+	if apierrors.IsNotFound(err) {
+		v.logger.Info("Rejecting application because the referenced resource does not exist",
+			"application", app.Name,
+			"namespace", app.Namespace,
+			"kind", kind,
+			"name", name,
+		)
+		return apierrors.NewBadRequest(fmt.Sprintf("%s '%s' does not exist. Create the %s instance first.", kind, name, kind))
+	}
+	if err != nil {
+		v.logger.Error(err, "internal error when validating reference", "kind", kind, "name", name)
+		return apierrors.NewInternalError(fmt.Errorf("could not validate %s reference '%s': %w", kind, name, err))
+	}
 	return nil
 }
 
@@ -192,7 +250,7 @@ func (v *ApplicationValidator) checkPostgresCAReferences(ctx context.Context, ap
 			return apierrors.NewBadRequest(fmt.Sprintf("Secret '%s' is a Postgres CA Secret and cannot be referenced directly", secretName))
 		}
 		postgresName := strings.TrimSuffix(secretName, "-ca")
-		err := v.getPostgres(ctx, app.Namespace, postgresName, "nais.io/v1")
+		err := v.getPostgres(ctx, app.Namespace, postgresName, nais_io_v1.GroupVersion.String())
 		if err == nil {
 			return apierrors.NewBadRequest(fmt.Sprintf("Secret '%s' is a Postgres CA Secret and cannot be referenced directly", secretName))
 		}

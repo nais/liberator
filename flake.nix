@@ -28,7 +28,7 @@
                   };
                 });
                 nixpkgsVersion = prev.go_latest.version;
-                newVersionNotInNixpkgs = -1 == builtins.compareVersions nixpkgsVersion version;
+                newVersionNotInNixpkgs = -1 == lib.compareVersions nixpkgsVersion version;
               in
               {
                 go_latest = if newVersionNotInNixpkgs then newerGoVersion else prev.go_latest;
@@ -48,6 +48,7 @@
             gopls
             gotools
             kustomize
+            mise
           ];
         };
         formatter = inputs.treefmt-nix.lib.mkWrapper pkgs (
