@@ -67,6 +67,12 @@ func (v *JobValidator) ValidateCreate(ctx context.Context, nj *Naisjob) (warning
 	if err := v.checkPostgresReference(ctx, nj); err != nil {
 		return nil, err
 	}
+	if err := v.checkValkeyReferences(ctx, nj); err != nil {
+		return nil, err
+	}
+	if err := v.checkOpenSearchReferences(ctx, nj); err != nil {
+		return nil, err
+	}
 
 	if err := v.checkPostgresCAReferences(ctx, nj); err != nil {
 		return nil, err
@@ -97,6 +103,12 @@ func (v *JobValidator) ValidateUpdate(ctx context.Context, oldA *Naisjob, nj *Na
 	}
 
 	if err := v.checkPostgresReference(ctx, nj); err != nil {
+		return nil, err
+	}
+	if err := v.checkValkeyReferences(ctx, nj); err != nil {
+		return nil, err
+	}
+	if err := v.checkOpenSearchReferences(ctx, nj); err != nil {
 		return nil, err
 	}
 
@@ -146,12 +158,57 @@ func (v *JobValidator) checkPostgresReference(ctx context.Context, nj *Naisjob) 
 
 	if nj.Spec.Uses != nil {
 		for _, postgres := range nj.Spec.Uses.Postgres {
-			if err := v.getPostgres(ctx, nj.Namespace, postgres.Name, "nais.io/v1"); err != nil {
+			if err := v.getPostgres(ctx, nj.Namespace, postgres.Name, GroupVersion.String()); err != nil {
 				return v.postgresReferenceError(err, nj, postgres.Name)
 			}
 		}
 	}
 
+	return nil
+}
+
+func (v *JobValidator) checkValkeyReferences(ctx context.Context, nj *Naisjob) error {
+	if nj.Spec.Uses == nil {
+		return nil
+	}
+	for _, valkey := range nj.Spec.Uses.Valkey {
+		if err := v.checkUsesReference(ctx, nj, "Valkey", valkey.Name); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (v *JobValidator) checkOpenSearchReferences(ctx context.Context, nj *Naisjob) error {
+	if nj.Spec.Uses == nil {
+		return nil
+	}
+	for _, openSearch := range nj.Spec.Uses.OpenSearch {
+		if err := v.checkUsesReference(ctx, nj, "OpenSearch", openSearch.Name); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (v *JobValidator) checkUsesReference(ctx context.Context, nj *Naisjob, kind, name string) error {
+	resource := &metav1.PartialObjectMetadata{
+		TypeMeta: metav1.TypeMeta{APIVersion: GroupVersion.String(), Kind: kind},
+	}
+	err := v.Get(ctx, client.ObjectKey{Name: name, Namespace: nj.Namespace}, resource)
+	if apierrors.IsNotFound(err) {
+		v.logger.Info("Rejecting naisjob because the referenced resource does not exist",
+			"naisjob", nj.Name,
+			"namespace", nj.Namespace,
+			"kind", kind,
+			"name", name,
+		)
+		return apierrors.NewBadRequest(fmt.Sprintf("%s '%s' does not exist. Create the %s instance first.", kind, name, kind))
+	}
+	if err != nil {
+		v.logger.Error(err, "internal error when validating reference", "kind", kind, "name", name)
+		return apierrors.NewInternalError(fmt.Errorf("could not validate %s reference '%s': %w", kind, name, err))
+	}
 	return nil
 }
 
@@ -192,7 +249,7 @@ func (v *JobValidator) checkPostgresCAReferences(ctx context.Context, nj *Naisjo
 			return apierrors.NewBadRequest(fmt.Sprintf("Secret '%s' is a Postgres CA Secret and cannot be referenced directly", secretName))
 		}
 		postgresName := strings.TrimSuffix(secretName, "-ca")
-		err := v.getPostgres(ctx, nj.Namespace, postgresName, "nais.io/v1")
+		err := v.getPostgres(ctx, nj.Namespace, postgresName, GroupVersion.String())
 		if err == nil {
 			return apierrors.NewBadRequest(fmt.Sprintf("Secret '%s' is a Postgres CA Secret and cannot be referenced directly", secretName))
 		}

@@ -30,6 +30,7 @@ var ignoredApplicationFields = []string{
 	`.Spec.Azure.Application.Claims.Extra`, // TODO: Remove when these deprecated Azure fields are removed.
 	`.Spec.Azure.Application.ReplyURLs`,
 	`.Spec.Azure.Application.SinglePageApplication`,
+	`.Spec.Valkey`, // TODO: Deprecated; replaced by `.Spec.Uses.Valkey` in the example.
 	`.Spec.Strategy.RollingUpdate.MaxSurge.IntVal`,
 	`.Spec.Strategy.RollingUpdate.MaxUnavailable`,
 	`.Spec.Strategy.RollingUpdate.MaxUnavailable.IntVal`,

@@ -43,6 +43,8 @@ type Naisjob struct {
 // NaisjobSpec contains the Nais manifest.
 // Please keep this list sorted for clarity.
 // +kubebuilder:validation:XValidation:rule="!has(self.postgres) || !has(self.uses) || !has(self.uses.postgres) || self.uses.postgres.size() == 0",message="postgres and uses.postgres are mutually exclusive"
+// +kubebuilder:validation:XValidation:rule="!has(self.openSearch) || !has(self.uses) || !has(self.uses.opensearch) || self.uses.opensearch.size() == 0",message="openSearch and uses.opensearch are mutually exclusive"
+// +kubebuilder:validation:XValidation:rule="!has(self.valkey) || self.valkey.size() == 0 || !has(self.uses) || !has(self.uses.valkey) || self.uses.valkey.size() == 0",message="valkey and uses.valkey are mutually exclusive"
 type NaisjobSpec struct {
 	// By default, no traffic is allowed between naisjobs inside the cluster.
 	// Configure access policies to explicitly allow communication between naisjobs.
@@ -136,6 +138,9 @@ type NaisjobSpec struct {
 
 	// To get your own OpenSearch instance head over to the IaC-repo to provision each instance.
 	// See [navikt/aiven-iac](https://github.com/navikt/aiven-iac) repository.
+	// Mutually exclusive with `spec.uses.opensearch`.
+	// This field is deprecated. Use uses.opensearch for new integrations.
+	// +nais:doc:Deprecated=true
 	OpenSearch *OpenSearch `json:"openSearch,omitempty"`
 
 	// For running pods in parallel.
@@ -217,6 +222,9 @@ type NaisjobSpec struct {
 
 	// List of Valkey instances this job needs credentials for.
 	// Must be owned by same team.
+	// Mutually exclusive with `spec.uses.valkey`.
+	// This field is deprecated. Use uses.valkey for new integrations.
+	// +nais:doc:Deprecated=true
 	// +nais:doc:Link="https://doc.nais.io/persistence/valkey/"
 	Valkey []Valkey `json:"valkey,omitempty"`
 

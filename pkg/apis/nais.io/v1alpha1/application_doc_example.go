@@ -376,10 +376,6 @@ func ExampleApplicationForDocumentation() *Application {
 					},
 				},
 			},
-			OpenSearch: &nais_io_v1.OpenSearch{
-				Instance: "my-open-search-instance",
-				Access:   "readwrite",
-			},
 			Port: 8080,
 			PreStopHook: &nais_io_v1.PreStopHook{
 				Exec: &nais_io_v1.ExecAction{
@@ -470,7 +466,9 @@ func ExampleApplicationForDocumentation() *Application {
 			},
 			TTL: "1h",
 			Uses: &nais_io_v1.Uses{
-				Postgres: []nais_io_v1.PostgresUse{{Name: "my-postgres", Role: "readwrite", EnvPrefix: "MYDB_"}},
+				Postgres:   []nais_io_v1.PostgresUse{{Name: "my-postgres", Role: "readwrite", EnvPrefix: "MYDB_"}},
+				OpenSearch: []nais_io_v1.OpenSearchUse{{Name: "my-open-search-instance", Permission: "readwrite", EnvPrefix: "MY_DIFFERENTIATING_PREFIX_"}},
+				Valkey:     []nais_io_v1.ValkeyUse{{Name: "cache", Permission: "readwrite", EnvPrefix: "MY_DIFFERENTIATING_PREFIX_"}},
 			},
 			Observability: &nais_io_v1.Observability{
 				Tracing: &nais_io_v1.Tracing{
@@ -490,13 +488,6 @@ func ExampleApplicationForDocumentation() *Application {
 					},
 				},
 			},
-			Valkey: []nais_io_v1.Valkey{
-				{
-					Instance: "cache",
-					Access:   "readwrite",
-				},
-			},
-
 			Vault: &nais_io_v1.Vault{
 				Enabled: true,
 				Paths: []nais_io_v1.SecretPath{
